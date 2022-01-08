@@ -1,5 +1,5 @@
 {
-    "description": "Authentication and authorization support for web based applications.",
+    "description": "Authentication and authorization support for web based desktop and mobile applications.",
     "homepage": "https://github.com/Badisi/auth-js",
     "license": "GPL-3.0",
     "author": "Badisi",
@@ -7,6 +7,19 @@
         "type": "git",
         "url": "https://github.com/Badisi/auth-js.git"
     },
+    "keywords": [
+        "authentication",
+        "authorization",
+        "oidc",
+        "openidconnect",
+        "openid",
+        "security",
+        "identity",
+        "oauth2",
+        "oauth",
+        "auth",
+        "authn"
+    ],
     "private": true,
     "scripts": {
         "start:docs": "npm run start --prefix=projects/docs",

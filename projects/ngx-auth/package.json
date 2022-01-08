@@ -1,7 +1,7 @@
 {
     "name": "@badisi/ngx-auth",
     "version": "2.0.0-beta.3",
-    "description": "Authentication and authorization support for angular based applications.",
+    "description": "Authentication and authorization support for Angular based desktop and mobile applications.",
     "homepage": "https://github.com/Badisi/auth-js/tree/main/projects/ngx-auth",
     "license": "GPL-3.0",
     "author": "Badisi",
@@ -9,6 +9,24 @@
         "type": "git",
         "url": "https://github.com/Badisi/auth-js.git"
     },
+    "keywords": [
+        "angular",
+        "ionic",
+        "capacitor",
+        "cordova",
+        "hybrid",
+        "authentication",
+        "authorization",
+        "oidc",
+        "openidconnect",
+        "openid",
+        "security",
+        "identity",
+        "oauth2",
+        "oauth",
+        "auth",
+        "authn"
+    ],
     "dependencies": {
         "@badisi/auth-js": "^1.0.0-beta.1"
     },

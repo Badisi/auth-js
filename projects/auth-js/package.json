@@ -1,7 +1,7 @@
 {
     "name": "@badisi/auth-js",
     "version": "1.0.0-beta.1",
-    "description": "Authentication and authorization support for web based applications.",
+    "description": "Authentication and authorization support for web based desktop and mobile applications.",
     "homepage": "https://github.com/Badisi/auth-js/tree/main/projects/auth-js",
     "license": "GPL-3.0",
     "author": "Badisi",
@@ -9,6 +9,23 @@
         "type": "git",
         "url": "https://github.com/Badisi/auth-js.git"
     },
+    "keywords": [
+        "ionic",
+        "capacitor",
+        "cordova",
+        "hybrid",
+        "authentication",
+        "authorization",
+        "oidc",
+        "openidconnect",
+        "openid",
+        "security",
+        "identity",
+        "oauth2",
+        "oauth",
+        "auth",
+        "authn"
+    ],
     "sideEffects": false,
     "dependencies": {
         "oidc-client-ts": "2.0.0-rc.3",
