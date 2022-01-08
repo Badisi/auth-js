@@ -1,0 +1,185 @@
+:host {
+    .flex {
+        flex: 1;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .column {
+        display: flex;
+        flex-direction: column;
+    }
+
+    header {
+        position: sticky;
+        top: 0;
+        align-items: center;
+        padding: 16px 20px;
+        background-color: #673ab7;
+        color: white;
+
+        .title {
+            align-items: center;
+            margin-bottom: 32px;
+            font-size: 28px;
+            font-weight: 400;
+
+            &.authenticated {
+                &::before {
+                    background-color: #66bb6a;
+                }
+            }
+
+            &::before {
+                display: block;
+                content: "";
+                width: 15px;
+                height: 15px;
+                border-radius: 50%;
+                background-color: #ef5350;
+                margin-top: 1px;
+                margin-right: 8px;
+            }
+
+            b {
+                margin-right: 8px;
+            }
+        }
+
+        .checkbox {
+            margin-right: 30px;
+        }
+
+        button {
+            margin-top: 2px;
+            &:not(:last-child) {
+                margin-right: 10px;
+            }
+        }
+    }
+
+    .content {
+        .debug-info {
+            padding: 0 14px;
+            background-color: #ede7f6;
+
+            .info {
+                margin: 16px;
+
+                .title {
+                    min-width: 130px;
+                }
+
+                .value {
+                    color: #5e35b1;
+                    overflow-x: auto;
+                    white-space: pre-wrap;
+                    word-wrap: break-word;
+                }
+
+                code {
+                    width: 100%;
+                }
+            }
+        }
+
+        .cards {
+            .card {
+                box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
+                    0 1px 3px 0 rgba(0, 0, 0, 0.12);
+                border-radius: 4px;
+                background-color: white;
+                margin: 12px 6px;
+
+                .card-actions {
+                    padding: 0 14px 8px 14px;
+                    text-align: left;
+                }
+
+                .card-title {
+                    padding: 16px;
+                    font-size: 20px;
+                    font-weight: 500;
+                    color: rgba(0, 0, 0, 0.87);
+                }
+
+                .card-actions {
+                    text-align: center;
+                    min-height: 50px;
+
+                    button {
+                        margin: 8px;
+                    }
+
+                    .input {
+                        &:not(:last-child) {
+                            margin-bottom: 8px;
+                        }
+                        label {
+                            text-align: right;
+                            width: 125px;
+                            margin-right: 14px;
+                        }
+                    }
+                }
+
+                .box {
+                    height: 200px;
+                    border-top: 1px solid lightgray;
+                    word-break: break-all;
+                    overflow: auto;
+                    background-color: #f2f2f2;
+                    padding: 12px;
+
+                    pre {
+                        margin: 0;
+                    }
+                }
+            }
+        }
+
+        @media only screen and (min-width: 600px) {
+            .info {
+                flex-direction: row !important;
+                align-items: center;
+
+                .title {
+                    align-self: flex-start;
+                }
+                .value {
+                    margin: 0;
+                }
+                code {
+                    width: 88% !important;
+                }
+            }
+
+            .cards {
+                flex-direction: row !important;
+                padding: 10px;
+
+                .card {
+                    margin: 12px;
+
+                    &.routes {
+                        min-width: 400px;
+                        width: 400px;
+                    }
+
+                    &.apis {
+                        min-width: 600px;
+                        width: 600px;
+                        .card-actions {
+                            input {
+                                width: 80%;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "projectType": "library",
+    "root": "projects/ngx-auth",
+    "sourceRoot": "projects/ngx-auth/src",
+    "prefix": "badisi",
+    "targets": {
+        "build": {
+            "executor": "@nrwl/angular:package",
+            "outputs": [
+                "dist/projects/ngx-auth"
+            ],
+            "options": {
+                "project": "projects/ngx-auth/ng-package.json"
+            },
+            "configurations": {
+                "production": {
+                    "tsConfig": "projects/ngx-auth/tsconfig.lib.prod.json"
+                },
+                "development": {
+                    "tsConfig": "projects/ngx-auth/tsconfig.lib.json"
+                }
+            },
+            "defaultConfiguration": "production"
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": [
+                "coverage/projects/ngx-auth"
+            ],
+            "options": {
+                "jestConfig": "projects/ngx-auth/jest.config.js",
+                "passWithNoTests": true
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "options": {
+                "lintFilePatterns": [
+                    "projects/ngx-auth/**/*.ts",
+                    "projects/ngx-auth/**/*.html"
+                ]
+            }
+        }
+    },
+    "tags": []
+}

@@ -1,0 +1,109 @@
+<header class="column">
+    <div class="title row"
+         [class.authenticated]="isAuthenticated$ | async">
+        <b>&#123; ngx-auth &#125;</b> Demo app
+    </div>
+    <div class="row">
+        <span style="display: flex; flex: 1"></span>
+        <div class="checkbox">
+            <input id="showDebugInfoCheckbox"
+                   type="checkbox"
+                   (click)="saveSettings()"
+                   [(ngModel)]="showDebugInfo">
+            <label for="showDebugInfoCheckbox">Show debug info</label>
+        </div>
+        <button id="login-button"
+                (click)="login()">LOGIN</button>
+        <button id="logout-button"
+                (click)="logout()">LOGOUT</button>
+        <button id="silent-refresh-button"
+                (click)="refresh()">SILENT REFRESH</button>
+    </div>
+</header>
+
+<div class="content">
+    <div *ngIf="showDebugInfo"
+         class="debug-info column">
+        <div class="info column">
+            <div class="title">Authenticated :</div>
+            <code>
+                <pre class="value">{{ (isAuthenticated$ | async) || false }}</pre>
+            </code>
+        </div>
+
+        <div *ngIf="(userSession$ | async) as userSession"
+             class="info column">
+            <div class="title">User session :</div>
+            <code>
+                <i *ngIf="userSession.expires_at" class="value">
+                    Will expire on : {{ userSession.expires_at * 1000 | date:'MMM d, y, HH:mm:ss a' }}
+                </i>
+                <br><br>
+                <pre class="value">{{ userSession | json }}</pre>
+            </code>
+        </div>
+
+        <div *ngIf="(accessToken$ | async) as accessToken"
+             class="info column">
+            <div class="title">Access token :</div>
+            <code>
+                <pre class="value">{{ accessToken }}</pre>
+                <br>
+                <ng-container *ngIf="(accessTokenDecoded$ | async) as accessTokenDecoded">
+                    <pre class="value">{{ accessTokenDecoded | json }}</pre>
+                </ng-container>
+            </code>
+        </div>
+
+        <div *ngIf="(userProfile$ | async) as userProfile"
+             class="info column">
+            <div class="title">User profile :</div>
+            <code>
+                <pre class="value">{{ userProfile | json }}</pre>
+            </code>
+        </div>
+    </div>
+
+    <div class="cards column">
+        <div class="card routes">
+            <div class="card-title">Routes access</div>
+            <div class="card-actions">
+                <button id="home-button"
+                        routerLink="/">HOME</button>
+                <button id="public-button"
+                        routerLink="/public">PUBLIC</button>
+                <button id="private-button"
+                        routerLink="/private">PRIVATE</button>
+            </div>
+            <div class="box">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+        <div class="card apis">
+            <div class="card-title">APIs access</div>
+            <div class="card-actions row">
+                <div class="column flex">
+                    <div class="input row">
+                        <label for="get-api-url-input">Url</label>
+                        <input id="get-api-url-input"
+                               class="flex"
+                               [(ngModel)]="privateApiUrl" />
+                    </div>
+                    <div class="input row">
+                        <label for="get-api-headers-input">Custom headers</label>
+                        <input id="get-api-headers-input"
+                               class="flex"
+                               [(ngModel)]="privateApiHeaders" />
+                    </div>
+                </div>
+                <button id="get-api-button"
+                        (click)="callPrivateApi()">GET</button>
+            </div>
+            <div class="box">
+                <code>
+                    <pre>{{ data |json }}</pre>
+                </code>
+            </div>
+        </div>
+    </div>
+</div>

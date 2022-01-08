@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "start": "wdio run wdio.config.ts --debug=true --headless=true --watch=false"
+    }
+}

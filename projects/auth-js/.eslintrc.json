@@ -1,0 +1,6 @@
+{
+    "root": true,
+    "extends": [
+        "@hug/eslint-config/moderate"
+    ]
+}

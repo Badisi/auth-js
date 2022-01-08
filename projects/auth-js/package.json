@@ -1,0 +1,18 @@
+{
+    "name": "@badisi/auth-js",
+    "version": "1.0.0-beta.1",
+    "description": "Authentication and authorization support for web based applications.",
+    "homepage": "https://github.com/Badisi/auth-js/tree/main/projects/auth-js",
+    "license": "GPL-3.0",
+    "author": "Badisi",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Badisi/auth-js.git"
+    },
+    "sideEffects": false,
+    "dependencies": {
+        "oidc-client-ts": "2.0.0-rc.3",
+        "lodash-es": "^4.17.21",
+        "jwt-decode": "^3.1.2"
+    }
+}

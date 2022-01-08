@@ -1,0 +1,66 @@
+{
+    "npmScope": "badisi",
+    "affected": {
+        "defaultBase": "main"
+    },
+    "workspaceLayout": {
+        "appsDir": "projects",
+        "libsDir": "projects"
+    },
+    "cli": {
+        "defaultCollection": "@nrwl/angular"
+    },
+    "implicitDependencies": {
+        "package.json": {
+            "dependencies": {
+                "oidc-client-ts": [
+                    "auth-js"
+                ],
+                "lodash-es": [
+                    "auth-js"
+                ],
+                "jwt-decode": [
+                    "auth-js"
+                ]
+            },
+            "devDependencies": "*"
+        },
+        ".eslintrc.json": "*"
+    },
+    "tasksRunnerOptions": {
+        "default": {
+            "runner": "@nrwl/workspace/tasks-runners/default",
+            "options": {
+                "cacheableOperations": [
+                    "build",
+                    "lint",
+                    "test",
+                    "e2e"
+                ]
+            }
+        }
+    },
+    "targetDependencies": {
+        "build": [
+            {
+                "target": "build",
+                "projects": "dependencies"
+            }
+        ]
+    },
+    "generators": {
+        "@nrwl/angular:application": {
+            "style": "scss",
+            "linter": "eslint",
+            "unitTestRunner": "jest",
+            "e2eTestRunner": "none"
+        },
+        "@nrwl/angular:library": {
+            "linter": "eslint",
+            "unitTestRunner": "jest"
+        },
+        "@nrwl/angular:component": {
+            "style": "scss"
+        }
+    }
+}

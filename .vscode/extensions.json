@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "angular.ng-template",
+        "dbaeumer.vscode-eslint",
+        "sibiraj-s.vscode-scss-formatter",
+        "eg2.vscode-npm-script",
+        "pkief.material-icon-theme"
+    ]
+}

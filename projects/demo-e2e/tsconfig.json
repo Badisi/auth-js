@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "types": [
+            "node",
+            "webdriverio/async",
+            "wdio-intercept-service",
+            "expect-webdriverio/jasmine",
+            "@wdio/local-runner",
+            "@wdio/jasmine-framework"
+        ]
+    }
+}

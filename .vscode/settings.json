@@ -1,0 +1,28 @@
+{
+    "files.eol": "\n",
+    "files.watcherExclude": {
+        "**/dist/**": true,
+        "**/tmp/**": true
+    },
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/dist": true,
+        "**/tmp": true
+    },
+    "workbench.iconTheme": "material-icon-theme",
+    "material-icon-theme.folders.theme": "none",
+    "material-icon-theme.opacity": 0.6,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "editor.formatOnSave": true,
+    "eslint.format.enable": true,
+    "[typescript]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "html.format.wrapAttributes": "force-aligned",
+    "html.format.wrapLineLength": 120,
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features"
+    }
+}

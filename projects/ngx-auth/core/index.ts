@@ -1,7 +1,7 @@
-export * from './models/auth-config.model';
-export * from './models/user-config.model';
-export * from './models/user-profile.model';
-export * from './models/user-session.model';
+export { Log, UserSession, UserProfile, AccessToken, Navigation } from '@badisi/auth-js/oidc';
+
+export * from './main';
+export * from './auth-settings.model';
 export * from './auth.guard';
 export * from './auth.interceptor';
 export * from './auth.service';

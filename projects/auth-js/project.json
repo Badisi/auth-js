@@ -1,0 +1,49 @@
+{
+    "root": "projects/auth-js",
+    "sourceRoot": "projects/auth-js",
+    "projectType": "library",
+    "targets": {
+        "build": {
+            "executor": "@nrwl/js:tsc",
+            "outputs": [
+                "{options.outputPath}"
+            ],
+            "options": {
+                "outputPath": "dist/auth-js",
+                "main": "projects/auth-js/index.ts",
+                "tsConfig": "projects/auth-js/tsconfig.lib.json",
+                "assets": [
+                    {
+                        "glob": "**/*",
+                        "input": "projects/auth-js/oidc/assets",
+                        "output": "oidc/assets"
+                    },
+                    "projects/auth-js/README.md",
+                    "LICENSE"
+                ]
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": [
+                "{options.outputFile}"
+            ],
+            "options": {
+                "lintFilePatterns": [
+                    "projects/auth-js/**/*.ts"
+                ]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": [
+                "coverage/projects/auth-js"
+            ],
+            "options": {
+                "jestConfig": "projects/auth-js/jest.config.js",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": []
+}

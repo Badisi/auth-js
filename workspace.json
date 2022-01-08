@@ -1,0 +1,8 @@
+{
+    "version": 2,
+    "projects": {
+        "auth-js": "projects/auth-js",
+        "demo-app": "projects/demo-app",
+        "ngx-auth": "projects/ngx-auth"
+    }
+}

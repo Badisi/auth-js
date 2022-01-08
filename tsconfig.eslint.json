@@ -1,0 +1,18 @@
+{
+    "extends": "./tsconfig.base.json",
+    "compilerOptions": {
+        "types": [
+            "node",
+            "jasmine",
+            "expect-webdriverio",
+            "webdriverio/async",
+            "@wdio/local-runner",
+            "@wdio/jasmine-framework"
+        ]
+    },
+    "include": [
+        "projects/demo-app/**/*.ts",
+        "projects/auth-js/**/*.ts",
+        "projects/ngx-auth/**/*.ts",
+    ]
+}

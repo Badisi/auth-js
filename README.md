@@ -1,90 +1,48 @@
-# ngx-auth
+# @badisi/auth-js
 
-Authentication and authorization support for angular based client applications.
+🛡️ Authentication and authorization support for web based applications.
 
-License: GPL-3.0
+[![npm version](https://img.shields.io/npm/v/@badisi/auth-js.svg?color=blue&logo=npm)][npm]
+[![npm downloads](https://img.shields.io/npm/dw/@badisi/auth-js.svg?color=blue&logo=npm)][npm-dl]
+[![license](https://img.shields.io/npm/l/@badisi/auth-js.svg?color=ff69b4)][license]
+
+[![build status](https://github.com/badisi/auth-js/workflows/CI%20tests/badge.svg)][ci-tests]
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)][pullrequest]
+
+<hr>
+
 
 ## Getting started
 
-Install `node v14.15.1`
+👉 Learn about it on the [docs site][docs-site].
 
-Run `npm install` to install all the required dependencies.
 
-## Building the library
+## Development
 
-Run `npm run build:lib` to build the library.
+See the [developer docs][developer].
 
-The build artifacts will be stored in the `dist/` directory.
 
-## Publishing the library
+## Contributing
 
-1. Increment the version number in `package.json` and `projects/ngx-auth/package.json`.
-2. Build the library
-3. Run `npm run publish:lib` to publish the library to the **nexus npm-internal** repo.
+#### > Want to Help ?
 
-## Linking the library
+Want to file a bug, contribute some code or improve documentation ? Excellent!
 
-During development, you can link the library to an angular project.
+But please read up first on the guidelines for [contributing][contributing], and learn about submission process, coding rules and more.
 
-:warning: Be careful not to commit the following modifications !
+#### > Code of Conduct
 
-##### Linking with distribution
+Please read and follow the [Code of Conduct][codeofconduct] and help me keep this project open and inclusive.
 
-```sh
-cd dist/ngx-auth
-yarn link
-```
 
-```sh
-cd my-angular-project
-yarn link @badisi/ngx-auth
-```
 
-Add the following to `my-angular-project/angular.json`:
 
-```json
-"architect": {
-    "build": {
-        "options": {
-            "preserveSymlinks": true
-        }
-    }
-}
-```
-
-##### Linking with sources
-
-```sh
-cd projects/ngx-auth
-yarn link
-```
-
-```sh
-cd my-angular-project
-yarn link @badisi/ngx-auth
-```
-
-Add the following to `my-angular-project/angular.json`:
-
-```json
-"architect": {
-    "build": {
-        "options": {
-            "preserveSymlinks": true
-        }
-    }
-}
-```
-
-Add the following to `my-angular-project/tsconfig.app.json`:
-
-```json
-"include": [
-    "./**/*",
-    "../node_modules/@badisi/ngx-auth/**/*"
-]
-```
-
-## Demo app
-
-Run `npm run start` for a dev server then navigate to `http://localhost:4200/`.
+[npm]: https://www.npmjs.com/package/@badisi/auth-js
+[npm-dl]: https://npmcharts.com/compare/@badisi/auth-js?minimal=true
+[ci-tests]: https://github.com/badisi/auth-js/actions?query=workflow:CI%20tests
+[pullrequest]: https://github.com/badisi/auth-js/blob/master/CONTRIBUTING.md#-submitting-a-pull-request-pr
+[license]: https://github.com/badisi/auth-js/blob/master/LICENSE
+[developer]: https://github.com/badisi/auth-js/blob/master/DEVELOPER.md
+[contributing]: https://github.com/badisi/auth-js/blob/master/CONTRIBUTING.md
+[codeofconduct]: https://github.com/badisi/auth-js/blob/master/CODE_OF_CONDUCT.md
+[docs-site]: https://badisi.github.io/auth-js
