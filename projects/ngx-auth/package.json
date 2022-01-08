@@ -1,0 +1,22 @@
+{
+    "name": "@badisi/ngx-auth",
+    "version": "1.0.0-beta.3",
+    "description": "Authentication and authorization support for angular based client applications.",
+    "homepage": "https://github.com/Badisi/ngx-auth",
+    "license": "GPL-3.0",
+    "sideEffects": false,
+    "author": "Badisi",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Badisi/ngx-auth.git"
+    },
+    "dependencies": {
+        "lodash-es": "^4.17.15",
+        "oidc-client": "1.10.1"
+    },
+    "peerDependencies": {
+        "@angular/common": ">=7.0.0",
+        "@angular/core": ">=7.0.0",
+        "@angular/router": ">=7.0.0"
+    }
+}

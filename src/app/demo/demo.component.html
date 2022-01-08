@@ -1,0 +1,71 @@
+<header>
+    <div class="title"><b>&#123; ngx-auth &#125;</b> Demo app</div>
+</header>
+
+<div class="content">
+    <div class="info">
+        <div class="title">Authenticated :</div>
+        <code>
+            <pre class="value">{{ isAuthenticated }}</pre>
+        </code>
+    </div>
+
+    <div class="info"
+         *ngIf="accessToken">
+        <div class="title">Access token :</div>
+        <code>
+            <pre class="value">{{ accessToken }}</pre>
+        </code>
+    </div>
+
+    <div class="info"
+         *ngIf="userSession">
+        <div class="title">User session :</div>
+        <code>
+            <i class="value">(expires : {{ this.userSession.expires_at * 1000 | date:'MMM d, y, HH:mm:ss a' }})</i>
+            <pre class="value">{{ userSession | json }}</pre>
+        </code>
+    </div>
+
+    <div class="info"
+         *ngIf="userProfile">
+        <div class="title">User profile :</div>
+        <code>
+            <pre class="value">{{ userProfile | json }}</pre>
+        </code>
+    </div>
+
+    <div class="cards">
+        <div class="card login">
+            <div class="card-title">Login/Logout</div>
+            <div class="card-actions">
+                <button (click)="login()">LOGIN</button>
+                <button (click)="logout()">LOGOUT</button>
+                <button (click)="refresh()">REFRESH</button>
+            </div>
+        </div>
+        <div class="card routes">
+            <div class="card-title">Routes access</div>
+            <div class="card-actions">
+                <button routerLink="/">HOME</button>
+                <button routerLink="/public">PUBLIC</button>
+                <button routerLink="/private">PRIVATE</button>
+            </div>
+            <div class="box">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+        <div class="card apis">
+            <div class="card-title">APIs access</div>
+            <div class="card-actions">
+                <input [(ngModel)]="privateApiUrl" />
+                <button (click)="callPrivateAPI()">GET</button>
+            </div>
+            <div class="box">
+                <code>
+                    <pre>{{ data |json }}</pre>
+                </code>
+            </div>
+        </div>
+    </div>
+</div>

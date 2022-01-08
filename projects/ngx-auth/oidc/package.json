@@ -1,0 +1,16 @@
+{
+    "sideEffects": false,
+    "ngPackage": {
+        "whitelistedNonPeerDependencies": [
+            "oidc-client",
+            "lodash-es"
+        ],
+        "lib": {
+            "entryFile": "./index.ts",
+            "umdModuleIds": {
+                "oidc-client": "oidc-client",
+                "lodash-es": "lodash-es"
+            }
+        }
+    }
+}
