@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 @Component({
     selector: 'ngx-auth-img',
     template: '',
-    styleUrls: ['./auth-image.component.scss']
+    styles: [':host { background-position: center center; background-repeat: no-repeat; background-size: cover; }']
 })
 export class AuthImageComponent {
     private _src!: string;
