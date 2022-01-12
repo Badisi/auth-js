@@ -1,6 +1,6 @@
 {
     "name": "@badisi/auth-js",
-    "version": "1.0.0-beta.1",
+    "version": "1.0.0-beta.2",
     "description": "Authentication and authorization support for web based desktop and mobile applications.",
     "homepage": "https://github.com/Badisi/auth-js/tree/main/projects/auth-js",
     "license": "GPL-3.0",
