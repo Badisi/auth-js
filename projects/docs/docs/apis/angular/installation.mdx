@@ -1,0 +1,69 @@
+---
+title: Installation
+---
+
+Install from the NPM repository using npm or yarn:
+
+```shell
+npm install @badisi/ngx-auth --save
+```
+
+```shell
+yarn add @badisi/ngx-auth
+```
+
+
+```js title="angular.json" {5-7,9-11}
+{
+  "targets": {
+    "build": {
+      "options": {
+        "allowedCommonJsDependencies": [
+          "oidc-client-ts"
+        ],
+        "assets": [{
+          "glob": "**/*",
+          "input": "projects/auth-js/oidc/assets",
+          "output": "oidc/callback"
+        }]
+      }
+    }
+  }
+}
+```
+
+
+```ts title="main.ts" {3,12-19}
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { initAuth } from '@badisi/ngx-auth';
+
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+
+if (environment.production) {
+  enableProdMode();
+}
+
+initAuth({
+  authorityUrl: 'http://localhost:8080/auth/realms/demo',
+  clientId: 'demo'
+}).then(authProvider => {
+  platformBrowserDynamic([
+    authProvider
+  ]).bootstrapModule(AppModule).catch(err => console.error(err));
+}).catch(error => console.error(error));
+```
+
+
+```ts title="app.module.ts" {2,6}
+import { NgModule } from '@angular/core';
+import { AuthModule } from '@badisi/ngx-auth';
+
+@NgModule({
+  imports: [
+    AuthModule
+  ]
+})
+export class AppModule { }
+```

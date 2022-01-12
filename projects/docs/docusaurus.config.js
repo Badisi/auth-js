@@ -39,7 +39,7 @@ const config = {
         /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
             navbar: {
-                title: '@badisi/auth-js',
+                title: 'Auth-js',
                 logo: {
                     alt: 'logo',
                     src: 'img/logo.svg'
@@ -47,9 +47,15 @@ const config = {
                 items: [
                     {
                         type: 'doc',
-                        docId: 'intro',
+                        label: 'Docs',
                         position: 'left',
-                        label: 'Tutorial'
+                        docId: 'intro/getting-started'
+                    },
+                    {
+                        type: 'doc',
+                        label: 'APIs',
+                        position: 'left',
+                        docId: 'apis/intro'
                     },
                     {
                         href: 'https://github.com/Badisi/auth-js',
@@ -67,8 +73,12 @@ const config = {
                         title: 'Docs',
                         items: [
                             {
-                                label: 'Tutorial',
-                                to: '/docs/intro'
+                                label: 'Getting started',
+                                to: '/docs/intro/getting-started'
+                            },
+                            {
+                                label: 'APIs',
+                                to: '/docs/apis/intro'
                             }
                         ]
                     },

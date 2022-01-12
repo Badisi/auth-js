@@ -1,6 +1,5 @@
 ---
-sidebar_position: 1
-slug: /
+title: Getting started
 ---
 
 # Tutorial Intro
