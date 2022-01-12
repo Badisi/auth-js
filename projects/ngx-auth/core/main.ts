@@ -5,9 +5,6 @@ import { OIDCAuthManager } from '@badisi/auth-js/oidc';
 import { AuthSettings } from './auth-settings.model';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AUTH_MANAGER = new InjectionToken<string>('AUTH_MANAGER');
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const DEFAULT_SETTINGS: Optional<AuthSettings, 'authorityUrl' | 'clientId'> = {
     automaticLoginOn401: true,
     automaticInjectToken: {
@@ -17,6 +14,9 @@ const DEFAULT_SETTINGS: Optional<AuthSettings, 'authorityUrl' | 'clientId'> = {
         }
     }
 };
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const AUTH_MANAGER = new InjectionToken<string>('AUTH_MANAGER');
 
 export const initAuth = async (settings: AuthSettings): Promise<StaticProvider> => {
     const manager = await createAuthManager({ ...DEFAULT_SETTINGS, ...settings }, OIDCAuthManager);
