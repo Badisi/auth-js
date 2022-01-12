@@ -10,7 +10,7 @@
                 "{options.outputPath}"
             ],
             "options": {
-                "outputPath": "dist/projects/demo-app",
+                "outputPath": "dist/demo-app",
                 "index": "projects/demo-app/src/index.html",
                 "main": "projects/demo-app/src/main.ts",
                 "polyfills": "projects/demo-app/src/polyfills.ts",
