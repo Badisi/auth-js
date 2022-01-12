@@ -112,7 +112,12 @@ export class AuthService {
             onUserSessionChanged: (value): void => this._userSession$.next(value),
             onAuthenticatedChanged: (value): void => this._isAuthenticated$.next(value),
             onRefreshingChanged: (value): void => this._isRefreshing$.next(value),
-            onRedirect: (value): void => void this.router.navigateByUrl(value.pathname)
+            onRedirect: (value): void => {
+                // Avoid cancelling any current navigation
+                if (!this.router.getCurrentNavigation()) {
+                    void this.router.navigateByUrl(`${value.pathname}${value.search}`);
+                }
+            }
         };
     }
 
