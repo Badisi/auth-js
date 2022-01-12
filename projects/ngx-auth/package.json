@@ -1,6 +1,6 @@
 {
     "name": "@badisi/ngx-auth",
-    "version": "2.0.0-beta.3",
+    "version": "2.0.0-beta.4",
     "description": "Authentication and authorization support for Angular based desktop and mobile applications.",
     "homepage": "https://github.com/Badisi/auth-js/tree/main/projects/ngx-auth",
     "license": "GPL-3.0",
