@@ -21,7 +21,7 @@ jobs:
       - name: Make sure npm is latest
         run: npm install -g npm@latest
       - name: Build docs
-        working-directory: docs
+        working-directory: projects/docs
         run: |
           npm clean-install
           npm run build
