@@ -2,7 +2,7 @@
     "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
     "dest": "../../dist/ngx-auth",
     "assets": [
-        "projects/auth-js/oidc/assets"
+        "./ngcc.config.js"
     ],
     "allowedNonPeerDependencies": [
         "@badisi/auth-js"
