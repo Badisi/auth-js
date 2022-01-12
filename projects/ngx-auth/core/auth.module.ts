@@ -1,6 +1,6 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { OIDCAuthManager } from '@badisi/auth-js/oidc';
 
 import { AuthGuard } from './auth.guard';
@@ -11,7 +11,7 @@ import { AUTH_MANAGER } from './main';
 @NgModule({
     providers: [
         AuthGuard,
-        Router,
+        RouterModule,
         {
             provide: AuthService,
             useFactory: (manager: OIDCAuthManager, router: Router): AuthService => new AuthService(manager, router),
