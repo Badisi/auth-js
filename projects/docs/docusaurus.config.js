@@ -74,11 +74,11 @@ const config = {
                         items: [
                             {
                                 label: 'Getting started',
-                                to: '/docs/intro/getting-started'
+                                to: '/intro/getting-started'
                             },
                             {
                                 label: 'APIs',
-                                to: '/docs/apis/intro'
+                                to: '/apis/intro'
                             }
                         ]
                     },
