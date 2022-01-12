@@ -6,7 +6,7 @@ import {
 } from '@angular/router';
 import { AccessToken, UserProfile } from '@badisi/auth-js/oidc';
 import { forkJoin, from, isObservable, Observable, of } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { catchError, map, switchMap, take } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
 
@@ -82,9 +82,13 @@ export class AuthGuard implements CanLoad, CanActivate, CanActivateChild {
                 take(1),
                 switchMap(isAuthenticated => {
                     if (!isAuthenticated) {
-                        void this.authService.login(redirectUrl);
+                        return from(this.authService.login(redirectUrl))
+                            .pipe(
+                                catchError(error => of(error)),
+                                switchMap(error => of(!error))
+                            );
                     }
-                    return of(isAuthenticated === true);
+                    return of(isAuthenticated);
                 })
             );
     }

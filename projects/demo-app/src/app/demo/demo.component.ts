@@ -46,10 +46,10 @@ export class DemoComponent implements OnInit {
 
         this.httpClient
             .get<unknown>(this.privateApiUrl, this.privateApiHeaders ? { headers } : {})
-            .subscribe(
-                (data: unknown) => this.data = data,
-                (error: Error) => this.data = error
-            );
+            .subscribe({
+                next: data => this.data = data,
+                error: (error: Error) => this.data = error
+            });
     }
 
     public login(): void {

@@ -16,8 +16,8 @@ export class AuthInterceptor implements HttpInterceptor {
     ) {
         const settings = authService.getSettings();
         if (settings) {
-            this.injectToken = settings.injectToken;
-            this.loginOn401 = settings.loginOn401;
+            this.injectToken = settings.automaticInjectToken;
+            this.loginOn401 = settings.automaticLoginOn401;
         }
     }
 

@@ -16,16 +16,17 @@ export interface Listeners {
     onUserSessionChanged?: (value: UserSession | undefined) => void;
     onAuthenticatedChanged?: (value: boolean) => void;
     onRefreshingChanged?: (value: boolean) => void;
+    onRedirect?: (value: URL) => void;
 }
 
 const REDIRECT_URL_KEY = 'oidc_manager_redirect';
 const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> = {
+    loginRequired: true,
+    automaticSilentRenew: true,
+    loadSession: true,
+    loadUserInfo: false,
     logLevel: Log.NONE,
     navigationType: Navigation.REDIRECT,
-    loginRequired: true,
-    loadSessionOnInit: true,
-    automaticSilentRenew: true,
-    loadUserInfo: false,
     scope: 'openid profile email phone',
     internal: {
         response_type: 'code',
@@ -135,11 +136,14 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             await this.backFromLogin();
         } else if (this.urlMatching(location.href, this.settings.internal?.post_logout_redirect_uri)) {
             await this.backFromLogout();
-        } else if (this.settings.loadSessionOnInit) {
-            await this.signinSilent().catch(async error => {
+        } else if (this.settings.loadSession) {
+            await this.signinSilent().catch(async (signinSilentError: Error) => {
                 if (this.settings.loginRequired) {
-                    await this.login();
-                    throw error;
+                    if (signinSilentError.message === 'login_required') {
+                        await this.login();
+                    } else {
+                        throw signinSilentError;
+                    }
                 }
             });
         } else if (this.settings.loginRequired) {
@@ -148,25 +152,34 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     }
 
     public async login(redirectUrl = location.href, navigationType?: Navigation): Promise<void> {
-        sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
         switch (navigationType || this.settings.navigationType) {
             case Navigation.POPUP:
-                await this.userManager?.signinPopup().catch(error => console.error(error));
+                await this.userManager?.signinPopup().catch((error: Error) => {
+                    if (error?.message === 'Attempted to navigate on a disposed window') {
+                        error = new Error('[OIDCAuthManager] Attempted to navigate on a disposed window.');
+                        error.stack = undefined;
+                        error.message += '\n\nⓘ This may be due to an ad blocker.';
+                    }
+                    throw error;
+                });
+                await this.redirect(redirectUrl);
                 break;
             default:
-                await this.userManager?.signinRedirect().catch(error => console.error(error));
+                sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
+                await this.userManager?.signinRedirect();
                 break;
         }
     }
 
     public async logout(redirectUrl = location.href, navigationType?: Navigation): Promise<void> {
-        sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
         switch (navigationType || this.settings.navigationType) {
             case Navigation.POPUP:
-                await this.userManager?.signoutPopup().catch(error => console.error(error));
+                await this.userManager?.signoutPopup();
+                await this.redirect(redirectUrl);
                 break;
             default:
-                await this.userManager?.signoutRedirect().catch(error => console.error(error));
+                sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
+                await this.userManager?.signoutRedirect();
                 break;
         }
     }
@@ -224,25 +237,28 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     /**
      *  Scenario :
-     *  1) signinSilent was asked
-     *  2) iframe was created and navigation was made to OP
-     *  3) redirection occurs in iframe
-     *  4) `silent_redirect.html` is not found so the app is loaded in the iframe instead
-     *  5) an inception loop occurs -> app in iframe in iframe in iframe..
+     *  1) signinSilent or signinPopup was asked
+     *  2) iframe or popup was created and navigation was made to OP
+     *  3) redirection occurs in iframe or popup
+     *  4) `silent_redirect_uri` or `popup_redirect_uri` is not found
+     *  5) the angular app is loaded in the iframe or popup instead
+     *  6) an inception loop occurs -> app in iframe in iframe in iframe or popup in popup in popup..
      */
     private assertNotInInceptionLoop(): void {
-        const silentRedirectUri = this.settings.internal?.silent_redirect_uri;
-        const htmlFileName = (new RegExp(/^.*\/(.*).html$/gm).exec(silentRedirectUri || ''))?.[1];
-        const error = new Error(`[OIDCAuthManager] ${silentRedirectUri || 'silent redirect uri'} was not found.`);
-        error.stack = undefined;
+        [this.settings.internal?.silent_redirect_uri, this.settings.internal?.popup_redirect_uri]
+            .forEach(uri => {
+                const htmlFileName = (new RegExp(/^.*\/(.*).html$/gm).exec(uri || ''))?.[1];
+                const error = new Error(`[OIDCAuthManager] ${uri || 'redirect uri'} was not found.`);
+                error.stack = undefined;
 
-        if (this.urlMatching(location.href, silentRedirectUri)) {
-            error.message += '\n\nⓘ This usually means you forgot to include the redirect html files in your application assets.';
-            throw error;
-        } else if (this.urlMatching(location.href, `/${htmlFileName}.html`)) {
-            error.message += '\n\nⓘ This usually means your redirect urls are misconfigured.';
-            throw error;
-        }
+                if (this.urlMatching(location.href, uri)) {
+                    error.message += '\n\nⓘ This usually means you forgot to include the redirect html files in your application assets.';
+                    throw error;
+                } else if (this.urlMatching(location.href, `/${htmlFileName}.html`)) {
+                    error.message += '\n\nⓘ This usually means your redirect urls are misconfigured.';
+                    throw error;
+                }
+            });
     }
 
     /**
@@ -271,11 +287,11 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         return ((url2 !== undefined) && url1.includes(url2));
     }
 
-    private getCompleteUrl(url: string): string {
+    private getCompleteUrl(url: string): URL {
         try {
-            return new URL(url).href;
+            return new URL(url);
         } catch {
-            return new URL(`${location.origin}${url.startsWith('/') ? '' : '/'}${url}`).href;
+            return new URL(`${location.origin}${url.startsWith('/') ? '' : '/'}${url}`);
         }
     }
 
@@ -287,10 +303,11 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
         const redirectUrl = this.getCompleteUrl(url || '/');
         // History cannot be rewritten when origin is different
-        if (location.origin === new URL(redirectUrl).origin) {
-            history.replaceState(history.state, '', redirectUrl);
+        if (location.origin === redirectUrl.origin) {
+            history.replaceState(history.state, '', redirectUrl.href);
+            this.listeners.onRedirect?.(redirectUrl);
         } else {
-            location.href = redirectUrl;
+            location.href = redirectUrl.href;
         }
     }
 

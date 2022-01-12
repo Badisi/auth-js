@@ -22,10 +22,8 @@ export interface OIDCAuthSettings extends CoreAuthSettings, Pick<UserManagerSett
     authorityUrl: string;
     clientId: string;
     schemeUri?: string;
-    loadSessionOnInit?: boolean;
+    loadSession?: boolean;
     navigationType?: Navigation;
     logLevel?: Log;
-    // ---
-    // TODO: how to call it : internal, extras, overrides ?
-    internal?: Omit<UserManagerSettings, UsefulSettings | 'authority' | 'client_id'>;
+    internal?: Partial<Omit<UserManagerSettings, UsefulSettings | 'authority' | 'client_id'>>;
 }

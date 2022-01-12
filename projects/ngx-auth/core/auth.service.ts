@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AccessToken, OIDCAuthManager, UserProfile, UserSession } from '@badisi/auth-js/oidc';
+import { Router } from '@angular/router';
+import { AccessToken, Navigation, OIDCAuthManager, UserProfile, UserSession } from '@badisi/auth-js/oidc';
 import { Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
@@ -14,7 +15,8 @@ export class AuthService {
     private _isRefreshing$: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
 
     constructor(
-        private manager: OIDCAuthManager
+        private manager: OIDCAuthManager,
+        private router: Router
     ) {
         void this.initObservables();
         this.listenForChanges();
@@ -53,16 +55,12 @@ export class AuthService {
 
     // --- OIDCAuthManager ---
 
-    public init(userSettings: AuthSettings): Promise<void> {
-        return this.manager.init(userSettings);
+    public login(redirectUrl?: string, navigationType?: Navigation): Promise<void> {
+        return this.manager.login(redirectUrl, navigationType);
     }
 
-    public login(redirectUrl?: string): Promise<void> {
-        return this.manager.login(redirectUrl);
-    }
-
-    public logout(redirectUrl?: string): Promise<void> {
-        return this.manager.logout(redirectUrl);
+    public logout(redirectUrl?: string, navigationType?: Navigation): Promise<void> {
+        return this.manager.logout(redirectUrl, navigationType);
     }
 
     public refresh(): Promise<void> {
@@ -113,7 +111,8 @@ export class AuthService {
             onUserProfileChanged: (value): void => this._userProfile$.next(value),
             onUserSessionChanged: (value): void => this._userSession$.next(value),
             onAuthenticatedChanged: (value): void => this._isAuthenticated$.next(value),
-            onRefreshingChanged: (value): void => this._isRefreshing$.next(value)
+            onRefreshingChanged: (value): void => this._isRefreshing$.next(value),
+            onRedirect: (value): void => void this.router.navigateByUrl(value.pathname)
         };
     }
 
