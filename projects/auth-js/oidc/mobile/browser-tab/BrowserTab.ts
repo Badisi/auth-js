@@ -1,4 +1,4 @@
-import { Log, UserManagerSettings } from 'oidc-client-ts';
+import { UserManagerSettings } from 'oidc-client-ts';
 
 export class BrowserTab {
     private params: UserManagerSettings;
@@ -6,7 +6,7 @@ export class BrowserTab {
     // private reject: (reason?: any) => void;
 
     constructor(params: UserManagerSettings) {
-        Log.logger.debug(`BrowserTab.ctor: redirect_uri: ${params.redirect_uri}`);
+        // Log.logger.debug(`BrowserTab.ctor: redirect_uri: ${params.redirect_uri}`);
         this.params = params;
         console.log(this.params);
     }
