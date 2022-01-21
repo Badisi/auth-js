@@ -13,14 +13,18 @@ on:
 
 jobs:
   ci_tests:
+    name: Tests on linux node${{ matrix.node }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ['12', '14', '16']
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
       - name: Setup node
         uses: actions/setup-node@v2
         with:
-          node-version: 14.x
+          node-version: ${{ matrix.node }}
           registry-url: https://registry.npmjs.org/
       - name: Make sure npm is latest
         run: npm install -g npm@latest
