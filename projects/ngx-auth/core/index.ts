@@ -1,4 +1,4 @@
-export { Log, UserSession, UserProfile, AccessToken, Navigation } from '@badisi/auth-js/oidc';
+export { UserSession, UserProfile, AccessToken, Navigation, Log } from '@badisi/auth-js/oidc';
 
 export * from './auth-settings.model';
 export * from './auth.guard';

@@ -1,14 +1,6 @@
-import { Log as OidcClientLog, UserManagerSettings } from 'oidc-client-ts';
+import { Log, UserManagerSettings } from 'oidc-client-ts';
 
 import { AuthSettings as CoreAuthSettings } from '../../core';
-
-export enum Log {
-    NONE = OidcClientLog.NONE,
-    ERROR = OidcClientLog.ERROR,
-    WARN = OidcClientLog.WARN,
-    INFO = OidcClientLog.INFO,
-    DEBUG = OidcClientLog.DEBUG
-}
 
 export enum Navigation {
     REDIRECT = 'REDIRECT',

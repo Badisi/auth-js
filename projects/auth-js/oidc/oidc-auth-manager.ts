@@ -2,12 +2,14 @@
 
 import jwtDecode from 'jwt-decode';
 import { merge } from 'lodash-es';
-import { InMemoryWebStorage, Log, User, UserManager, UserManagerSettings, WebStorageStateStore } from 'oidc-client-ts';
+import {
+    InMemoryWebStorage, Log, User, UserManager, UserManagerSettings, UserProfile, WebStorageStateStore
+} from 'oidc-client-ts';
 
 import { AuthManager, Optional } from '../core';
 import { MobileStorage } from './mobile/mobile-storage';
+import { AccessToken } from './models/access-token.model';
 import { Navigation, OIDCAuthSettings } from './models/oidc-auth-settings.model';
-import { AccessToken, UserProfile } from './models/user-profile.model';
 import { UserSession } from './models/user-session.model';
 
 export interface Listeners {
@@ -57,7 +59,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             this._user = value;
 
             this._accessToken = (value) ? value.access_token : undefined;
-            this._userProfile = (value?.profile) ? value.profile as UserProfile : undefined;
+            this._userProfile = (value?.profile) ? value.profile : undefined;
             this._userSession = (value) ? UserSession.deserialize(value) : undefined;
             this._isAuthenticated = !!(value && !value.expired);
 
@@ -71,8 +73,8 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     // --- PUBLIC API(s) ---
 
     public async init(userSettings: OIDCAuthSettings): Promise<void> {
-        Log.level = userSettings.logLevel || DEFAULT_SETTINGS.logLevel || Log.NONE;
-        Log.logger = console;
+        Log.setLevel(userSettings.logLevel || DEFAULT_SETTINGS.logLevel || Log.NONE);
+        Log.setLogger(console);
 
         const isNative = this.isNative();
         const baseUrl = (isNative) ? `${userSettings.schemeUri}://` : `${location.origin}/`;
@@ -328,27 +330,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         this.listeners.onRefreshingChanged?.(true);
 
         try {
-            // TODO: when fix is done on odic-client side, there should be no need to reassign this.user as
-            // a UserLoaded event will be triggered.
-            const user = await this.userManager?.signinSilent();
-
-            /** Fix oidc-client issue : profile is not updated after silent refresh */
-            // https://github.com/IdentityModel/oidc-client-js/issues/1034
-            if (user?.id_token) {
-                Object.assign(user.profile, jwtDecode<{
-                    iss?: string;
-                    aud?: string | string[];
-                    azp?: string;
-                    iat?: number;
-                    nbf?: number;
-                    exp?: number;
-                    sub?: string;
-                    auth_time?: number;
-                }>(user.id_token));
-                await this.userManager?.storeUser(user);
-            }
-
-            this.user = user;
+            await this.userManager?.signinSilent();
         } catch (error) {
             await this.removeUser();
             throw error;
