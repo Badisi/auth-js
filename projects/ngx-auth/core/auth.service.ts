@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccessToken, Navigation, OIDCAuthManager, UserProfile, UserSession } from '@badisi/auth-js/oidc';
 import { Observable, ReplaySubject } from 'rxjs';
@@ -16,6 +16,7 @@ export class AuthService {
 
     constructor(
         private manager: OIDCAuthManager,
+        private ngZone: NgZone,
         private router: Router
     ) {
         void this.initObservables();
@@ -107,15 +108,17 @@ export class AuthService {
 
     private listenForChanges(): void {
         this.manager.listeners = {
-            onAccessTokenChanged: (value): void => this._accessToken$.next(value),
-            onUserProfileChanged: (value): void => this._userProfile$.next(value),
-            onUserSessionChanged: (value): void => this._userSession$.next(value),
-            onAuthenticatedChanged: (value): void => this._isAuthenticated$.next(value),
-            onRefreshingChanged: (value): void => this._isRefreshing$.next(value),
+            onAccessTokenChanged: (value): void => this.ngZone.run(() => this._accessToken$.next(value)),
+            onUserProfileChanged: (value): void => this.ngZone.run(() => this._userProfile$.next(value)),
+            onUserSessionChanged: (value): void => this.ngZone.run(() => this._userSession$.next(value)),
+            onAuthenticatedChanged: (value): void => this.ngZone.run(() => this._isAuthenticated$.next(value)),
+            onRefreshingChanged: (value): void => this.ngZone.run(() => this._isRefreshing$.next(value)),
             onRedirect: (value): void => {
                 // Avoid cancelling any current navigation
                 if (!this.router.getCurrentNavigation()) {
-                    void this.router.navigateByUrl(`${value.pathname}${value.search}`);
+                    this.ngZone.run(() => {
+                        void this.router.navigateByUrl(`${value.pathname}${value.search}`);
+                    });
                 }
             }
         };

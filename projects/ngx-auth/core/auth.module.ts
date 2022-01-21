@@ -1,5 +1,5 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { NgModule, NgZone } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { OIDCAuthManager } from '@badisi/auth-js/oidc';
 
@@ -14,8 +14,9 @@ import { AUTH_MANAGER } from './main';
         RouterModule,
         {
             provide: AuthService,
-            useFactory: (manager: OIDCAuthManager, router: Router): AuthService => new AuthService(manager, router),
-            deps: [AUTH_MANAGER, Router]
+            useFactory: (manager: OIDCAuthManager, zone: NgZone, router: Router): AuthService =>
+                new AuthService(manager, zone, router),
+            deps: [AUTH_MANAGER, NgZone, Router]
         },
         {
             provide: HTTP_INTERCEPTORS,
