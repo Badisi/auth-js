@@ -57,7 +57,7 @@ export class DemoComponent implements OnInit {
     }
 
     public logout(): void {
-        void this.authService.logout();
+        void this.authService.logout('/');
     }
 
     public refresh(): void {

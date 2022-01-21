@@ -1,6 +1,6 @@
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { initAuth, Log } from '@badisi/ngx-auth';
+import { initAuth, Log, Navigation } from '@badisi/ngx-auth';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
@@ -14,8 +14,8 @@ initAuth({
     clientId: 'demo',
     schemeUri: 'demo-scheme',
     loginRequired: false,
-    // navigationType: Navigation.POPUP,
-    logLevel: Log.NONE
+    navigationType: Navigation.POPUP,
+    logLevel: Log.DEBUG
 }).then(authProvider => {
     platformBrowserDynamic([
         authProvider

@@ -11,7 +11,7 @@ import { PublicComponent } from './public/public.component';
     resource_access?: { account?: { roles?: string[] } };
 };
 
- const roleValidator = (...roles: string[]): AuthGuardValidator =>
+const roleValidator = (...roles: string[]): AuthGuardValidator =>
     (_userProfile?: UserProfile, accessToken?: AccessToken): boolean => {
         const tokenRoles = (accessToken as AccessTokenWithRoles)?.resource_access?.account?.roles || [];
         return roles.every(role => tokenRoles.includes(role));
