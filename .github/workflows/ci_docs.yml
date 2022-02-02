@@ -2,9 +2,13 @@ name: Deploy docs to GitHub Pages
 
 on:
   push:
-    branches: [main]
-    paths: [projects/docs/**]
-    tags-ignore: ['**']
+    branches:
+      - main
+    paths:
+      - '.github/workflows/ci_docs.yml'
+      - 'projects/docs/**'
+    tags-ignore:
+      - '**'
 
 jobs:
   ci_docs:
