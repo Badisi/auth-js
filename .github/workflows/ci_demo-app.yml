@@ -1,17 +1,17 @@
-name: Deploy docs to GitHub Pages
+name: Deploy demo-app to GitHub Pages
 
 on:
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/ci_docs.yml'
-      - 'projects/docs/**'
+      - '.github/workflows/ci_demo-app.yml'
+      - 'projects/demo-app/**'
     tags-ignore:
       - '**'
 
 jobs:
-  ci_docs:
+  ci_demo-app:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
@@ -24,15 +24,18 @@ jobs:
           cache: npm
       - name: Make sure npm is latest
         run: npm install -g npm@latest
-      - name: Build docs
-        working-directory: projects/docs
-        run: |
-          npm clean-install
-          npm run build
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Lint
+        run: npm run lint:demo-app
+      - name: Build
+        env:
+          baseUrl: /${{ github.event.repository.name }}/demo-app/
+        run: npm run build:demo-app -- --base-href=${{ env.baseUrl }} --deploy-url=${{ env.baseUrl }}
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./projects/docs/build
-          destination_dir: docs
-          commit_message: 'deploy(docs):'
+          publish_dir: ./dist/demo-app
+          destination_dir: demo-app
+          commit_message: 'deploy(demo-app):'

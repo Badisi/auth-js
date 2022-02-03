@@ -9,7 +9,7 @@ const config = {
     title: 'auth-js',
     tagline: 'Authentication and authorization support for web based applications.',
     url: 'https://badisi.github.io',
-    baseUrl: '/auth-js/',
+    baseUrl: '/auth-js/docs/',
     organizationName: 'Badisi',
     projectName: 'auth-js',
     deploymentBranch: 'gh-pages',
