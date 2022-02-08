@@ -1,0 +1,118 @@
+<form class="card"
+      [formGroup]="settings">
+    <div class="input column">
+        <label for="authority-url-input">Authority url *</label>
+        <input id="authority-url-input"
+               class="flex"
+               [class.error]="settings.get('authorityUrl')?.hasError('required')"
+               formControlName="authorityUrl" />
+    </div>
+
+    <div class="input column">
+        <label for="client-id-input">Client id *</label>
+        <input id="client-id-input"
+               class="flex"
+               [class.error]="settings.get('clientId')?.hasError('required')"
+               formControlName="clientId" />
+    </div>
+
+    <div class="input column">
+        <label for="scheme-uri-input">Scheme uri</label>
+        <input id="scheme-uri-input"
+               class="flex"
+               formControlName="schemeUri" />
+    </div>
+
+    <div class="input column">
+        <label for="auth-guard-redirect-url-input">AuthGuard redirect url</label>
+        <input id="auth-guard-redirect-url-input"
+               class="flex"
+               formControlName="authGuardRedirectUrl" />
+    </div>
+
+    <div class="input column">
+        <label for="scope-input">Scope</label>
+        <input id="scope-input"
+               class="flex"
+               formControlName="scope" />
+    </div>
+
+    <div class="input column">
+        <label for="navigation-type-select">Navigation type</label>
+        <select id="navigation-type-select"
+                class="flex"
+                formControlName="navigationType">
+            <option value="REDIRECT">REDIRECT</option>
+            <option value="POPUP">POPUP</option>
+        </select>
+    </div>
+
+    <div class="input column">
+        <label for="log-level-select">Log level</label>
+        <select id="log-level-select"
+                class="flex"
+                formControlName="logLevel">
+            <option value="0">NONE</option>
+            <option value="1">ERROR</option>
+            <option value="2">WARN</option>
+            <option value="3">INFO</option>
+            <option value="4">DEBUG</option>
+        </select>
+    </div>
+
+    <div class="checkbox">
+        <input id="login-required-checkbox"
+               type="checkbox"
+               formControlName="loginRequired">
+        <label for="login-required-checkbox">Login required</label>
+    </div>
+
+    <div class="checkbox">
+        <input id="load-session-checkbox"
+               type="checkbox"
+               formControlName="loadSession">
+        <label for="load-session-checkbox">Load session</label>
+    </div>
+
+    <div class="checkbox">
+        <input id="load-user-info-checkbox"
+               type="checkbox"
+               formControlName="loadUserInfo">
+        <label for="load-user-info-checkbox">Load user info</label>
+    </div>
+
+    <div class="checkbox">
+        <input id="automatic-login-on-401-checkbox"
+               type="checkbox"
+               formControlName="automaticLoginOn401">
+        <label for="automatic-login-on-401-checkbox">Automatic login on 401</label>
+    </div>
+
+    <div class="checkbox">
+        <input id="automatic-inject-token-checkbox"
+               type="checkbox"
+               formControlName="automaticInjectToken">
+        <label for="automatic-inject-token-checkbox">Automatic inject token</label>
+    </div>
+
+    <div class="checkbox">
+        <input id="automatic-silent-renew-checkbox"
+               type="checkbox"
+               formControlName="automaticSilentRenew">
+        <label for="automatic-silent-renew-checkbox">Automatic silent renew</label>
+    </div>
+</form>
+
+<div class="row actions-bar">
+    <button id="reset-settings-button"
+            (click)="reset()">RESET TO DEFAULT</button>
+    <ng-container *ngIf="settings.dirty">
+        <span class="flex"></span>
+        <button id="apply-settings-button"
+                (click)="apply()">APPLY</button>
+        <button id="cancel-settings-button"
+                (click)="cancel()">CANCEL</button>
+    </ng-container>
+</div>
+
+<div style="min-height: 32px;"></div>

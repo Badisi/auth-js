@@ -1,31 +1,20 @@
 :host {
-    .flex {
-        flex: 1;
-    }
-
-    .row {
-        display: flex;
-        flex-direction: row;
-    }
-
-    .column {
-        display: flex;
-        flex-direction: column;
-    }
-
     header {
         position: sticky;
         top: 0;
         align-items: center;
-        padding: 16px 20px;
-        background-color: #673ab7;
+        padding-top: 16px;
         color: white;
+        background: rgb(103, 58, 183);
+        background: linear-gradient(180deg, rgba(103, 58, 183, 1) 0%, rgba(94, 53, 177, 1) 100%);
+        box-shadow: 0 3px 5px -1px #0003, 0 6px 10px #00000024, 0 1px 18px #0000001f;
 
         .title {
             align-items: center;
-            margin-bottom: 32px;
+            margin-bottom: 22px;
             font-size: 28px;
             font-weight: 400;
+            color: #ede7f6;
 
             &.authenticated {
                 &::before {
@@ -59,127 +48,192 @@
                 margin-right: 10px;
             }
         }
-    }
 
-    .content {
-        .debug-info {
-            padding: 0 14px;
-            background-color: #ede7f6;
+        .tabs {
+            width: 100%;
+            margin-top: 16px;
+            padding: 10px 0;
+            padding-left: 68px;
 
-            .info {
-                margin: 16px;
-
-                .title {
-                    min-width: 130px;
+            a {
+                cursor: pointer;
+                color: white;
+                padding: 8px 16px;
+                border-radius: 4px;
+                transition: background-color 150ms cubic-bezier(0.35, 0, 0.25, 1);
+                &.selected {
+                    background-color: #512da8;
                 }
-
-                .value {
-                    color: #5e35b1;
-                    overflow-x: auto;
-                    white-space: pre-wrap;
-                    word-wrap: break-word;
+                &:hover {
+                    background-color: #4527a0;
                 }
-
-                code {
-                    width: 100%;
+                &:not(:last-child) {
+                    margin-right: 10px;
                 }
             }
         }
 
-        .cards {
-            .card {
-                box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
-                    0 1px 3px 0 rgba(0, 0, 0, 0.12);
-                border-radius: 4px;
-                background-color: white;
-                margin: 12px 6px;
+        .github-icon {
+            position: absolute;
+            top: 20px;
+            right: 22px;
+            width: 26px;
+            height: 26px;
+            color: white;
+        }
+    }
 
-                .card-actions {
-                    padding: 0 14px 8px 14px;
-                    text-align: left;
-                }
+    .playground {
+        display: flex;
+        flex: 1;
+        padding: 20px 28px;
 
-                .card-title {
-                    padding: 16px;
-                    font-size: 20px;
-                    font-weight: 500;
-                    color: rgba(0, 0, 0, 0.87);
-                }
+        .card {
+            &.routes {
+                margin-bottom: 20px;
 
-                .card-actions {
-                    text-align: center;
-                    min-height: 50px;
+                .route {
+                    display: flex;
+                    align-items: center;
 
                     button {
-                        margin: 8px;
+                        padding: 2px 10px;
+                        min-width: 104px;
+                        margin: 8px 12px 8px 8px;
                     }
 
-                    .input {
-                        &:not(:last-child) {
-                            margin-bottom: 8px;
-                        }
-                        label {
-                            text-align: right;
-                            width: 125px;
-                            margin-right: 14px;
-                        }
+                    input {
+                        margin: 0 2px;
+                        padding: 4px;
+                    }
+
+                    .info {
+                        padding-bottom: 2px;
+                        font-size: 14px;
+                        line-height: 22px;
+                        text-align: left;
+                        color: #0000008a;
                     }
                 }
 
                 .box {
-                    height: 200px;
-                    border-top: 1px solid lightgray;
-                    word-break: break-all;
-                    overflow: auto;
-                    background-color: #f2f2f2;
-                    padding: 12px;
+                    height: 100px;
+                }
+            }
 
-                    pre {
-                        margin: 0;
+            &.apis {
+                .card-actions {
+                    padding-bottom: 16px;
+                    button {
+                        margin-left: 14px;
                     }
+                }
+            }
+
+            .card-title {
+                padding: 16px;
+                font-size: 20px;
+                font-weight: 500;
+                color: rgba(0, 0, 0, 0.87);
+            }
+
+            .card-actions {
+                padding: 0 14px 8px 14px;
+                min-height: 50px;
+
+                .input {
+                    display: flex;
+                    align-items: center;
+
+                    &:not(:last-child) {
+                        margin-bottom: 8px;
+                    }
+                    label {
+                        width: 125px;
+                        text-align: right;
+                        margin-right: 14px;
+                    }
+                    input {
+                        padding: 4px;
+                    }
+                }
+            }
+
+            .box {
+                height: 200px;
+                border-top: 1px solid lightgray;
+                word-break: break-all;
+                overflow: auto;
+                background-color: #f2f2f2;
+                padding: 12px;
+
+                pre {
+                    margin: 0;
                 }
             }
         }
+    }
 
-        @media only screen and (min-width: 600px) {
-            .info {
-                flex-direction: row !important;
-                align-items: center;
+    @media only screen and (max-width: 600px) {
+        header {
+            .tabs {
+                padding-left: 0;
+                justify-content: center;
+                background-color: #7043bf;
+            }
+        }
 
-                .title {
-                    align-self: flex-start;
-                }
-                .value {
-                    margin: 0;
-                }
-                code {
-                    width: 88% !important;
+        .playground {
+            padding: 6px 0;
+
+            .card {
+                border-radius: 0;
+                margin: 0;
+                &.routes {
+                    margin-bottom: 12px;
                 }
             }
+        }
+    }
 
-            .cards {
-                flex-direction: row !important;
-                padding: 10px;
+    /* @media only screen and (min-width: 600px) {
+        .info {
+            flex-direction: row !important;
+            align-items: center;
 
-                .card {
-                    margin: 12px;
+            .title {
+                align-self: flex-start;
+            }
+            .value {
+                margin: 0;
+            }
+            code {
+                width: 88% !important;
+            }
+        }
 
-                    &.routes {
-                        min-width: 400px;
-                        width: 400px;
-                    }
+        .cards {
+            flex-direction: row !important;
+            padding: 10px;
 
-                    &.apis {
-                        min-width: 600px;
-                        width: 600px;
-                        .card-actions {
-                            input {
-                                width: 80%;
-                            }
+            .card {
+                margin: 12px;
+
+                &.routes {
+                    min-width: 400px;
+                    width: 400px;
+                }
+
+                &.apis {
+                    min-width: 600px;
+                    width: 600px;
+                    .card-actions {
+                        input {
+                            width: 80%;
                         }
                     }
                 }
             }
         }
-    }
+    }*/
 }

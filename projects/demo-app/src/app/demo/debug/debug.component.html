@@ -1,0 +1,38 @@
+<div class="card">
+    <div class="info column">
+        <div class="title">Authenticated</div>
+        <code>
+        <pre class="value">{{ (isAuthenticated$ | async) || false }}</pre>
+    </code>
+    </div>
+
+    <div *ngIf="(userSession$ | async) as userSession"
+         class="info column">
+        <div class="title">User session</div>
+        <code>
+            <ng-container *ngIf="userSession.expires_at">
+                <pre class="value">Will expire on : {{ userSession.expires_at * 1000 | date:'MMM d, y, HH:mm:ss a' }}</pre>
+            </ng-container>
+            <pre class="value">{{ userSession | json }}</pre>
+        </code>
+    </div>
+
+    <div *ngIf="(accessToken$ | async) as accessToken"
+         class="info column">
+        <div class="title">Access token</div>
+        <code>
+            <pre class="value">{{ accessToken }}</pre>
+            <ng-container *ngIf="(accessTokenDecoded$ | async) as accessTokenDecoded">
+                <pre class="value">{{ accessTokenDecoded | json }}</pre>
+            </ng-container>
+        </code>
+    </div>
+
+    <div *ngIf="(userProfile$ | async) as userProfile"
+         class="info column">
+        <div class="title">User profile</div>
+        <code>
+            <pre class="value">{{ userProfile | json }}</pre>
+        </code>
+    </div>
+</div>

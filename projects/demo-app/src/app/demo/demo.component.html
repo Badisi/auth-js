@@ -3,15 +3,8 @@
          [class.authenticated]="isAuthenticated$ | async">
         <b>&#123; ngx-auth &#125;</b> Demo app
     </div>
+
     <div class="row">
-        <span style="display: flex; flex: 1"></span>
-        <div class="checkbox">
-            <input id="showDebugInfoCheckbox"
-                   type="checkbox"
-                   (click)="saveSettings()"
-                   [(ngModel)]="showDebugInfo">
-            <label for="showDebugInfoCheckbox">Show debug info</label>
-        </div>
         <button id="login-button"
                 (click)="login()">LOGIN</button>
         <button id="logout-button"
@@ -19,91 +12,102 @@
         <button id="silent-refresh-button"
                 (click)="refresh()">SILENT REFRESH</button>
     </div>
+
+    <nav class="tabs row">
+        <a id="playground-button"
+           [class.selected]="this.currentView === View.PLAYGROUND"
+           (click)="showView(View.PLAYGROUND)">Playground</a>
+        <a id="info-button"
+           [class.selected]="this.currentView === View.DEBUG"
+           (click)="showView(View.DEBUG)">Debug</a>
+        <a id="settings-button"
+           [class.selected]="this.currentView === View.SETTINGS"
+           (click)="showView(View.SETTINGS)">Settings</a>
+    </nav>
+
+    <a class="github-icon"
+       href="https://github.com/Badisi/auth-js"
+       target="_blank"
+       aria-label="GitHub repository">
+        <span>
+            <svg viewBox="0 0 24 24"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path fill="currentColor"
+                      d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12">
+                </path>
+            </svg>
+        </span>
+    </a>
 </header>
 
-<div class="content">
-    <div *ngIf="showDebugInfo"
-         class="debug-info column">
-        <div class="info column">
-            <div class="title">Authenticated :</div>
-            <code>
-                <pre class="value">{{ (isAuthenticated$ | async) || false }}</pre>
-            </code>
-        </div>
-
-        <div *ngIf="(userSession$ | async) as userSession"
-             class="info column">
-            <div class="title">User session :</div>
-            <code>
-                <i *ngIf="userSession.expires_at" class="value">
-                    Will expire on : {{ userSession.expires_at * 1000 | date:'MMM d, y, HH:mm:ss a' }}
-                </i>
-                <br><br>
-                <pre class="value">{{ userSession | json }}</pre>
-            </code>
-        </div>
-
-        <div *ngIf="(accessToken$ | async) as accessToken"
-             class="info column">
-            <div class="title">Access token :</div>
-            <code>
-                <pre class="value">{{ accessToken }}</pre>
-                <br>
-                <ng-container *ngIf="(accessTokenDecoded$ | async) as accessTokenDecoded">
-                    <pre class="value">{{ accessTokenDecoded | json }}</pre>
-                </ng-container>
-            </code>
-        </div>
-
-        <div *ngIf="(userProfile$ | async) as userProfile"
-             class="info column">
-            <div class="title">User profile :</div>
-            <code>
-                <pre class="value">{{ userProfile | json }}</pre>
-            </code>
-        </div>
-    </div>
-
-    <div class="cards column">
-        <div class="card routes">
-            <div class="card-title">Routes access</div>
-            <div class="card-actions">
-                <button id="home-button"
-                        routerLink="/">HOME</button>
-                <button id="public-button"
-                        routerLink="/public">PUBLIC</button>
-                <button id="private-button"
-                        routerLink="/private">PRIVATE</button>
-            </div>
-            <div class="box">
-                <router-outlet></router-outlet>
-            </div>
-        </div>
-        <div class="card apis">
-            <div class="card-title">APIs access</div>
-            <div class="card-actions row">
-                <div class="column flex">
-                    <div class="input row">
-                        <label for="get-api-url-input">Url</label>
-                        <input id="get-api-url-input"
-                               class="flex"
-                               [(ngModel)]="privateApiUrl" />
+<ng-container [ngSwitch]="currentView">
+    <ng-container *ngSwitchCase="View.PLAYGROUND">
+        <div class="playground column flex">
+            <div class="card routes">
+                <div class="card-title">Routes access</div>
+                <div class="card-actions column">
+                    <div class="route">
+                        <button id="home-button"
+                                routerLink="/">HOME</button>
+                        <div class="info">Home page</div>
                     </div>
-                    <div class="input row">
-                        <label for="get-api-headers-input">Custom headers</label>
-                        <input id="get-api-headers-input"
-                               class="flex"
-                               [(ngModel)]="privateApiHeaders" />
+                    <div class="route">
+                        <button id="public-button"
+                                routerLink="/public">PUBLIC</button>
+                        <div class="info">Public content (no login required)</div>
+                    </div>
+                    <div class="route">
+                        <button id="private-button"
+                                routerLink="/private">PRIVATE</button>
+                        <div class="info">Private content (login required)</div>
+                    </div>
+                    <div class="route">
+                        <button id="protected-button"
+                                routerLink="/protected">PROTECTED</button>
+                        <div class="info">Protected content (login required + role(s):
+                            <input id="roles-input"
+                                   [(ngModel)]="roles" />)
+                        </div>
                     </div>
                 </div>
-                <button id="get-api-button"
-                        (click)="callPrivateApi()">GET</button>
+                <div class="box">
+                    <router-outlet></router-outlet>
+                </div>
             </div>
-            <div class="box">
-                <code>
+            <div class="card apis">
+                <div class="card-title">APIs access</div>
+                <div class="card-actions row">
+                    <div class="column flex">
+                        <div class="input row">
+                            <label for="api-url-input">Url</label>
+                            <input id="api-url-input"
+                                   class="flex"
+                                   [(ngModel)]="privateApiUrl" />
+                        </div>
+                        <div class="input row">
+                            <label for="api-headers-input">Custom headers</label>
+                            <input id="api-headers-input"
+                                   class="flex"
+                                   [(ngModel)]="privateApiHeaders" />
+                        </div>
+                    </div>
+                    <button id="get-button"
+                            (click)="callPrivateApi()">GET</button>
+                </div>
+                <div class="box">
+                    <code>
                     <pre>{{ data |json }}</pre>
                 </code>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="View.DEBUG">
+        <app-debug></app-debug>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="View.SETTINGS">
+        <app-settings #appSettings></app-settings>
+    </ng-container>
+</ng-container>

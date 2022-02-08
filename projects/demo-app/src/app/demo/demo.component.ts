@@ -1,11 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivationStart, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '@badisi/ngx-auth';
 
-const DEMO_APP_STORAGE_KEY = 'ngx-auth_demo-app_settings';
-
-interface DemoAppSettings {
-    showDebugInfo: string;
+enum View {
+    PLAYGROUND,
+    DEBUG,
+    SETTINGS
 }
 
 @Component({
@@ -14,28 +15,42 @@ interface DemoAppSettings {
     styleUrls: ['./demo.component.scss']
 })
 export class DemoComponent implements OnInit {
-    public isAuthenticated$ = this.authService.isAuthenticated$;
-    public accessToken$ = this.authService.accessToken$;
-    public accessTokenDecoded$ = this.authService.accessTokenDecoded$;
-    public userProfile$ = this.authService.userProfile$;
-    public userSession$ = this.authService.userSession$;
+    @ViewChild(RouterOutlet)
+    public outlet!: RouterOutlet;
 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    public View = View;
+
+    public isAuthenticated$ = this.authService.isAuthenticated$;
+    public currentView: View = View.PLAYGROUND;
+
+    public roles = 'view-profile';
     public privateApiUrl = '/api/my-api';
     public privateApiHeaders?: string;
     public data: unknown | Error;
 
-    public showDebugInfo?: boolean;
-
     constructor(
         private authService: AuthService,
-        private httpClient: HttpClient
+        private httpClient: HttpClient,
+        private router: Router
+
     ) { }
 
     public ngOnInit(): void {
-        this.loadSettings();
+        this.router.events.subscribe(e => {
+            if (e instanceof ActivationStart) {
+                this.outlet.deactivate();
+            }
+        });
     }
 
     // ---- HANDLER(s) ----
+
+    public showView(view: View): void {
+        if (this.currentView !== view) {
+            this.currentView = view;
+        }
+    }
 
     public callPrivateApi(): void {
         let headers = new HttpHeaders();
@@ -62,18 +77,5 @@ export class DemoComponent implements OnInit {
 
     public refresh(): void {
         void this.authService.refresh();
-    }
-
-    public saveSettings(): void {
-        sessionStorage.setItem(DEMO_APP_STORAGE_KEY, JSON.stringify({
-            showDebugInfo: (!this.showDebugInfo).toString()
-        }));
-    }
-
-    // --- HELPER(s) ---
-
-    private loadSettings(): void {
-        const settings = JSON.parse(sessionStorage.getItem(DEMO_APP_STORAGE_KEY) || '{}') as DemoAppSettings;
-        this.showDebugInfo = (settings.showDebugInfo === 'true');
     }
 }

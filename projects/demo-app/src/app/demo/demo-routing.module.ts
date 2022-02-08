@@ -1,21 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from '@badisi/ngx-auth';
+import { AccessToken, AuthGuard, AuthGuardValidator, UserProfile } from '@badisi/ngx-auth';
 
 import { DemoComponent } from './demo.component';
-import { ForbiddenComponent } from './forbidden/forbidden.component';
-import { PublicComponent } from './public/public.component';
 
-/* type AccessTokenWithRoles = AccessToken & {
+type AccessTokenWithRoles = AccessToken & {
     // eslint-disable-next-line @typescript-eslint/naming-convention, camelcase
     resource_access?: { account?: { roles?: string[] } };
 };
 
-const roleValidator = (...roles: string[]): AuthGuardValidator =>
+const roleValidator = (): AuthGuardValidator =>
     (_userProfile?: UserProfile, accessToken?: AccessToken): boolean => {
+        const requiredRolesInput = document.getElementById('roles-input') as HTMLInputElement;
+        const requiredRoles = requiredRolesInput?.value?.split(',') || [];
         const tokenRoles = (accessToken as AccessTokenWithRoles)?.resource_access?.account?.roles || [];
-        return roles.every(role => tokenRoles.includes(role));
-    };*/
+        return requiredRoles.every(role => tokenRoles.includes(role));
+    };
 
 const routes: Routes = [
     {
@@ -24,21 +24,41 @@ const routes: Routes = [
         children: [
             {
                 path: 'public',
-                component: PublicComponent
-            },
-            {
-                path: 'forbidden',
-                component: ForbiddenComponent
+                loadChildren: (): Promise<unknown> => import('./page/page.module').then(m => m.PageModule),
+                runGuardsAndResolvers: 'always',
+                data: {
+                    title: 'PUBLIC CONTENT'
+                }
             },
             {
                 path: 'private',
-                loadChildren: (): Promise<unknown> => import('./private/private.module').then(m => m.PrivateModule),
+                loadChildren: (): Promise<unknown> => import('./page/page.module').then(m => m.PageModule),
+                runGuardsAndResolvers: 'always',
                 canLoad: [AuthGuard],
                 canActivate: [AuthGuard],
                 canActivateChild: [AuthGuard],
                 data: {
-                    // authGuardValidator: roleValidator('manage-account', 'view-profile'),
-                    authGuardRedirectUrl: '/forbidden'
+                    title: 'PRIVATE CONTENT'
+                }
+            },
+            {
+                path: 'forbidden',
+                loadChildren: (): Promise<unknown> => import('./page/page.module').then(m => m.PageModule),
+                runGuardsAndResolvers: 'always',
+                data: {
+                    title: 'ACCESS FORBIDDEN'
+                }
+            },
+            {
+                path: 'protected',
+                loadChildren: (): Promise<unknown> => import('./page/page.module').then(m => m.PageModule),
+                runGuardsAndResolvers: 'always',
+                canLoad: [AuthGuard],
+                canActivate: [AuthGuard],
+                canActivateChild: [AuthGuard],
+                data: {
+                    title: 'PROTECTED CONTENT',
+                    authGuardValidator: roleValidator()
                 }
             }
         ]

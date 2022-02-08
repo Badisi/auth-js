@@ -1,0 +1,37 @@
+:host {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 20px 28px;
+
+    .info {
+        margin: 16px;
+
+        .title {
+            min-width: 130px;
+        }
+
+        .value {
+            color: #5e35b1;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        code {
+            width: 100%;
+        }
+    }
+
+    @media only screen and (max-width: 600px) {
+        padding: 6px 0;
+
+        .card {
+            border-radius: 0;
+            margin: 0;
+            &.routes {
+                margin-bottom: 12px;
+            }
+        }
+    }
+}
