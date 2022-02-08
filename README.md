@@ -10,7 +10,7 @@ Package | Version | Downloads | License | Description
 [@badisi/auth-js](/projects/auth-js) | [![npm version](https://img.shields.io/npm/v/@badisi/auth-js.svg?color=blue&logo=npm)][npm-auth-js] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/auth-js.svg?color=7986CB&logo=npm&label=npm)][npm-dl-auth-js] | [![license](https://img.shields.io/npm/l/@badisi/auth-js.svg?color=ff69b4&label=)][license] | For Vanilla JS applications
 [@badisi/ngx-auth](/projects/ngx-auth) | [![npm version](https://img.shields.io/npm/v/@badisi/ngx-auth.svg?color=blue&logo=npm)][npm-ngx-auth] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/ngx-auth.svg?color=7986CB&logo=npm&label=npm)][npm-dl-ngx-auth] | [![license](https://img.shields.io/npm/l/@badisi/ngx-auth.svg?color=ff69b4&label=)][license] | For Angular, Ionic applications
 
-<hr>
+<hr/>
 
 
 ## Getting started
