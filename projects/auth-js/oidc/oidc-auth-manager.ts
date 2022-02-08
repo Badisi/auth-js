@@ -2,9 +2,7 @@
 
 import jwtDecode from 'jwt-decode';
 import { merge } from 'lodash-es';
-import {
-    InMemoryWebStorage, Log, User, UserManager, UserManagerSettings, UserProfile, WebStorageStateStore
-} from 'oidc-client-ts';
+import { InMemoryWebStorage, Log, User, UserManager, UserManagerSettings, UserProfile, WebStorageStateStore } from 'oidc-client-ts';
 
 import { AuthManager, Optional } from '../core';
 import { MobileStorage } from './mobile/mobile-storage';
