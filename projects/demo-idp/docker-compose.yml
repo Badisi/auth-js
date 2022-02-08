@@ -11,6 +11,7 @@ services:
       KEYCLOAK_LOGLEVEL: DEBUG
       WILDFLY_LOGLEVEL: DEBUG
     volumes:
+      # - ./:/tmp/
       - ./settings.json:/tmp/settings.json
     ports:
       - 8080:8080
