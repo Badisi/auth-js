@@ -9,8 +9,8 @@
                 (click)="login()">LOGIN</button>
         <button id="logout-button"
                 (click)="logout()">LOGOUT</button>
-        <button id="silent-refresh-button"
-                (click)="refresh()">SILENT REFRESH</button>
+        <button id="silent-renew-button"
+                (click)="renew()">SILENT RENEW</button>
     </div>
 
     <nav class="tabs row">
@@ -91,7 +91,7 @@
                                    [(ngModel)]="privateApiHeaders" />
                         </div>
                     </div>
-                    <button id="get-button"
+                    <button id="api-get-button"
                             (click)="callPrivateApi()">GET</button>
                 </div>
                 <div class="box">

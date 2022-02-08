@@ -12,7 +12,7 @@ export class AuthService {
     private _userProfile$: ReplaySubject<UserProfile | undefined> = new ReplaySubject<UserProfile | undefined>(1);
     private _userSession$: ReplaySubject<UserSession | undefined> = new ReplaySubject<UserSession | undefined>(1);
     private _isAuthenticated$: ReplaySubject<boolean | undefined> = new ReplaySubject<boolean | undefined>(1);
-    private _isRefreshing$: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
+    private _isRenewing$: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
 
     constructor(
         private manager: OIDCAuthManager,
@@ -64,8 +64,8 @@ export class AuthService {
         return this.manager.logout(redirectUrl, navigationType);
     }
 
-    public refresh(): Promise<void> {
-        return this.manager.refresh();
+    public renew(): Promise<void> {
+        return this.manager.renew();
     }
 
     public getSettings(): AuthSettings {
@@ -112,7 +112,7 @@ export class AuthService {
             onUserProfileChanged: (value): void => this.ngZone.run(() => this._userProfile$.next(value)),
             onUserSessionChanged: (value): void => this.ngZone.run(() => this._userSession$.next(value)),
             onAuthenticatedChanged: (value): void => this.ngZone.run(() => this._isAuthenticated$.next(value)),
-            onRefreshingChanged: (value): void => this.ngZone.run(() => this._isRefreshing$.next(value)),
+            onRenewingChanged: (value): void => this.ngZone.run(() => this._isRenewing$.next(value)),
             onRedirect: (value): void => {
                 // Avoid cancelling any current navigation
                 if (!this.router.getCurrentNavigation()) {
@@ -129,6 +129,6 @@ export class AuthService {
         this._userProfile$.next(await this.manager.getUserProfile());
         this._userSession$.next(await this.manager.getUserSession());
         this._isAuthenticated$.next(await this.manager.isAuthenticated());
-        this._isRefreshing$.next(this.manager.isRefreshing());
+        this._isRenewing$.next(this.manager.isRenewing());
     }
 }

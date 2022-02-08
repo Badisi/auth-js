@@ -15,7 +15,7 @@ export interface Listeners {
     onUserProfileChanged?: (value: UserProfile | undefined) => void;
     onUserSessionChanged?: (value: UserSession | undefined) => void;
     onAuthenticatedChanged?: (value: boolean) => void;
-    onRefreshingChanged?: (value: boolean) => void;
+    onRenewingChanged?: (value: boolean) => void;
     onRedirect?: (value: URL) => void;
 }
 
@@ -46,7 +46,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     private _userProfile?: UserProfile;
     private _userSession?: UserSession;
     private _isAuthenticated?: boolean;
-    private _isRefreshing = false;
+    private _isRenewing = false;
 
     private userManager?: UserManager;
     private settings = DEFAULT_SETTINGS as OIDCAuthSettings;
@@ -184,7 +184,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         }
     }
 
-    public async refresh(): Promise<void> {
+    public async renew(): Promise<void> {
         return this.signinSilent().catch(error => console.error(error));
     }
 
@@ -204,32 +204,32 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         return this.settings;
     }
 
-    public isRefreshing(): boolean {
-        return this._isRefreshing;
+    public isRenewing(): boolean {
+        return this._isRenewing;
     }
 
     public async isAuthenticated(): Promise<boolean | undefined> {
-        await this.waitForRefresh('isAuthenticated()');
+        await this.waitForRenew('isAuthenticated()');
         return this._isAuthenticated;
     }
 
     public async getUserProfile(): Promise<UserProfile | undefined> {
-        await this.waitForRefresh('getUserProfile()');
+        await this.waitForRenew('getUserProfile()');
         return this._userProfile;
     }
 
     public async getUserSession(): Promise<UserSession | undefined> {
-        await this.waitForRefresh('getUserSession()');
+        await this.waitForRenew('getUserSession()');
         return this._userSession;
     }
 
     public async getAccessToken(): Promise<string | undefined> {
-        await this.waitForRefresh('getAccessToken()');
+        await this.waitForRenew('getAccessToken()');
         return this._accessToken;
     }
 
     public async getAccessTokenDecoded(): Promise<AccessToken | string | undefined> {
-        await this.waitForRefresh('getAccessTokenDecoded()');
+        await this.waitForRenew('getAccessTokenDecoded()');
         return this.decodeJwt(this._accessToken);
     }
 
@@ -271,12 +271,12 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
      *  6) in parallel user navigates somewhere and triggers isAuthenticated
      *  7) isAuthenticated should wait signinSilent to finish before returning
      */
-    private async waitForRefresh(caller: string): Promise<void> {
+    private async waitForRenew(caller: string): Promise<void> {
         const startTime = new Date().getTime();
         // eslint-disable-next-line no-loops/no-loops
-        while (this._isRefreshing) {
+        while (this._isRenewing) {
             if (new Date().getTime() > (startTime + 5000)) {
-                console.warn('[OIDCAuthManager]', caller, 'timed out waiting for refresh to finish.');
+                console.warn('[OIDCAuthManager]', caller, 'timed out waiting for renew to finish.');
                 break;
             }
             await new Promise(resolve => setTimeout(resolve, 100));
@@ -324,8 +324,8 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     }*/
 
     private async signinSilent(): Promise<void> {
-        this._isRefreshing = true;
-        this.listeners.onRefreshingChanged?.(true);
+        this._isRenewing = true;
+        this.listeners.onRenewingChanged?.(true);
 
         try {
             await this.userManager?.signinSilent();
@@ -333,8 +333,8 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             await this.removeUser();
             throw error;
         } finally {
-            this._isRefreshing = false;
-            this.listeners.onRefreshingChanged?.(false);
+            this._isRenewing = false;
+            this.listeners.onRenewingChanged?.(false);
         }
     }
 

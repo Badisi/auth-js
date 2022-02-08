@@ -3,10 +3,10 @@ class DemoPage {
 
     get loginButton() { return $('button#login-button'); }
     get logoutButton() { return $('button#logout-button'); }
-    get silentRefreshButton() { return $('button#silent-refresh-button'); }
-    get getApiUrlInput() { return $('input#get-api-url-input'); }
-    get getApiHeadersInput() { return $('input#get-api-headers-input'); }
-    get getApiButton() { return $('button#get-api-button'); }
+    get silentRenewButton() { return $('button#silent-renew-button'); }
+    get apiUrlInput() { return $('input#api-url-input'); }
+    get apiHeadersInput() { return $('input#api-headers-input'); }
+    get apiGetButton() { return $('button#api-get-button'); }
 
     async open(route = '') {
         await browser.url(`${this.url}${route}`);
@@ -21,14 +21,14 @@ class DemoPage {
         await this.logoutButton.click();
     }
 
-    async silentRefresh() {
-        await this.silentRefreshButton.click();
+    async silentRenew() {
+        await this.silentRenewButton.click();
     }
 
-    async getApi(url: string, headers = '') {
-        await this.getApiUrlInput.setValue(url);
-        await this.getApiHeadersInput.setValue(headers);
-        await this.getApiButton.click();
+    async api(url: string, headers = '') {
+        await this.apiUrlInput.setValue(url);
+        await this.apiHeadersInput.setValue(headers);
+        await this.apiGetButton.click();
         await browser.pause(100);
     }
 }
