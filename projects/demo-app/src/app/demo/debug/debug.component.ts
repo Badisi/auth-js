@@ -8,6 +8,8 @@ import { AuthService } from '@badisi/ngx-auth';
 })
 export class DebugComponent {
     public isAuthenticated$ = this.authService.isAuthenticated$;
+    public idToken$ = this.authService.idToken$;
+    public idTokenDecoded$ = this.authService.idTokenDecoded$;
     public accessToken$ = this.authService.accessToken$;
     public accessTokenDecoded$ = this.authService.accessTokenDecoded$;
     public userProfile$ = this.authService.userProfile$;

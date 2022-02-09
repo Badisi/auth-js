@@ -7,10 +7,12 @@ import { InMemoryWebStorage, Log, User, UserManager, UserManagerSettings, UserPr
 import { AuthManager, Optional } from '../core';
 import { MobileStorage } from './mobile/mobile-storage';
 import { AccessToken } from './models/access-token.model';
+import { IdToken } from './models/id-token.model';
 import { Navigation, OIDCAuthSettings } from './models/oidc-auth-settings.model';
 import { UserSession } from './models/user-session.model';
 
 export interface Listeners {
+    onIdTokenChanged?: (value: string | undefined) => void;
     onAccessTokenChanged?: (value: string | undefined) => void;
     onUserProfileChanged?: (value: UserProfile | undefined) => void;
     onUserSessionChanged?: (value: UserSession | undefined) => void;
@@ -42,6 +44,7 @@ const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> 
 export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     public listeners: Listeners = {};
 
+    private _idToken?: string;
     private _accessToken?: string;
     private _userProfile?: UserProfile;
     private _userSession?: UserSession;
@@ -56,11 +59,13 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         if (this._user !== value) {
             this._user = value;
 
+            this._idToken = (value) ? value.id_token : undefined;
             this._accessToken = (value) ? value.access_token : undefined;
             this._userProfile = (value?.profile) ? value.profile : undefined;
             this._userSession = (value) ? UserSession.deserialize(value) : undefined;
             this._isAuthenticated = !!(value && !value.expired);
 
+            this.listeners.onIdTokenChanged?.(this._idToken);
             this.listeners.onAccessTokenChanged?.(this._accessToken);
             this.listeners.onUserProfileChanged?.(this._userProfile);
             this.listeners.onUserSessionChanged?.(this._userSession);
@@ -189,10 +194,10 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         return this.signinSilent().catch(error => console.error(error));
     }
 
-    public decodeJwt(value?: string): AccessToken | string | undefined {
+    public decodeJwt<T>(value?: string): T | string | undefined {
         try {
             if (value) {
-                return jwtDecode<AccessToken>(value);
+                return jwtDecode<T>(value);
             }
             return value;
         } catch {
@@ -224,6 +229,16 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         return this._userSession;
     }
 
+    public async getIdToken(): Promise<string | undefined> {
+        await this.waitForRenew('getIdToken()');
+        return this._idToken;
+    }
+
+    public async getIdTokenDecoded(): Promise<IdToken | string | undefined> {
+        await this.waitForRenew('getIdTokenDecoded()');
+        return this.decodeJwt<IdToken>(this._idToken);
+    }
+
     public async getAccessToken(): Promise<string | undefined> {
         await this.waitForRenew('getAccessToken()');
         return this._accessToken;
@@ -231,7 +246,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     public async getAccessTokenDecoded(): Promise<AccessToken | string | undefined> {
         await this.waitForRenew('getAccessTokenDecoded()');
-        return this.decodeJwt(this._accessToken);
+        return this.decodeJwt<AccessToken>(this._accessToken);
     }
 
     // --- HELPER(s) ---

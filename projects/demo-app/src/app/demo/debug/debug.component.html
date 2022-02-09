@@ -25,6 +25,17 @@
         </code>
     </div>
 
+    <div *ngIf="(idToken$ | async) as idToken"
+         class="info column">
+        <div class="title">Id token</div>
+        <code>
+            <pre class="value json-value">{{ idToken }}</pre>
+            <ng-container *ngIf="(idTokenDecoded$ | async) as idTokenDecoded">
+                <pre class="value" [innerHtml]="idTokenDecoded | prettyPrint:['exp', 'iat', 'auth_time']"></pre>
+            </ng-container>
+        </code>
+    </div>
+
     <div *ngIf="(userProfile$ | async) as userProfile"
          class="info column">
         <div class="title">User profile</div>

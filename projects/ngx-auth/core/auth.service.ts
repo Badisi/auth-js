@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { AccessToken, Navigation, OIDCAuthManager, UserProfile, UserSession } from '@badisi/auth-js/oidc';
+import { AccessToken, IdToken, Navigation, OIDCAuthManager, UserProfile, UserSession } from '@badisi/auth-js/oidc';
 import { Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
@@ -8,6 +8,7 @@ import { AuthSettings } from './auth-settings.model';
 
 @Injectable()
 export class AuthService {
+    private _idToken$: ReplaySubject<string | undefined> = new ReplaySubject<string | undefined>(1);
     private _accessToken$: ReplaySubject<string | undefined> = new ReplaySubject<string | undefined>(1);
     private _userProfile$: ReplaySubject<UserProfile | undefined> = new ReplaySubject<UserProfile | undefined>(1);
     private _userSession$: ReplaySubject<UserSession | undefined> = new ReplaySubject<UserSession | undefined>(1);
@@ -41,6 +42,19 @@ export class AuthService {
         );
     }
 
+    public get idToken$(): Observable<string | undefined> {
+        return this._idToken$.asObservable().pipe(
+            distinctUntilChanged()
+        );
+    }
+
+    public get idTokenDecoded$(): Observable<IdToken | string | undefined> {
+        return this._idToken$.asObservable().pipe(
+            distinctUntilChanged(),
+            map(token => this.manager.decodeJwt<IdToken>(token))
+        );
+    }
+
     public get accessToken$(): Observable<string | undefined> {
         return this._accessToken$.asObservable().pipe(
             distinctUntilChanged()
@@ -50,7 +64,7 @@ export class AuthService {
     public get accessTokenDecoded$(): Observable<AccessToken | string | undefined> {
         return this._accessToken$.asObservable().pipe(
             distinctUntilChanged(),
-            map(accessToken => this.manager.decodeJwt(accessToken))
+            map(token => this.manager.decodeJwt<AccessToken>(token))
         );
     }
 
@@ -84,6 +98,14 @@ export class AuthService {
         return this.manager.getUserSession();
     }
 
+    public getIdToken(): Promise<string | undefined> {
+        return this.manager.getIdToken();
+    }
+
+    public getIdTokenDecoded(): Promise<IdToken | string | undefined> {
+        return this.manager.getIdTokenDecoded();
+    }
+
     public getAccessToken(): Promise<string | undefined> {
         return this.manager.getAccessToken();
     }
@@ -108,6 +130,7 @@ export class AuthService {
 
     private listenForChanges(): void {
         this.manager.listeners = {
+            onIdTokenChanged: (value): void => this.ngZone.run(() => this._idToken$.next(value)),
             onAccessTokenChanged: (value): void => this.ngZone.run(() => this._accessToken$.next(value)),
             onUserProfileChanged: (value): void => this.ngZone.run(() => this._userProfile$.next(value)),
             onUserSessionChanged: (value): void => this.ngZone.run(() => this._userSession$.next(value)),
@@ -125,6 +148,7 @@ export class AuthService {
     }
 
     private async initObservables(): Promise<void> {
+        this._idToken$.next(await this.manager.getIdToken());
         this._accessToken$.next(await this.manager.getAccessToken());
         this._userProfile$.next(await this.manager.getUserProfile());
         this._userSession$.next(await this.manager.getUserSession());
