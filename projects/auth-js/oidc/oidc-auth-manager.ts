@@ -151,7 +151,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         }
     }
 
-    public async login(redirectUrl = location.href, navigationType?: Navigation): Promise<void> {
+    public async login(redirectUrl = location.href, navigationType?: Navigation): Promise<boolean> {
         switch (navigationType || this.settings.navigationType) {
             case Navigation.POPUP:
                 await this.userManager?.signinPopup().catch((error: Error) => {
@@ -169,6 +169,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                 await this.userManager?.signinRedirect();
                 break;
         }
+        return (this._isAuthenticated === true);
     }
 
     public async logout(redirectUrl = location.href, navigationType?: Navigation): Promise<void> {

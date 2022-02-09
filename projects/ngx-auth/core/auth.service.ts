@@ -56,7 +56,7 @@ export class AuthService {
 
     // --- OIDCAuthManager ---
 
-    public login(redirectUrl?: string, navigationType?: Navigation): Promise<void> {
+    public login(redirectUrl?: string, navigationType?: Navigation): Promise<boolean> {
         return this.manager.login(redirectUrl, navigationType);
     }
 

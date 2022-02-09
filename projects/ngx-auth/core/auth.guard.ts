@@ -25,7 +25,8 @@ export class AuthGuard implements CanLoad, CanActivate, CanActivateChild {
     ) { }
 
     public canLoad(route: Route): Observable<UrlTree | boolean> {
-        return this.isAllowed(route.data);
+        const inFlightUrl = this.router.getCurrentNavigation()?.extractedUrl?.toString();
+        return this.isAllowed(route.data, inFlightUrl);
     }
 
     public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<UrlTree | boolean> {
@@ -84,8 +85,7 @@ export class AuthGuard implements CanLoad, CanActivate, CanActivateChild {
                     if (!isAuthenticated) {
                         return from(this.authService.login(redirectUrl))
                             .pipe(
-                                catchError(error => of(error)),
-                                switchMap(error => of(!error))
+                                catchError(() => of(false))
                             );
                     }
                     return of(isAuthenticated);
@@ -94,18 +94,16 @@ export class AuthGuard implements CanLoad, CanActivate, CanActivateChild {
     }
 
     private isAllowed(data?: AuthGuardData, redirectUrl = location.href): Observable<UrlTree | boolean> {
-        return forkJoin({
-            isAuthenticated: this.isAuthenticated$(redirectUrl),
-            isAuthorized: this.isAuthorized$(data)
-        }).pipe(
-            map(({ isAuthenticated, isAuthorized }) => {
-                const isAllowed = isAuthenticated && isAuthorized;
-                if (!isAllowed) {
-                    const notAllowedUrl = data?.authGuardRedirectUrl || this.authService.getSettings()?.authGuardRedirectUrl;
-                    return this.router.parseUrl(notAllowedUrl ? notAllowedUrl : this.router.url);
-                }
-                return isAllowed;
-            })
-        );
+        return this.isAuthenticated$(redirectUrl)
+            .pipe(
+                switchMap(isAuthenticated => (isAuthenticated) ? this.isAuthorized$(data) : of(false)),
+                map(isAuthorized => {
+                    if (!isAuthorized) {
+                        const notAllowedUrl = data?.authGuardRedirectUrl || this.authService.getSettings()?.authGuardRedirectUrl;
+                        return this.router.parseUrl(notAllowedUrl ? notAllowedUrl : this.router.url);
+                    }
+                    return true;
+                })
+            );
     }
 }
