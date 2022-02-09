@@ -21,6 +21,7 @@
                 ],
                 "assets": [
                     "projects/demo-app/src/favicon.ico",
+                    "projects/demo-app/src/404.html",
                     "projects/demo-app/src/assets",
                     {
                         "glob": "**/*",
