@@ -15,14 +15,14 @@
 
     <nav class="tabs row">
         <a id="playground-button"
-           [class.selected]="settings.currentView === View.PLAYGROUND"
-           (click)="showView(View.PLAYGROUND)">Playground</a>
+           [class.selected]="settings.currentView === DemoAppView.PLAYGROUND"
+           (click)="showView(DemoAppView.PLAYGROUND)">Playground</a>
         <a id="info-button"
-           [class.selected]="settings.currentView === View.DEBUG"
-           (click)="showView(View.DEBUG)">Debug</a>
+           [class.selected]="settings.currentView === DemoAppView.DEBUG"
+           (click)="showView(DemoAppView.DEBUG)">Debug</a>
         <a id="settings-button"
-           [class.selected]="settings.currentView === View.SETTINGS"
-           (click)="showView(View.SETTINGS)">Settings</a>
+           [class.selected]="settings.currentView === DemoAppView.SETTINGS"
+           (click)="showView(DemoAppView.SETTINGS)">Settings</a>
     </nav>
 
     <a class="github-icon"
@@ -41,7 +41,7 @@
 </header>
 
 <ng-container [ngSwitch]="settings.currentView">
-    <ng-container *ngSwitchCase="View.PLAYGROUND">
+    <ng-container *ngSwitchCase="DemoAppView.PLAYGROUND">
         <div class="playground column flex">
             <div class="card routes">
                 <div class="card-title">Routes access</div>
@@ -106,11 +106,11 @@
         </div>
     </ng-container>
 
-    <ng-container *ngSwitchCase="View.DEBUG">
+    <ng-container *ngSwitchCase="DemoAppView.DEBUG">
         <app-debug></app-debug>
     </ng-container>
 
-    <ng-container *ngSwitchCase="View.SETTINGS">
+    <ng-container *ngSwitchCase="DemoAppView.SETTINGS">
         <app-settings #appSettings></app-settings>
     </ng-container>
 </ng-container>

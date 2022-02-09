@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AccessToken, AuthGuard, AuthGuardValidator, UserProfile } from '@badisi/ngx-auth';
 
+import { DEMO_APP_SETTING_STORAGE_KEY, DemoAppSettings } from './demo';
 import { DemoComponent } from './demo.component';
 
 type AccessTokenWithRoles = AccessToken & {
@@ -11,8 +12,8 @@ type AccessTokenWithRoles = AccessToken & {
 
 const roleValidator = (): AuthGuardValidator =>
     (_userProfile?: UserProfile, accessToken?: AccessToken): boolean => {
-        const requiredRolesInput = document.getElementById('roles-input') as HTMLInputElement;
-        const requiredRoles = requiredRolesInput?.value?.split(',') || [];
+        const appSettings = sessionStorage.getItem(DEMO_APP_SETTING_STORAGE_KEY);
+        const requiredRoles = (appSettings) ? (JSON.parse(appSettings) as DemoAppSettings).roles?.split(',') || [] : [];
         const tokenRoles = (accessToken as AccessTokenWithRoles)?.resource_access?.account?.roles || [];
         return requiredRoles.every(role => tokenRoles.includes(role));
     };

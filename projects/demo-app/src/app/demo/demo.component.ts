@@ -3,20 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivationStart, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '@badisi/ngx-auth';
 
-const DEMO_APP_SETTING_STORAGE_KEY = 'demo-app_settings';
-
-enum View {
-    PLAYGROUND,
-    DEBUG,
-    SETTINGS
-}
-
-interface DemoAppSettings {
-    currentView: View;
-    roles: string;
-    privateApiUrl: string;
-    privateApiHeaders: string;
-}
+import { DEMO_APP_SETTING_STORAGE_KEY, DemoAppSettings, DemoAppView } from './demo';
 
 @Component({
     selector: 'app-demo',
@@ -28,13 +15,13 @@ export class DemoComponent implements OnInit {
     public outlet!: RouterOutlet;
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    public View = View;
+    public DemoAppView = DemoAppView;
 
     public isAuthenticated$ = this.authService.isAuthenticated$;
     public data: unknown | Error;
 
     public settings: DemoAppSettings = {
-        currentView: View.PLAYGROUND,
+        currentView: DemoAppView.PLAYGROUND,
         roles: 'view-profile',
         privateApiUrl: '/api/my-api',
         privateApiHeaders: ''
@@ -58,7 +45,7 @@ export class DemoComponent implements OnInit {
 
     // ---- HANDLER(s) ----
 
-    public showView(view: View): void {
+    public showView(view: DemoAppView): void {
         if (this.settings.currentView !== view) {
             this.settings.currentView = view;
             this.saveSettings();
