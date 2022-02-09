@@ -75,7 +75,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         Log.setLogger(console);
 
         const isNative = this.isNative();
-        const baseUrl = (isNative) ? `${userSettings.schemeUri}://` : `${location.origin}/`;
+        const baseUrl = (isNative) ? `${userSettings.schemeUri}://` : this.getBaseUrl();
 
         // Initialize settings
         this.settings = merge({}, DEFAULT_SETTINGS, {
@@ -287,11 +287,17 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         return ((url2 !== undefined) && url1.includes(url2));
     }
 
-    private getCompleteUrl(url: string): URL {
+    private getBaseUrl(): string {
+        const baseUrl = document.baseURI || document.querySelector('base')?.href || location.origin;
+        return (baseUrl.endsWith('/')) ? baseUrl : `${baseUrl}/`;
+    }
+
+    private getURL(url: string): URL {
         try {
             return new URL(url);
         } catch {
-            return new URL(`${location.origin}${url.startsWith('/') ? '' : '/'}${url}`);
+            const pathUrl = (!url.startsWith('/')) ? url : url.substring(1, url.length);
+            return new URL(`${this.getBaseUrl()}${pathUrl}`);
         }
     }
 
@@ -301,7 +307,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             await this.removeUser();
         }
 
-        const redirectUrl = this.getCompleteUrl(url || '/');
+        const redirectUrl = this.getURL(url || '/');
         // History cannot be rewritten when origin is different
         if (location.origin === redirectUrl.origin) {
             history.replaceState(history.state, '', redirectUrl.href);
