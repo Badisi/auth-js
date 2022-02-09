@@ -4,6 +4,21 @@
     flex-direction: column;
     padding: 20px 28px;
 
+    ::ng-deep {
+        .json-key {
+            color: rgb(124, 77, 255);
+        }
+        .json-value {
+            color: rgb(67, 122, 237);
+        }
+        .json-string {
+            color: rgb(83, 160, 83);
+        }
+        .json-date {
+            color: rgb(200, 56, 198);
+        }
+    }
+
     .info {
         margin: 16px;
 
@@ -12,7 +27,6 @@
         }
 
         .value {
-            color: #5e35b1;
             overflow-x: auto;
             white-space: pre-wrap;
             word-wrap: break-word;

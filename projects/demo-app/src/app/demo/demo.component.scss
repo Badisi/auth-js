@@ -54,6 +54,7 @@
             margin-top: 16px;
             padding: 10px 0;
             padding-left: 68px;
+            background-color: #7043bf;
 
             a {
                 cursor: pointer;
@@ -179,7 +180,6 @@
             .tabs {
                 padding-left: 0;
                 justify-content: center;
-                background-color: #7043bf;
             }
         }
 
@@ -195,45 +195,4 @@
             }
         }
     }
-
-    /* @media only screen and (min-width: 600px) {
-        .info {
-            flex-direction: row !important;
-            align-items: center;
-
-            .title {
-                align-self: flex-start;
-            }
-            .value {
-                margin: 0;
-            }
-            code {
-                width: 88% !important;
-            }
-        }
-
-        .cards {
-            flex-direction: row !important;
-            padding: 10px;
-
-            .card {
-                margin: 12px;
-
-                &.routes {
-                    min-width: 400px;
-                    width: 400px;
-                }
-
-                &.apis {
-                    min-width: 600px;
-                    width: 600px;
-                    .card-actions {
-                        input {
-                            width: 80%;
-                        }
-                    }
-                }
-            }
-        }
-    }*/
 }
