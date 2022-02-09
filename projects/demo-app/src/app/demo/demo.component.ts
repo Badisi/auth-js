@@ -3,10 +3,19 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivationStart, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '@badisi/ngx-auth';
 
+const DEMO_APP_SETTING_STORAGE_KEY = 'demo-app_settings';
+
 enum View {
     PLAYGROUND,
     DEBUG,
     SETTINGS
+}
+
+interface DemoAppSettings {
+    currentView: View;
+    roles: string;
+    privateApiUrl: string;
+    privateApiHeaders: string;
 }
 
 @Component({
@@ -22,19 +31,22 @@ export class DemoComponent implements OnInit {
     public View = View;
 
     public isAuthenticated$ = this.authService.isAuthenticated$;
-    public currentView: View = View.PLAYGROUND;
-
-    public roles = 'view-profile';
-    public privateApiUrl = '/api/my-api';
-    public privateApiHeaders?: string;
     public data: unknown | Error;
+
+    public settings: DemoAppSettings = {
+        currentView: View.PLAYGROUND,
+        roles: 'view-profile',
+        privateApiUrl: '/api/my-api',
+        privateApiHeaders: ''
+    };
 
     constructor(
         private authService: AuthService,
         private httpClient: HttpClient,
         private router: Router
-
-    ) { }
+    ) {
+        this.loadSettings();
+    }
 
     public ngOnInit(): void {
         this.router.events.subscribe(e => {
@@ -47,20 +59,21 @@ export class DemoComponent implements OnInit {
     // ---- HANDLER(s) ----
 
     public showView(view: View): void {
-        if (this.currentView !== view) {
-            this.currentView = view;
+        if (this.settings.currentView !== view) {
+            this.settings.currentView = view;
+            this.saveSettings();
         }
     }
 
     public callPrivateApi(): void {
         let headers = new HttpHeaders();
-        this.privateApiHeaders?.split(';').forEach(header => {
+        this.settings.privateApiHeaders?.split(';').forEach(header => {
             const item = header.split(':');
             headers = headers.append(item[0]?.trim(), item[1]?.trim() || '');
         });
 
         this.httpClient
-            .get<unknown>(this.privateApiUrl, this.privateApiHeaders ? { headers } : {})
+            .get<unknown>(this.settings.privateApiUrl, this.settings.privateApiHeaders ? { headers } : {})
             .subscribe({
                 next: data => this.data = data,
                 error: (error: Error) => this.data = error
@@ -75,7 +88,24 @@ export class DemoComponent implements OnInit {
         void this.authService.logout('/');
     }
 
+    public test(): void {
+        console.log('coucou');
+    }
+
     public renew(): void {
         void this.authService.renew();
+    }
+
+    // --- HELPER(s) ---
+
+    public loadSettings(): void {
+        const appSettings = sessionStorage.getItem(DEMO_APP_SETTING_STORAGE_KEY);
+        if (appSettings) {
+            this.settings = JSON.parse(appSettings) as DemoAppSettings;
+        }
+    }
+
+    public saveSettings(): void {
+        sessionStorage.setItem(DEMO_APP_SETTING_STORAGE_KEY, JSON.stringify(this.settings));
     }
 }

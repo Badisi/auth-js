@@ -15,13 +15,13 @@
 
     <nav class="tabs row">
         <a id="playground-button"
-           [class.selected]="this.currentView === View.PLAYGROUND"
+           [class.selected]="settings.currentView === View.PLAYGROUND"
            (click)="showView(View.PLAYGROUND)">Playground</a>
         <a id="info-button"
-           [class.selected]="this.currentView === View.DEBUG"
+           [class.selected]="settings.currentView === View.DEBUG"
            (click)="showView(View.DEBUG)">Debug</a>
         <a id="settings-button"
-           [class.selected]="this.currentView === View.SETTINGS"
+           [class.selected]="settings.currentView === View.SETTINGS"
            (click)="showView(View.SETTINGS)">Settings</a>
     </nav>
 
@@ -40,7 +40,7 @@
     </a>
 </header>
 
-<ng-container [ngSwitch]="currentView">
+<ng-container [ngSwitch]="settings.currentView">
     <ng-container *ngSwitchCase="View.PLAYGROUND">
         <div class="playground column flex">
             <div class="card routes">
@@ -66,7 +66,8 @@
                                 routerLink="/protected">PROTECTED</button>
                         <div class="info">Protected content (login required + role(s):
                             <input id="roles-input"
-                                   [(ngModel)]="roles" />)
+                                   (input)="saveSettings()"
+                                   [(ngModel)]="settings.roles" />)
                         </div>
                     </div>
                 </div>
@@ -82,13 +83,15 @@
                             <label for="api-url-input">Url</label>
                             <input id="api-url-input"
                                    class="flex"
-                                   [(ngModel)]="privateApiUrl" />
+                                   (input)="saveSettings()"
+                                   [(ngModel)]="settings.privateApiUrl" />
                         </div>
                         <div class="input row">
                             <label for="api-headers-input">Custom headers</label>
                             <input id="api-headers-input"
                                    class="flex"
-                                   [(ngModel)]="privateApiHeaders" />
+                                   (input)="saveSettings()"
+                                   [(ngModel)]="settings.privateApiHeaders" />
                         </div>
                     </div>
                     <button id="api-get-button"
