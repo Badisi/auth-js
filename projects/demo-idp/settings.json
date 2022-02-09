@@ -606,10 +606,12 @@
             "clientAuthenticatorType": "client-secret",
             "secret": "**********",
             "redirectUris": [
-                "http://localhost:4200/oidc/callback/*"
+                "http://localhost:4200/oidc/callback/*",
+                "https://badisi.github.io/auth-js/demo-app/oidc/callback/*"
             ],
             "webOrigins": [
-                "http://localhost:4200"
+                "http://localhost:4200",
+                "https://badisi.github.io"
             ],
             "notBefore": 0,
             "bearerOnly": false,
