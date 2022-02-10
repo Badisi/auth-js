@@ -17,6 +17,15 @@
 </head>
 
 <body>
+    <script>
+        const redirectUrl = sessionStorage.getItem('gh-pages-url-from-404');
+        if (redirectUrl) {
+            sessionStorage.removeItem('gh-pages-url-from-404');
+            if (redirectUrl && (redirectUrl !== location.href)) {
+                history.replaceState(null, null, redirectUrl);
+            }
+        }
+    </script>
     <app-root></app-root>
 </body>
 
