@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivationStart, Router, RouterOutlet } from '@angular/router';
+import { Component, ViewChild } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { AuthService } from '@badisi/ngx-auth';
 
 import { DEMO_APP_SETTING_STORAGE_KEY, DemoAppSettings, DemoAppView } from './demo';
@@ -10,7 +10,7 @@ import { DEMO_APP_SETTING_STORAGE_KEY, DemoAppSettings, DemoAppView } from './de
     templateUrl: './demo.component.html',
     styleUrls: ['./demo.component.scss']
 })
-export class DemoComponent implements OnInit {
+export class DemoComponent {
     @ViewChild(RouterOutlet)
     public outlet!: RouterOutlet;
 
@@ -29,18 +29,9 @@ export class DemoComponent implements OnInit {
 
     constructor(
         private authService: AuthService,
-        private httpClient: HttpClient,
-        private router: Router
+        private httpClient: HttpClient
     ) {
         this.loadSettings();
-    }
-
-    public ngOnInit(): void {
-        this.router.events.subscribe(e => {
-            if (e instanceof ActivationStart) {
-                this.outlet.deactivate();
-            }
-        });
     }
 
     // ---- HANDLER(s) ----
@@ -73,10 +64,6 @@ export class DemoComponent implements OnInit {
 
     public logout(): void {
         void this.authService.logout('/');
-    }
-
-    public test(): void {
-        console.log('coucou');
     }
 
     public renew(): void {
