@@ -4,11 +4,10 @@ on:
   push:
     branches:
       - main
-    paths:
-      - '.github/workflows/ci_demo-app.yml'
-      - 'projects/demo-app/**'
     tags-ignore:
-      - '**'
+    - '**'
+    paths-ignore:
+    - 'projects/docs/**'
 
 jobs:
   ci_demo-app:
