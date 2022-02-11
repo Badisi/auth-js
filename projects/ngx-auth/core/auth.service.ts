@@ -48,7 +48,7 @@ export class AuthService {
         );
     }
 
-    public get idTokenDecoded$(): Observable<IdToken | string | undefined> {
+    public get idTokenDecoded$(): Observable<IdToken | undefined> {
         return this._idToken$.asObservable().pipe(
             distinctUntilChanged(),
             map(token => this.manager.decodeJwt<IdToken>(token))
@@ -61,7 +61,7 @@ export class AuthService {
         );
     }
 
-    public get accessTokenDecoded$(): Observable<AccessToken | string | undefined> {
+    public get accessTokenDecoded$(): Observable<AccessToken | undefined> {
         return this._accessToken$.asObservable().pipe(
             distinctUntilChanged(),
             map(token => this.manager.decodeJwt<AccessToken>(token))
