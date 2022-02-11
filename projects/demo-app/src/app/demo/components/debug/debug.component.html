@@ -20,7 +20,12 @@
         <code>
             <pre class="value json-value">{{ accessToken }}</pre>
             <ng-container *ngIf="(accessTokenDecoded$ | async) as accessTokenDecoded">
-                <pre class="value" [innerHtml]="accessTokenDecoded | prettyPrint:['exp', 'iat', 'auth_time']"></pre>
+                <ng-container *ngIf="accessTokenIsJwt">
+                    <pre class="value" [innerHtml]="accessTokenDecoded | prettyPrint:['exp', 'iat', 'auth_time']"></pre>
+                </ng-container>
+                <ng-container *ngIf="!accessTokenIsJwt">
+                    <pre class="value">(no decoded info as it is not a JWT token)</pre>
+                </ng-container>
             </ng-container>
         </code>
     </div>

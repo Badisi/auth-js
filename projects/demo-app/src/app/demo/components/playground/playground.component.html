@@ -1,0 +1,70 @@
+<div class="column flex">
+    <div class="card routes">
+        <div class="card-title">Routes access</div>
+        <div class="card-actions column">
+            <div class="route">
+                <button id="home-button"
+                        routerLink="/">HOME</button>
+                <div class="info">Home page</div>
+            </div>
+            <div class="route">
+                <button id="public-button"
+                        routerLink="/public">PUBLIC</button>
+                <div class="info">Public content (no login required)</div>
+            </div>
+            <div class="route">
+                <button id="private-button"
+                        routerLink="/private">PRIVATE</button>
+                <div class="info">Private content (login required)</div>
+            </div>
+            <div class="route">
+                <button id="protected-button"
+                        routerLink="/protected">PROTECTED</button>
+                <div class="info">Protected content (login required + role(s):
+                    <input id="roles-input"
+                           (input)="saveSettings()"
+                           (keydown.enter)="router.navigateByUrl('/protected')"
+                           [(ngModel)]="settings.roles" />)
+                </div>
+            </div>
+        </div>
+        <div class="box">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+    <div class="card apis">
+        <div class="card-title row">
+            APIs access
+            <div class="card-status"
+                 [class.success]="dataOnError === false"
+                 [class.error]="dataOnError === true"></div>
+        </div>
+        <div class="card-actions row">
+            <div class="column flex">
+                <div class="input row">
+                    <label for="api-url-input">Url</label>
+                    <input id="api-url-input"
+                           class="flex"
+                           (input)="saveSettings()"
+                           (keydown.enter)="callPrivateApi()"
+                           [(ngModel)]="settings.privateApiUrl" />
+                </div>
+                <div class="input row">
+                    <label for="api-headers-input">Custom headers</label>
+                    <input id="api-headers-input"
+                           class="flex"
+                           (input)="saveSettings()"
+                           (keydown.enter)="callPrivateApi()"
+                           [(ngModel)]="settings.privateApiHeaders" />
+                </div>
+            </div>
+            <button id="api-get-button"
+                    (click)="callPrivateApi()">GET</button>
+        </div>
+        <div class="box">
+            <code>
+                <pre [innerHTML]="data | prettyPrint"></pre>
+            </code>
+        </div>
+    </div>
+</div>

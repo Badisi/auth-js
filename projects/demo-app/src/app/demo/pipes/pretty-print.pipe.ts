@@ -31,9 +31,9 @@ export class PrettyPrintPipe implements PipeTransform {
             }
             return r + (pEnd || '');
         };
-        return JSON.stringify(value, null, 2)
+        return (value) ? JSON.stringify(value, null, 2)
             .replace(/&/g, '&amp;').replace(/\\"/g, '&quot;')
             .replace(/</g, '&lt;').replace(/>/g, '&gt;')
-            .replace(jsonLine, replacer);
+            .replace(jsonLine, replacer) : '';
     }
 }

@@ -37,6 +37,15 @@
                formControlName="scope" />
     </div>
 
+    <div class="input column"
+         formGroupName="internal">
+        <label for="extra-query-params-input">Extra query params</label>
+        <input id="extra-query-params-input"
+               class="flex"
+               jsonValueAccessor
+               formControlName="extraQueryParams" />
+    </div>
+
     <div class="input column">
         <label for="navigation-type-select">Navigation type</label>
         <select id="navigation-type-select"

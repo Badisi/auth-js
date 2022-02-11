@@ -3,14 +3,14 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { initAuth } from '@badisi/ngx-auth';
 
 import { AppModule } from './app/app.module';
-import { SettingsComponent } from './app/demo/settings/settings.component';
+import { DemoService } from './app/demo/services/demo.service';
 import { environment } from './environments/environment';
 
 if (environment.production) {
     enableProdMode();
 }
 
-initAuth(SettingsComponent.loadSettings())
+initAuth(DemoService.getLibrarySettings())
     .then(authProvider => {
         platformBrowserDynamic([
             authProvider

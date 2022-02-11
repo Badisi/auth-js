@@ -2,21 +2,29 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AccessToken, AuthGuard, AuthGuardValidator, UserProfile } from '@badisi/ngx-auth';
 
-import { DEMO_APP_SETTING_STORAGE_KEY, DemoAppSettings } from './demo';
 import { DemoComponent } from './demo.component';
+import { DemoService } from './services/demo.service';
 
-type AccessTokenWithRoles = AccessToken & {
-    // eslint-disable-next-line @typescript-eslint/naming-convention, camelcase
-    resource_access?: { account?: { roles?: string[] } };
-};
-
-const roleValidator = (): AuthGuardValidator =>
+/* eslint-disable
+    @typescript-eslint/no-explicit-any,
+    @typescript-eslint/no-unsafe-assignment,
+    @typescript-eslint/no-unsafe-member-access
+*/
+const rolesValidator = (): AuthGuardValidator =>
     (_userProfile?: UserProfile, accessToken?: AccessToken): boolean => {
-        const appSettings = sessionStorage.getItem(DEMO_APP_SETTING_STORAGE_KEY);
-        const requiredRoles = (appSettings) ? (JSON.parse(appSettings) as DemoAppSettings).roles?.split(',') || [] : [];
-        const tokenRoles = (accessToken as AccessTokenWithRoles)?.resource_access?.account?.roles || [];
-        return requiredRoles.every(role => tokenRoles.includes(role));
+        const settings = DemoService.getPlaygroundSettings();
+        const requiredRoles = (settings) ? settings.roles?.split(',') || [] : [];
+        let tokenRoles: string[] = (accessToken as any).resource_access?.account?.roles; // keycloak
+        if (!tokenRoles) {
+            tokenRoles = (accessToken as any)?.['http://ngx-auth.com/roles']; // auth0
+        }
+        return requiredRoles.every(role => (tokenRoles || []).includes(role));
     };
+/* eslint-enable
+    @typescript-eslint/no-explicit-any,
+    @typescript-eslint/no-unsafe-assignment,
+    @typescript-eslint/no-unsafe-member-access
+*/
 
 const routes: Routes = [
     {
@@ -25,7 +33,7 @@ const routes: Routes = [
         children: [
             {
                 path: 'public',
-                loadChildren: (): Promise<unknown> => import('./page/page.module').then(m => m.PageModule),
+                loadChildren: (): Promise<unknown> => import('./components/page/page.module').then(m => m.PageModule),
                 runGuardsAndResolvers: 'always',
                 data: {
                     title: 'PUBLIC CONTENT'
@@ -33,7 +41,7 @@ const routes: Routes = [
             },
             {
                 path: 'private',
-                loadChildren: (): Promise<unknown> => import('./page/page.module').then(m => m.PageModule),
+                loadChildren: (): Promise<unknown> => import('./components/page/page.module').then(m => m.PageModule),
                 runGuardsAndResolvers: 'always',
                 canLoad: [AuthGuard],
                 canActivate: [AuthGuard],
@@ -44,7 +52,7 @@ const routes: Routes = [
             },
             {
                 path: 'forbidden',
-                loadChildren: (): Promise<unknown> => import('./page/page.module').then(m => m.PageModule),
+                loadChildren: (): Promise<unknown> => import('./components/page/page.module').then(m => m.PageModule),
                 runGuardsAndResolvers: 'always',
                 data: {
                     title: 'ACCESS FORBIDDEN'
@@ -52,14 +60,14 @@ const routes: Routes = [
             },
             {
                 path: 'protected',
-                loadChildren: (): Promise<unknown> => import('./page/page.module').then(m => m.PageModule),
+                loadChildren: (): Promise<unknown> => import('./components/page/page.module').then(m => m.PageModule),
                 runGuardsAndResolvers: 'always',
                 canLoad: [AuthGuard],
                 canActivate: [AuthGuard],
                 canActivateChild: [AuthGuard],
                 data: {
                     title: 'PROTECTED CONTENT',
-                    authGuardValidator: roleValidator()
+                    authGuardValidator: rolesValidator()
                 }
             }
         ]

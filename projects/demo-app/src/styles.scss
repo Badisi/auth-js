@@ -31,6 +31,22 @@ body {
     margin: 12px 6px;
 }
 
+.json-key {
+    color: rgb(124, 77, 255);
+}
+
+.json-value {
+    color: rgb(67, 122, 237);
+}
+
+.json-string {
+    color: rgb(83, 160, 83);
+}
+
+.json-date {
+    color: rgb(200, 56, 198);
+}
+
 input {
     color: #5e35b1;
     padding: 10px;

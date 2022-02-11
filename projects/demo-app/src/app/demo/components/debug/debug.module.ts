@@ -1,22 +1,19 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
+import { PipesModule } from '../../pipes/pipes.module';
 import { DebugComponent } from './debug.component';
-import { PrettyPrintPipe } from './pretty-print.pipe';
 
 @NgModule({
     declarations: [
-        DebugComponent,
-        PrettyPrintPipe
+        DebugComponent
     ],
     imports: [
-        CommonModule
+        CommonModule,
+        PipesModule
     ],
     exports: [
         DebugComponent
-    ],
-    providers: [
-        DatePipe
     ]
 })
 export class DebugModule { }

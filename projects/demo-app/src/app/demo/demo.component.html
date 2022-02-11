@@ -15,14 +15,14 @@
 
     <nav class="tabs row">
         <a id="playground-button"
-           [class.selected]="settings.currentView === DemoAppView.PLAYGROUND"
-           (click)="showView(DemoAppView.PLAYGROUND)">Playground</a>
+           [class.selected]="currentView === DemoView.PLAYGROUND"
+           (click)="showView(DemoView.PLAYGROUND)">Playground</a>
         <a id="info-button"
-           [class.selected]="settings.currentView === DemoAppView.DEBUG"
-           (click)="showView(DemoAppView.DEBUG)">Debug</a>
+           [class.selected]="currentView === DemoView.DEBUG"
+           (click)="showView(DemoView.DEBUG)">Debug</a>
         <a id="settings-button"
-           [class.selected]="settings.currentView === DemoAppView.SETTINGS"
-           (click)="showView(DemoAppView.SETTINGS)">Settings</a>
+           [class.selected]="currentView === DemoView.SETTINGS"
+           (click)="showView(DemoView.SETTINGS)">Settings</a>
     </nav>
 
     <a class="github-icon"
@@ -40,77 +40,16 @@
     </a>
 </header>
 
-<ng-container [ngSwitch]="settings.currentView">
-    <ng-container *ngSwitchCase="DemoAppView.PLAYGROUND">
-        <div class="playground column flex">
-            <div class="card routes">
-                <div class="card-title">Routes access</div>
-                <div class="card-actions column">
-                    <div class="route">
-                        <button id="home-button"
-                                routerLink="/">HOME</button>
-                        <div class="info">Home page</div>
-                    </div>
-                    <div class="route">
-                        <button id="public-button"
-                                routerLink="/public">PUBLIC</button>
-                        <div class="info">Public content (no login required)</div>
-                    </div>
-                    <div class="route">
-                        <button id="private-button"
-                                routerLink="/private">PRIVATE</button>
-                        <div class="info">Private content (login required)</div>
-                    </div>
-                    <div class="route">
-                        <button id="protected-button"
-                                routerLink="/protected">PROTECTED</button>
-                        <div class="info">Protected content (login required + role(s):
-                            <input id="roles-input"
-                                   (input)="saveSettings()"
-                                   [(ngModel)]="settings.roles" />)
-                        </div>
-                    </div>
-                </div>
-                <div class="box">
-                    <router-outlet></router-outlet>
-                </div>
-            </div>
-            <div class="card apis">
-                <div class="card-title">APIs access</div>
-                <div class="card-actions row">
-                    <div class="column flex">
-                        <div class="input row">
-                            <label for="api-url-input">Url</label>
-                            <input id="api-url-input"
-                                   class="flex"
-                                   (input)="saveSettings()"
-                                   [(ngModel)]="settings.privateApiUrl" />
-                        </div>
-                        <div class="input row">
-                            <label for="api-headers-input">Custom headers</label>
-                            <input id="api-headers-input"
-                                   class="flex"
-                                   (input)="saveSettings()"
-                                   [(ngModel)]="settings.privateApiHeaders" />
-                        </div>
-                    </div>
-                    <button id="api-get-button"
-                            (click)="callPrivateApi()">GET</button>
-                </div>
-                <div class="box">
-                    <code>
-                    <pre>{{ data |json }}</pre>
-                </code>
-                </div>
-            </div>
-        </div>
+<ng-container [ngSwitch]="currentView">
+    <ng-container *ngSwitchCase="DemoView.PLAYGROUND">
+        <app-playground></app-playground>
     </ng-container>
 
-    <ng-container *ngSwitchCase="DemoAppView.DEBUG">
+    <ng-container *ngSwitchCase="DemoView.DEBUG">
         <app-debug></app-debug>
     </ng-container>
 
-    <ng-container *ngSwitchCase="DemoAppView.SETTINGS">
+    <ng-container *ngSwitchCase="DemoView.SETTINGS">
         <app-settings #appSettings></app-settings>
     </ng-container>
 </ng-container>

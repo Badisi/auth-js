@@ -1,9 +1,9 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, ViewChild } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '@badisi/ngx-auth';
 
-import { DEMO_APP_SETTING_STORAGE_KEY, DemoAppSettings, DemoAppView } from './demo';
+import { DemoView } from './models/demo-view.enum';
+import { DemoService } from './services/demo.service';
 
 @Component({
     selector: 'app-demo',
@@ -11,51 +11,25 @@ import { DEMO_APP_SETTING_STORAGE_KEY, DemoAppSettings, DemoAppView } from './de
     styleUrls: ['./demo.component.scss']
 })
 export class DemoComponent {
-    @ViewChild(RouterOutlet)
-    public outlet!: RouterOutlet;
-
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    public DemoAppView = DemoAppView;
+    public DemoView = DemoView;
 
     public isAuthenticated$ = this.authService.isAuthenticated$;
-    public data: unknown | Error;
 
-    public settings: DemoAppSettings = {
-        currentView: DemoAppView.PLAYGROUND,
-        roles: 'view-profile',
-        privateApiUrl: '/api/my-api',
-        privateApiHeaders: ''
-    };
+    public currentView = DemoService.getCurrentView();
 
     constructor(
         private authService: AuthService,
-        private httpClient: HttpClient
-    ) {
-        this.loadSettings();
-    }
+        public router: Router
+    ) { }
 
     // ---- HANDLER(s) ----
 
-    public showView(view: DemoAppView): void {
-        if (this.settings.currentView !== view) {
-            this.settings.currentView = view;
-            this.saveSettings();
+    public showView(view: DemoView): void {
+        if (this.currentView !== view) {
+            this.currentView = view;
+            DemoService.saveCurrentView(view);
         }
-    }
-
-    public callPrivateApi(): void {
-        let headers = new HttpHeaders();
-        this.settings.privateApiHeaders?.split(';').forEach(header => {
-            const item = header.split(':');
-            headers = headers.append(item[0]?.trim(), item[1]?.trim() || '');
-        });
-
-        this.httpClient
-            .get<unknown>(this.settings.privateApiUrl, this.settings.privateApiHeaders ? { headers } : {})
-            .subscribe({
-                next: data => this.data = data,
-                error: (error: Error) => this.data = error
-            });
     }
 
     public login(): void {
@@ -68,18 +42,5 @@ export class DemoComponent {
 
     public renew(): void {
         void this.authService.renew();
-    }
-
-    // --- HELPER(s) ---
-
-    public loadSettings(): void {
-        const appSettings = sessionStorage.getItem(DEMO_APP_SETTING_STORAGE_KEY);
-        if (appSettings) {
-            this.settings = JSON.parse(appSettings) as DemoAppSettings;
-        }
-    }
-
-    public saveSettings(): void {
-        sessionStorage.setItem(DEMO_APP_SETTING_STORAGE_KEY, JSON.stringify(this.settings));
     }
 }
