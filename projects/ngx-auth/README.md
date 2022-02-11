@@ -16,6 +16,8 @@
 
 👉 Learn about it on the [docs site][docs-site].
 
+🎈 Play with it on the [demo site][demo-site].
+
 
 ## Development
 
@@ -46,3 +48,4 @@ Please read and follow the [Code of Conduct][codeofconduct] and help me keep thi
 [contributing]: https://github.com/badisi/auth-js/blob/master/CONTRIBUTING.md
 [codeofconduct]: https://github.com/badisi/auth-js/blob/master/CODE_OF_CONDUCT.md
 [docs-site]: https://badisi.github.io/auth-js/docs
+[demo-site]: https://badisi.github.io/auth-js/demo-app
