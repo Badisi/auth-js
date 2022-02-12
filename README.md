@@ -7,7 +7,7 @@ Authentication and authorization support for web based desktop and mobile applic
 
 Package | Version | Downloads | License | Description
 --- | --- | --- | --- | ---
-[@badisi/auth-js](/projects/auth-js) | [![npm version](https://img.shields.io/npm/v/@badisi/auth-js.svg?color=blue&logo=npm)][npm-auth-js] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/auth-js.svg?color=7986CB&logo=npm&label=npm)][npm-dl-auth-js] | [![license](https://img.shields.io/npm/l/@badisi/auth-js.svg?color=ff69b4&label=)][license] | For Vanilla JS applications
+[@badisi/auth-js](/projects/auth-js) | [![npm version](https://img.shields.io/npm/v/@badisi/auth-js.svg?color=blue&logo=npm)][npm-auth-js] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/auth-js.svg?color=7986CB&logo=npm&label=npm)][npm-dl-auth-js] | [![license](https://img.shields.io/npm/l/@badisi/auth-js.svg?color=ff69b4&label=)][license] | For VanillaJS, Ionic applications
 [@badisi/ngx-auth](/projects/ngx-auth) | [![npm version](https://img.shields.io/npm/v/@badisi/ngx-auth.svg?color=blue&logo=npm)][npm-ngx-auth] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/ngx-auth.svg?color=7986CB&logo=npm&label=npm)][npm-dl-ngx-auth] | [![license](https://img.shields.io/npm/l/@badisi/ngx-auth.svg?color=ff69b4&label=)][license] | For Angular, Ionic applications
 
 <hr/>
@@ -50,5 +50,5 @@ Please read and follow the [Code of Conduct][codeofconduct] and help me keep thi
 [developer]: https://github.com/badisi/auth-js/blob/main/DEVELOPER.md
 [contributing]: https://github.com/badisi/auth-js/blob/main/CONTRIBUTING.md
 [codeofconduct]: https://github.com/badisi/auth-js/blob/main/CODE_OF_CONDUCT.md
-[docs-site]: https://badisi.github.io/auth-js/docs
+[docs-site]: https://badisi.github.io/auth-js/docs/docs/intro
 [demo-site]: https://badisi.github.io/auth-js/demo-app

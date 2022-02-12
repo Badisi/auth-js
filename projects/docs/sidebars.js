@@ -19,35 +19,59 @@ const sidebars = {
     docsSidebar: [
         {
             label: 'Introduction',
+            type: 'doc',
+            id: 'docs/intro'
+        },
+        {
+            label: 'Getting started',
             type: 'category',
             collapsed: false,
             items: [
-                'intro/getting-started'
+                'docs/getting-started/vanilla-js',
+                'docs/getting-started/angular',
+                'docs/getting-started/mobile'
             ]
+        },
+        {
+            label: 'Configuration',
+            type: 'doc',
+            id: 'docs/configuration'
+        },
+        {
+            label: 'Usage',
+            type: 'doc',
+            id: 'docs/usage'
+        },
+        {
+            label: 'Playground',
+            type: 'doc',
+            id: 'docs/playground'
         }
     ],
 
     apisSidebar: [
         {
-            label: 'Introduction',
+            label: 'VanillaJS',
+            type: 'category',
+            collapsed: false,
+            items: [
+                'apis/vanilla-js/auth-manager'
+            ]
+        },
+        {
+            label: 'Angular',
+            type: 'category',
+            collapsed: false,
+            items: [
+                'apis/angular/auth-service',
+                'apis/angular/auth-guard',
+                'apis/angular/auth-interceptor'
+            ]
+        },
+        {
+            label: 'Mobile',
             type: 'doc',
-            id: 'apis/intro',
-        },
-        {
-            label: 'Vanilla JS',
-            type: 'category',
-            collapsed: true,
-            items: [
-                'apis/vanilla-js/installation'
-            ]
-        },
-        {
-            label: 'Angular, Ionic',
-            type: 'category',
-            collapsed: true,
-            items: [
-                'apis/angular/installation'
-            ]
+            id: 'apis/mobile'
         }
     ]
 };

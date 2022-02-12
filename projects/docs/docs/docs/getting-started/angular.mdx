@@ -1,0 +1,141 @@
+---
+title: Angular
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+
+This guide explains how to set up your **Angular project** to begin using `@badisi/ngx-auth`.
+
+> 🚀 The fastest, simplest and preferred way is the [schematic](#schematic) way but you can also install this library [manually](#manual-installation).
+
+:::tip
+If you are new to [**Angular**][angular] or getting started with a new Angular application, see Angular's full [Getting Started Guide][angular-start] and [Setting up your environment][angular-setup].
+:::
+
+
+### Schematic
+
+:::caution
+Not yet available..
+:::
+
+Use the Angular CLI's installation [schematic][schematics] to automagically set up your Angular project with this library:
+
+```shell
+ng add @badisi/ngx-auth
+```
+
+
+### Manual installation
+
+If you wish to install this library manually, please follow the steps below:
+
+1. Install the library from the **NPM repository**
+
+    <Tabs>
+    <TabItem value="npm" label="npm" default>
+
+    ```shell
+    npm install @badisi/ngx-auth --save
+    ```
+
+    </TabItem>
+    <TabItem value="yarn" label="yarn">
+
+    ```shell
+    yarn add @badisi/ngx-auth
+    ```
+
+    </TabItem>
+    </Tabs>
+
+2. Modify your **angular.json** file
+
+    :::info
+    This library depends on [`oidc-client-ts`][oidc-client] which itself depends on [`crypto-js`][crypto-js] which is a **commonjs** dependency.
+
+    **Assets** needs to be copy over to your application because some html web pages are used and required when navigating back from the Authorization server.
+    :::
+
+    ```js title="angular.json" {5-7,9-11}
+    {
+      "targets": {
+        "build": {
+          "options": {
+            "allowedCommonJsDependencies": [
+              "oidc-client-ts"
+            ],
+            "assets": [{
+              "glob": "**/*",
+              "input": "node_modules/@badisi/ngx-auth/oidc/assets",
+              "output": "oidc/callback"
+            }]
+          }
+        }
+      }
+    }
+    ```
+
+3. Modify your **main.ts** file
+
+    :::info
+    Initializing the library prior to your Angular application bootstrapping ensures that all the security checks are made upstream (if needed) and avoid the whole Angular application to be loaded twice when using redirects.
+    :::
+
+    :::tip
+    For more info on how to **configure** the library please have a look at the [configuration](../configuration) page.
+    :::
+
+    ```ts title="main.ts" {3,12-15,19}
+    import { enableProdMode } from '@angular/core';
+    import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+    import { initAuth } from '@badisi/ngx-auth';
+
+    import { AppModule } from './app/app.module';
+    import { environment } from './environments/environment';
+
+    if (environment.production) {
+      enableProdMode();
+    }
+
+    initAuth({
+      authorityUrl: 'https://dev-fijd1e9x.us.auth0.com',
+      clientId: 'kRVVEnAWKMpxxpcodl0TqLXfIHgQvmmt'
+    }).then(authProvider => {
+      platformBrowserDynamic([
+        authProvider
+      ]).bootstrapModule(AppModule).catch(err => console.error(err));
+    }).catch(error => console.error(error));
+    ```
+
+4. Modify your **app.module.ts** file
+
+    :::info
+    Importing the **AuthModule** is required so an `AuthService`, `AuthInterceptor` and `AuthGuard` are provided to your application.
+    :::
+
+    ```ts title="app.module.ts" {2,6}
+    import { NgModule } from '@angular/core';
+    import { AuthModule } from '@badisi/ngx-auth';
+
+    @NgModule({
+      imports: [
+        AuthModule
+      ]
+    })
+    export class AppModule {}
+    ```
+
+5. You're done! 🚀
+
+
+
+
+[angular]: https://angular.io
+[angular-start]: https://angular.io/start
+[angular-setup]: https://angular.io/guide/setup-local
+[schematics]: https://material.angular.io/guide/schematics
+[oidc-client]: https://github.com/authts/oidc-client-ts/issues/275
+[crypto-js]: https://github.com/brix/crypto-js

@@ -56,6 +56,29 @@ html[data-theme="dark"] .docusaurus-highlight-code-line {
     background-color: rgba(0, 0, 0, 0.3);
 }
 
+.tabs-container {
+    border-radius: var(--ifm-global-radius);
+    box-shadow: var(--ifm-global-shadow-lw);
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+.tabs-container .theme-code-block {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    box-shadow: none;
+    margin-bottom: 0;
+}
+.tabs-container .tabs {
+    border-bottom: 1px solid var(--ifm-color-emphasis-300);
+}
+.tabs-container .tabs__item {
+    border-radius: 0;
+}
+.tabs-container .margin-vert--md {
+    margin-top: 4px !important;
+    margin-bottom: 4px !important;
+}
+
 code {
     background-color: rgba(180, 147, 207, 0.3);
     color: #404040;
@@ -89,6 +112,9 @@ code {
 [data-theme="light"] nav.menu {
     background-color: #f1f7f7;
 }
+[data-theme="light"] .tabs-container {
+    background-color: rgb(251, 251, 251);
+}
 [data-theme="light"] .footer {
     --ifm-footer-background-color: #7986cb;
 }
@@ -98,6 +124,9 @@ code {
 }
 [data-theme="dark"] .main-wrapper {
     background-color: #282c35;
+}
+[data-theme="dark"] .tabs-container {
+    background-color: rgb(1, 22, 39);
 }
 [data-theme="dark"] .footer {
     background-color: var(--ifm-navbar-background-color);

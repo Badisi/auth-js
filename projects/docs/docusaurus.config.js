@@ -49,13 +49,13 @@ const config = {
                         type: 'doc',
                         label: 'Docs',
                         position: 'left',
-                        docId: 'intro/getting-started'
+                        docId: 'docs/intro'
                     },
                     {
                         type: 'doc',
                         label: 'APIs',
                         position: 'left',
-                        docId: 'apis/intro'
+                        docId: 'apis/vanilla-js/auth-manager'
                     },
                     {
                         href: 'https://github.com/Badisi/auth-js',
@@ -74,11 +74,15 @@ const config = {
                         items: [
                             {
                                 label: 'Getting started',
-                                to: '/intro/getting-started'
+                                to: '/docs/intro'
                             },
                             {
-                                label: 'APIs',
-                                to: '/apis/intro'
+                                label: 'Configuration',
+                                to: '/docs/configuration'
+                            },
+                            {
+                                label: 'Usage',
+                                to: '/docs/usage'
                             }
                         ]
                     },

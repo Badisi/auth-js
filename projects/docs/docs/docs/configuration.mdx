@@ -1,0 +1,104 @@
+---
+title: Configuration
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+
+:::note
+Draft document..
+:::
+
+<Tabs>
+<TabItem value="auth-js" label="VanillaJS" default>
+
+```js
+import { initAuth } from '@badisi/auth-js';
+
+await initAuth(settings: AuthSettings);
+```
+
+</TabItem>
+<TabItem value="ngx-auth" label="Angular">
+
+```ts
+import { initAuth } from '@badisi/ngx-auth';
+
+await initAuth(settings: AuthSettings);
+```
+
+</TabItem>
+</Tabs>
+
+
+## Global
+
+### `authorityUrl*`
+> **type**: string<br/>
+> **required**
+
+### `clientId*`
+> **type**: string<br/>
+> **required**
+
+### `loginRequired`
+> **type**: boolean<br/>
+> **default**: true
+
+### `loadSession`
+> **type**: boolean<br/>
+> **default**: true
+
+### `loadUserInfo`
+> **type**: boolean<br/>
+> **default**: false
+
+### `automaticSilentRenew`
+> **type**: boolean<br/>
+> **default**: true
+
+### `navigationType`
+> **type**: enum - *Navigation(REDIRECT|POPUP)*<br/>
+> **default**: REDIRECT
+
+### `scope`
+> **type**: string<br/>
+> **default**: "openid profile email phone"
+
+### `logLevel`
+> **type**: enum - *Log(NONE|ERROR|WARN|INFO|DEBUG)*<br/>
+> **default**: NONE
+
+### `internal`
+> **type**: UserManagerSettings<br/>
+
+
+## Angular
+
+### `automaticInjectToken`
+> **type**: boolean or custom object<br/>
+> **default**: see the examples
+
+```ts title="Examples"
+// default: any url that starts with "/api"
+automaticInjectToken: {
+  include: (url: string): boolean => {
+    const matches = new RegExp(/^.*?(?<!\/)\/(?!\/)(.*$)/gm).exec(url);
+    return (matches?.[1]?.startsWith('api')) || false;
+  }
+}
+```
+
+### `automaticLoginOn401`
+> **type**: boolean<br/>
+> **default**: true
+
+### `authGuardRedirectUrl`
+> **type**: string<br/>
+
+
+## Mobile
+
+### `schemeUri`
+> **type**: string<br/>
