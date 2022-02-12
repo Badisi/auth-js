@@ -42,10 +42,10 @@ Please read and follow the [Code of Conduct][codeofconduct] and help me keep thi
 [npm]: https://www.npmjs.com/package/@badisi/auth-js
 [npm-dl]: https://npmcharts.com/compare/@badisi/auth-js?minimal=true
 [ci-tests]: https://github.com/badisi/auth-js/actions?query=workflow:CI%20tests
-[pullrequest]: https://github.com/badisi/auth-js/blob/master/CONTRIBUTING.md#-submitting-a-pull-request-pr
-[license]: https://github.com/badisi/auth-js/blob/master/LICENSE
-[developer]: https://github.com/badisi/auth-js/blob/master/DEVELOPER.md
-[contributing]: https://github.com/badisi/auth-js/blob/master/CONTRIBUTING.md
-[codeofconduct]: https://github.com/badisi/auth-js/blob/master/CODE_OF_CONDUCT.md
+[pullrequest]: https://github.com/badisi/auth-js/blob/main/CONTRIBUTING.md#-submitting-a-pull-request-pr
+[license]: https://github.com/badisi/auth-js/blob/main/LICENSE
+[developer]: https://github.com/badisi/auth-js/blob/main/DEVELOPER.md
+[contributing]: https://github.com/badisi/auth-js/blob/main/CONTRIBUTING.md
+[codeofconduct]: https://github.com/badisi/auth-js/blob/main/CODE_OF_CONDUCT.md
 [docs-site]: https://badisi.github.io/auth-js/docs
 [demo-site]: https://badisi.github.io/auth-js/demo-app
