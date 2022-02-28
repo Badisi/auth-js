@@ -419,11 +419,11 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         if (this.settings.authorityUrl.endsWith('auth0.com')) {
             const { authorityUrl, clientId } = this.settings;
             const postLogoutRedirectUri = this.settings.internal?.post_logout_redirect_uri;
-            this.settings.internal = merge({}, this.settings.internal, {
+            this.settings.internal = merge({}, {
                 metadataSeed: {
                     end_session_endpoint: `${authorityUrl}/v2/logout?client_id=${clientId}&returnTo=${postLogoutRedirectUri}`
                 }
-            });
+            }, this.settings.internal);
         }
     }
 }
