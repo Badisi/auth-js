@@ -11,25 +11,16 @@ import { IdToken } from './models/id-token.model';
 import { Navigation, OIDCAuthSettings } from './models/oidc-auth-settings.model';
 import { UserSession } from './models/user-session.model';
 
-export interface Listeners {
-    onIdTokenChanged?: (value: string | undefined) => void;
-    onAccessTokenChanged?: (value: string | undefined) => void;
-    onUserProfileChanged?: (value: UserProfile | undefined) => void;
-    onUserSessionChanged?: (value: UserSession | undefined) => void;
-    onAuthenticatedChanged?: (value: boolean) => void;
-    onRenewingChanged?: (value: boolean) => void;
-    onRedirect?: (value: URL) => void;
-}
-
 const REDIRECT_URL_KEY = 'oidc_manager_redirect';
+
 const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> = {
     loginRequired: true,
-    automaticSilentRenew: true,
     loadSession: true,
     loadUserInfo: false,
-    logLevel: Log.NONE,
+    automaticSilentRenew: true,
     navigationType: Navigation.REDIRECT,
     scope: 'openid profile email phone',
+    logLevel: Log.NONE,
     internal: {
         response_type: 'code',
         redirectMethod: 'replace',
@@ -40,6 +31,16 @@ const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> 
         silent_redirect_uri: 'oidc/callback/silent_redirect.html'
     }
 };
+
+export interface Listeners {
+    onIdTokenChanged?: (value: string | undefined) => void;
+    onAccessTokenChanged?: (value: string | undefined) => void;
+    onUserProfileChanged?: (value: UserProfile | undefined) => void;
+    onUserSessionChanged?: (value: UserSession | undefined) => void;
+    onAuthenticatedChanged?: (value: boolean) => void;
+    onRenewingChanged?: (value: boolean) => void;
+    onRedirect?: (value: URL) => void;
+}
 
 export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     public listeners: Listeners = {};
