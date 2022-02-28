@@ -11,7 +11,7 @@ import { IdToken } from './models/id-token.model';
 import { Navigation, OIDCAuthSettings } from './models/oidc-auth-settings.model';
 import { UserSession } from './models/user-session.model';
 
-const REDIRECT_URL_KEY = 'oidc_manager_redirect';
+const REDIRECT_URL_KEY = 'auth-js:oidc_manager:redirect_url';
 
 const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> = {
     loginRequired: true,
