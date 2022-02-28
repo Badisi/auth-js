@@ -10,8 +10,7 @@
     "lib": {
         "entryFile": "./index.ts",
         "umdModuleIds": {
-            "@badisi/auth-js/oidc": "@badisi/auth-js/oidc",
-            "@badisi/auth-js/core": "@badisi/auth-js/core"
+            "@badisi/auth-js/oidc": "@badisi/auth-js/oidc"
         }
     }
 }

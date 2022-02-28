@@ -1,11 +1,22 @@
-import { AuthManager } from './models/auth-manager.model';
 import { AuthSettings } from './models/auth-settings.model';
 
-export const createAuthManager = async (
-    settings: AuthSettings,
-    impl: (new () => AuthManager<AuthSettings>)
-): Promise<AuthManager<AuthSettings>> => {
-    const manager = new impl();
-    await manager.init(settings);
-    return manager;
-};
+export abstract class AuthManager<T extends AuthSettings> {
+    public isCapacitor(): boolean {
+        const capacitor = window.Capacitor;
+        return !!(capacitor?.isNativePlatform());
+    }
+
+    public isCordova(): boolean {
+        return !!(window.cordova || window.phonegap || window.PhoneGap);
+    }
+
+    public isNative(): boolean {
+        return this.isCapacitor() || this.isCordova();
+    }
+
+    public abstract init(settings: T): Promise<unknown> | unknown;
+    public abstract login(...args: unknown[]): Promise<unknown>;
+    public abstract logout(...args: unknown[]): Promise<unknown>;
+    public abstract getSettings(): T | undefined;
+    public abstract isAuthenticated(): Promise<boolean | undefined>;
+}

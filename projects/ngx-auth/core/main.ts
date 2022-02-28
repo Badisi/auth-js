@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { InjectionToken, StaticProvider } from '@angular/core';
-import { createAuthManager, Optional } from '@badisi/auth-js/core';
-import { OIDCAuthManager } from '@badisi/auth-js/oidc';
+import { initOidc, Optional } from '@badisi/auth-js/oidc';
 
 import { AuthSettings } from './auth-settings.model';
 
@@ -21,11 +20,8 @@ const DEFAULT_SETTINGS: Optional<AuthSettings, 'authorityUrl' | 'clientId'> = {
  */
 export const AUTH_MANAGER = new InjectionToken<string>('AUTH_MANAGER');
 
-export const initAuth = async (settings: AuthSettings): Promise<StaticProvider> => {
-    const manager = await createAuthManager({ ...DEFAULT_SETTINGS, ...settings }, OIDCAuthManager);
-    return {
-        provide: AUTH_MANAGER,
-        useValue: manager,
-        multi: false
-    };
-};
+export const initAuth = async (settings: AuthSettings): Promise<StaticProvider> => ({
+    provide: AUTH_MANAGER,
+    useValue: await initOidc({ ...DEFAULT_SETTINGS, ...settings }),
+    multi: false
+});
