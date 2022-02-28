@@ -31,7 +31,7 @@
         "lint": "npm run lint:demo-app && npm run lint:auth-js && npm run lint:ngx-auth",
         "build:demo-app": "nx run demo-app:build",
         "build:auth-js": "nx run auth-js:build",
-        "build:ngx-auth": "nx run ngx-auth:build && cpy projects/auth-js/oidc/assets dist/ngx-auth/oidc/assets && cpy LICENSE dist/ngx-auth",
+        "build:ngx-auth": "nx run ngx-auth:build && nx run ngx-auth:copy-assets",
         "build": "npm run build:auth-js && npm run build:ngx-auth",
         "e2e": "npm run start --prefix=projects/demo-e2e -- --debug=true --headless=false --watch=true",
         "postinstall": "ngcc --properties es2015 browser module main"
@@ -73,6 +73,7 @@
         "@wdio/spec-reporter": "^7.16.14",
         "chromedriver": "^98.0.0",
         "cpy-cli": "^3.1.1",
+        "esbuild": "^0.14.23",
         "eslint": "^8.8.0",
         "jest": "^27.5.1",
         "jest-preset-angular": "^11.1.0",

@@ -31,5 +31,19 @@
         "oidc-client-ts": "2.0.0",
         "lodash-es": "^4.17.21",
         "jwt-decode": "^3.1.2"
+    },
+    "exports": {
+        "core": {
+            "import": "./esm/core/index.js",
+            "require": "./umd/core/index.js",
+            "browser": "./browser/core/index.min.js",
+            "types": "./core/index.d.ts"
+        },
+        "oidc": {
+            "import": "./esm/oidc/index.js",
+            "require": "./umd/oidc/index.js",
+            "browser": "./browser/oidc/index.min.js",
+            "types": "./oidc/index.d.ts"
+        }
     }
 }

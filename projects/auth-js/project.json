@@ -4,22 +4,17 @@
     "projectType": "library",
     "targets": {
         "build": {
-            "executor": "@nrwl/js:tsc",
+            "executor": "@nrwl/workspace:run-commands",
             "outputs": [
-                "{options.outputPath}"
+                "dist/auth-js"
             ],
             "options": {
-                "outputPath": "dist/auth-js",
-                "main": "projects/auth-js/index.ts",
-                "tsConfig": "projects/auth-js/tsconfig.lib.json",
-                "assets": [
-                    {
-                        "glob": "**/*",
-                        "input": "projects/auth-js/oidc/assets",
-                        "output": "oidc/assets"
-                    },
-                    "projects/auth-js/README.md",
-                    "LICENSE"
+                "commands": [
+                    "node projects/auth-js/build",
+                    "cpy projects/auth-js/oidc/assets dist/auth-js/oidc/assets",
+                    "cpy projects/auth-js/package.json dist/auth-js/",
+                    "cpy projects/auth-js/README.md dist/auth-js/",
+                    "cpy LICENSE dist/auth-js/"
                 ]
             }
         },
