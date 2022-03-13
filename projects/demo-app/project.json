@@ -1,109 +1,25 @@
 {
-    "projectType": "application",
     "root": "projects/demo-app",
-    "sourceRoot": "projects/demo-app/src",
-    "prefix": "badisi",
+    "implicitDependencies": [
+        "demo-app-auth-js",
+        "demo-app-ngx-auth"
+    ],
     "targets": {
         "build": {
-            "executor": "@angular-devkit/build-angular:browser",
+            "executor": "@nrwl/workspace:run-commands",
             "outputs": [
-                "{options.outputPath}"
+                "dist/demo-app"
             ],
             "options": {
-                "outputPath": "dist/demo-app",
-                "index": "projects/demo-app/src/index.html",
-                "main": "projects/demo-app/src/main.ts",
-                "polyfills": "projects/demo-app/src/polyfills.ts",
-                "tsConfig": "projects/demo-app/tsconfig.app.json",
-                "inlineStyleLanguage": "scss",
-                "allowedCommonJsDependencies": [
-                    "crypto-js"
-                ],
-                "assets": [
-                    "projects/demo-app/src/favicon.ico",
-                    "projects/demo-app/src/404.html",
-                    "projects/demo-app/src/assets",
-                    {
-                        "glob": "**/*",
-                        "input": "projects/auth-js/oidc/assets",
-                        "output": "oidc/callback"
-                    }
-                ],
-                "styles": [
-                    "projects/demo-app/src/styles.scss"
-                ],
-                "scripts": []
-            },
-            "configurations": {
-                "production": {
-                    "budgets": [
-                        {
-                            "type": "initial",
-                            "maximumWarning": "500kb",
-                            "maximumError": "1mb"
-                        },
-                        {
-                            "type": "anyComponentStyle",
-                            "maximumWarning": "2kb",
-                            "maximumError": "4kb"
-                        }
-                    ],
-                    "fileReplacements": [
-                        {
-                            "replace": "projects/demo-app/src/environments/environment.ts",
-                            "with": "projects/demo-app/src/environments/environment.prod.ts"
-                        }
-                    ],
-                    "outputHashing": "all"
-                },
-                "development": {
-                    "buildOptimizer": false,
-                    "optimization": false,
-                    "vendorChunk": true,
-                    "extractLicenses": false,
-                    "sourceMap": true,
-                    "namedChunks": true
-                }
-            },
-            "defaultConfiguration": "production"
-        },
-        "serve": {
-            "executor": "@angular-devkit/build-angular:dev-server",
-            "configurations": {
-                "production": {
-                    "browserTarget": "demo-app:build:production"
-                },
-                "development": {
-                    "browserTarget": "demo-app:build:development"
-                }
-            },
-            "defaultConfiguration": "development"
-        },
-        "extract-i18n": {
-            "executor": "@angular-devkit/build-angular:extract-i18n",
-            "options": {
-                "browserTarget": "demo-app:build"
+                "command": "cpy projects/demo-app/404.html dist/demo-app/"
             }
         },
         "lint": {
-            "executor": "@nrwl/linter:eslint",
+            "executor": "@nrwl/workspace:run-commands",
             "options": {
-                "lintFilePatterns": [
-                    "projects/demo-app/src/**/*.ts",
-                    "projects/demo-app/src/**/*.html"
-                ]
-            }
-        },
-        "test": {
-            "executor": "@nrwl/jest:jest",
-            "outputs": [
-                "coverage/projects/demo-app"
-            ],
-            "options": {
-                "jestConfig": "projects/demo-app/jest.config.js",
-                "passWithNoTests": true
+                "command": "nx run-many --target=lint --projects=demo-app-auth-js,demo-app-ngx-auth",
+                "color": true
             }
         }
-    },
-    "tags": []
+    }
 }

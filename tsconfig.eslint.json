@@ -13,6 +13,6 @@
     "include": [
         "projects/demo-app/**/*.ts",
         "projects/auth-js/**/*.ts",
-        "projects/ngx-auth/**/*.ts",
+        "projects/ngx-auth/**/*.ts"
     ]
 }

@@ -1,0 +1,18 @@
+<demo-app-main [isAuthenticated]="isAuthenticated$ | async"
+               (login)="login()"
+               (logout)="logout()"
+               (silentRenew)="silentRenew()">
+    <app-playground tabLabel="Playground"></app-playground>
+    <demo-app-debug tabLabel="Debug"
+                    [isAuthenticated]="isAuthenticated$ | async"
+                    [userProfile]="userProfile$ | async"
+                    [userSession]="userSession$ | async"
+                    [idToken]="idToken$ | async"
+                    [idTokenDecoded]="idTokenDecoded$ | async"
+                    [accessToken]="accessToken$ | async"
+                    [accessTokenDecoded]="accessTokenDecoded$ | async">
+    </demo-app-debug>
+    <demo-app-settings tabLabel="Settings"
+                       [isDev]="isDev">
+    </demo-app-settings>
+</demo-app-main>

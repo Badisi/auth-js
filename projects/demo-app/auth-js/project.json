@@ -1,0 +1,89 @@
+{
+    "projectType": "application",
+    "root": "projects/demo-app/auth-js",
+    "sourceRoot": "projects/demo-app/auth-js/src",
+    "targets": {
+        "build": {
+            "executor": "@nrwl/web:webpack",
+            "outputs": [
+                "{options.outputPath}"
+            ],
+            "options": {
+                "outputPath": "dist/demo-app/auth-js",
+                "compiler": "babel",
+                "index": "projects/demo-app/auth-js/src/index.html",
+                "baseHref": "/",
+                "main": "projects/demo-app/auth-js/src/main.ts",
+                "polyfills": "projects/demo-app/auth-js/src/polyfills.ts",
+                "tsConfig": "projects/demo-app/auth-js/tsconfig.app.json",
+                "assets": [
+                    "projects/demo-app/auth-js/src/favicon.ico",
+                    {
+                        "glob": "**/*",
+                        "input": "projects/auth-js/oidc/assets",
+                        "output": "oidc/callback"
+                    }
+                ],
+                "styles": [
+                    "projects/demo-app/auth-js/src/styles.scss"
+                ],
+                "scripts": []
+            },
+            "configurations": {
+                "production": {
+                    "fileReplacements": [
+                        {
+                            "replace": "projects/demo-app/auth-js/src/environments/environment.ts",
+                            "with": "projects/demo-app/auth-js/src/environments/environment.prod.ts"
+                        }
+                    ],
+                    "optimization": true,
+                    "outputHashing": "all",
+                    "sourceMap": false,
+                    "namedChunks": false,
+                    "extractLicenses": true,
+                    "vendorChunk": false
+                }
+            },
+            "defaultConfiguration": "development"
+        },
+        "serve": {
+            "executor": "@nrwl/web:dev-server",
+            "options": {
+                "host": "0.0.0.0",
+                "buildTarget": "demo-app-auth-js:build"
+            },
+            "configurations": {
+                "production": {
+                    "buildTarget": "demo-app-auth-js:build:production"
+                },
+                "development": {
+                    "browserTarget": "demo-app-auth-js:build:development"
+                }
+            },
+            "defaultConfiguration": "development"
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": [
+                "{options.outputFile}"
+            ],
+            "options": {
+                "lintFilePatterns": [
+                    "projects/demo-app/auth-js/src/**/*.ts",
+                    "projects/demo-app/auth-js/src/**/*.html"
+                ]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": [
+                "coverage/projects/demo-app/auth-js"
+            ],
+            "options": {
+                "jestConfig": "projects/demo-app/auth-js/jest.config.js",
+                "passWithNoTests": true
+            }
+        }
+    }
+}

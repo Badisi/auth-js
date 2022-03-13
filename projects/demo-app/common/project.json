@@ -1,0 +1,26 @@
+{
+    "projectType": "library",
+    "root": "projects/demo-app/common",
+    "sourceRoot": "projects/demo-app/common",
+    "targets": {
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": [
+                "coverage/projects/demo-app/common"
+            ],
+            "options": {
+                "jestConfig": "projects/demo-app/common/jest.config.js",
+                "passWithNoTests": true
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "options": {
+                "lintFilePatterns": [
+                    "projects/demo-app/common/**/*.ts",
+                    "projects/demo-app/common/**/*.html"
+                ]
+            }
+        }
+    }
+}

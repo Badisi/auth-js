@@ -4,15 +4,6 @@
     "sourceRoot": "projects/ngx-auth/src",
     "prefix": "badisi",
     "targets": {
-        "copy-assets": {
-            "executor": "@nrwl/workspace:run-commands",
-            "options": {
-                "commands": [
-                    "cpy projects/auth-js/oidc/assets dist/ngx-auth/oidc/assets",
-                    "cpy LICENSE dist/ngx-auth/"
-                ]
-            }
-        },
         "build": {
             "executor": "@nrwl/angular:package",
             "outputs": [
@@ -30,6 +21,18 @@
                 }
             },
             "defaultConfiguration": "production"
+        },
+        "copy-assets": {
+            "executor": "@nrwl/workspace:run-commands",
+            "outputs": [
+                "dist/ngx-auth"
+            ],
+            "options": {
+                "commands": [
+                    "cpy projects/auth-js/oidc/assets dist/ngx-auth/oidc/assets",
+                    "cpy LICENSE dist/ngx-auth/"
+                ]
+            }
         },
         "test": {
             "executor": "@nrwl/jest:jest",
@@ -50,6 +53,5 @@
                 ]
             }
         }
-    },
-    "tags": []
+    }
 }

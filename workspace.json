@@ -2,7 +2,10 @@
     "version": 2,
     "projects": {
         "auth-js": "projects/auth-js",
+        "ngx-auth": "projects/ngx-auth",
         "demo-app": "projects/demo-app",
-        "ngx-auth": "projects/ngx-auth"
+        "demo-app-common": "projects/demo-app/common",
+        "demo-app-auth-js": "projects/demo-app/auth-js",
+        "demo-app-ngx-auth": "projects/demo-app/ngx-auth"
     }
 }

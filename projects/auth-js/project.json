@@ -1,7 +1,5 @@
 {
     "root": "projects/auth-js",
-    "sourceRoot": "projects/auth-js",
-    "projectType": "library",
     "targets": {
         "build": {
             "executor": "@nrwl/workspace:run-commands",
@@ -15,7 +13,9 @@
                     "cpy projects/auth-js/package.json dist/auth-js/",
                     "cpy projects/auth-js/README.md dist/auth-js/",
                     "cpy LICENSE dist/auth-js/"
-                ]
+                ],
+                "parallel": false,
+                "color": true
             }
         },
         "lint": {
@@ -39,6 +39,5 @@
                 "passWithNoTests": true
             }
         }
-    },
-    "tags": []
+    }
 }

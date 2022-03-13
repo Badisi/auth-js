@@ -30,6 +30,9 @@
             ],
             "@badisi/ngx-auth/*": [
                 "projects/ngx-auth/*"
+            ],
+            "demo-app-common": [
+                "projects/demo-app/common"
             ]
         }
     },
