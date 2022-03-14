@@ -1,19 +1,6 @@
 {
     "root": "projects/demo-app",
-    "implicitDependencies": [
-        "demo-app-auth-js",
-        "demo-app-ngx-auth"
-    ],
     "targets": {
-        "build": {
-            "executor": "@nrwl/workspace:run-commands",
-            "outputs": [
-                "dist/demo-app"
-            ],
-            "options": {
-                "command": "cpy projects/demo-app/404.html dist/demo-app/"
-            }
-        },
         "lint": {
             "executor": "@nrwl/workspace:run-commands",
             "options": {

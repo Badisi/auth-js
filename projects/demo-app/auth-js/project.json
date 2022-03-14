@@ -43,9 +43,10 @@
                     "namedChunks": false,
                     "extractLicenses": true,
                     "vendorChunk": false
-                }
+                },
+                "development": {}
             },
-            "defaultConfiguration": "development"
+            "defaultConfiguration": "production"
         },
         "serve": {
             "executor": "@nrwl/web:dev-server",

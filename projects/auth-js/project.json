@@ -9,10 +9,10 @@
             "options": {
                 "commands": [
                     "node projects/auth-js/build",
-                    "cpy projects/auth-js/oidc/assets dist/auth-js/oidc/assets",
-                    "cpy projects/auth-js/package.json dist/auth-js/",
-                    "cpy projects/auth-js/README.md dist/auth-js/",
-                    "cpy LICENSE dist/auth-js/"
+                    "cpy projects/auth-js/oidc/assets dist/auth-js/oidc/assets --flat",
+                    "cpy projects/auth-js/package.json dist/auth-js/ --flat",
+                    "cpy projects/auth-js/README.md dist/auth-js/ --flat",
+                    "cpy LICENSE dist/auth-js/ --flat"
                 ],
                 "parallel": false,
                 "color": true

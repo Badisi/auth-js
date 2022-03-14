@@ -10,8 +10,12 @@
             // Store the URL the user was trying to access when receiving the 404.
             sessionStorage.setItem('gh-pages-url-from-404', location.href);
 
-            // Redirect to the demo application
-            location.href = '/auth-js/demo-app';
+            // Redirect to the proper demo application
+            if (location.href.includes('/demo-app/ngx-auth')) {
+                location.href = '/auth-js/demo-app/ngx-auth';
+            } else {
+                location.href = '/auth-js/demo-app/auth-js';
+            }
         } else {
             // Redirect to the documentation
             location.href = '/auth-js/docs';
