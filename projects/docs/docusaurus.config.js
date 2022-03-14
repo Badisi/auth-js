@@ -24,6 +24,7 @@ const config = {
             /** @type {import('@docusaurus/preset-classic').Options} */
             ({
                 docs: {
+                    breadcrumbs: false,
                     routeBasePath: '/',
                     sidebarPath: require.resolve('./sidebars.js'),
                     editUrl: 'https://github.com/Badisi/auth-js/edit/main/projects/docs/'
