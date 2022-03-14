@@ -1,13 +1,15 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { AccessToken, IdToken, Navigation, OIDCAuthManager, UserProfile, UserSession } from '@badisi/auth-js/oidc';
+import {
+    AccessToken, AuthSubscription, IdToken, Navigation, OIDCAuthManager, UserProfile, UserSession
+} from '@badisi/auth-js/oidc';
 import { Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
 import { AuthSettings } from './auth-settings.model';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnDestroy {
     private _idToken$: ReplaySubject<string | undefined> = new ReplaySubject<string | undefined>(1);
     private _accessToken$: ReplaySubject<string | undefined> = new ReplaySubject<string | undefined>(1);
     private _userProfile$: ReplaySubject<UserProfile | undefined> = new ReplaySubject<UserProfile | undefined>(1);
@@ -15,13 +17,18 @@ export class AuthService {
     private _isAuthenticated$: ReplaySubject<boolean | undefined> = new ReplaySubject<boolean | undefined>(1);
     private _isRenewing$: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
 
+    private authManagerSubs: AuthSubscription[] = [];
+
     constructor(
         private manager: OIDCAuthManager,
         private ngZone: NgZone,
         private router: Router
     ) {
-        void this.initObservables();
-        this.listenForChanges();
+        this.listenForManagerChanges();
+    }
+
+    public ngOnDestroy(): void {
+        this.authManagerSubs.forEach(sub => sub.unsubscribe());
     }
 
     public get isAuthenticated$(): Observable<boolean | undefined> {
@@ -128,31 +135,22 @@ export class AuthService {
 
     // --- HELPER(s) ----
 
-    private listenForChanges(): void {
-        this.manager.listeners = {
-            onIdTokenChanged: (value): void => this.ngZone.run(() => this._idToken$.next(value)),
-            onAccessTokenChanged: (value): void => this.ngZone.run(() => this._accessToken$.next(value)),
-            onUserProfileChanged: (value): void => this.ngZone.run(() => this._userProfile$.next(value)),
-            onUserSessionChanged: (value): void => this.ngZone.run(() => this._userSession$.next(value)),
-            onAuthenticatedChanged: (value): void => this.ngZone.run(() => this._isAuthenticated$.next(value)),
-            onRenewingChanged: (value): void => this.ngZone.run(() => this._isRenewing$.next(value)),
-            onRedirect: (value): void => {
+    private listenForManagerChanges(): void {
+        this.authManagerSubs.push(
+            this.manager.onIdTokenChanged(value => this.ngZone.run(() => this._idToken$.next(value))),
+            this.manager.onAccessTokenChanged(value => this.ngZone.run(() => this._accessToken$.next(value))),
+            this.manager.onUserProfileChanged(value => this.ngZone.run(() => this._userProfile$.next(value))),
+            this.manager.onUserSessionChanged(value => this.ngZone.run(() => this._userSession$.next(value))),
+            this.manager.onAuthenticatedChanged(value => this.ngZone.run(() => this._isAuthenticated$.next(value))),
+            this.manager.onRenewingChanged(value => this.ngZone.run(() => this._isRenewing$.next(value))),
+            this.manager.onRedirect(value => {
                 // Avoid cancelling any current navigation
                 if (!this.router.getCurrentNavigation()) {
                     this.ngZone.run(() => {
                         void this.router.navigateByUrl(`${value.pathname}${value.search}`);
                     });
                 }
-            }
-        };
-    }
-
-    private async initObservables(): Promise<void> {
-        this._idToken$.next(await this.manager.getIdToken());
-        this._accessToken$.next(await this.manager.getAccessToken());
-        this._userProfile$.next(await this.manager.getUserProfile());
-        this._userSession$.next(await this.manager.getUserSession());
-        this._isAuthenticated$.next(await this.manager.isAuthenticated());
-        this._isRenewing$.next(this.manager.isRenewing());
+            })
+        );
     }
 }

@@ -1,5 +1,6 @@
-export { Log, UserProfile } from 'oidc-client-ts';
-export { Optional } from '../core';
+export { Log } from 'oidc-client-ts';
+export type { UserProfile } from 'oidc-client-ts';
+export type { Optional, AuthSubscriber, AuthSubscription } from '../core';
 
 export * from './models/oidc-auth-settings.model';
 export * from './models/access-token.model';

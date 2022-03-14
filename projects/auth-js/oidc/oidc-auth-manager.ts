@@ -2,9 +2,12 @@
 
 import jwtDecode from 'jwt-decode';
 import { merge } from 'lodash-es';
-import { InMemoryWebStorage, Log, User, UserManager, UserManagerSettings, UserProfile, WebStorageStateStore } from 'oidc-client-ts';
+import {
+    InMemoryWebStorage, Log, User, UserManager, UserManagerSettings, UserProfile, WebStorageStateStore
+} from 'oidc-client-ts';
 
-import { AuthManager, Optional } from '../core';
+import { AuthManager, AuthSubscriber, AuthSubscription, Optional } from '../core';
+import { AuthSubscriptions } from '../core/auth-subscriptions';
 import { MobileStorage } from './mobile/mobile-storage';
 import { AccessToken } from './models/access-token.model';
 import { IdToken } from './models/id-token.model';
@@ -32,18 +35,15 @@ const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> 
     }
 };
 
-export interface Listeners {
-    onIdTokenChanged?: (value: string | undefined) => void;
-    onAccessTokenChanged?: (value: string | undefined) => void;
-    onUserProfileChanged?: (value: UserProfile | undefined) => void;
-    onUserSessionChanged?: (value: UserSession | undefined) => void;
-    onAuthenticatedChanged?: (value: boolean) => void;
-    onRenewingChanged?: (value: boolean) => void;
-    onRedirect?: (value: URL) => void;
-}
-
 export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
-    public listeners: Listeners = {};
+    private idTokenSubs: AuthSubscriptions<[string | undefined]> = new AuthSubscriptions();
+    private accessTokenSubs: AuthSubscriptions<[string | undefined]> = new AuthSubscriptions();
+    private userProfileSubs: AuthSubscriptions<[UserProfile | undefined]> = new AuthSubscriptions();
+    private userSessionSubs: AuthSubscriptions<[UserSession | undefined]> = new AuthSubscriptions();
+    private authenticatedSubs: AuthSubscriptions<[boolean]> = new AuthSubscriptions();
+    private renewingSubs: AuthSubscriptions<[boolean]> = new AuthSubscriptions();
+    private redirectSubs: AuthSubscriptions<[URL]> = new AuthSubscriptions();
+    private userManagerSubs: (() => void)[] = [];
 
     private _idToken?: string;
     private _accessToken?: string;
@@ -66,11 +66,11 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             this._userSession = (value) ? UserSession.deserialize(value) : undefined;
             this._isAuthenticated = !!(value && !value.expired);
 
-            this.listeners.onIdTokenChanged?.(this._idToken);
-            this.listeners.onAccessTokenChanged?.(this._accessToken);
-            this.listeners.onUserProfileChanged?.(this._userProfile);
-            this.listeners.onUserSessionChanged?.(this._userSession);
-            this.listeners.onAuthenticatedChanged?.(this._isAuthenticated);
+            this.idTokenSubs.notify(this._idToken);
+            this.accessTokenSubs.notify(this._accessToken);
+            this.userProfileSubs.notify(this._userProfile);
+            this.userSessionSubs.notify(this._userSession);
+            this.authenticatedSubs.notify(this._isAuthenticated);
         }
     }
 
@@ -110,20 +110,22 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             ...this.settings.internal
         } as UserManagerSettings);
 
-        // Listen for events (do not care about unsubscribing as the manager should be a singleton)
-        this.userManager.events.addUserLoaded(user => {
-            this.user = user;
-        });
-        this.userManager.events.addUserUnloaded(() => {
-            this.user = null;
-        });
-        this.userManager.events.addAccessTokenExpired(() => {
-            // Token can expire while the app is in background
-            //   -> try a silent renew in that case and otherwise redirect to home
-            if (this.settings.automaticSilentRenew) {
-                this.signinSilent().catch(error => this.redirect('/', error));
-            }
-        });
+        // Listen for events
+        this.userManagerSubs.push(
+            this.userManager.events.addUserLoaded(user => {
+                this.user = user;
+            }),
+            this.userManager.events.addUserUnloaded(() => {
+                this.user = null;
+            }),
+            this.userManager.events.addAccessTokenExpired(() => {
+                // Token can expire while the app is in background
+                //   -> try a silent renew in that case and otherwise redirect to home
+                if (this.settings.automaticSilentRenew) {
+                    this.signinSilent().catch(error => this.redirect('/', error));
+                }
+            })
+        );
 
         // Make sure we are not trapped in the inception loop
         this.assertNotInInceptionLoop();
@@ -253,6 +255,49 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         return this.decodeJwt<AccessToken>(this._accessToken);
     }
 
+    // --- DESTROY ---
+
+    public destroy(): void {
+        this.idTokenSubs.unsubscribe();
+        this.accessTokenSubs.unsubscribe();
+        this.userProfileSubs.unsubscribe();
+        this.userSessionSubs.unsubscribe();
+        this.authenticatedSubs.unsubscribe();
+        this.renewingSubs.unsubscribe();
+        this.redirectSubs.unsubscribe();
+        this.userManagerSubs.forEach(unsub => unsub());
+    }
+
+    // --- HANDLER(s) ---
+
+    public onIdTokenChanged(handler: AuthSubscriber<[string | undefined]>): AuthSubscription {
+        return this.idTokenSubs.add(handler);
+    }
+
+    public onAccessTokenChanged(handler: AuthSubscriber<[string | undefined]>): AuthSubscription {
+        return this.accessTokenSubs.add(handler);
+    }
+
+    public onUserProfileChanged(handler: AuthSubscriber<[UserProfile | undefined]>): AuthSubscription {
+        return this.userProfileSubs.add(handler);
+    }
+
+    public onUserSessionChanged(handler: AuthSubscriber<[UserSession | undefined]>): AuthSubscription {
+        return this.userSessionSubs.add(handler);
+    }
+
+    public onAuthenticatedChanged(handler: AuthSubscriber<[boolean]>): AuthSubscription {
+        return this.authenticatedSubs.add(handler);
+    }
+
+    public onRenewingChanged(handler: AuthSubscriber<[boolean]>): AuthSubscription {
+        return this.renewingSubs.add(handler);
+    }
+
+    public onRedirect(handler: AuthSubscriber<[URL]>): AuthSubscription {
+        return this.redirectSubs.add(handler);
+    }
+
     // --- HELPER(s) ---
 
     /**
@@ -331,7 +376,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         // History cannot be rewritten when origin is different
         if (location.origin === redirectUrl.origin) {
             history.replaceState(history.state, '', redirectUrl.href);
-            this.listeners.onRedirect?.(redirectUrl);
+            this.redirectSubs.notify(redirectUrl);
         } else {
             location.href = redirectUrl.href;
         }
@@ -351,7 +396,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     private async signinSilent(): Promise<void> {
         this._isRenewing = true;
-        this.listeners.onRenewingChanged?.(true);
+        this.renewingSubs.notify(true);
 
         try {
             await this.userManager?.signinSilent();
@@ -360,7 +405,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             throw error;
         } finally {
             this._isRenewing = false;
-            this.listeners.onRenewingChanged?.(false);
+            this.renewingSubs.notify(false);
         }
     }
 
@@ -417,11 +462,13 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
      */
     private patchAuth0Logout(): void {
         if (this.settings.authorityUrl.endsWith('auth0.com')) {
-            const { authorityUrl, clientId } = this.settings;
-            const postLogoutRedirectUri = this.settings.internal?.post_logout_redirect_uri;
+            const { authorityUrl, clientId, navigationType } = this.settings;
+            const returnTo = (navigationType === Navigation.POPUP) ?
+                this.settings.internal?.popup_post_logout_redirect_uri :
+                this.settings.internal?.post_logout_redirect_uri;
             this.settings.internal = merge({}, {
                 metadataSeed: {
-                    end_session_endpoint: `${authorityUrl}/v2/logout?client_id=${clientId}&returnTo=${postLogoutRedirectUri}`
+                    end_session_endpoint: `${authorityUrl}/v2/logout?client_id=${clientId}&returnTo=${returnTo}`
                 }
             }, this.settings.internal);
         }
