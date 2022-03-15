@@ -114,7 +114,6 @@ const librarySettingsDefinition: LibrarySettingsDefinitionItem<OIDCAuthSettings>
 export const authSettings: DemoAppSettings<OIDCAuthSettings> = new DemoAppSettings(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
     `auth-js:${(pkgJson as any).version as string}:demo-app:settings`, {
-        currentImplementationIndex: 0,
         currentTabIndex: 0,
         currentSettingsIndex: 0,
         librarySettingsDefinition,

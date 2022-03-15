@@ -85,11 +85,13 @@ export const globalStyle = `
     @media only screen and (max-width: 600px) {
         :host {
             padding: 0 !important;
+            padding-bottom: 24px !important;
         }
 
         :host .card {
             border: 0;
             margin: 0;
+            margin-bottom: 6px;
         }
     }
 `;

@@ -1,8 +1,11 @@
 import { AuthSettings } from '@badisi/auth-js/core';
+import authJsPkgJson from 'projects/auth-js/package.json';
+import ngxAuthPkgJson from 'projects/ngx-auth/package.json';
 
 export interface Implementation {
     label: string;
     url: string;
+    version: string;
 }
 
 export interface Settings<S extends AuthSettings = AuthSettings> {
@@ -21,7 +24,6 @@ export interface LibrarySettingsDefinitionItem<S extends AuthSettings = AuthSett
 }
 
 export interface AppSettings<S extends AuthSettings = AuthSettings> {
-    currentImplementationIndex: number;
     currentTabIndex: number;
     currentSettingsIndex: number;
     librarySettingsDefinition: LibrarySettingsDefinitionItem<S>[];
@@ -29,12 +31,16 @@ export interface AppSettings<S extends AuthSettings = AuthSettings> {
 }
 
 export class DemoAppSettings<S extends AuthSettings = AuthSettings> {
-    private implementations = [{
-        label: 'auth-js',
-        url: 'https://badisi.github.io/auth-js/demo-app/auth-js'
+    private implementations: Implementation[] = [{
+        label: 'VanillaJS',
+        url: 'https://badisi.github.io/auth-js/demo-app/auth-js',
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
+        version: `${authJsPkgJson.name}@${authJsPkgJson.version}`
     }, {
-        label: 'ngx-auth',
-        url: 'https://badisi.github.io/auth-js/demo-app/ngx-auth'
+        label: 'Angular',
+        url: 'https://badisi.github.io/auth-js/demo-app/ngx-auth',
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
+        version: `${ngxAuthPkgJson.name}@${ngxAuthPkgJson.version}`
     }];
 
     constructor(
@@ -42,16 +48,6 @@ export class DemoAppSettings<S extends AuthSettings = AuthSettings> {
         private defaultAppSettings: AppSettings<S>
     ) {
         this.defaultAppSettings.librarySettingsDefinition.forEach((item, index) => item._index = index);
-    }
-
-    public getCurrentImplementationIndex(): number {
-        return this.getAppSettings().currentImplementationIndex;
-    }
-
-    public saveCurrentImplementationIndex(index: number): void {
-        const appSettings = this.getAppSettings();
-        appSettings.currentImplementationIndex = index;
-        this.saveAppSettings(appSettings);
     }
 
     public getCurrentTabIndex(): number {

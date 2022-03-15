@@ -11,7 +11,7 @@ template.innerHTML = `
             left: 0;
             right: 0;
             align-items: center;
-            height: 110px;
+            height: 130px;
             color: white;
             background: rgb(103, 58, 183);
             background: linear-gradient(180deg, rgba(103, 58, 183, 1) 0%, rgba(94, 53, 177, 1) 100%);
@@ -20,7 +20,7 @@ template.innerHTML = `
         :host header .github-icon {
             position: absolute;
             top: 20px;
-            right: 22px;
+            right: 34px;
             width: 26px;
             height: 26px;
             color: white;
@@ -33,7 +33,7 @@ template.innerHTML = `
         :host header .status {
             position: absolute;
             top: 25px;
-            right: 56px;
+            right: 70px;
             width: 15px;
             height: 15px;
             border-radius: 50%;
@@ -42,12 +42,26 @@ template.innerHTML = `
             margin-right: 8px;
         }
 
+        header .version {
+            position: absolute;
+            bottom: 14px;
+            font-size: 12px;
+            font-weight: 300;
+            font-style: italic;
+            color: #B388FF;
+        }
+
         :host header .title {
             align-items: center;
-            margin: 10px 0;
+            margin: 8px 0;
             font-size: 28px;
             font-weight: 400;
             color: #ede7f6;
+        }
+
+        :host header .title .icon {
+            margin-top: 3px;
+            margin-right: 4px;
         }
 
         :host header .title select {
@@ -67,6 +81,13 @@ template.innerHTML = `
 
         :host header button:not(:last-child) {
             margin-right: 10px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            :host header .title {
+                align-self: flex-start;
+                margin-left: 24px;
+            }
         }
     </style>
 
@@ -89,8 +110,10 @@ template.innerHTML = `
         </a>
 
         <div class="title row">
-            &#123; <select id="implementation-select"></select> &#125; Demo app
+            <span class="icon">🛡️</span>Demo app &#123; <select id="implementation-select"></select> &#125;
         </div>
+
+        <div class="version"></div>
 
         <div class="row">
             <button id="login-button">LOGIN</button>
@@ -103,10 +126,12 @@ template.innerHTML = `
 export class DemoAppHeaderElement extends HTMLElement {
     private listeners: (() => void)[] = [];
 
-    private statusEl?: HTMLElement | null;
-    private loginButtonEl?: HTMLElement | null;
-    private logoutButtonEl?: HTMLElement | null;
-    private silentRenewButtonEl?: HTMLElement | null;
+    private implSelectEl: HTMLSelectElement;
+    private statusEl: HTMLElement;
+    private versionEl: HTMLElement;
+    private loginButtonEl: HTMLElement;
+    private logoutButtonEl: HTMLElement;
+    private silentRenewButtonEl: HTMLElement;
 
     constructor() {
         super();
@@ -114,10 +139,12 @@ export class DemoAppHeaderElement extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot?.appendChild(document.importNode(template.content, true));
 
-        this.statusEl = this.shadowRoot?.querySelector('.status');
-        this.loginButtonEl = this.shadowRoot?.querySelector('#login-button');
-        this.logoutButtonEl = this.shadowRoot?.querySelector('#logout-button');
-        this.silentRenewButtonEl = this.shadowRoot?.querySelector('#silent-renew-button');
+        this.implSelectEl = this.shadowRoot?.querySelector('#implementation-select') as HTMLSelectElement;
+        this.statusEl = this.shadowRoot?.querySelector('.status') as HTMLElement;
+        this.versionEl = this.shadowRoot?.querySelector('.version') as HTMLElement;
+        this.loginButtonEl = this.shadowRoot?.querySelector('#login-button') as HTMLElement;
+        this.logoutButtonEl = this.shadowRoot?.querySelector('#logout-button') as HTMLElement;
+        this.silentRenewButtonEl = this.shadowRoot?.querySelector('#silent-renew-button') as HTMLElement;
 
         this.refreshStatus(false);
     }
@@ -127,22 +154,26 @@ export class DemoAppHeaderElement extends HTMLElement {
     }
 
     public connectedCallback(): void {
-        const selectEl = this.shadowRoot?.querySelector('#implementation-select') as HTMLSelectElement;
-        window.authSettings.getImplementations().forEach((item, index) => {
+        if (window.location.href.includes('localhost')) {
             const optionEl = document.createElement('option');
-            optionEl.selected = (index === window.authSettings.getCurrentImplementationIndex());
-            optionEl.value = String(item.label);
-            optionEl.textContent = item.label;
-            selectEl?.appendChild(optionEl);
-        });
+            optionEl.textContent = 'localhost';
+            this.implSelectEl.appendChild(optionEl);
+        } else {
+            window.authSettings.getImplementations().forEach(item => {
+                const optionEl = document.createElement('option');
+                optionEl.value = String(item.label);
+                optionEl.textContent = item.label;
+                this.implSelectEl.appendChild(optionEl);
+            });
 
-        const changeCb = (): void => {
-            window.authSettings.saveCurrentImplementationIndex(selectEl.selectedIndex);
-            window.location.href = window.authSettings.getImplementations()[selectEl.selectedIndex].url;
-        };
-        selectEl?.addEventListener('change', changeCb);
-        this.listeners.push(() => selectEl.removeEventListener('change', changeCb));
+            const changeCb = (): void => {
+                window.location.href = window.authSettings.getImplementations()[this.implSelectEl.selectedIndex].url;
+            };
+            this.implSelectEl.addEventListener('change', changeCb);
+            this.listeners.push(() => this.implSelectEl.removeEventListener('change', changeCb));
+        }
 
+        this.refreshImplementation();
         this.addEventListeners();
     }
 
@@ -167,6 +198,16 @@ export class DemoAppHeaderElement extends HTMLElement {
             () => this.logoutButtonEl?.removeEventListener('click', logout),
             () => this.silentRenewButtonEl?.removeEventListener('click', silentRenew)
         );
+    }
+
+    private refreshImplementation(): void {
+        if (!window.location.href.includes('localhost')) {
+            const impls = window.authSettings.getImplementations();
+            const implIndex = impls.findIndex(item => window.location.href.includes(item.url));
+            const impl = (implIndex !== -1) ? impls[implIndex] : impls[0];
+            this.implSelectEl.selectedIndex = (implIndex !== -1) ? implIndex : 0;
+            this.versionEl.textContent = impl.version;
+        }
     }
 
     private refreshStatus(value: boolean): void {

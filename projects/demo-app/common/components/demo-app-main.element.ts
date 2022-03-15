@@ -8,7 +8,7 @@ template.innerHTML = `
 
         :host .tabs {
             position: fixed;
-            top: 110px;
+            top: 130px;
             left: 0;
             right: 0;
             z-index: 1;
@@ -41,7 +41,7 @@ template.innerHTML = `
 
         :host .tabs-content {
             position: fixed;
-            top: 165px;
+            top: calc(130px + 55px);
             left: 0;
             right: 0;
             bottom: 0;
@@ -67,6 +67,7 @@ export class DemoAppMainElement extends HTMLElement {
     private listeners: (() => void)[] = [];
 
     private tabsContentEl?: HTMLElement;
+    private demoAppHeaderEl: DemoAppHeaderElement;
 
     private tabs: HTMLElement[] = [];
     private views: HTMLElement[] = [];
@@ -77,19 +78,18 @@ export class DemoAppMainElement extends HTMLElement {
 
         this.attachShadow({ mode: 'open' });
         this.shadowRoot?.appendChild(document.importNode(template.content, true));
+
+        this.tabsContentEl = this.shadowRoot?.querySelector('.tabs-content') as HTMLElement;
+        this.demoAppHeaderEl = this.shadowRoot?.querySelector('demo-app-header') as DemoAppHeaderElement;
     }
 
     public set isAuthenticated(value: boolean) {
-        const demoAppHeader = this.shadowRoot?.querySelector('demo-app-header') as DemoAppHeaderElement;
-        demoAppHeader.isAuthenticated = value;
+        this.demoAppHeaderEl.isAuthenticated = value;
     }
 
     public connectedCallback(): void {
-        this.tabsContentEl = this.shadowRoot?.querySelector('.tabs-content') as HTMLElement;
         this.drawTabs();
-
-        const settings = window.authSettings;
-        this.showView(settings ? settings.getCurrentTabIndex() : 0);
+        this.showView(window.authSettings ? window.authSettings.getCurrentTabIndex() : 0);
     }
 
     public disconnectedCallback(): void {
