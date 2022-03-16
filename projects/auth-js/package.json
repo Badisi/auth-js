@@ -24,7 +24,9 @@
         "oauth2",
         "oauth",
         "auth",
-        "authn"
+        "authn",
+        "web",
+        "mobile"
     ],
     "sideEffects": false,
     "dependencies": {

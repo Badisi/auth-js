@@ -25,7 +25,9 @@
         "oauth2",
         "oauth",
         "auth",
-        "authn"
+        "authn",
+        "web",
+        "mobile"
     ],
     "dependencies": {
         "@badisi/auth-js": "^1.0.0-beta.5"
