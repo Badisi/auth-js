@@ -44,11 +44,11 @@ template.innerHTML = `
 
         header .version {
             position: absolute;
-            bottom: 14px;
-            font-size: 12px;
+            bottom: 13px;
+            font-size: 13px;
             font-weight: 300;
             font-style: italic;
-            color: #B388FF;
+            color: ##bda9e1;
         }
 
         :host header .title {
