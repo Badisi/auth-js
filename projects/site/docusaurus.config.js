@@ -9,7 +9,7 @@ const config = {
     title: 'auth-js',
     tagline: 'Authentication and authorization support for web based applications.',
     url: 'https://badisi.github.io',
-    baseUrl: '/auth-js/docs/',
+    baseUrl: '/auth-js/site/',
     organizationName: 'Badisi',
     projectName: 'auth-js',
     deploymentBranch: 'gh-pages',
@@ -27,7 +27,7 @@ const config = {
                     breadcrumbs: false,
                     routeBasePath: '/',
                     sidebarPath: require.resolve('./sidebars.js'),
-                    editUrl: 'https://github.com/Badisi/auth-js/edit/main/projects/docs/'
+                    editUrl: 'https://github.com/Badisi/auth-js/edit/main/projects/site/'
                 },
                 theme: {
                     customCss: require.resolve('./src/css/custom.css')

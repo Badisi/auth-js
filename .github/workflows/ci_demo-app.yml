@@ -7,7 +7,7 @@ on:
     tags-ignore:
     - '**'
     paths-ignore:
-    - 'projects/docs/**'
+    - 'projects/site/**'
 
 jobs:
   ci_demo-app:

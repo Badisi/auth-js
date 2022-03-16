@@ -1,17 +1,17 @@
-name: Deploy docs to GitHub Pages
+name: Deploy site to GitHub Pages
 
 on:
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/ci_docs.yml'
-      - 'projects/docs/**'
+      - '.github/workflows/ci_site.yml'
+      - 'projects/site/**'
     tags-ignore:
       - '**'
 
 jobs:
-  ci_docs:
+  ci_site:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
@@ -24,8 +24,8 @@ jobs:
           cache: npm
       - name: Make sure npm is latest
         run: npm install -g npm@latest
-      - name: Build docs
-        working-directory: projects/docs
+      - name: Build site
+        working-directory: projects/site
         run: |
           npm clean-install
           npm run build
@@ -33,6 +33,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./projects/docs/build
-          destination_dir: docs
-          commit_message: 'deploy(docs):'
+          publish_dir: ./projects/site/build
+          destination_dir: site
+          commit_message: 'deploy(site):'
