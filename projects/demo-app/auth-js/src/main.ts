@@ -11,7 +11,7 @@ void (async (): Promise<void> => {
     window.authManager = await initOidc(authSettings.getCurrentSettings().librarySettings);
 
     const template = document.createElement('template');
-    if (await window.authManager.isAuthenticated() || !window.authManager.getSettings().loginRequired) {
+    if (!window.authManager.getSettings().loginRequired || await window.authManager.isAuthenticated()) {
         template.innerHTML = '<app-root></app-root>';
         document.body.appendChild(document.importNode(template.content, true));
     } else {

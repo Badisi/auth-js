@@ -131,6 +131,11 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         this.assertNotInInceptionLoop();
 
         // Decide what to do..
+        const runSyncOrAsync = async (job: () => Promise<unknown>): Promise<void> => {
+            // eslint-disable-next-line @typescript-eslint/brace-style, max-statements-per-line
+            if (this.settings.loginRequired) { await job(); } else { void job(); }
+        };
+
         if (isNative) {
             this.installCustomUrlSchemeCallback();
             /* if (this.settings.autoLoginOnInit) {
@@ -144,11 +149,11 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                 return null;
             }*/
         } else if (this.urlMatching(location.href, this.settings.internal?.redirect_uri)) {
-            await this.backFromLogin();
+            await runSyncOrAsync(() => this.backFromLogin());
         } else if (this.urlMatching(location.href, this.settings.internal?.post_logout_redirect_uri)) {
-            await this.backFromLogout();
+            await runSyncOrAsync(() => this.backFromLogout());
         } else if (this.settings.loadSession) {
-            await this.signinSilent().catch(async (signinSilentError: Error) => {
+            await runSyncOrAsync(() => this.signinSilent().catch(async (signinSilentError: Error) => {
                 if (this.settings.loginRequired) {
                     if (signinSilentError.message === 'login_required') {
                         await this.login();
@@ -156,7 +161,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                         throw signinSilentError;
                     }
                 }
-            });
+            }));
         } else if (this.settings.loginRequired) {
             await this.login();
         }
