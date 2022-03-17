@@ -48,4 +48,4 @@ Please read and follow the [Code of Conduct][codeofconduct] and help me keep thi
 [contributing]: https://github.com/badisi/auth-js/blob/main/CONTRIBUTING.md
 [codeofconduct]: https://github.com/badisi/auth-js/blob/main/CODE_OF_CONDUCT.md
 [docs-site]: https://badisi.github.io/auth-js/site/docs/intro
-[demo-site]: https://badisi.github.io/auth-js/demo-app
+[demo-site]: https://badisi.github.io/auth-js/demo-app/ngx-auth
