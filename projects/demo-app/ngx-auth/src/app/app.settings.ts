@@ -16,7 +16,7 @@ const settings: Settings<AuthSettings>[] = [{
         clientId: 'kRVVEnAWKMpxxpcodl0TqLXfIHgQvmmt',
         schemeUri: 'demo-app',
         authGuardRedirectUrl: '/forbidden',
-        scope: 'openid profile email phone read:current_user',
+        scope: 'openid profile email phone offline_access read:current_user',
         internal: {
             extraQueryParams: {
                 audience: 'https://dev-fijd1e9x.us.auth0.com/api/v2/'
