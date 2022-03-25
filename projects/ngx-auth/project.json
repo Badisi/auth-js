@@ -29,7 +29,7 @@
             ],
             "options": {
                 "commands": [
-                    "cpy projects/auth-js/oidc/assets dist/ngx-auth/oidc/assets",
+                    "cpy projects/auth-js/oidc/assets dist/ngx-auth/oidc/assets --flat",
                     "cpy LICENSE dist/ngx-auth/ --flat"
                 ],
                 "color": true
