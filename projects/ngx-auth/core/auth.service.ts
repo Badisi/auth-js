@@ -31,6 +31,12 @@ export class AuthService implements OnDestroy {
         this.authManagerSubs.forEach(sub => sub.unsubscribe());
     }
 
+    public get isRenewing$(): Observable<boolean | undefined> {
+        return this._isRenewing$.asObservable().pipe(
+            distinctUntilChanged()
+        );
+    }
+
     public get isAuthenticated$(): Observable<boolean | undefined> {
         return this._isAuthenticated$.asObservable().pipe(
             distinctUntilChanged()

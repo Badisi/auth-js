@@ -47,6 +47,9 @@ export class AppElement extends HTMLElement {
             const manager = window.authManager;
             if (this.demoAppMainEl && this.demoAppDebugEl) {
                 switch (key) {
+                    case 'renewing':
+                        this.demoAppMainEl.isRenewing = value as boolean;
+                        break;
                     case 'authenticated':
                         this.demoAppMainEl.isAuthenticated = value as boolean;
                         this.demoAppDebugEl.isAuthenticated = value as boolean;
@@ -75,6 +78,7 @@ export class AppElement extends HTMLElement {
         const manager = window.authManager;
         if (manager) {
             this.authManagerSubs.push(
+                manager.onRenewingChanged(value => this.refreshInfo('renewing', value)),
                 manager.onAuthenticatedChanged(value => this.refreshInfo('authenticated', value)),
                 manager.onUserSessionChanged(value => this.refreshInfo('userSession', value)),
                 manager.onAccessTokenChanged(value => this.refreshInfo('accessToken', value)),

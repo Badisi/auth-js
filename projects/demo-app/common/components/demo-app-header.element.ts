@@ -26,6 +26,30 @@ template.innerHTML = `
             color: white;
         }
 
+        @keyframes statusLoadingAnimation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        :host header .status.loading {
+            background: none;
+        }
+
+        :host header .status.loading:after {
+            display: block;
+            content: " ";
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            border-color: #fff transparent #fff transparent;
+            animation: statusLoadingAnimation 1.2s linear infinite;
+        }
+
+        :host header .status.not-authenticated {
+            background-color: #EC407A;
+        }
+
         :host header .status.authenticated {
             background-color: #7CB342;
         }
@@ -37,7 +61,6 @@ template.innerHTML = `
             width: 15px;
             height: 15px;
             border-radius: 50%;
-            background-color: #EC407A;
             margin-top: 1px;
             margin-right: 8px;
         }
@@ -145,12 +168,21 @@ export class DemoAppHeaderElement extends HTMLElement {
         this.loginButtonEl = this.shadowRoot?.querySelector('#login-button') as HTMLElement;
         this.logoutButtonEl = this.shadowRoot?.querySelector('#logout-button') as HTMLElement;
         this.silentRenewButtonEl = this.shadowRoot?.querySelector('#silent-renew-button') as HTMLElement;
+    }
 
-        this.refreshStatus(false);
+    public set isRenewing(value: boolean) {
+        if (this.statusEl) {
+            this.statusEl.classList[(value) ? 'add' : 'remove']('loading');
+        }
     }
 
     public set isAuthenticated(value: boolean) {
-        this.refreshStatus(value);
+        if (this.statusEl && value !== null) {
+            this.statusEl.classList.remove('loading');
+            this.statusEl.title = (value) ? 'Authenticated' : 'Not authenticated';
+            this.statusEl.classList[(value) ? 'add' : 'remove']('authenticated');
+            this.statusEl.classList[(value) ? 'remove' : 'add']('not-authenticated');
+        }
     }
 
     public connectedCallback(): void {
@@ -207,13 +239,6 @@ export class DemoAppHeaderElement extends HTMLElement {
             const impl = (implIndex !== -1) ? impls[implIndex] : impls[0];
             this.implSelectEl.selectedIndex = (implIndex !== -1) ? implIndex : 0;
             this.versionEl.textContent = impl.version;
-        }
-    }
-
-    private refreshStatus(value: boolean): void {
-        if (this.statusEl) {
-            this.statusEl.title = (value) ? 'Authenticated' : 'Not authenticated';
-            this.statusEl.classList[(value) ? 'add' : 'remove']('authenticated');
         }
     }
 }

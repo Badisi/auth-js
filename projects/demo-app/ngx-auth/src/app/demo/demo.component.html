@@ -1,4 +1,5 @@
-<demo-app-main [isAuthenticated]="isAuthenticated$ | async"
+<demo-app-main [isRenewing]="isRenewing$ | async"
+               [isAuthenticated]="isAuthenticated$ | async"
                (login)="login()"
                (logout)="logout()"
                (silentRenew)="silentRenew()">

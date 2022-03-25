@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
     templateUrl: './demo.component.html'
 })
 export class DemoComponent {
+    public isRenewing$ = this.authService.isRenewing$;
     public isAuthenticated$ = this.authService.isAuthenticated$;
     public userProfile$ = this.authService.userProfile$;
     public userSession$ = this.authService.userSession$;

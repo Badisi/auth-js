@@ -83,6 +83,10 @@ export class DemoAppMainElement extends HTMLElement {
         this.demoAppHeaderEl = this.shadowRoot?.querySelector('demo-app-header') as DemoAppHeaderElement;
     }
 
+    public set isRenewing(value: boolean) {
+        this.demoAppHeaderEl.isRenewing = value;
+    }
+
     public set isAuthenticated(value: boolean) {
         this.demoAppHeaderEl.isAuthenticated = value;
     }

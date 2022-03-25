@@ -89,7 +89,9 @@ export class DemoAppDebugElement extends HTMLElement {
     }
 
     public set isAuthenticated(value: boolean | undefined) {
-        this.update('#isAuthenticated', value);
+        if (value !== null) {
+            this.update('#isAuthenticated', value);
+        }
     }
 
     public set userSession(value: unknown | undefined) {
