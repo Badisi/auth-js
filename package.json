@@ -25,7 +25,7 @@
     "private": true,
     "scripts": {
         "start:site": "npm run start --prefix=projects/site",
-        "start:demo-idp": "npm run start --prefix=project/demo-idp",
+        "start:demo-idp": "npm run start --prefix=projects/demo-idp",
         "start:demo-app:auth-js": "nx run demo-app-auth-js:serve",
         "start:demo-app:ngx-auth": "nx run demo-app-ngx-auth:serve",
         "lint:auth-js": "nx run auth-js:lint",
