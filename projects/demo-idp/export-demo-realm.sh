@@ -3,4 +3,4 @@ docker exec -it badisi-auth-js-demo-idp /opt/jboss/keycloak/bin/standalone.sh \
     -Dkeycloak.migration.provider=singleFile \
     -Dkeycloak.migration.realmName=demo \
     -Dkeycloak.migration.usersExportStrategy=REALM_FILE \
-    -Dkeycloak.migration.file=/tmp/settings-new.json
+    -Dkeycloak.migration.file=/tmp/realm-config/demo-realm-exported.json
