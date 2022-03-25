@@ -311,7 +311,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
      *  2) iframe or popup was created and navigation was made to OP
      *  3) redirection occurs in iframe or popup
      *  4) `silent_redirect_uri` or `popup_redirect_uri` is not found
-     *  5) the angular app is loaded in the iframe or popup instead
+     *  5) the web app is loaded in the iframe or popup instead
      *  6) an inception loop occurs -> app in iframe in iframe in iframe or popup in popup in popup..
      */
     private assertNotInInceptionLoop(): void {
