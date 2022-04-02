@@ -1,4 +1,5 @@
 {
+    "name": "@badisi/auth-js",
     "description": "Authentication and authorization support for web based desktop and mobile applications.",
     "homepage": "https://github.com/Badisi/auth-js",
     "license": "GPL-3.0",
@@ -39,6 +40,10 @@
         "e2e": "npm run start --prefix=projects/demo-e2e -- --debug=true --headless=false --watch=true",
         "postinstall": "ngcc --properties es2015 browser module main"
     },
+    "workspaces": [
+        "projects/auth-js",
+        "projects/ngx-auth"
+    ],
     "dependencies": {
         "@angular/common": "^12.x",
         "@angular/compiler": "^12.x",
