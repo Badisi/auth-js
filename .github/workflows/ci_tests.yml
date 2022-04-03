@@ -1,34 +1,62 @@
-name: CI tests
+name: Run tests
 
 on:
   push:
     branches:
-    - '**'
+      - '**'
     tags-ignore:
-    - '**'
+      - '**'
     paths-ignore:
-    - 'projects/site/**'
+      - 'projects/site/**'
   pull_request:
+  workflow_call:
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   ci_tests:
-    name: Tests on linux node${{ matrix.node }}
-    runs-on: ubuntu-latest
+    name: Tests on ${{ matrix.os }} node${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
-        node: ['12', '14', '16']
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [12, 14, 16]
+
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
+
       - name: Setup node
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
           registry-url: https://registry.npmjs.org/
-      - name: Make sure npm is latest
+          cache: npm
+
+      # https://github.com/actions/setup-node/issues/411
+      # https://github.com/npm/cli/issues/4341
+      - name: Workaround for npm installation on Windows
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: npm install -g npm@8.3.1
+
+      - name: Install latest npm
         run: npm install -g npm@latest
+
       - name: Install dependencies
         run: npm clean-install
+
       - name: Lint
         run: npm run lint
+
+      # - name: Test
+      #   run: npm run test
+
+      - name: Build auth-js
+        run: npm run build:auth-js
+
+      - name: Build ngx-auth
+        run: npm run build:ngx-auth

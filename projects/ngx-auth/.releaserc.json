@@ -1,0 +1,21 @@
+{
+    "branches": [
+        "master",
+        {
+            "name": "main",
+            "channel": "beta",
+            "prerelease": "beta"
+        }
+    ],
+    "plugins": [
+        "@semantic-release/commit-analyzer",
+        "@semantic-release/release-notes-generator",
+        [
+            "@semantic-release/npm",
+            {
+                "pkgRoot": "../../dist/ngx-auth"
+            }
+        ],
+        "@semantic-release/github"
+    ]
+}

@@ -1,4 +1,6 @@
 {
+    "name": "demo-e2e",
+    "private": true,
     "scripts": {
         "start": "wdio run wdio.config.ts --debug=true --headless=true --watch=false"
     },

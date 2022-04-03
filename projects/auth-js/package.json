@@ -37,6 +37,9 @@
     "devDependencies": {
         "@types/lodash-es": "^4.17.6"
     },
+    "publishConfig": {
+        "access": "public"
+    },
     "exports": {
         "core": {
             "import": "./esm/core/index.js",

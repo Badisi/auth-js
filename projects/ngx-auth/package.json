@@ -36,5 +36,8 @@
         "@angular/common": ">=7.0.0",
         "@angular/core": ">=7.0.0",
         "@angular/router": ">=7.0.0"
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }

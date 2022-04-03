@@ -1,4 +1,6 @@
 {
+    "name": "demo-idp",
+    "private": true,
     "scripts": {
         "start": "docker-compose --file='docker-compose.yml' up"
     }

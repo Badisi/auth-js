@@ -1,31 +1,42 @@
-name: Publish library to NPM
+name: Publish libraries
 
 on:
-  release:
-    types: [created]
+  workflow_dispatch:
 
 jobs:
+  #ci_tests_and_build:
+  #  uses: ./.github/workflows/ci_tests.yml
+
   ci_publish:
+    #needs: ci_tests_and_build
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
+
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 16
           registry-url: https://registry.npmjs.org/
-      - name: Make sure npm is latest
+          cache: npm
+
+      - name: Install latest npm
         run: npm install -g npm@latest
+
       - name: Install dependencies
         run: npm clean-install
-      - name: Lint
-        run: npm run lint
-      - name: Test
-        run: npm run test
-      - name: Build
-        run: npm run build:lib
-#      - name: Publish
-#        env:
-#          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-#        run: npm publish ./dist --access=public
+
+      - name: Build auth-js
+        run: npm run build:auth-js
+
+      - name: Build ngx-auth
+        run: npm run build:ngx-auth
+
+      - name: Run semantic-release
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx multi-semantic-release --ignore-packages="projects/demo-e2e/**"

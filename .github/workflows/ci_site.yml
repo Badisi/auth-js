@@ -1,14 +1,19 @@
-name: Deploy site to GitHub Pages
+name: Deploy site
 
 on:
   push:
     branches:
       - main
+    tags-ignore:
+      - '**'
     paths:
       - '.github/workflows/ci_site.yml'
       - 'projects/site/**'
-    tags-ignore:
-      - '**'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   ci_site:
@@ -16,19 +21,24 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
+
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 16
           registry-url: https://registry.npmjs.org/
           cache: npm
-      - name: Make sure npm is latest
+          cache-dependency-path: projects/site/package-lock.json
+
+      - name: Install latest npm
         run: npm install -g npm@latest
+
       - name: Build site
         working-directory: projects/site
         run: |
           npm clean-install
           npm run build
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
