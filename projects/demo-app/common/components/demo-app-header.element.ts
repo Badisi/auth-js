@@ -68,10 +68,18 @@ template.innerHTML = `
         header .version {
             position: absolute;
             bottom: 13px;
+        }
+
+        header .version a {
             font-size: 13px;
             font-weight: 300;
             font-style: italic;
-            color: ##bda9e1;
+            text-decoration: none;
+            color: #bda9e1;
+        }
+
+        header .version a:hover {
+            text-decoration: underline;
         }
 
         :host header .title {
@@ -199,7 +207,7 @@ export class DemoAppHeaderElement extends HTMLElement {
             });
 
             const changeCb = (): void => {
-                window.location.href = window.authSettings.getImplementations()[this.implSelectEl.selectedIndex].url;
+                window.location.href = window.authSettings.getImplementations()[this.implSelectEl.selectedIndex].demoUrl;
             };
             this.implSelectEl.addEventListener('change', changeCb);
             this.listeners.push(() => this.implSelectEl.removeEventListener('change', changeCb));
@@ -233,13 +241,11 @@ export class DemoAppHeaderElement extends HTMLElement {
     }
 
     private refreshImplementation(): void {
-        if (!window.location.href.includes('localhost')) {
-            const impls = window.authSettings.getImplementations();
-            const implIndex = impls.findIndex(item => window.location.href.includes(item.url));
-            const impl = (implIndex !== -1) ? impls[implIndex] : impls[0];
-            this.implSelectEl.selectedIndex = (implIndex !== -1) ? implIndex : 0;
-            this.versionEl.textContent = impl.version;
-        }
+        const impls = window.authSettings.getImplementations();
+        const implIndex = impls.findIndex(item => window.location.href.includes(item.demoUrl));
+        const impl = (implIndex !== -1) ? impls[implIndex] : impls[0];
+        this.implSelectEl.selectedIndex = (implIndex !== -1) ? implIndex : 0;
+        this.versionEl.innerHTML = impl.version;
     }
 }
 

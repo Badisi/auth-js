@@ -4,7 +4,7 @@ import ngxAuthPkgJson from 'projects/ngx-auth/package.json';
 
 export interface Implementation {
     label: string;
-    url: string;
+    demoUrl: string;
     version: string;
 }
 
@@ -33,14 +33,14 @@ export interface AppSettings<S extends AuthSettings = AuthSettings> {
 export class DemoAppSettings<S extends AuthSettings = AuthSettings> {
     private implementations: Implementation[] = [{
         label: 'VanillaJS',
-        url: 'https://badisi.github.io/auth-js/demo-app/auth-js',
+        demoUrl: 'https://badisi.github.io/auth-js/demo-app/auth-js',
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-        version: `${authJsPkgJson.name}@${authJsPkgJson.version}`
+        version: `<a href="${authJsPkgJson.homepage}" target="_blank">${authJsPkgJson.name}@main</a>`
     }, {
         label: 'Angular',
-        url: 'https://badisi.github.io/auth-js/demo-app/ngx-auth',
+        demoUrl: 'https://badisi.github.io/auth-js/demo-app/ngx-auth',
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-        version: `${ngxAuthPkgJson.name}@${ngxAuthPkgJson.version}`
+        version: `<a href="${ngxAuthPkgJson.homepage}" target="_blank">${ngxAuthPkgJson.name}@main</a>`
     }];
 
     constructor(
