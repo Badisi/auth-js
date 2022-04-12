@@ -30,9 +30,9 @@
     ],
     "sideEffects": false,
     "dependencies": {
-        "oidc-client-ts": "2.0.2",
+        "jwt-decode": "^3.1.2",
         "lodash-es": "^4.17.21",
-        "jwt-decode": "^3.1.2"
+        "oidc-client-ts": "2.0.3"
     },
     "devDependencies": {
         "@types/lodash-es": "^4.17.6"
