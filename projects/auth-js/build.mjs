@@ -8,9 +8,9 @@ import { mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, resolve as pathResolve } from 'path';
 import { fileURLToPath } from 'url';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const { blue, green } = chalk;
-const { dependencies, peerDependencies } = JSON.parse(readFileSync('package.json'));
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const { name: pkgName, dependencies, peerDependencies } = JSON.parse(readFileSync(pathResolve(__dirname, 'package.json')));
 
 const EXTERNALS = Object.keys({ ...dependencies, ...peerDependencies });
 const DIST_PATH = pathResolve(__dirname, '../../dist/auth-js');
@@ -58,7 +58,7 @@ const build = async (entryPointName, platform, distName, bundleExternals = false
         // Build entry points
         for (const entryPointName of ['core', 'oidc']) { // eslint-disable-line no-loops/no-loops
             console.log('-'.repeat(78));
-            console.log(`Building entry point '@badisi/auth-js/${entryPointName}'`);
+            console.log(`Building entry point '${pkgName}/${entryPointName}'`);
             console.log('-'.repeat(78));
 
             console.log(`${green('✓')} Bundling to ESM`);
@@ -73,15 +73,28 @@ const build = async (entryPointName, platform, distName, bundleExternals = false
             console.log(`${green('✓')} Bundling to BROWSER and minifying (self contained)`);
             await build(entryPointName, 'browser', 'browser', true, true);
 
-            console.log(`${green('✓')} Built @badisi/auth-js/${entryPointName}`, '\n');
+            console.log(`${green('✓')} Built ${pkgName}/${entryPointName}`, '\n');
         }
 
         // Build library
         console.log('-'.repeat(78));
-        console.log('Building \'@badisi/auth-js\'');
+        console.log(`Building '${pkgName}'`);
         console.log('-'.repeat(78));
         //  types
         await execCmd('tsc --project tsconfig.lib.json', { cwd: __dirname });
+        ['core', 'oidc'].forEach(entryPoint => {
+            writeFileSync(
+                pathResolve(DIST_PATH, entryPoint, 'package.json'),
+                JSON.stringify({
+                    name: `${pkgName}/${entryPoint}`,
+                    types: './index.d.ts',
+                    import: `../esm/${entryPoint}/index.js`,
+                    require: `../umd/${entryPoint}/index.js`,
+                    browser: `../browser/${entryPoint}/index.min.js`
+                }, null, 4),
+                { encoding: 'utf8' }
+            );
+        });
         console.log(`${green('✓')} Generating types`);
         //  assets
         await cpy('projects/auth-js/oidc/assets', pathResolve(DIST_PATH, 'oidc', 'assets'), { flat: true });
@@ -90,14 +103,14 @@ const build = async (entryPointName, platform, distName, bundleExternals = false
         await cpy('LICENSE', DIST_PATH, { flat: true });
         console.log(`${green('✓')} Copying assets`);
         //  package.json
-        const pkgJsonPath = pathResolve(DIST_PATH, 'package.json');
-        const pkgJson = JSON.parse(readFileSync(pkgJsonPath, { encoding: 'utf8' }));
-        delete pkgJson.scripts;
-        delete pkgJson.devDependencies;
-        writeFileSync(pkgJsonPath, JSON.stringify(pkgJson, null, 4), { encoding: 'utf8' });
+        const distPkgJsonPath = pathResolve(DIST_PATH, 'package.json');
+        const distPkgJson = JSON.parse(readFileSync(distPkgJsonPath, { encoding: 'utf8' }));
+        delete distPkgJson.scripts;
+        delete distPkgJson.devDependencies;
+        writeFileSync(distPkgJsonPath, JSON.stringify(distPkgJson, null, 4), { encoding: 'utf8' });
         console.log(`${green('✓')} Writing package metadata`);
         //  end
-        console.log(`${green('✓')} Built @badisi/auth-js\n`);
+        console.log(`${green('✓')} Built ${pkgName}\n`);
 
         // Success
         console.log(green('-'.repeat(78)));

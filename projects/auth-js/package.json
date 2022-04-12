@@ -41,17 +41,17 @@
         "access": "public"
     },
     "exports": {
-        "core": {
+        "./core": {
+            "types": "./core/index.d.ts",
             "import": "./esm/core/index.js",
             "require": "./umd/core/index.js",
-            "browser": "./browser/core/index.min.js",
-            "types": "./core/index.d.ts"
+            "browser": "./browser/core/index.min.js"
         },
-        "oidc": {
+        "./oidc": {
+            "types": "./oidc/index.d.ts",
             "import": "./esm/oidc/index.js",
             "require": "./umd/oidc/index.js",
-            "browser": "./browser/oidc/index.min.js",
-            "types": "./oidc/index.d.ts"
+            "browser": "./browser/oidc/index.min.js"
         }
     }
 }
