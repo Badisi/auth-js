@@ -46,8 +46,20 @@ jobs:
       - name: Install latest npm
         run: npm install -g npm@latest
 
+      - name: Cache .angular and node_modules
+        uses: actions/cache@v3
+        id: cache-step
+        with:
+          key: cache-${{ matrix.os }}-node${{ matrix.node }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            cache-${{ matrix.os }}-node${{ matrix.node }}-
+          path: |
+            .angular/cache
+            node_modules
+
       - name: Install dependencies
-        run: npm clean-install
+        if: steps.cache-step.outputs.cache-hit != 'true'
+        run: npm clean-install --engine-strict
 
       - name: Lint
         run: npm run lint

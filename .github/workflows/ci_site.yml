@@ -36,7 +36,7 @@ jobs:
       - name: Build site
         working-directory: projects/site
         run: |
-          npm clean-install
+          npm clean-install --engine-strict
           npm run build
 
       - name: Deploy to GitHub Pages

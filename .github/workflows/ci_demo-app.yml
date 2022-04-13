@@ -32,7 +32,7 @@ jobs:
         run: npm install -g npm@latest
 
       - name: Install dependencies
-        run: npm clean-install
+        run: npm clean-install --engine-strict
 
       - name: Lint demo apps
         run: npm run lint:demo-app

@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  #ci_tests_and_build:
-  #  uses: ./.github/workflows/ci_tests.yml
+  ci_tests:
+    uses: ./.github/workflows/ci_tests.yml
 
   ci_publish:
-    #needs: ci_tests_and_build
+    needs: ci_tests
     runs-on: ubuntu-latest
 
     steps:
@@ -26,7 +26,7 @@ jobs:
         run: npm install -g npm@latest
 
       - name: Install dependencies
-        run: npm clean-install
+        run: npm clean-install --engine-strict
 
       - name: Build auth-js
         run: npm run build:auth-js
