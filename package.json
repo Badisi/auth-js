@@ -71,7 +71,7 @@
         "@nrwl/web": "^13.10.2",
         "@nrwl/workspace": "^13.10.2",
         "@types/jest": "^27.4.1",
-        "@types/node": "^17.0.23",
+        "@types/node": "^17.0.24",
         "cpy-cli": "^4.1.0",
         "esbuild": "^0.14.36",
         "eslint": "^8.13.0",
