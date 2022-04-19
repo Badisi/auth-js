@@ -18,7 +18,7 @@ const settings: Settings<OIDCAuthSettings>[] = [{
         navigationType: Navigation.REDIRECT,
         logLevel: Log.NONE,
         loginRequired: false,
-        loadSession: true,
+        loadUserSession: true,
         loadUserInfo: true,
         automaticSilentRenew: true
     }
@@ -32,7 +32,7 @@ const settings: Settings<OIDCAuthSettings>[] = [{
         navigationType: Navigation.REDIRECT,
         logLevel: Log.NONE,
         loginRequired: false,
-        loadSession: true,
+        loadUserSession: true,
         loadUserInfo: true,
         automaticSilentRenew: true
     }
@@ -98,12 +98,12 @@ const librarySettingsDefinition: LibrarySettingsDefinitionItem<OIDCAuthSettings>
     label: 'Login required',
     type: 'boolean'
 }, {
-    name: 'loadSession',
-    label: 'Load session',
+    name: 'loadUserSession',
+    label: 'Load user\'s session',
     type: 'boolean'
 }, {
     name: 'loadUserInfo',
-    label: 'Load user info',
+    label: 'Load user\'s info',
     type: 'boolean'
 }, {
     name: 'automaticSilentRenew',

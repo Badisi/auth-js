@@ -18,7 +18,7 @@ const REDIRECT_URL_KEY = 'auth-js:oidc_manager:redirect_url';
 
 const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> = {
     loginRequired: false,
-    loadSession: true,
+    loadUserSession: true,
     loadUserInfo: false,
     automaticSilentRenew: true,
     navigationType: Navigation.REDIRECT,
@@ -152,7 +152,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             await runSyncOrAsync(() => this.backFromLogin());
         } else if (this.urlMatching(location.href, this.settings.internal?.post_logout_redirect_uri)) {
             await runSyncOrAsync(() => this.backFromLogout());
-        } else if (this.settings.loadSession) {
+        } else if (this.settings.loadUserSession) {
             await runSyncOrAsync(() => this.signinSilent().catch(async (signinSilentError: Error) => {
                 if (this.settings.loginRequired) {
                     if (signinSilentError.message === 'login_required') {

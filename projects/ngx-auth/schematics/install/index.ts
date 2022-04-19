@@ -17,7 +17,7 @@ const getActualUserConfig = async (context: SchematicContext, options: InstallOp
         authorityUrl: options.authorityUrl,
         clientId: options.clientId
     };
-    (['loginRequired', 'loadSession', 'loadUserInfo'] as (keyof InstallOptions)[]).forEach(name => {
+    (['loginRequired', 'loadUserSession', 'loadUserInfo'] as (keyof InstallOptions)[]).forEach(name => {
         if (options[name] !== defaultOptions[name]) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
             (config as any)[name] = options[name];

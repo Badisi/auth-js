@@ -25,7 +25,7 @@ const settings: Settings<AuthSettings>[] = [{
         navigationType: Navigation.REDIRECT,
         logLevel: Log.NONE,
         loginRequired: false,
-        loadSession: true,
+        loadUserSession: true,
         loadUserInfo: true,
         automaticSilentRenew: true,
         automaticLoginOn401: true,
@@ -47,7 +47,7 @@ const settings: Settings<AuthSettings>[] = [{
         navigationType: Navigation.REDIRECT,
         logLevel: Log.NONE,
         loginRequired: false,
-        loadSession: true,
+        loadUserSession: true,
         loadUserInfo: true,
         automaticSilentRenew: true,
         automaticLoginOn401: true,
@@ -119,12 +119,12 @@ const librarySettingsDefinition: LibrarySettingsDefinitionItem<AuthSettings>[] =
     label: 'Login required',
     type: 'boolean'
 }, {
-    name: 'loadSession',
-    label: 'Load session',
+    name: 'loadUserSession',
+    label: 'Load user\'s session',
     type: 'boolean'
 }, {
     name: 'loadUserInfo',
-    label: 'Load user info',
+    label: 'Load user\'s info',
     type: 'boolean'
 }, {
     name: 'automaticSilentRenew',

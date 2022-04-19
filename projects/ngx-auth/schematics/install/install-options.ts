@@ -3,6 +3,6 @@ export class InstallOptions {
     public authorityUrl!: string;
     public clientId!: string;
     public loginRequired?: boolean;
-    public loadSession?: boolean;
+    public loadUserSession?: boolean;
     public loadUserInfo?: boolean;
 }
