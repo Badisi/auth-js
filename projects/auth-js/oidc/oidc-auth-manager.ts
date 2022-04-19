@@ -17,7 +17,7 @@ import { UserSession } from './models/user-session.model';
 const REDIRECT_URL_KEY = 'auth-js:oidc_manager:redirect_url';
 
 const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> = {
-    loginRequired: true,
+    loginRequired: false,
     loadSession: true,
     loadUserInfo: false,
     automaticSilentRenew: true,

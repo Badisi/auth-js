@@ -1,0 +1,47 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "badisi-ngx-auth-install",
+    "title": "install schematic",
+    "type": "object",
+    "properties": {
+        "project": {
+            "description": "Name of the Angular project to run the schematics on.",
+            "type": "string"
+        },
+        "authorityUrl": {
+            "x-prompt": "Authority url ?",
+            "description": "The authorization server DNS host name or IP address.",
+            "type": "string",
+            "minLength": 1
+        },
+        "clientId": {
+            "x-prompt": "Client id ?",
+            "description": "The public client application's identifier assigned by the authorization server.",
+            "type": "string",
+            "minLength": 1
+        },
+        "loginRequired": {
+            "x-prompt": "Is authentication required at startup ?",
+            "description": "Whether an authentication should be required during the initialization phase.",
+            "type": "boolean",
+            "default": false
+        },
+        "loadSession": {
+            "x-prompt": "Retrieve user's session at startup ?",
+            "description": "Whether any currently opened user's session should be retrieved during the initialization phase.",
+            "type": "boolean",
+            "default": true
+        },
+        "loadUserInfo": {
+            "x-prompt": "Load user's info at startup ?",
+            "description": "Whether the user's information should be loaded from the userinfo endpoint during the initialization phase.",
+            "type": "boolean",
+            "default": false
+        }
+    },
+    "required": [
+        "authorityUrl",
+        "clientId"
+    ],
+    "additionalProperties": false
+}

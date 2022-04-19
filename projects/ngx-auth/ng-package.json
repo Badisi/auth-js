@@ -5,6 +5,7 @@
         "./ngcc.config.js"
     ],
     "allowedNonPeerDependencies": [
+        "@hug/ngx-schematics-utilities",
         "@badisi/auth-js"
     ],
     "lib": {

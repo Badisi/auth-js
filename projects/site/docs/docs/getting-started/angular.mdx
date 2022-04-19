@@ -6,20 +6,12 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 
-This guide explains how to set up your **Angular project** to begin using `@badisi/ngx-auth`.
+This guide explains how to set up your Angular project to begin using `@badisi/ngx-auth`.
 
 > 🚀 The fastest, simplest and preferred way is the [schematic](#schematic) way but you can also install this library [manually](#manual-installation).
 
-:::tip
-If you are new to [**Angular**][angular] or getting started with a new Angular application, see Angular's full [Getting Started Guide][angular-start] and [Setting up your environment][angular-setup].
-:::
-
 
 ### Schematic
-
-:::caution
-Not yet available..
-:::
 
 Use the Angular CLI's installation [schematic][schematics] to automagically set up your Angular project with this library:
 
@@ -53,19 +45,13 @@ If you wish to install this library manually, please follow the steps below:
 
 2. Modify your **angular.json** file
 
-    :::info
-    This library depends on [`oidc-client-ts`][oidc-client] which itself depends on [`crypto-js`][crypto-js] which is a **commonjs** dependency.
-
-    **Assets** needs to be copy over to your application because some html web pages are used and required when navigating back from the Authorization server.
-    :::
-
     ```js title="angular.json" {5-7,9-11}
     {
-      "targets": {
+      "...": {
         "build": {
           "options": {
             "allowedCommonJsDependencies": [
-              "oidc-client-ts"
+              "crypto-js"
             ],
             "assets": [{
               "glob": "**/*",
@@ -78,15 +64,14 @@ If you wish to install this library manually, please follow the steps below:
     }
     ```
 
-3. Modify your **main.ts** file
-
     :::info
-    Initializing the library prior to your Angular application bootstrapping ensures that all the security checks are made upstream (if needed) and avoid the whole Angular application to be loaded twice when using redirects.
-    :::
+    This library depends on [`oidc-client-ts`][oidc-client] which itself depends on [`crypto-js`][crypto-js] which is a **commonjs** dependency.
 
-    :::tip
-    For more info on how to **configure** the library please have a look at the [configuration](../configuration) page.
+    **Assets** needs to be copy over to your application because some html web pages are used and required when navigating back from the Authorization server.
     :::
+    <br/>
+
+3. Modify your **main.ts** file
 
     ```ts title="main.ts" {3,12-15,19}
     import { enableProdMode } from '@angular/core';
@@ -110,11 +95,16 @@ If you wish to install this library manually, please follow the steps below:
     }).catch(error => console.error(error));
     ```
 
-4. Modify your **app.module.ts** file
+    :::tip
+    For more info on how to **configure** the library please have a look at the [configuration](../configuration) page.
+    :::
 
     :::info
-    Importing the **AuthModule** is required so an `AuthService`, `AuthInterceptor` and `AuthGuard` are provided to your application.
+    Initializing the library prior to your Angular application bootstrapping ensures that all the security checks are made upstream (if needed) and avoid the whole Angular application to be loaded twice when using redirects.
     :::
+    <br/>
+
+4. Modify your **app.module.ts** file
 
     ```ts title="app.module.ts" {2,6}
     import { NgModule } from '@angular/core';
@@ -127,6 +117,11 @@ If you wish to install this library manually, please follow the steps below:
     })
     export class AppModule {}
     ```
+
+    :::info
+    Importing the **AuthModule** is required so an `AuthService`, `AuthInterceptor` and `AuthGuard` are provided to your application.
+    :::
+    <br/>
 
 5. You're done! 🚀
 
