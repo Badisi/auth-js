@@ -18,6 +18,14 @@
     --ifm-navbar-item-padding-horizontal: 1rem;
 }
 
+/**
+ * @docusaurus@2.0.0-beta.18 breaks the left column -> it does not take the whole page height
+ */
+.main-wrapper {
+    display: flex;
+}
+/**/
+
 .navbar__brand:hover {
     color: black;
 }
