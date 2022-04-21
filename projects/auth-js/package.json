@@ -44,13 +44,13 @@
         "./core": {
             "types": "./core/index.d.ts",
             "import": "./esm/core/index.js",
-            "require": "./umd/core/index.js",
+            "require": "./cjs/core/index.js",
             "browser": "./browser/core/index.min.js"
         },
         "./oidc": {
             "types": "./oidc/index.d.ts",
             "import": "./esm/oidc/index.js",
-            "require": "./umd/oidc/index.js",
+            "require": "./cjs/oidc/index.js",
             "browser": "./browser/oidc/index.min.js"
         }
     }
