@@ -95,7 +95,7 @@ export default (options: InstallOptions): Rule =>
                 const configContent = JSON.stringify(config, null, 2).replace(/"([^"]+)":/g, '$1:').replace(/"/g, '\'');
                 rules.push(
                     replaceInFile(mainTsPath, /initAuth\((.*?)\)/sm, `initAuth(${configContent})`),
-                    logAction(`Have a look at ${bold('main.ts')} file and update the ${bold('auth configuration')} according to your needs`)
+                    logAction(`Have a look at ${bold('main.ts')} file and update the ${bold('auth configuration')} according to your needs.`)
                 );
 
                 return chain(rules);

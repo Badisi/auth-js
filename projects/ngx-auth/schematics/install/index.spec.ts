@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+
 import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { disable as disableColors } from '@colors/colors';
 import { Schema as ApplicationOptions, Style } from '@schematics/angular/application/schema';
 import { Schema as WorkspaceOptions } from '@schematics/angular/workspace/schema';
 import { join } from 'path';
@@ -44,13 +47,26 @@ const getCleanAppTree = async (): Promise<UnitTestTree> => {
 
 const occurrences = (str: string, pattern: string): number => (str.match(new RegExp(pattern, 'g')) || []).length;
 
+interface Log {
+    name: string;
+    level: string;
+    message: string;
+}
+
 describe('Test - install schematic', () => {
     let tree: UnitTestTree;
     let nbFiles: number;
+    let logs: Log[];
+
+    beforeAll(() => {
+        disableColors();
+        runner.logger.subscribe(log => logs.push(log));
+    });
 
     beforeEach(async () => {
         tree = await getCleanAppTree();
         nbFiles = tree.files.length;
+        logs = [];
     });
 
     it('should failed without an angular app', async () => {
@@ -88,5 +104,32 @@ describe('Test - install schematic', () => {
         const appModuleTsContent = tree.read(appModuleTsPath)?.toString('utf-8') || '';
         expect(occurrences(appModuleTsContent, '@badisi/ngx-auth')).toEqual(1);
         expect(occurrences(appModuleTsContent, 'AuthModule')).toEqual(2);
+    });
+
+    it('should display an action message', async () => {
+        tree = await runner.runSchematicAsync('install', schematicOptions, tree).toPromise();
+        expect(logs).toContainEqual(expect.objectContaining({
+            name: 'install',
+            level: 'info',
+            message: '\r>  ACTION  Have a look at main.ts file and update the auth configuration according to your needs.\n'
+        }));
+    });
+
+    it('should display an error message', async () => {
+        const mainTsPath = '/projects/app-test/src/main.ts';
+        const mainTsContent = tree.read(mainTsPath)?.toString('utf-8') || '';
+        tree.overwrite(mainTsPath, mainTsContent.replace('bootstrapModule', 'bootstrapModuleERROR'));
+
+        tree = await runner.runSchematicAsync('install', schematicOptions, tree).toPromise();
+        expect(logs).toContainEqual(expect.objectContaining({
+            name: 'install',
+            level: 'info',
+            message: '\r>  ERROR  There were some conflict during the installation, please have a look at main.ts file and resolve it.\n'
+        }));
+        expect(logs).toContainEqual(expect.objectContaining({
+            name: 'install',
+            level: 'info',
+            message: '\r>  ACTION  Have a look at main.ts file and update the auth configuration according to your needs.\n'
+        }));
     });
 });
