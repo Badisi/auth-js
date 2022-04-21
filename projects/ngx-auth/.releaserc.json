@@ -16,6 +16,11 @@
                 "pkgRoot": "../../dist/ngx-auth"
             }
         ],
-        "@semantic-release/github"
+        [
+            "@semantic-release/github",
+            {
+                "successComment": ":tada: Released in [${nextRelease.gitTag}](https://github.com/Badisi/auth-js/releases/tag/${nextRelease.gitTag}) :package::rocket:"
+            }
+        ]
     ]
 }
