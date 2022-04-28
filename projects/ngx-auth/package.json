@@ -31,7 +31,7 @@
     ],
     "dependencies": {
         "@badisi/auth-js": "0.0.0-semantically-released",
-        "@hug/ngx-schematics-utilities": "^3.0.0"
+        "@hug/ngx-schematics-utilities": "^4.0.0"
     },
     "peerDependencies": {
         "@angular/common": ">=7.0.0",
