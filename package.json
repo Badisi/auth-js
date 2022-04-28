@@ -2,7 +2,7 @@
     "name": "@badisi/auth-js",
     "description": "Authentication and authorization support for web based desktop and mobile applications.",
     "homepage": "https://github.com/Badisi/auth-js",
-    "license": "GPL-3.0",
+    "license": "GPL-3.0-only",
     "author": "Badisi",
     "repository": {
         "type": "git",

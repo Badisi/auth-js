@@ -32,6 +32,7 @@ const copyAssets = async () => {
     await cpy('projects/auth-js/package.json', CONFIG.distPath, { flat: true });
     await cpy('projects/auth-js/README.md', CONFIG.distPath, { flat: true });
     await cpy('LICENSE', CONFIG.distPath, { flat: true });
+    await cpy('node_modules/oidc-client-ts/LICENSE', pathResolve(CONFIG.distPath, 'browser', 'oidc'), { rename: '3rdpartylicenses.txt', flat: true });
 };
 
 const execCmd = (cmd, opts) => new Promise((resolve, reject) => {

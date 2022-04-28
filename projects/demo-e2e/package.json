@@ -1,6 +1,7 @@
 {
     "name": "demo-e2e",
     "private": true,
+    "license": "GPL-3.0-only",
     "scripts": {
         "start": "wdio run wdio.config.ts --debug=true --headless=false --watch=true"
     },

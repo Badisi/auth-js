@@ -3,7 +3,7 @@
     "version": "0.0.0-semantically-released",
     "description": "Authentication and authorization support for Angular based desktop and mobile applications.",
     "homepage": "https://github.com/Badisi/auth-js/tree/main/projects/ngx-auth",
-    "license": "GPL-3.0",
+    "license": "GPL-3.0-only",
     "author": "Badisi",
     "repository": {
         "type": "git",

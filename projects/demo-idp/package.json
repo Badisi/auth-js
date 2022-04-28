@@ -1,6 +1,7 @@
 {
     "name": "demo-idp",
     "private": true,
+    "license": "GPL-3.0-only",
     "scripts": {
         "start": "docker-compose --file='docker-compose.yml' up"
     }
