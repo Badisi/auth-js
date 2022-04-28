@@ -1,0 +1,34 @@
+---
+title: Providers
+---
+
+:::note
+Draft document..
+:::
+<br/>
+
+Authentication providers *(ie. Keycloak, Auth0, etc..)* should be configured this way:
+
+#### Allowed Web Origins
+```
+http://localhost:4200
+```
+
+#### Allowed Callback URLs
+```
+http://localhost:4200/?oidc-callback=login,
+http://localhost:4200/oidc/callback/popup_redirect.html,
+http://localhost:4200/oidc/callback/silent_redirect.html
+```
+
+#### Allowed Logout URLs
+```
+http://localhost:4200/?oidc-callback=logout,
+http://localhost:4200/oidc/callback/popup_redirect.html
+```
+
+#### Grants
+```
+Authorization Code
+Refresh Token
+```

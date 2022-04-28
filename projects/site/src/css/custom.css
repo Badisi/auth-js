@@ -14,6 +14,7 @@
     --ifm-color-primary-lighter: rgb(102, 212, 189);
     --ifm-color-primary-lightest: rgb(146, 224, 208);
     --ifm-code-font-size: 95%;
+    --ifm-code-background: rgba(180, 147, 207, 0.3);
     --ifm-background-color: white;
     --ifm-navbar-item-padding-horizontal: 1rem;
 }
@@ -88,7 +89,6 @@ html[data-theme="dark"] .docusaurus-highlight-code-line {
 }
 
 code {
-    background-color: rgba(180, 147, 207, 0.3);
     color: #404040;
     padding: 5px 8px;
     border: none;

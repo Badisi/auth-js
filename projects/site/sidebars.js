@@ -20,32 +20,33 @@ const sidebars = {
         {
             label: 'Introduction',
             type: 'doc',
-            id: 'docs/intro'
+            id: 'documentation/intro'
         },
         {
             label: 'Getting started',
             type: 'category',
             collapsed: false,
             items: [
-                'docs/getting-started/vanilla-js',
-                'docs/getting-started/angular',
-                'docs/getting-started/mobile'
+                'documentation/getting-started/vanilla-js',
+                'documentation/getting-started/angular',
+                'documentation/getting-started/mobile',
+                'documentation/getting-started/providers'
             ]
         },
         {
             label: 'Configuration',
             type: 'doc',
-            id: 'docs/configuration'
+            id: 'documentation/configuration'
         },
         {
             label: 'Usage',
             type: 'doc',
-            id: 'docs/usage'
+            id: 'documentation/usage'
         },
         {
             label: 'Playground',
             type: 'doc',
-            id: 'docs/playground'
+            id: 'documentation/playground'
         }
     ],
 

@@ -9,6 +9,7 @@ import TabItem from '@theme/TabItem';
 :::note
 Draft document..
 :::
+<br/>
 
 <Tabs>
 <TabItem value="auth-js" label="VanillaJS" default>
@@ -34,49 +35,49 @@ await initAuth(settings: AuthSettings);
 
 ## Global
 
-### `authorityUrl*`
+#### `authorityUrl*`
 > **type**: string<br/>
 > **required**
 
-### `clientId*`
+#### `clientId*`
 > **type**: string<br/>
 > **required**
 
-### `loginRequired`
+#### `loginRequired`
 > **type**: boolean<br/>
 > **default**: true
 
-### `loadUserSession`
+#### `loadUserSession`
 > **type**: boolean<br/>
 > **default**: true
 
-### `loadUserInfo`
+#### `loadUserInfo`
 > **type**: boolean<br/>
 > **default**: false
 
-### `automaticSilentRenew`
+#### `automaticSilentRenew`
 > **type**: boolean<br/>
 > **default**: true
 
-### `navigationType`
+#### `navigationType`
 > **type**: enum - *Navigation.(REDIRECT, POPUP)*<br/>
 > **default**: REDIRECT
 
-### `scope`
+#### `scope`
 > **type**: string<br/>
 > **default**: "openid profile email phone"
 
-### `logLevel`
+#### `logLevel`
 > **type**: enum - *Log.(NONE, ERROR, WARN, INFO, DEBUG)*<br/>
 > **default**: NONE
 
-### `internal`
+#### `internal`
 > **type**: UserManagerSettings<br/>
 
 
 ## Angular
 
-### `automaticInjectToken`
+#### `automaticInjectToken`
 > **type**: boolean or custom object<br/>
 > **default**: see the examples
 
@@ -90,15 +91,15 @@ automaticInjectToken: {
 }
 ```
 
-### `automaticLoginOn401`
+#### `automaticLoginOn401`
 > **type**: boolean<br/>
 > **default**: true
 
-### `authGuardRedirectUrl`
+#### `authGuardRedirectUrl`
 > **type**: string<br/>
 
 
 ## Mobile
 
-### `schemeUri`
+#### `schemeUri`
 > **type**: string<br/>
