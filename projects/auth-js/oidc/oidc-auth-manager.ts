@@ -26,7 +26,6 @@ const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> 
     logLevel: Log.NONE,
     internal: {
         response_type: 'code',
-        redirectMethod: 'replace',
         redirect_uri: '?oidc-callback=login',
         post_logout_redirect_uri: '?oidc-callback=logout',
         popup_redirect_uri: 'oidc/callback/popup_redirect.html',
