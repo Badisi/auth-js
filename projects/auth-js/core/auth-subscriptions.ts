@@ -6,12 +6,12 @@ import { AuthSubscription } from './models/auth-subscription.model';
  */
 export class AuthSubscriptions<T extends unknown[]> {
     private subscribers: AuthSubscriber<T>[] = [];
-    private lastNotified?: T;
+    private lastNotifiedValue?: T;
 
     public add(subscriber: AuthSubscriber<T>): AuthSubscription {
         this.subscribers.push(subscriber);
-        if (this.lastNotified) {
-            void subscriber(...this.lastNotified);
+        if (this.lastNotifiedValue) {
+            void subscriber(...this.lastNotifiedValue);
         }
         return {
             unsubscribe: () => this.unsubscribe(subscriber)
@@ -19,7 +19,7 @@ export class AuthSubscriptions<T extends unknown[]> {
     }
 
     public notify(...args: T): void {
-        this.lastNotified = args;
+        this.lastNotifiedValue = args;
         this.subscribers.forEach(subscriber => void subscriber(...args));
     }
 
