@@ -31,55 +31,49 @@ export class AuthService implements OnDestroy {
         this.authManagerSubs.forEach(sub => sub.unsubscribe());
     }
 
-    public get isRenewing$(): Observable<boolean | undefined> {
-        return this._isRenewing$.asObservable().pipe(
+    /* eslint-disable @typescript-eslint/member-ordering */
+    public readonly isRenewing$: Observable<boolean | undefined> =
+        this._isRenewing$.asObservable().pipe(
             distinctUntilChanged()
         );
-    }
 
-    public get isAuthenticated$(): Observable<boolean | undefined> {
-        return this._isAuthenticated$.asObservable().pipe(
+    public readonly isAuthenticated$: Observable<boolean | undefined> =
+        this._isAuthenticated$.asObservable().pipe(
             distinctUntilChanged()
         );
-    }
 
-    public get userProfile$(): Observable<UserProfile | undefined> {
-        return this._userProfile$.asObservable().pipe(
+    public readonly userProfile$: Observable<UserProfile | undefined> =
+        this._userProfile$.asObservable().pipe(
             distinctUntilChanged()
         );
-    }
 
-    public get userSession$(): Observable<UserSession | undefined> {
-        return this._userSession$.asObservable().pipe(
+    public readonly userSession$: Observable<UserSession | undefined> =
+        this._userSession$.asObservable().pipe(
             distinctUntilChanged()
         );
-    }
 
-    public get idToken$(): Observable<string | undefined> {
-        return this._idToken$.asObservable().pipe(
+    public readonly idToken$: Observable<string | undefined> =
+        this._idToken$.asObservable().pipe(
             distinctUntilChanged()
         );
-    }
 
-    public get idTokenDecoded$(): Observable<IdToken | undefined> {
-        return this._idToken$.asObservable().pipe(
+    public readonly idTokenDecoded$: Observable<IdToken | undefined> =
+        this._idToken$.asObservable().pipe(
             distinctUntilChanged(),
             map(token => this.manager.decodeJwt<IdToken>(token))
         );
-    }
 
-    public get accessToken$(): Observable<string | undefined> {
-        return this._accessToken$.asObservable().pipe(
+    public readonly accessToken$: Observable<string | undefined> =
+        this._accessToken$.asObservable().pipe(
             distinctUntilChanged()
         );
-    }
 
-    public get accessTokenDecoded$(): Observable<AccessToken | undefined> {
-        return this._accessToken$.asObservable().pipe(
+    public readonly accessTokenDecoded$: Observable<AccessToken | undefined> =
+        this._accessToken$.asObservable().pipe(
             distinctUntilChanged(),
             map(token => this.manager.decodeJwt<AccessToken>(token))
         );
-    }
+    /* eslint-enable @typescript-eslint/member-ordering */
 
     // --- OIDCAuthManager ---
 
