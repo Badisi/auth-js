@@ -40,10 +40,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 @badisi/auth-js
-GPL-3.0
+GPL-3.0-only
 
 @badisi/ngx-auth
-GPL-3.0
+GPL-3.0-only
 
 crypto-js
 MIT
