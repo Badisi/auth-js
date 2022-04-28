@@ -7,8 +7,8 @@ services:
     environment:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: Pa55w0rd
-      KEYCLOAK_LOGLEVEL: DEBUG
-      WILDFLY_LOGLEVEL: DEBUG
+      # KEYCLOAK_LOGLEVEL: DEBUG
+      # WILDFLY_LOGLEVEL: DEBUG
       KEYCLOAK_IMPORT: /tmp/realm-config/demo-realm.json
     volumes:
       - ./demo-realm.json:/tmp/realm-config/demo-realm.json
