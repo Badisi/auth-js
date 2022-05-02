@@ -65,12 +65,12 @@ template.innerHTML = `
             margin-right: 8px;
         }
 
-        header .version {
+        :host header .version {
             position: absolute;
             bottom: 13px;
         }
 
-        header .version a {
+        :host header .version a {
             font-size: 13px;
             font-weight: 300;
             font-style: italic;
@@ -78,11 +78,12 @@ template.innerHTML = `
             color: #bda9e1;
         }
 
-        header .version a:hover {
+        :host header .version a:hover {
             text-decoration: underline;
         }
 
         :host header .title {
+            position: relative;
             align-items: center;
             margin: 8px 0;
             font-size: 28px;
@@ -106,6 +107,19 @@ template.innerHTML = `
             outline: none;
         }
 
+        :host header .title .tip {
+            position: absolute;
+            right: -204px;
+            font-size: 15px;
+            font-weight: 300;
+            font-style: italic;
+            color: #ffd341;
+        }
+
+        :host header .title .tip .hand {
+            font-size: 18px;
+        }
+
         :host header button {
             margin-top: 2px;
         }
@@ -118,6 +132,11 @@ template.innerHTML = `
             :host header .title {
                 align-self: flex-start;
                 margin-left: 24px;
+            }
+        }
+        @media only screen and (max-width: 1000px) {
+            :host header .title .tip {
+                display: none;
             }
         }
     </style>
@@ -142,6 +161,7 @@ template.innerHTML = `
 
         <div class="title row">
             <span class="icon">🛡️</span>Demo app &#123; <select id="implementation-select"></select> &#125;
+            <div class="tip"><span class="hand">👈</span> choose an implementation</div>
         </div>
 
         <div class="version"></div>
@@ -213,6 +233,12 @@ export class DemoAppHeaderElement extends HTMLElement {
             this.listeners.push(() => this.implSelectEl.removeEventListener('change', changeCb));
         }
 
+        const clickCb = (): void => {
+            this.shadowRoot?.querySelector('header .title .tip')?.remove();
+        };
+        this.implSelectEl.addEventListener('click', clickCb, { once: true });
+        this.listeners.push(() => this.implSelectEl.removeEventListener('click', clickCb));
+
         this.refreshImplementation();
         this.addEventListeners();
     }
@@ -242,10 +268,15 @@ export class DemoAppHeaderElement extends HTMLElement {
 
     private refreshImplementation(): void {
         const impls = window.authSettings.getImplementations();
-        const implIndex = impls.findIndex(item => window.location.href.includes(item.demoUrl));
-        const impl = (implIndex !== -1) ? impls[implIndex] : impls[0];
-        this.implSelectEl.selectedIndex = (implIndex !== -1) ? implIndex : 0;
-        this.versionEl.innerHTML = impl.version;
+        if (!window.location.href.includes('localhost')) {
+            const implIndex = impls.findIndex(item => window.location.href.includes(item.demoUrl));
+            const impl = (implIndex !== -1) ? impls[implIndex] : impls[0];
+            this.implSelectEl.selectedIndex = (implIndex !== -1) ? implIndex : 0;
+            this.versionEl.innerHTML = impl.version;
+        } else {
+            this.implSelectEl.selectedIndex = 0;
+            this.versionEl.innerHTML = '<a>@localhost</a>';
+        }
     }
 }
 
