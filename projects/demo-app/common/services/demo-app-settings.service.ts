@@ -24,6 +24,7 @@ export interface LibrarySettingsDefinitionItem<S extends AuthSettings = AuthSett
 }
 
 export interface AppSettings<S extends AuthSettings = AuthSettings> {
+    showTip: boolean;
     currentTabIndex: number;
     currentSettingsIndex: number;
     librarySettingsDefinition: LibrarySettingsDefinitionItem<S>[];
@@ -68,6 +69,10 @@ export class DemoAppSettings<S extends AuthSettings = AuthSettings> {
         return this.getAppSettings().settings;
     }
 
+    public getShowTip(): boolean {
+        return this.getAppSettings().showTip;
+    }
+
     public getCurrentSettings(): Settings<S> {
         const appSettings = this.getAppSettings();
         return appSettings.settings[appSettings.currentSettingsIndex];
@@ -89,6 +94,12 @@ export class DemoAppSettings<S extends AuthSettings = AuthSettings> {
 
     public getLibrarySettingsDefinition(): LibrarySettingsDefinitionItem<S>[] {
         return this.getAppSettings().librarySettingsDefinition;
+    }
+
+    public saveShowTip(value: boolean): void {
+        const appSettings = this.getAppSettings();
+        appSettings.showTip = value;
+        this.saveAppSettings(appSettings);
     }
 
     public saveCurrentLibrarySettings(value: S): void {

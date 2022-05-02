@@ -143,6 +143,7 @@ const librarySettingsDefinition: LibrarySettingsDefinitionItem<AuthSettings>[] =
 export const authSettings: DemoAppSettings<AuthSettings> = new DemoAppSettings(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
     `ngx-auth:${(pkgJson as any).version as string}:demo-app:settings`, {
+        showTip: true,
         currentTabIndex: 0,
         currentSettingsIndex: 0,
         librarySettingsDefinition,

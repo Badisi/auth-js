@@ -235,9 +235,14 @@ export class DemoAppHeaderElement extends HTMLElement {
 
         const clickCb = (): void => {
             this.shadowRoot?.querySelector('header .title .tip')?.remove();
+            window.authSettings.saveShowTip(false);
         };
-        this.implSelectEl.addEventListener('click', clickCb, { once: true });
-        this.listeners.push(() => this.implSelectEl.removeEventListener('click', clickCb));
+        if (window.authSettings.getShowTip()) {
+            this.implSelectEl.addEventListener('click', clickCb, { once: true });
+            this.listeners.push(() => this.implSelectEl.removeEventListener('click', clickCb));
+        } else {
+            clickCb();
+        }
 
         this.refreshImplementation();
         this.addEventListeners();
