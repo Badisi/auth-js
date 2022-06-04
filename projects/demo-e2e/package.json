@@ -6,11 +6,11 @@
         "start": "wdio run wdio.config.ts --debug=true --headless=false --watch=true"
     },
     "devDependencies": {
-        "@wdio/cli": "^7.19.6",
-        "@wdio/jasmine-framework": "^7.19.5",
-        "@wdio/local-runner": "^7.19.5",
-        "@wdio/spec-reporter": "^7.19.5",
-        "chromedriver": "^100.0.0",
+        "@wdio/cli": "^7.20.1",
+        "@wdio/jasmine-framework": "^7.20.0",
+        "@wdio/local-runner": "^7.20.1",
+        "@wdio/spec-reporter": "^7.20.0",
+        "chromedriver": "^101.0.0",
         "wdio-chromedriver-service": "^7.3.2",
         "wdio-intercept-service": "^4.2.2"
     }
