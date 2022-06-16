@@ -8,7 +8,7 @@ template.innerHTML = `
 
         :host .tabs {
             position: fixed;
-            top: 130px;
+            top: calc(130px + var(--safe-area-inset-top));
             left: 0;
             right: 0;
             z-index: 1;
@@ -41,10 +41,10 @@ template.innerHTML = `
 
         :host .tabs-content {
             position: fixed;
-            top: calc(130px + 55px);
+            top: calc(130px + 55px + var(--safe-area-inset-top));
             left: 0;
             right: 0;
-            bottom: 0;
+            bottom: calc(0px + var(--safe-area-inset-bottom));
             overflow: auto;
         }
 

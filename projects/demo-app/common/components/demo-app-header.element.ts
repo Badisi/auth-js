@@ -10,6 +10,7 @@ template.innerHTML = `
             top: 0;
             left: 0;
             right: 0;
+            padding-top: calc(0px + var(--safe-area-inset-top));
             align-items: center;
             height: 130px;
             color: white;
@@ -19,7 +20,7 @@ template.innerHTML = `
 
         :host header .github-icon {
             position: absolute;
-            top: 20px;
+            top: calc(20px + var(--safe-area-inset-top));
             right: 34px;
             width: 26px;
             height: 26px;
@@ -56,10 +57,11 @@ template.innerHTML = `
 
         :host header .status {
             position: absolute;
-            top: 25px;
+            top: calc(25px + var(--safe-area-inset-top));
             right: 70px;
             width: 15px;
             height: 15px;
+            z-index: 1;
             border-radius: 50%;
             margin-top: 1px;
             margin-right: 8px;
@@ -86,7 +88,7 @@ template.innerHTML = `
             position: relative;
             align-items: center;
             margin: 8px 0;
-            font-size: 28px;
+            font-size: 1.4em;
             font-weight: 400;
             color: #ede7f6;
         }
@@ -99,7 +101,7 @@ template.innerHTML = `
         :host header .title select {
             cursor: pointer;
             text-align: center;
-            font-size: 28px;
+            font-size: 1.1em;
             font-weight: bold;
             color: #ede7f6;
             background: none;
@@ -142,7 +144,7 @@ template.innerHTML = `
     </style>
 
     <header class="column">
-        <div class="status"></div>
+        <div class="status loading"></div>
 
         <a class="github-icon"
             href="https://github.com/Badisi/auth-js"
