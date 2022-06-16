@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">demo-app-auth-js</string>
+    <string name="title_activity_main">demo-app-auth-js</string>
+    <string name="package_name">demoapp.authjs</string>
+    <string name="custom_url_scheme">demoapp.authjs</string>
+</resources>

@@ -1,0 +1,9 @@
+{
+    "dependencies": {
+        "@capacitor/android": "^3.5.1",
+        "@capacitor/app": "^1.1.1",
+        "@capacitor/browser": "^1.0.7",
+        "@capacitor/core": "^3.5.1",
+        "@capacitor/ios": "^3.5.1"
+    }
+}
