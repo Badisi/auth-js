@@ -1,8 +1,8 @@
 module.exports = {
     displayName: 'demo-app-auth-js',
-    preset: '../../../jest.preset.js',
+    preset: '../../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-    coverageDirectory: '../../../coverage/projects/demo-app-auth-js',
+    coverageDirectory: '../../../../coverage/projects/demo-app/web/auth-js',
     transform: {
         '^.+\\.[tj]s$': 'babel-jest'
     },

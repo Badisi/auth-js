@@ -1,7 +1,7 @@
 {
     "projectType": "application",
-    "root": "projects/demo-app/auth-js",
-    "sourceRoot": "projects/demo-app/auth-js/src",
+    "root": "projects/demo-app/web/auth-js",
+    "sourceRoot": "projects/demo-app/web/auth-js/src",
     "targets": {
         "build": {
             "executor": "@nrwl/web:webpack",
@@ -11,13 +11,13 @@
             "options": {
                 "outputPath": "dist/demo-app/auth-js",
                 "compiler": "babel",
-                "index": "projects/demo-app/auth-js/src/index.html",
+                "index": "projects/demo-app/web/auth-js/src/index.html",
                 "baseHref": "/",
-                "main": "projects/demo-app/auth-js/src/main.ts",
-                "polyfills": "projects/demo-app/auth-js/src/polyfills.ts",
-                "tsConfig": "projects/demo-app/auth-js/tsconfig.app.json",
+                "main": "projects/demo-app/web/auth-js/src/main.ts",
+                "polyfills": "projects/demo-app/web/auth-js/src/polyfills.ts",
+                "tsConfig": "projects/demo-app/web/auth-js/tsconfig.app.json",
                 "assets": [
-                    "projects/demo-app/auth-js/src/favicon.ico",
+                    "projects/demo-app/web/auth-js/src/favicon.ico",
                     {
                         "glob": "**/*",
                         "input": "projects/auth-js/oidc/assets",
@@ -25,7 +25,7 @@
                     }
                 ],
                 "styles": [
-                    "projects/demo-app/auth-js/src/styles.scss"
+                    "projects/demo-app/web/auth-js/src/styles.scss"
                 ],
                 "scripts": []
             },
@@ -33,8 +33,8 @@
                 "production": {
                     "fileReplacements": [
                         {
-                            "replace": "projects/demo-app/auth-js/src/environments/environment.ts",
-                            "with": "projects/demo-app/auth-js/src/environments/environment.prod.ts"
+                            "replace": "projects/demo-app/web/auth-js/src/environments/environment.ts",
+                            "with": "projects/demo-app/web/auth-js/src/environments/environment.prod.ts"
                         }
                     ],
                     "optimization": true,
@@ -71,18 +71,18 @@
             ],
             "options": {
                 "lintFilePatterns": [
-                    "projects/demo-app/auth-js/src/**/*.ts",
-                    "projects/demo-app/auth-js/src/**/*.html"
+                    "projects/demo-app/web/auth-js/src/**/*.ts",
+                    "projects/demo-app/web/auth-js/src/**/*.html"
                 ]
             }
         },
         "test": {
             "executor": "@nrwl/jest:jest",
             "outputs": [
-                "coverage/projects/demo-app/auth-js"
+                "coverage/projects/demo-app/web/auth-js"
             ],
             "options": {
-                "jestConfig": "projects/demo-app/auth-js/jest.config.js",
+                "jestConfig": "projects/demo-app/web/auth-js/jest.config.js",
                 "passWithNoTests": true
             }
         }

@@ -42,6 +42,23 @@ template.innerHTML = `
             margin-right: 12px;
         }
 
+        :host button {
+            cursor: pointer;
+        }
+
+        :host #apply-settings-button {
+            color: white;
+            padding: 4px 18px;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 150ms cubic-bezier(0.35, 0, 0.25, 1);
+            background-color: #512da8;
+        }
+
+        :host #apply-settings-button:hover {
+            background-color: #4527a0;
+        }
+
         :host(.dirty) .form-actions #apply-settings-button,
         :host(.dirty) .form-actions #cancel-settings-button {
             display: flex !important;
@@ -60,8 +77,8 @@ template.innerHTML = `
             </div>
             <button id="reset-settings-button" type="button">RESET TO DEFAULT</button>
             <span class="flex"></span>
-            <button id="apply-settings-button" type="submit" class="hidden">APPLY</button>
             <button id="cancel-settings-button" type="button" class="hidden">CANCEL</button>
+            <button id="apply-settings-button" type="submit" class="hidden">APPLY</button>
         </div>
     </form>
 `;

@@ -4,8 +4,8 @@
         "auth-js": "projects/auth-js",
         "ngx-auth": "projects/ngx-auth",
         "demo-app": "projects/demo-app",
-        "demo-app-common": "projects/demo-app/common",
-        "demo-app-auth-js": "projects/demo-app/auth-js",
-        "demo-app-ngx-auth": "projects/demo-app/ngx-auth"
+        "demo-app-common": "projects/demo-app/web/common",
+        "demo-app-auth-js": "projects/demo-app/web/auth-js",
+        "demo-app-ngx-auth": "projects/demo-app/web/ngx-auth"
     }
 }

@@ -1,8 +1,7 @@
 import { Log, Navigation } from '@badisi/auth-js/oidc';
 import { AuthSettings } from '@badisi/ngx-auth';
 import { DemoAppSettings, LibrarySettingsDefinitionItem, Settings } from 'demo-app-common';
-
-import pkgJson from '../../../../ngx-auth/package.json';
+import pkgJson from 'projects/ngx-auth/package.json';
 
 const settings: Settings<AuthSettings>[] = [{
     name: 'Auth0',
@@ -22,7 +21,7 @@ const settings: Settings<AuthSettings>[] = [{
                 audience: 'https://dev-fijd1e9x.us.auth0.com/api/v2/'
             }
         },
-        navigationType: Navigation.REDIRECT,
+        navigationType: Navigation.POPUP,
         logLevel: Log.NONE,
         loginRequired: false,
         loadUserSession: true,

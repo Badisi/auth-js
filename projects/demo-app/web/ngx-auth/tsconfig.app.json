@@ -1,9 +1,10 @@
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
-        "outDir": "../../../dist/out-tsc",
+        "outDir": "../../../../dist/out-tsc",
         "types": [
-            "../../auth-js/core/types/mobile"
+            "../../../auth-js/core/types/oidc-client-ts",
+            "../../../auth-js/core/types/window"
         ],
         "target": "ES2017"
     },

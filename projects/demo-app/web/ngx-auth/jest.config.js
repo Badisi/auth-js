@@ -1,6 +1,6 @@
 module.exports = {
     displayName: 'demo-app-ngx-auth',
-    preset: '../../../jest.preset.js',
+    preset: '../../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     globals: {
         'ts-jest': {
@@ -8,7 +8,7 @@ module.exports = {
             stringifyContentPathRegex: '\\.(html|svg)$'
         }
     },
-    coverageDirectory: '../../coverage/projects/demo-app-ngx-auth',
+    coverageDirectory: '../../../../coverage/projects/demo-app/web/ngx-auth',
     transform: {
         '^.+\\.(ts|mjs|js|html)$': 'jest-preset-angular'
     },

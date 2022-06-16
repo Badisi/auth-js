@@ -1,7 +1,6 @@
 import { Log, Navigation, OIDCAuthSettings } from '@badisi/auth-js/oidc';
 import { DemoAppSettings, LibrarySettingsDefinitionItem, Settings } from 'demo-app-common';
-
-import pkgJson from '../../../../auth-js/package.json';
+import pkgJson from 'projects/auth-js/package.json';
 
 const settings: Settings<OIDCAuthSettings>[] = [{
     name: 'Auth0',

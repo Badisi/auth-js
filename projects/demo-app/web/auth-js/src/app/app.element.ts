@@ -1,4 +1,4 @@
-import { AuthSubscription } from '@badisi/auth-js/core';
+import { AuthSubscription, AuthUtils } from '@badisi/auth-js/core';
 import { DemoAppDebugElement, DemoAppMainElement, DemoAppSettingsElement } from 'demo-app-common';
 
 import { environment } from '../environments/environment';
@@ -44,7 +44,6 @@ export class AppElement extends HTMLElement {
 
     private refreshInfo(key: string, value?: unknown): void {
         if (window.authManager) {
-            const manager = window.authManager;
             if (this.demoAppMainEl && this.demoAppDebugEl) {
                 switch (key) {
                     case 'renewing':
@@ -59,11 +58,11 @@ export class AppElement extends HTMLElement {
                         break;
                     case 'accessToken':
                         this.demoAppDebugEl.accessToken = value as string;
-                        this.demoAppDebugEl.accessTokenDecoded = manager.decodeJwt(value as string);
+                        this.demoAppDebugEl.accessTokenDecoded = AuthUtils.decodeJwt(value as string);
                         break;
                     case 'idToken':
                         this.demoAppDebugEl.idToken = value as string;
-                        this.demoAppDebugEl.idTokenDecoded = manager.decodeJwt(value as string);
+                        this.demoAppDebugEl.idTokenDecoded = AuthUtils.decodeJwt(value as string);
                         break;
                     case 'userProfile':
                         this.demoAppDebugEl.userProfile = value;
@@ -94,7 +93,7 @@ export class AppElement extends HTMLElement {
             const login = () => void manager.login();
             this.demoAppMainEl.addEventListener('login', login);
 
-            const logout = () => void manager.logout('/');
+            const logout = () => void manager.logout('/').then(() => location.href = '/');
             this.demoAppMainEl.addEventListener('logout', logout);
 
             const silentRenew = () => void manager.renew();

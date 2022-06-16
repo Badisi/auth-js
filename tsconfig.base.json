@@ -32,7 +32,7 @@
                 "projects/ngx-auth/*"
             ],
             "demo-app-common": [
-                "projects/demo-app/common"
+                "projects/demo-app/web/common"
             ]
         }
     },

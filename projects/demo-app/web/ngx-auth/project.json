@@ -1,7 +1,7 @@
 {
     "projectType": "application",
-    "root": "projects/demo-app/ngx-auth",
-    "sourceRoot": "projects/demo-app/ngx-auth/src",
+    "root": "projects/demo-app/web/ngx-auth",
+    "sourceRoot": "projects/demo-app/web/ngx-auth/src",
     "prefix": "badisi",
     "targets": {
         "build": {
@@ -11,16 +11,16 @@
             ],
             "options": {
                 "outputPath": "dist/demo-app/ngx-auth",
-                "index": "projects/demo-app/ngx-auth/src/index.html",
-                "main": "projects/demo-app/ngx-auth/src/main.ts",
-                "polyfills": "projects/demo-app/ngx-auth/src/polyfills.ts",
-                "tsConfig": "projects/demo-app/ngx-auth/tsconfig.app.json",
+                "index": "projects/demo-app/web/ngx-auth/src/index.html",
+                "main": "projects/demo-app/web/ngx-auth/src/main.ts",
+                "polyfills": "projects/demo-app/web/ngx-auth/src/polyfills.ts",
+                "tsConfig": "projects/demo-app/web/ngx-auth/tsconfig.app.json",
                 "inlineStyleLanguage": "scss",
                 "allowedCommonJsDependencies": [
                     "crypto-js"
                 ],
                 "assets": [
-                    "projects/demo-app/ngx-auth/src/favicon.ico",
+                    "projects/demo-app/web/ngx-auth/src/favicon.ico",
                     {
                         "glob": "**/*",
                         "input": "projects/auth-js/oidc/assets",
@@ -28,7 +28,7 @@
                     }
                 ],
                 "styles": [
-                    "projects/demo-app/ngx-auth/src/styles.scss"
+                    "projects/demo-app/web/ngx-auth/src/styles.scss"
                 ],
                 "scripts": []
             },
@@ -48,8 +48,8 @@
                     ],
                     "fileReplacements": [
                         {
-                            "replace": "projects/demo-app/ngx-auth/src/environments/environment.ts",
-                            "with": "projects/demo-app/ngx-auth/src/environments/environment.prod.ts"
+                            "replace": "projects/demo-app/web/ngx-auth/src/environments/environment.ts",
+                            "with": "projects/demo-app/web/ngx-auth/src/environments/environment.prod.ts"
                         }
                     ],
                     "outputHashing": "all"
@@ -90,18 +90,18 @@
             "executor": "@nrwl/linter:eslint",
             "options": {
                 "lintFilePatterns": [
-                    "projects/demo-app/ngx-auth/src/**/*.ts",
-                    "projects/demo-app/ngx-auth/src/**/*.html"
+                    "projects/demo-app/web/ngx-auth/src/**/*.ts",
+                    "projects/demo-app/web/ngx-auth/src/**/*.html"
                 ]
             }
         },
         "test": {
             "executor": "@nrwl/jest:jest",
             "outputs": [
-                "coverage/projects/demo-app/ngx-auth"
+                "coverage/projects/demo-app/web/ngx-auth"
             ],
             "options": {
-                "jestConfig": "projects/demo-app/ngx-auth/jest.config.js",
+                "jestConfig": "projects/demo-app/web/ngx-auth/jest.config.js",
                 "passWithNoTests": true
             }
         }
