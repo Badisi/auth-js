@@ -61,14 +61,16 @@ jobs:
         if: steps.cache-step.outputs.cache-hit != 'true'
         run: npm clean-install --engine-strict
 
-      - name: Lint
-        run: npm run lint
+      - name: Lint libs
+        run: npm run lint:libs
 
-      - name: Test
-        run: npm run test
+      - name: Test libs
+        run: npm run test:libs
 
       - name: Build auth-js
-        run: npm run build:auth-js
+        working-directory: projects/auth-js
+        run: npm run build
 
       - name: Build ngx-auth
-        run: npm run build:ngx-auth
+        working-directory: projects/ngx-auth
+        run: npm run build

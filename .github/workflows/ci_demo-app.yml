@@ -34,18 +34,21 @@ jobs:
       - name: Install dependencies
         run: npm clean-install --engine-strict
 
-      - name: Lint demo apps
-        run: npm run lint:demo-app
+      - name: Lint demo-app
+        working-directory: projects/demo-app/web
+        run: npm run lint
 
-      - name: Build demo-app-auth-js
+      - name: Build demo-app auth-js
+        working-directory: projects/demo-app/web/auth-js
         env:
           baseUrl: /${{ github.event.repository.name }}/demo-app/auth-js/
-        run: npm run build:demo-app-auth-js -- --base-href=${{ env.baseUrl }} --deploy-url=${{ env.baseUrl }}
+        run: npm run build -- --base-href=${{ env.baseUrl }} --deploy-url=${{ env.baseUrl }}
 
-      - name: Build demo-app-ngx-auth
+      - name: Build demo-app ngx-auth
+        working-directory: projects/demo-app/web/ngx-auth
         env:
           baseUrl: /${{ github.event.repository.name }}/demo-app/ngx-auth/
-        run: npm run build:demo-app-ngx-auth -- --base-href=${{ env.baseUrl }} --deploy-url=${{ env.baseUrl }}
+        run: npm run build -- --base-href=${{ env.baseUrl }} --deploy-url=${{ env.baseUrl }}
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

@@ -3,6 +3,15 @@
     "root": "projects/demo-app/web/common",
     "sourceRoot": "projects/demo-app/web/common",
     "targets": {
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "options": {
+                "lintFilePatterns": [
+                    "projects/demo-app/web/common/**/*.ts",
+                    "projects/demo-app/web/common/**/*.html"
+                ]
+            }
+        },
         "test": {
             "executor": "@nrwl/jest:jest",
             "outputs": [
@@ -11,15 +20,6 @@
             "options": {
                 "jestConfig": "projects/demo-app/web/common/jest.config.js",
                 "passWithNoTests": true
-            }
-        },
-        "lint": {
-            "executor": "@nrwl/linter:eslint",
-            "options": {
-                "lintFilePatterns": [
-                    "projects/demo-app/web/common/**/*.ts",
-                    "projects/demo-app/web/common/**/*.html"
-                ]
             }
         }
     }

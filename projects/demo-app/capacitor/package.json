@@ -1,9 +1,19 @@
 {
+    "name": "demo-app-capacitor",
+    "private": true,
+    "license": "GPL-3.0-only",
+    "scripts": {
+        "start:ios": "npx cap run ios",
+        "start:android": "npx cap run android"
+    },
     "dependencies": {
-        "@capacitor/android": "^3.5.1",
+        "@capacitor/android": "^3.6.0",
         "@capacitor/app": "^1.1.1",
         "@capacitor/browser": "^1.0.7",
-        "@capacitor/core": "^3.5.1",
-        "@capacitor/ios": "^3.5.1"
+        "@capacitor/core": "^3.6.0",
+        "@capacitor/ios": "^3.6.0"
+    },
+    "devDependencies": {
+        "@capacitor/cli": "^3.6.0"
     }
 }
