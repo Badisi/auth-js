@@ -1,7 +1,7 @@
 {
-	"appId": "demoapp.authjs",
-	"appName": "demo-app-auth-js",
-	"webDir": "src",
+	"appId": "demoapp",
+	"appName": "demo-app",
+	"hideLogs": true,
 	"bundledWebRuntime": false,
 	"server": {
 		"url": "http://localhost:4200"

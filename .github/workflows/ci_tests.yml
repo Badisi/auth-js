@@ -61,11 +61,11 @@ jobs:
         if: steps.cache-step.outputs.cache-hit != 'true'
         run: npm clean-install --engine-strict
 
-      - name: Lint libs
-        run: npm run lint:libs
+      - name: Lint
+        run: npm run lint
 
-      - name: Test libs
-        run: npm run test:libs
+      - name: Test
+        run: npm run test
 
       - name: Build auth-js
         working-directory: projects/auth-js

@@ -1,3 +1,5 @@
+import '@capacitor/core';
+
 import { OIDCAuthManager } from '@badisi/auth-js/oidc';
 
 import { DemoAppSettings } from '../services/demo-app-settings.service';

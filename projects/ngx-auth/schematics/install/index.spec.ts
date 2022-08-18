@@ -28,6 +28,7 @@ const appOptions: ApplicationOptions = {
 };
 
 const schematicOptions: InstallOptions = {
+    project: 'app-test',
     authorityUrl: 'https://dev-fijd1e9x.us.auth0.com',
     clientId: 'kRVVEnAWKMpxxpcodl0TqLXfIHgQvmmt'
 };

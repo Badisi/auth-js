@@ -1,9 +1,6 @@
 import { AuthSubscriber } from './models/auth-subscriber.model';
 import { AuthSubscription } from './models/auth-subscription.model';
 
-/**
- * @internal
- */
 export class AuthSubscriptions<T extends unknown[]> {
     private subscribers: AuthSubscriber<T>[] = [];
     private lastNotifiedValue?: T;

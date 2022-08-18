@@ -6,7 +6,10 @@
     "properties": {
         "project": {
             "description": "Name of the Angular project to run the schematics on.",
-            "type": "string"
+            "type": "string",
+            "$default": {
+                "$source": "projectName"
+            }
         },
         "authorityUrl": {
             "x-prompt": "Authority url ?",

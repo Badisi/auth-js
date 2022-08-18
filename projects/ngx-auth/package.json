@@ -32,7 +32,7 @@
     "scripts": {
         "lint": "nx run ngx-auth:lint",
         "test": "nx run ngx-auth:test",
-        "build": "cd ../../; nx run ngx-auth:build && nx run ngx-auth:copy-assets && nx run ngx-auth:build-schematics"
+        "build": "cd ../../ && nx run ngx-auth:build && nx run ngx-auth:copy-assets && nx run ngx-auth:build-schematics"
     },
     "dependencies": {
         "@badisi/auth-js": "0.0.0-semantically-released",

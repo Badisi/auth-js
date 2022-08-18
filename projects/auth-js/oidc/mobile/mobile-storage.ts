@@ -1,114 +1,103 @@
-// import { Log } from 'oidc-client-ts';
+/* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-unsafe-assignment */
 
-// TODO: fallback to localStorage if plugin does not exists
-export class MobileStorage implements Storage {
-    public get length(): number {
-        return 0;
+import type { StoragePlugin } from '@capacitor/storage/dist/esm/definitions';
+import type { SecureStoragePluginPlugin } from 'capacitor-secure-storage-plugin/dist/esm/definitions';
+import { Logger } from 'oidc-client-ts';
+
+import { AsyncStorage } from '../models/async-storage.model';
+
+const LOCAL_STORAGE = window.localStorage;
+const CAPACITOR_STORAGE = window.Capacitor?.Plugins?.['Storage'] as StoragePlugin;
+const CAPACITOR_SECURE_STORAGE = window.Capacitor?.Plugins?.['SecureStoragePlugin'] as SecureStoragePluginPlugin;
+
+export class MobileStorage implements AsyncStorage {
+    private readonly _logger = new Logger('MobileStorage');
+
+    constructor() {
+        if (!CAPACITOR_SECURE_STORAGE) {
+            let message = '[@badisi/auth-js] This application is currently using an unsafe storage.\n\n';
+            message += 'ⓘ Please follow the recommended guide and use `capacitor-secure-storage-plugin` instead.';
+            console.warn(message);
+        }
+
+        if (CAPACITOR_SECURE_STORAGE) {
+            this._logger.debug('Using `capacitor-secure-storage-plugin` implementation');
+        } else if (CAPACITOR_STORAGE) {
+            this._logger.debug('Using `@capacitor/storage` implementation');
+        } else {
+            this._logger.debug('Using `localStorage` implementation');
+        }
     }
 
-    public clear(): void {
-        throw new Error('Method not implemented.');
+    public async length(): Promise<number> {
+        if (CAPACITOR_SECURE_STORAGE) {
+            return (await CAPACITOR_SECURE_STORAGE.keys()).value.length;
+        } else if (CAPACITOR_STORAGE) {
+            return (await CAPACITOR_STORAGE.keys()).keys.length;
+        } else {
+            return LOCAL_STORAGE.length;
+        }
     }
 
-    public getItem(_key: string): string | null {
-        throw new Error('Method not implemented.');
+    public async key(index: number): Promise<string | null> {
+        if (CAPACITOR_SECURE_STORAGE) {
+            return (await CAPACITOR_SECURE_STORAGE.keys()).value[index];
+        } else if (CAPACITOR_STORAGE) {
+            return (await CAPACITOR_STORAGE.keys()).keys[index];
+        } else {
+            return LOCAL_STORAGE.key(index);
+        }
     }
 
-    public key(_index: number): string | null {
-        throw new Error('Method not implemented.');
+    public async clear(): Promise<void> {
+        this._logger.create('clear');
+
+        if (CAPACITOR_SECURE_STORAGE) {
+            await CAPACITOR_SECURE_STORAGE.clear();
+        } else if (CAPACITOR_STORAGE) {
+            await CAPACITOR_STORAGE.clear();
+        } else {
+            LOCAL_STORAGE.clear();
+        }
     }
 
-    public removeItem(_key: string): void {
-        throw new Error('Method not implemented.');
-    }
+    public async getItem(key: string): Promise<string | null> {
+        this._logger.create(`getItem('${key}')`);
 
-    public setItem(_key: string, _value: string): void {
-        throw new Error('Method not implemented.');
-    }
-
-    /* private _secureStorage: any;
-
-    set(key: string, value: string): Promise<void> {
-        Log.logger.debug('CordovaPluginSecureStorageEcho.setItem', key);
-        return new Promise(async (resolve) => {
-            const store = await this.getStore();
-            store.set(
-                () => resolve(),
-                (error: any) => {
-                    Log.logger.error(error);
-                    resolve();
-                },
-                key,
-                value
-            );
-        });
-    }
-
-    get(key: string): Promise<string | null> {
-        Log.logger.debug('CordovaPluginSecureStorageEcho.getItem', key);
-        return new Promise(async (resolve) => {
-            const store = await this.getStore();
-            store.get(
-                (value: any) => resolve(value),
-                (error: any) => {
-                    Log.logger.error(error);
-                    resolve(null);
-                },
-                key
-            );
-        });
-    }
-
-    remove(key: string): Promise<string | null> {
-        Log.logger.debug('CordovaPluginSecureStorageEcho.removeItem', key);
-        return new Promise(async (resolve) => {
-            const store = await this.getStore();
-            store.remove(
-                () => resolve(null),
-                (error: any) => {
-                    Log.logger.error(error);
-                    resolve(null);
-                },
-                key
-            );
-        });
-    }
-
-    getAllKeys(): Promise<string[]> {
-        Log.logger.debug('CordovaPluginSecureStorageEcho.getAllKeys');
-        return new Promise(async (resolve) => {
-            const store = await this.getStore();
-            store.keys(
-                (keys: string[]) => resolve(keys),
-                (error: any) => {
-                    Log.logger.error(error);
-                    resolve([]);
-                },
-            );
-        });
-    }
-
-    // --- HELPER(s) ---
-
-    private getStore(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            if (!this._secureStorage) {
-                const cordova = (window as any).cordova;
-                if (cordova && cordova.plugins.SecureStorage) {
-                    const storage = new cordova.plugins.SecureStorage(
-                        () => {
-                            this._secureStorage = storage;
-                            resolve(this._secureStorage);
-                        },
-                        (error: any) => reject(error),
-                        'NGX_AUTH'
-                    );
-                } else {
-                    reject('CordovaPluginSecureStorageEcho: cordova.plugins.SecureStorage is undefined');
-                }
-            } else {
-                resolve(this._secureStorage);
+        if (CAPACITOR_SECURE_STORAGE) {
+            try {
+                return (await CAPACITOR_SECURE_STORAGE.get({ key })).value;
+            } catch {
+                return null;
             }
-        });
-    }*/
+        } else if (CAPACITOR_STORAGE) {
+            return (await CAPACITOR_STORAGE.get({ key })).value;
+        } else {
+            return LOCAL_STORAGE.getItem(key);
+        }
+    }
+
+    public async setItem(key: string, value: string): Promise<void> {
+        this._logger.create(`setItem('${key}')`);
+
+        if (CAPACITOR_SECURE_STORAGE) {
+            await CAPACITOR_SECURE_STORAGE.set({ key, value });
+        } else if (CAPACITOR_STORAGE) {
+            await CAPACITOR_STORAGE.set({ key, value });
+        } else {
+            LOCAL_STORAGE.setItem(key, value);
+        }
+    }
+
+    public async removeItem(key: string): Promise<void> {
+        this._logger.create(`removeItem('${key}')`);
+
+        if (CAPACITOR_SECURE_STORAGE) {
+            await CAPACITOR_SECURE_STORAGE.remove({ key });
+        } else if (CAPACITOR_STORAGE) {
+            await CAPACITOR_STORAGE.remove({ key });
+        } else {
+            LOCAL_STORAGE.removeItem(key);
+        }
+    }
 }

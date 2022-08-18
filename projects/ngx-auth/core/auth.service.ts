@@ -1,7 +1,7 @@
 import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-    AccessToken, AuthSubscription, IdToken, Navigation, OIDCAuthManager, UserProfile, UserSession
+    AccessToken, AuthSubscription, AuthUtils, IdToken, Navigation, OIDCAuthManager, UserProfile, UserSession
 } from '@badisi/auth-js/oidc';
 import { Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
@@ -60,7 +60,7 @@ export class AuthService implements OnDestroy {
     public readonly idTokenDecoded$: Observable<IdToken | undefined> =
         this._idToken$.asObservable().pipe(
             distinctUntilChanged(),
-            map(token => this.manager.decodeJwt<IdToken>(token))
+            map(token => AuthUtils.decodeJwt<IdToken>(token))
         );
 
     public readonly accessToken$: Observable<string | undefined> =
@@ -71,7 +71,7 @@ export class AuthService implements OnDestroy {
     public readonly accessTokenDecoded$: Observable<AccessToken | undefined> =
         this._accessToken$.asObservable().pipe(
             distinctUntilChanged(),
-            map(token => this.manager.decodeJwt<AccessToken>(token))
+            map(token => AuthUtils.decodeJwt<AccessToken>(token))
         );
     /* eslint-enable @typescript-eslint/member-ordering */
 
@@ -119,18 +119,6 @@ export class AuthService implements OnDestroy {
 
     public getAccessTokenDecoded(): Promise<AccessToken | string | undefined> {
         return this.manager.getAccessTokenDecoded();
-    }
-
-    public isCapacitor(): boolean {
-        return this.manager.isCapacitor();
-    }
-
-    public isCordova(): boolean {
-        return this.manager.isCordova();
-    }
-
-    public isNative(): boolean {
-        return this.manager.isNative();
     }
 
     // --- HELPER(s) ----

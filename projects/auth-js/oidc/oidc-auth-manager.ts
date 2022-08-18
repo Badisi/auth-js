@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions, @typescript-eslint/naming-convention, camelcase */
 
-import jwtDecode from 'jwt-decode';
 import { merge } from 'lodash-es';
-import {
-    InMemoryWebStorage, Log, User, UserManager, UserManagerSettings, UserProfile, WebStorageStateStore
-} from 'oidc-client-ts';
+import { ErrorResponse, InMemoryWebStorage, Log, User, UserManagerSettings, UserProfile, WebStorageStateStore } from 'oidc-client-ts';
 
-import { AuthManager, AuthSubscriber, AuthSubscription, Optional } from '../core';
-import { AuthSubscriptions } from '../core/auth-subscriptions';
+import { AuthManager, AuthSubscriber, AuthSubscription, AuthSubscriptions, AuthUtils, Optional } from '../core';
 import { MobileStorage } from './mobile/mobile-storage';
 import { AccessToken } from './models/access-token.model';
 import { IdToken } from './models/id-token.model';
 import { Navigation, OIDCAuthSettings } from './models/oidc-auth-settings.model';
 import { UserSession } from './models/user-session.model';
+import { UserManager } from './user-manager';
 
 const REDIRECT_URL_KEY = 'auth-js:oidc_manager:redirect_url';
 
@@ -79,14 +76,14 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         Log.setLevel(userSettings.logLevel || DEFAULT_SETTINGS.logLevel || Log.NONE);
         Log.setLogger(console);
 
-        const isNative = this.isNative();
-        const baseUrl = (isNative) ? `${userSettings.schemeUri}://` : this.getBaseUrl();
+        const isNativeMobile = AuthUtils.isNativeMobile();
+        const baseUrl = (isNativeMobile) ? `${userSettings.schemeUri}://` : AuthUtils.getBaseUrl();
 
         // Initialize settings
         this.settings = merge({}, DEFAULT_SETTINGS, {
             internal: {
                 userStore: new WebStorageStateStore({
-                    store: (isNative) ? new MobileStorage() : new InMemoryWebStorage()
+                    store: (isNativeMobile) ? new MobileStorage() as unknown as Storage : new InMemoryWebStorage()
                 }),
                 redirect_uri: `${baseUrl}${DEFAULT_SETTINGS.internal?.redirect_uri}`,
                 popup_redirect_uri: `${baseUrl}${DEFAULT_SETTINGS.internal?.popup_redirect_uri}`,
@@ -130,90 +127,96 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         this.assertNotInInceptionLoop();
 
         // Decide what to do..
-        const runSyncOrAsync = async (job: () => Promise<unknown>): Promise<void> => {
-            // eslint-disable-next-line @typescript-eslint/brace-style, max-statements-per-line
-            if (this.settings.loginRequired) { await job(); } else { void job(); }
-        };
+        if (AuthUtils.isUrlMatching(location.href, this.settings.internal?.redirect_uri)) {
+            await this.runSyncOrAsync(() => this.backFromLoginRedirect());
+        } else if (AuthUtils.isUrlMatching(location.href, this.settings.internal?.post_logout_redirect_uri)) {
+            await this.runSyncOrAsync(() => this.backFromLogoutRedirect());
+        } else if (this.settings.loadUserSession || this.settings.loginRequired) {
+            const signinSilent = async (): Promise<void> => {
+                await this.runSyncOrAsync(() => this.signinSilent()
+                    .catch(async (signinSilentError: ErrorResponse) => {
+                        if (this.settings.loginRequired) {
+                            const { error, message } = signinSilentError;
+                            if ([error, message].includes('login_required')) {
+                                await this.login();
+                            } else {
+                                throw signinSilentError;
+                            }
+                        } else {
+                            this.authenticatedSubs.notify(false);
+                        }
+                    }));
+            };
 
-        if (isNative) {
-            this.installCustomUrlSchemeCallback();
-            /* if (this.settings.autoLoginOnInit) {
-                // Try to load user from storage
-                await this.loadUser();
-
-                // If user credentials have expired -> try a silent renew
-                if (this.user) {
-                    return (!this.user.expired) ? this.userProfile : this.signinSilent();
+            // Try to load user from storage
+            const user = await this.userManager?.getUser();
+            if (!user) {
+                // on desktop -> try a silent renew with iframe
+                if (!isNativeMobile) {
+                    await signinSilent();
+                // on mobile -> force login if required
+                } else if (this.settings.loginRequired) {
+                    await this.login();
+                // else -> gracefully notify that we are not authenticated
+                } else {
+                    this.authenticatedSubs.notify(false);
                 }
-                return null;
-            }*/
-        } else if (this.urlMatching(location.href, this.settings.internal?.redirect_uri)) {
-            await runSyncOrAsync(() => this.backFromLogin());
-        } else if (this.urlMatching(location.href, this.settings.internal?.post_logout_redirect_uri)) {
-            await runSyncOrAsync(() => this.backFromLogout());
-        } else if (this.settings.loadUserSession) {
-            await runSyncOrAsync(() => this.signinSilent().catch(async (signinSilentError: Error) => {
-                if (this.settings.loginRequired) {
-                    if (signinSilentError.message === 'login_required') {
-                        await this.login();
-                    } else {
-                        throw signinSilentError;
-                    }
-                }
-            }));
-        } else if (this.settings.loginRequired) {
-            await this.login();
+            } else if (user.expired) {
+                await signinSilent();
+            } else {
+                this.user = user;
+            }
+        } else {
+            this.authenticatedSubs.notify(false);
         }
     }
 
     public async login(redirectUrl = location.href, navigationType?: Navigation): Promise<boolean> {
-        switch (navigationType || this.settings.navigationType) {
-            case Navigation.POPUP:
-                await this.userManager?.signinPopup().catch((error: Error) => {
-                    if (error?.message === 'Attempted to navigate on a disposed window') {
-                        error = new Error('[OIDCAuthManager] Attempted to navigate on a disposed window.');
-                        error.stack = undefined;
-                        error.message += '\n\nⓘ This may be due to an ad blocker.';
-                    }
-                    throw error;
-                });
-                await this.redirect(redirectUrl);
-                break;
-            default:
-                sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
-                await this.userManager?.signinRedirect();
-                break;
+        if (AuthUtils.isNativeMobile()) {
+            await this.userManager?.signinMobile();
+            await this.redirect(redirectUrl);
+        } else {
+            switch (navigationType || this.settings.navigationType) {
+                case Navigation.POPUP:
+                    await this.userManager?.signinPopup().catch((error: Error) => {
+                        if (error?.message === 'Attempted to navigate on a disposed window') {
+                            error = new Error('[OIDCAuthManager] Attempted to navigate on a disposed window.');
+                            error.stack = undefined;
+                            error.message += '\n\nⓘ This may be due to an ad blocker.';
+                        }
+                        throw error;
+                    });
+                    await this.redirect(redirectUrl);
+                    break;
+                default:
+                    sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
+                    await this.userManager?.signinRedirect();
+                    break;
+            }
         }
         return (this._isAuthenticated === true);
     }
 
     public async logout(redirectUrl = location.href, navigationType?: Navigation): Promise<void> {
-        switch (navigationType || this.settings.navigationType) {
-            case Navigation.POPUP:
-                await this.userManager?.signoutPopup();
-                await this.redirect(redirectUrl);
-                break;
-            default:
-                sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
-                await this.userManager?.signoutRedirect();
-                break;
+        if (AuthUtils.isNativeMobile()) {
+            await this.userManager?.signoutMobile();
+            await this.redirect(redirectUrl);
+        } else {
+            switch (navigationType || this.settings.navigationType) {
+                case Navigation.POPUP:
+                    await this.userManager?.signoutPopup();
+                    await this.redirect(redirectUrl);
+                    break;
+                default:
+                    sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
+                    await this.userManager?.signoutRedirect();
+                    break;
+            }
         }
     }
 
     public async renew(): Promise<void> {
         return this.signinSilent().catch(error => console.error(error));
-    }
-
-    public decodeJwt<T>(value?: string): T | string | undefined {
-        try {
-            if (value) {
-                return jwtDecode<T>(value);
-            }
-            return value;
-        } catch {
-            console.warn('[OIDCAuthManager] Access token was not decoded as it is not a valid JWT.');
-            return value;
-        }
     }
 
     public getSettings(): OIDCAuthSettings {
@@ -246,7 +249,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     public async getIdTokenDecoded(): Promise<IdToken | string | undefined> {
         await this.waitForRenew('getIdTokenDecoded()');
-        return this.decodeJwt<IdToken>(this._idToken);
+        return AuthUtils.decodeJwt<IdToken>(this._idToken);
     }
 
     public async getAccessToken(): Promise<string | undefined> {
@@ -256,7 +259,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     public async getAccessTokenDecoded(): Promise<AccessToken | string | undefined> {
         await this.waitForRenew('getAccessTokenDecoded()');
-        return this.decodeJwt<AccessToken>(this._accessToken);
+        return AuthUtils.decodeJwt<AccessToken>(this._accessToken);
     }
 
     // --- DESTROY ---
@@ -320,10 +323,10 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                 const error = new Error(`[OIDCAuthManager] ${uri || 'redirect uri'} was not found.`);
                 error.stack = undefined;
 
-                if (this.urlMatching(location.href, uri)) {
+                if (AuthUtils.isUrlMatching(location.href, uri)) {
                     error.message += '\n\nⓘ This usually means you forgot to include the redirect html files in your application assets.';
                     throw error;
-                } else if (this.urlMatching(location.href, `/${htmlFileName}.html`)) {
+                } else if (AuthUtils.isUrlMatching(location.href, `/${htmlFileName}.html`)) {
                     error.message += '\n\nⓘ This usually means your redirect urls are misconfigured.';
                     throw error;
                 }
@@ -332,7 +335,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     /**
      *  Scenario example :
-     *  1) isNative = true + app is in background
+     *  1) isNativeMobile = true + app is in background
      *  2) access token expires
      *  3) app is brought back to foreground
      *  4) addAccessTokenExpired event is called
@@ -345,29 +348,16 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         // eslint-disable-next-line no-loops/no-loops
         while (this._isRenewing) {
             if (new Date().getTime() > (startTime + 5000)) {
-                console.warn('[OIDCAuthManager]', caller, 'timed out waiting for renew to finish.');
+                console.warn('[@badisi/auth-js]', `\`${caller}\``, 'timed out waiting for renew to finish.');
                 break;
             }
             await new Promise(resolve => setTimeout(resolve, 100));
         }
     }
 
-    private urlMatching(url1: string, url2?: string): boolean {
-        return ((url2 !== undefined) && url1.includes(url2));
-    }
-
-    private getBaseUrl(): string {
-        const baseUrl = document.baseURI || document.querySelector('base')?.href || location.origin;
-        return (baseUrl.endsWith('/')) ? baseUrl : `${baseUrl}/`;
-    }
-
-    private getURL(url: string): URL {
-        try {
-            return new URL(url);
-        } catch {
-            const pathUrl = (!url.startsWith('/')) ? url : url.substring(1, url.length);
-            return new URL(`${this.getBaseUrl()}${pathUrl}`);
-        }
+    private async runSyncOrAsync(job: () => Promise<unknown>): Promise<void> {
+        // eslint-disable-next-line @typescript-eslint/brace-style, max-statements-per-line
+        if (this.settings.loginRequired) { await job(); } else { void job(); }
     }
 
     private async redirect(url: string | null, error?: unknown): Promise<void> {
@@ -376,7 +366,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             await this.removeUser();
         }
 
-        const redirectUrl = this.getURL(url || '/');
+        const redirectUrl = AuthUtils.stringToURL(url || '/');
         // History cannot be rewritten when origin is different
         if (location.origin === redirectUrl.origin) {
             history.replaceState(history.state, '', redirectUrl.href);
@@ -394,10 +384,6 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         ]);
     }
 
-    /* private async loadUser(): Promise<void> {
-        this.user = await this.userManager?.getUser();
-    }*/
-
     private async signinSilent(): Promise<void> {
         this._isRenewing = true;
         this.renewingSubs.notify(true);
@@ -413,9 +399,9 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         }
     }
 
-    private async backFromLogin(url?: string): Promise<void> {
+    private async backFromLoginRedirect(): Promise<void> {
         try {
-            await this.userManager?.signinCallback(url);
+            await this.userManager?.signinRedirectCallback(location.href);
             await this.redirect(sessionStorage.getItem(REDIRECT_URL_KEY));
         } catch (error) {
             await this.redirect('/', error);
@@ -424,35 +410,15 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         }
     }
 
-    private async backFromLogout(url?: string): Promise<void> {
+    private async backFromLogoutRedirect(): Promise<void> {
         try {
-            await this.userManager?.signoutCallback(url);
+            await this.userManager?.signoutRedirectCallback(location.href);
             await this.redirect(sessionStorage.getItem(REDIRECT_URL_KEY));
             await this.removeUser();
         } catch (error) {
             await this.redirect('/', error);
         } finally {
             sessionStorage.removeItem(REDIRECT_URL_KEY);
-        }
-    }
-
-    private installCustomUrlSchemeCallback(): void {
-        const onCallback = (url: string): void => {
-            if (this.urlMatching(url, this.settings.internal?.redirect_uri)) {
-                void this.backFromLogin(url);
-            } else if (this.urlMatching(url, this.settings.internal?.post_logout_redirect_uri)) {
-                void this.backFromLogout(url);
-            }
-        };
-
-        if (this.isCapacitor()) {
-            window.Capacitor.addListener('App', 'appUrlOpen', (data: unknown) => {
-                onCallback((data as { url: string }).url);
-            });
-        } else if (this.isCordova()) {
-            window.handleOpenURL = (url: string): void => {
-                onCallback(url);
-            };
         }
     }
 

@@ -26,17 +26,16 @@
     "private": true,
     "scripts": {
         "ncu": "npx ncu -i --deep --format=group",
-        "lint:libs": "nx run-many --target=lint --projects=auth-js,ngx-auth",
-        "test:libs": "nx run-many --target=test --projects=auth-js,ngx-auth",
-        "postinstall": "ngcc --properties es2015 browser module main"
+        "lint": "nx run-many --target=lint --projects=auth-js,ngx-auth",
+        "test": "nx run-many --target=test --projects=auth-js,ngx-auth"
     },
     "workspaces": [
         "projects/auth-js",
         "projects/demo-app/capacitor",
+        "projects/demo-app/web",
         "projects/demo-e2e",
         "projects/demo-idp",
-        "projects/ngx-auth",
-        "projects/site"
+        "projects/ngx-auth"
     ],
     "dependencies": {
         "@angular/common": "^12.x",
@@ -46,36 +45,36 @@
         "@angular/platform-browser": "^12.x",
         "@angular/platform-browser-dynamic": "^12.x",
         "@angular/router": "^12.x",
-        "rxjs": "^7.5.5",
+        "rxjs": "^7.5.6",
         "tslib": "^2.4.0",
-        "zone.js": "^0.11.6"
+        "zone.js": "^0.11.8"
     },
     "devDependencies": {
         "@angular-devkit/build-angular": "^12.x",
         "@angular/cli": "^12.x",
         "@angular/compiler-cli": "^12.x",
-        "@hug/eslint-config": "^8.0.0",
+        "@hug/eslint-config": "^8.0.1",
         "@nrwl/angular": "^12.x",
-        "@nrwl/cli": "^14.4.1",
-        "@nrwl/eslint-plugin-nx": "^14.4.1",
-        "@nrwl/jest": "^14.4.1",
-        "@nrwl/linter": "^14.4.1",
-        "@nrwl/tao": "^14.4.1",
-        "@nrwl/web": "^14.4.1",
-        "@nrwl/workspace": "^14.4.1",
-        "@types/jest": "^28.1.4",
-        "@types/node": "^18.0.1",
+        "@nrwl/cli": "^14.5.7",
+        "@nrwl/eslint-plugin-nx": "^14.5.7",
+        "@nrwl/jest": "^14.5.7",
+        "@nrwl/linter": "^14.5.7",
+        "@nrwl/tao": "^14.5.7",
+        "@nrwl/web": "^14.5.7",
+        "@nrwl/workspace": "^14.5.7",
+        "@types/jest": "^28.1.7",
+        "@types/node": "^18.7.6",
         "cpy-cli": "^4.1.0",
-        "esbuild": "^0.14.48",
-        "eslint": "^8.19.0",
-        "jest": "^28.1.2",
-        "jest-preset-angular": "^12.1.0",
+        "esbuild": "^0.15.5",
+        "eslint": "^8.22.0",
+        "jest": "^28.1.3",
+        "jest-preset-angular": "^12.2.0",
         "ng-packagr": "^12.x",
-        "postcss": "^8.4.14",
+        "postcss": "^8.4.16",
         "postcss-import": "^14.1.0",
-        "postcss-preset-env": "^7.7.2",
+        "postcss-preset-env": "^7.8.0",
         "postcss-url": "^10.1.3",
-        "ts-jest": "^28.0.5",
+        "ts-jest": "^28.0.8",
         "typescript": "~4.3.5"
     }
 }

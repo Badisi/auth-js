@@ -1,14 +1,18 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-    appId: 'demoapp.authjs',
-    appName: 'demo-app-auth-js',
-    webDir: 'src',
-    hideLogs: true,
-    bundledWebRuntime: false,
-    server: {
-        url: 'http://localhost:4200'
-    }
+    appId: 'demoapp',
+    appName: 'demo-app',
+    loggingBehavior: 'debug',
+    bundledWebRuntime: false
 };
+
+for (let i = 0; i < process.argv.length; i++) {
+    if (process.argv[i] === '--serverUrl') {
+        config.server = {
+            url: process.argv[++i]
+        }
+    }
+}
 
 export default config;

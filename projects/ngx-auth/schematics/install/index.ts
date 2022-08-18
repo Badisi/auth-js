@@ -14,6 +14,7 @@ const getActualUserConfig = async (context: SchematicContext, options: InstallOp
     const defaultOptions = await getSchematicSchemaDefaultOptions(context, 'install');
 
     const config: InstallOptions = {
+        project: 'app-test',
         authorityUrl: options.authorityUrl,
         clientId: options.clientId
     };
