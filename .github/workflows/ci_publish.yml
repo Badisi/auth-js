@@ -3,6 +3,9 @@ name: Publish libraries
 on:
   workflow_dispatch:
 
+env:
+  NODE: 16
+
 jobs:
   ci_tests:
     uses: ./.github/workflows/ci_tests.yml
@@ -18,14 +21,26 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: ${{ env.NODE }}
           registry-url: https://registry.npmjs.org/
           cache: npm
 
       - name: Install latest npm
         run: npm install -g npm@latest
 
+      - name: Cache .angular and node_modules
+        uses: actions/cache@v3
+        id: cache-step
+        with:
+          key: cache-ubuntu-latest-node${{ env.NODE }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            cache-ubuntu-latest-node${{ env.NODE }}-
+          path: |
+            .angular/cache
+            node_modules
+
       - name: Install dependencies
+        if: steps.cache-step.outputs.cache-hit != 'true'
         run: npm clean-install --engine-strict
 
       - name: Build auth-js
