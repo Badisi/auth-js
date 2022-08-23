@@ -21,7 +21,7 @@ const settings: Settings<AuthSettings>[] = [{
                 audience: 'https://dev-fijd1e9x.us.auth0.com/api/v2/'
             }
         },
-        navigationType: Navigation.POPUP,
+        navigationType: Navigation.REDIRECT,
         logLevel: Log.NONE,
         loginRequired: false,
         loadUserSession: true,
