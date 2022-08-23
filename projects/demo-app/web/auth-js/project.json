@@ -59,7 +59,7 @@
                     "buildTarget": "demo-app-auth-js:build:production"
                 },
                 "development": {
-                    "browserTarget": "demo-app-auth-js:build:development"
+                    "buildTarget": "demo-app-auth-js:build:development"
                 }
             },
             "defaultConfiguration": "development"
