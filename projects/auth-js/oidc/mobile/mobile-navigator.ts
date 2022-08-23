@@ -7,15 +7,14 @@ export class MobileNavigator {
     private readonly _logger = new Logger('MobileNavigator');
 
     constructor(
-        public _settings: UserManagerSettingsStore
+        public settings: UserManagerSettingsStore
     ) {
         // TODO: manage settings
-        // TODO: test with popup mode
     }
 
-    public prepare(options: MobileWindowOptions): MobileWindow {
+    public prepare(options: MobileWindowOptions, redirectUrl: string): MobileWindow {
         // TODO: manage options
         this._logger.create('prepare');
-        return new MobileWindow(options);
+        return new MobileWindow(options, redirectUrl);
     }
 }

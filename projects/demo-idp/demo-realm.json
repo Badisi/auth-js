@@ -606,6 +606,7 @@
             "clientAuthenticatorType": "client-secret",
             "secret": "**********",
             "redirectUris": [
+                "demo-app://*",
                 "http://localhost:4200/*",
                 "https://badisi.github.io/auth-js/demo-app/ngx-auth/*",
                 "https://badisi.github.io/auth-js/demo-app/auth-js/*"

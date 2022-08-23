@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions, @typescript-eslint/naming-convention, camelcase */
 
 import { merge } from 'lodash-es';
-import { ErrorResponse, InMemoryWebStorage, Log, User, UserManagerSettings, UserProfile, WebStorageStateStore } from 'oidc-client-ts';
+import { ErrorResponse, InMemoryWebStorage, Log, User, UserProfile, WebStorageStateStore } from 'oidc-client-ts';
 
 import { AuthManager, AuthSubscriber, AuthSubscription, AuthSubscriptions, AuthUtils, Optional } from '../core';
 import { MobileStorage } from './mobile/mobile-storage';
@@ -77,7 +77,11 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         Log.setLogger(console);
 
         const isNativeMobile = AuthUtils.isNativeMobile();
-        const baseUrl = (isNativeMobile) ? `${userSettings.schemeUri}://` : AuthUtils.getBaseUrl();
+        /**
+         * Providers like Keycloak does not handle custom redirect urls like `demo-app://?oidc-callback=login`,
+         * because they lack a host name. To fix this, `demo-app://localhost/?oidc-callback=login` is used instead.
+         */
+        const baseUrl = (isNativeMobile) ? `${userSettings.schemeUri}://localhost/` : AuthUtils.getBaseUrl();
 
         // Initialize settings
         this.settings = merge({}, DEFAULT_SETTINGS, {
@@ -86,8 +90,8 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                     store: (isNativeMobile) ? new MobileStorage() as unknown as Storage : new InMemoryWebStorage()
                 }),
                 redirect_uri: `${baseUrl}${DEFAULT_SETTINGS.internal?.redirect_uri}`,
-                popup_redirect_uri: `${baseUrl}${DEFAULT_SETTINGS.internal?.popup_redirect_uri}`,
                 post_logout_redirect_uri: `${baseUrl}${DEFAULT_SETTINGS.internal?.post_logout_redirect_uri}`,
+                popup_redirect_uri: `${baseUrl}${DEFAULT_SETTINGS.internal?.popup_redirect_uri}`,
                 popup_post_logout_redirect_uri: `${baseUrl}${DEFAULT_SETTINGS.internal?.popup_post_logout_redirect_uri}`,
                 silent_redirect_uri: `${baseUrl}${DEFAULT_SETTINGS.internal?.silent_redirect_uri}`
             }
@@ -97,14 +101,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         this.patchAuth0Logout();
 
         // Configure the user manager
-        this.userManager = new UserManager({
-            authority: this.settings.authorityUrl,
-            client_id: this.settings.clientId,
-            scope: this.settings.scope,
-            loadUserInfo: this.settings.loadUserInfo,
-            automaticSilentRenew: this.settings.automaticSilentRenew,
-            ...this.settings.internal
-        } as UserManagerSettings);
+        this.userManager = new UserManager(this.settings);
 
         // Listen for events
         this.userManagerSubs.push(
@@ -128,9 +125,9 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
         // Decide what to do..
         if (AuthUtils.isUrlMatching(location.href, this.settings.internal?.redirect_uri)) {
-            await this.runSyncOrAsync(() => this.backFromLoginRedirect());
+            await this.runSyncOrAsync(() => this.backFromSigninRedirect());
         } else if (AuthUtils.isUrlMatching(location.href, this.settings.internal?.post_logout_redirect_uri)) {
-            await this.runSyncOrAsync(() => this.backFromLogoutRedirect());
+            await this.runSyncOrAsync(() => this.backFromSignoutRedirect());
         } else if (this.settings.loadUserSession || this.settings.loginRequired) {
             const signinSilent = async (): Promise<void> => {
                 await this.runSyncOrAsync(() => this.signinSilent()
@@ -150,24 +147,41 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
             // Try to load user from storage
             const user = await this.userManager?.getUser();
-            if (!user) {
+            if (!user || user.expired) {
                 // on desktop -> try a silent renew with iframe
-                if (!isNativeMobile) {
+                if (!isNativeMobile && this.settings.loadUserSession) {
                     await signinSilent();
-                // on mobile -> force login if required
+                // else -> force login if required
                 } else if (this.settings.loginRequired) {
                     await this.login();
                 // else -> gracefully notify that we are not authenticated
                 } else {
                     this.authenticatedSubs.notify(false);
                 }
-            } else if (user.expired) {
-                await signinSilent();
             } else {
                 this.user = user;
             }
         } else {
             this.authenticatedSubs.notify(false);
+        }
+    }
+
+    public async logout(redirectUrl = location.href, navigationType?: Navigation): Promise<void> {
+        if (AuthUtils.isNativeMobile()) {
+            await this.userManager?.signoutMobile();
+            await this.redirect(redirectUrl);
+        } else {
+            switch (navigationType || this.settings.navigationType) {
+                case Navigation.POPUP:
+                    await this.userManager?.signoutPopup();
+                    await this.redirect(redirectUrl);
+                    break;
+                case Navigation.REDIRECT:
+                default:
+                    sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
+                    await this.userManager?.signoutRedirect();
+                    break;
+            }
         }
     }
 
@@ -188,6 +202,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                     });
                     await this.redirect(redirectUrl);
                     break;
+                case Navigation.REDIRECT:
                 default:
                     sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
                     await this.userManager?.signinRedirect();
@@ -195,24 +210,6 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             }
         }
         return (this._isAuthenticated === true);
-    }
-
-    public async logout(redirectUrl = location.href, navigationType?: Navigation): Promise<void> {
-        if (AuthUtils.isNativeMobile()) {
-            await this.userManager?.signoutMobile();
-            await this.redirect(redirectUrl);
-        } else {
-            switch (navigationType || this.settings.navigationType) {
-                case Navigation.POPUP:
-                    await this.userManager?.signoutPopup();
-                    await this.redirect(redirectUrl);
-                    break;
-                default:
-                    sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
-                    await this.userManager?.signoutRedirect();
-                    break;
-            }
-        }
     }
 
     public async renew(): Promise<void> {
@@ -313,7 +310,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
      *  2) iframe or popup was created and navigation was made to OP
      *  3) redirection occurs in iframe or popup
      *  4) `silent_redirect_uri` or `popup_redirect_uri` is not found
-     *  5) the web app is loaded in the iframe or popup instead
+     *  5) the web app (instead of the proper redirect_uri) is loaded in the iframe or popup
      *  6) an inception loop occurs -> app in iframe in iframe in iframe or popup in popup in popup..
      */
     private assertNotInInceptionLoop(): void {
@@ -326,7 +323,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                 if (AuthUtils.isUrlMatching(location.href, uri)) {
                     error.message += '\n\nⓘ This usually means you forgot to include the redirect html files in your application assets.';
                     throw error;
-                } else if (AuthUtils.isUrlMatching(location.href, `/${htmlFileName}.html`)) {
+                } else if (location.href.includes(`/${htmlFileName}.html`)) {
                     error.message += '\n\nⓘ This usually means your redirect urls are misconfigured.';
                     throw error;
                 }
@@ -399,7 +396,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         }
     }
 
-    private async backFromLoginRedirect(): Promise<void> {
+    private async backFromSigninRedirect(): Promise<void> {
         try {
             await this.userManager?.signinRedirectCallback(location.href);
             await this.redirect(sessionStorage.getItem(REDIRECT_URL_KEY));
@@ -410,7 +407,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         }
     }
 
-    private async backFromLogoutRedirect(): Promise<void> {
+    private async backFromSignoutRedirect(): Promise<void> {
         try {
             await this.userManager?.signoutRedirectCallback(location.href);
             await this.redirect(sessionStorage.getItem(REDIRECT_URL_KEY));

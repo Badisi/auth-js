@@ -8,6 +8,7 @@ import { Logger } from 'oidc-client-ts';
 import { AuthUtils } from '../../core';
 import { MobileWindowOptions } from '../models/mobile-window-options.model';
 
+const CUSTOM_URL_SCHEME_HANDLER_TIMEOUT = 30 * 1000; // 30s
 const CAPACITOR_APP = window.Capacitor?.Plugins?.['App'] as AppPlugin;
 const CAPACITOR_BROWSER = window.Capacitor?.Plugins?.['Browser'] as BrowserPlugin;
 const BROWSER_TAB = undefined; // cordova?.plugins?.browsertab;
@@ -19,12 +20,14 @@ export class MobileWindow implements IWindow {
     private capacitorBrowserFinishedHandle?: PluginListenerHandle;
     private originalHandleOpenURL = window.handleOpenURL;
 
+    private timer?: number;
     private navigateLogger?: Logger;
     private _resolve?: (value: NavigateResponse) => void;
     private _reject?: (reason?: unknown) => void;
 
     constructor(
-        public options: MobileWindowOptions
+        public options: MobileWindowOptions,
+        public redirectUrl: string
     ) {
         if (!AuthUtils.isCapacitor() && !AuthUtils.isCordova()) {
             let message = '[@badisi/auth-js] Required core dependency not found.\n\n';
@@ -42,6 +45,12 @@ export class MobileWindow implements IWindow {
             let message = '[@badisi/auth-js] This application is currently using a non recommended browser plugin.\n\n';
             message += 'ⓘ Please follow the recommended guide and use `@badisi/capacitor-browsertab` instead.';
             console.warn(message);
+        }
+
+        if (BROWSER_TAB) {
+            this._logger.debug('Using `@badisi/capacitor-browsertab` implementation');
+        } else if (CAPACITOR_BROWSER) {
+            this._logger.debug('Using `@capacitor/browser` implementation');
         }
     }
 
@@ -78,6 +87,7 @@ export class MobileWindow implements IWindow {
         window.handleOpenURL = this.originalHandleOpenURL;
         await this.capacitorBrowserFinishedHandle?.remove();
         await this.capacitorAppUrlOpenHandle?.remove();
+        clearTimeout(this.timer);
         logger.debug('success');
     }
 
@@ -103,7 +113,6 @@ export class MobileWindow implements IWindow {
 
         await CAPACITOR_BROWSER?.open({
             url: params.url,
-            // toolbarColor: '#32a852',
             presentationStyle: 'popover'
         });
     }
@@ -120,6 +129,9 @@ export class MobileWindow implements IWindow {
     private async installCustomUrlSchemeHandler(): Promise<void> {
         const logger = this._logger.create('installCustomUrlSchemeHandler');
 
+        // Set a timeout in case no response is received
+        this.timer = setTimeout(() => void this.onError(''), CUSTOM_URL_SCHEME_HANDLER_TIMEOUT);
+
         // Clean-up
         await this.cleanup();
 
@@ -129,14 +141,20 @@ export class MobileWindow implements IWindow {
 
             this.capacitorAppUrlOpenHandle = await CAPACITOR_APP?.addListener?.(
                 'appUrlOpen',
-                ({ url }): void => void this.onSuccess(url)
+                ({ url }): void => {
+                    if (AuthUtils.isUrlMatching(url, this.redirectUrl)) {
+                        void this.onSuccess(url);
+                    }
+                }
             );
         } else if (AuthUtils.isCordova()) {
             logger.debug('waiting for Cordova `handleOpenURL` callback');
 
             window.handleOpenURL = (url: string): void => {
                 this.originalHandleOpenURL?.(url);
-                void this.onSuccess(url);
+                if (AuthUtils.isUrlMatching(url, this.redirectUrl)) {
+                    void this.onSuccess(url);
+                }
             };
         }
 
