@@ -18,7 +18,11 @@ env:
   NODE: 16
 
 jobs:
+  ci_tests:
+    uses: ./.github/workflows/ci_tests.yml
+
   ci_demo-app:
+    needs: ci_tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
