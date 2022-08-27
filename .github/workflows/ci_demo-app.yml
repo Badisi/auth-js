@@ -19,6 +19,9 @@ env:
 
 jobs:
   ci_tests:
+    concurrency:
+      group: Run tests-${{ github.ref }}
+      cancel-in-progress: true
     uses: ./.github/workflows/ci_tests.yml
 
   ci_demo-app:
