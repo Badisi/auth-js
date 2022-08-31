@@ -1,7 +1,7 @@
 {
 	"appId": "demoapp",
 	"appName": "demo-app",
-	"hideLogs": true,
+	"loggingBehavior": "debug",
 	"bundledWebRuntime": false,
 	"server": {
 		"url": "http://localhost:4200"
