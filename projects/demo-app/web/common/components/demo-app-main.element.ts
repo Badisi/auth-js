@@ -93,7 +93,7 @@ export class DemoAppMainElement extends HTMLElement {
 
     public connectedCallback(): void {
         this.drawTabs();
-        this.showView(window.authSettings ? window.authSettings.getCurrentTabIndex() : 0);
+        this.showView(window.appSettings ? window.appSettings.get().currentTabIndex : 0);
     }
 
     public disconnectedCallback(): void {
@@ -137,7 +137,7 @@ export class DemoAppMainElement extends HTMLElement {
             });
             this.tabsContentEl?.scrollTo(0, 0);
 
-            window.authSettings?.saveCurrentTabIndex(index);
+            window.appSettings.setCurrentTabIndex(index);
         }
     }
 }

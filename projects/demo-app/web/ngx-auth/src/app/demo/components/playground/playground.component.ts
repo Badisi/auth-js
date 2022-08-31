@@ -13,7 +13,7 @@ import { PlaygroundSettings } from './playground-settings.model';
     encapsulation: ViewEncapsulation.ShadowDom
 })
 export class PlaygroundComponent {
-    public settings = window.authSettings.getCurrentSettings().otherSettings as PlaygroundSettings;
+    public settings = window.appSettings.getCurrentUserSettings().otherSettings as PlaygroundSettings ?? {};
     public dataOnError?: boolean;
     public data: unknown | Error;
 
@@ -44,6 +44,8 @@ export class PlaygroundComponent {
     }
 
     public saveSettings(): void {
-        window.authSettings.saveCurrentOtherSettings(this.settings);
+        const currentUserSettings = window.appSettings.getCurrentUserSettings();
+        currentUserSettings.otherSettings = this.settings;
+        window.appSettings.addUserSettings(currentUserSettings);
     }
 }

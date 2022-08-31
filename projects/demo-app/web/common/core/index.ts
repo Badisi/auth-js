@@ -2,11 +2,11 @@ import '@capacitor/core';
 
 import { OIDCAuthManager } from '@badisi/auth-js/oidc';
 
-import { DemoAppSettings } from '../services/demo-app-settings.service';
+import { DemoAppSettings } from '../settings/demo-app-settings.service';
 
 declare global {
     interface Window {
-        authSettings: DemoAppSettings;
+        appSettings: DemoAppSettings;
         authManager: OIDCAuthManager;
     }
 }

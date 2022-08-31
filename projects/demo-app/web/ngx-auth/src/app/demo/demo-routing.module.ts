@@ -12,7 +12,7 @@ import { DemoComponent } from './demo.component';
 */
 const rolesValidator = (): AuthGuardValidator =>
     (_userProfile?: UserProfile, accessToken?: AccessToken): boolean => {
-        const settings = window.authSettings.getCurrentSettings().otherSettings as PlaygroundSettings;
+        const settings = window.appSettings.getCurrentUserSettings().otherSettings as PlaygroundSettings;
         const requiredRoles = (settings) ? settings.roles?.split(',') || [] : [];
         let tokenRoles: string[] = (accessToken as any).resource_access?.account?.roles; // keycloak
         if (!tokenRoles) {

@@ -6,6 +6,7 @@ template.innerHTML = `
         ${globalStyle}
 
         :host header {
+            z-index: 1;
             position: fixed;
             top: 0;
             left: 0;
@@ -221,7 +222,7 @@ export class DemoAppHeaderElement extends HTMLElement {
             optionEl.textContent = 'localhost';
             this.implSelectEl.appendChild(optionEl);
         } else {
-            window.authSettings.getImplementations().forEach(item => {
+            window.appSettings.getImplementations().forEach(item => {
                 const optionEl = document.createElement('option');
                 optionEl.value = String(item.label);
                 optionEl.textContent = item.label;
@@ -229,7 +230,7 @@ export class DemoAppHeaderElement extends HTMLElement {
             });
 
             const changeCb = (): void => {
-                window.location.href = window.authSettings.getImplementations()[this.implSelectEl.selectedIndex].demoUrl;
+                window.location.href = window.appSettings.getImplementations()[this.implSelectEl.selectedIndex].demoUrl;
             };
             this.implSelectEl.addEventListener('change', changeCb);
             this.listeners.push(() => this.implSelectEl.removeEventListener('change', changeCb));
@@ -237,9 +238,9 @@ export class DemoAppHeaderElement extends HTMLElement {
 
         const clickCb = (): void => {
             this.shadowRoot?.querySelector('header .title .tip')?.remove();
-            window.authSettings.saveShowTip(false);
+            window.appSettings.setShowTip(false);
         };
-        if (window.authSettings.getShowTip()) {
+        if (window.appSettings.get().showTip) {
             this.implSelectEl.addEventListener('click', clickCb, { once: true });
             this.listeners.push(() => this.implSelectEl.removeEventListener('click', clickCb));
         } else {
@@ -274,7 +275,7 @@ export class DemoAppHeaderElement extends HTMLElement {
     }
 
     private refreshImplementation(): void {
-        const impls = window.authSettings.getImplementations();
+        const impls = window.appSettings.getImplementations();
         if (!window.location.href.includes('localhost')) {
             const implIndex = impls.findIndex(item => window.location.href.includes(item.demoUrl));
             const impl = (implIndex !== -1) ? impls[implIndex] : impls[0];

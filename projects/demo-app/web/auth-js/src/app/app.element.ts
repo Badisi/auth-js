@@ -1,7 +1,5 @@
 import { AuthSubscription, AuthUtils } from '@badisi/auth-js/core';
-import { DemoAppDebugElement, DemoAppMainElement, DemoAppSettingsElement } from 'demo-app-common';
-
-import { environment } from '../environments/environment';
+import { DemoAppDebugElement, DemoAppMainElement } from 'demo-app-common';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -27,9 +25,6 @@ export class AppElement extends HTMLElement {
     public connectedCallback(): void {
         this.demoAppMainEl = this.shadowRoot?.querySelector('demo-app-main') as DemoAppMainElement;
         this.demoAppDebugEl = this.shadowRoot?.querySelector('demo-app-debug') as DemoAppDebugElement;
-
-        const demoAppSettingsEl = this.shadowRoot?.querySelector('demo-app-settings') as DemoAppSettingsElement;
-        demoAppSettingsEl.isDev = !environment.production;
 
         this.listenForHeaderEvents();
         this.listenForAuthChanges();

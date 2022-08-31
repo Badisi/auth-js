@@ -4,7 +4,7 @@ import { initAuth } from '@badisi/ngx-auth';
 import { DemoAppSettings } from 'demo-app-common';
 
 import { AppModule } from './app/app.module';
-import { authSettings } from './app/app.settings';
+import { appSettings } from './app/app.settings';
 import { environment } from './environments/environment';
 
 declare global {
@@ -20,13 +20,13 @@ if (environment.production) {
 ((): void => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    window.authSettings = authSettings;
+    window.appSettings = appSettings;
 
     const el = document.createElement('div');
     el.innerHTML = 'Loading...';
     document.body.appendChild(el);
 
-    initAuth(authSettings.getCurrentSettings().librarySettings)
+    initAuth(appSettings.getCurrentUserSettings().librarySettings)
         .then(authProvider => {
             el.replaceWith(document.createElement('app-root'));
 

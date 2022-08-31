@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any */
 
 import { AuthSettings } from '@badisi/auth-js/core';
-import { OIDCAuthSettings } from '@badisi/auth-js/oidc';
 
 import { globalStyle } from '../core';
+import { UserSettings } from '../settings/demo-app-settings.service';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -18,20 +18,31 @@ template.innerHTML = `
         }
 
         :host .card {
-            padding: 16px;
+            padding: 40px 16px 16px 16px;
         }
 
-        :host .form-content > * {
+        :host form {
+            position: relative;
+        }
+
+        :host form .input, :host .form-content > * {
             margin-bottom: 24px;
         }
 
-        :host .form-content label {
+        :host form label {
             margin-bottom: 8px;
         }
 
         :host .form-actions {
-            padding: 0 8px;
-            align-items: center;
+            z-index: 10;
+            position: fixed;
+            bottom: calc(12px + var(--safe-area-inset-bottom));
+            left: calc(50% - 120px);
+            padding: 14px 0;
+            border-radius: 4px;
+            background-color: #E0E0E0;
+            width: 240px;
+            justify-content: center;
         }
 
         :host .form-actions button {
@@ -46,40 +57,89 @@ template.innerHTML = `
             cursor: pointer;
         }
 
-        :host #apply-settings-button {
+        :host #settings-select {
+            margin-left: 6px;
+            color: black;
+        }
+
+        :host #add-settings-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            color: darkgray;
+        }
+
+        :host #delete-settings-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #EF5350;
+        }
+
+        :host #save-settings-button {
             color: white;
-            padding: 4px 18px;
+            padding: 4px 24px;
             border: none;
             border-radius: 4px;
             transition: background-color 150ms cubic-bezier(0.35, 0, 0.25, 1);
             background-color: #512da8;
         }
 
-        :host #apply-settings-button:hover {
+        :host #cancel-settings-button {
+            padding: 4px 18px;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 150ms cubic-bezier(0.35, 0, 0.25, 1);
+            background-color: white;
+        }
+
+        :host #save-settings-button:hover {
             background-color: #4527a0;
         }
 
-        :host(.dirty) .form-actions #apply-settings-button,
-        :host(.dirty) .form-actions #cancel-settings-button {
+        :host(.dirty) .form-actions {
             display: flex !important;
+        }
+
+        :host(.dirty) #delete-settings-button {
+            display: none;
+        }
+
+        @media only screen and (max-width: 600px) {
+            :host .settings-select {
+                margin: 12px 8px;
+            }
         }
     </style>
 
-    <form class="column">
-        <div class="form-content card flex"></div>
-
-        <div class="form-actions row">
-            <div id="reset-settings-dev" class="hidden">
-                RESET DEFAULT TO:
-                <select id="reset-settings-select">
-                    <option value disabled selected>Choose an option</option>
-                </select>
-            </div>
-            <button id="reset-settings-button" type="button">RESET TO DEFAULT</button>
-            <span class="flex"></span>
-            <button id="cancel-settings-button" type="button" class="hidden">CANCEL</button>
-            <button id="apply-settings-button" type="submit" class="hidden">APPLY</button>
+    <div class="settings-select row">
+        <select id="settings-select"></select>
+        <div id="add-settings-button" title="Create new settings">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
         </div>
+    </div>
+
+    <div class="form-actions row hidden">
+        <button id="save-settings-button" type="button">SAVE</button>
+        <button id="cancel-settings-button" type="button">CANCEL</button>
+    </div>
+
+    <form class="column card">
+        <div id="delete-settings-button">
+            DELETE
+        </div>
+        <div class="input column">
+            <label for="settingsName">Settings name *</label>
+            <input id="settingsName" name="settingsName" required="">
+        </div>
+        <div class="form-content flex"></div>
     </form>
 `;
 
@@ -87,42 +147,35 @@ export class DemoAppSettingsElement extends HTMLElement {
     private listeners: (() => void)[] = [];
 
     private formEl!: HTMLFormElement;
-    private resetEl!: HTMLButtonElement;
-    private resetDevEl!: HTMLElement;
     private formContentEl!: HTMLElement;
+    private selectEl!: HTMLSelectElement;
+    private settingsNameEl!: HTMLInputElement;
     private formIsDirty = false;
+    private formIsNew = false;
 
     constructor() {
         super();
 
         this.attachShadow({ mode: 'open' });
         this.shadowRoot?.appendChild(document.importNode(template.content, true));
-
-        this.resetEl = this.shadowRoot?.querySelector('#reset-settings-button') as HTMLButtonElement;
-        this.resetDevEl = this.shadowRoot?.querySelector('#reset-settings-dev') as HTMLElement;
-        this.isDev = false;
-    }
-
-    public set isDev(value: boolean) {
-        if (value) {
-            this.resetDevEl?.classList.remove('hidden');
-            this.resetEl?.classList.add('hidden');
-        } else {
-            this.resetDevEl?.classList.add('hidden');
-            this.resetEl?.classList.remove('hidden');
-        }
     }
 
     public connectedCallback(): void {
         this.formEl = this.shadowRoot?.querySelector('form') as HTMLFormElement;
         this.formContentEl = this.shadowRoot?.querySelector('.form-content') as HTMLElement;
+        this.selectEl = this.shadowRoot?.querySelector('#settings-select') as HTMLSelectElement;
+        this.settingsNameEl = this.shadowRoot?.querySelector('#settingsName') as HTMLInputElement;
+
+        /* const testEl = this.shadowRoot?.querySelector('.form-actions') as HTMLElement;
+        const height = window.visualViewport.height;
+        const resizeHandler = (): void => {
+            testEl.style.bottom = `${height - window.visualViewport.height + 10}px`;
+        };
+        window.visualViewport.addEventListener('resize', resizeHandler);*/
 
         // Form events
-        this.formEl.onsubmit = (): boolean => false;
-        this.formEl.addEventListener('submit', () => this.saveAndReload(), { once: true });
-
         const inputCb = (e: Event): void => {
-            if (!this.formIsDirty && ((e.target as HTMLElement).id !== 'reset-settings-select')) {
+            if (!this.formIsDirty && ((e.target as HTMLElement).id !== 'settings-select')) {
                 this.formIsDirty = true;
                 this.classList.add('dirty');
             }
@@ -130,19 +183,29 @@ export class DemoAppSettingsElement extends HTMLElement {
         this.formEl.addEventListener('input', inputCb);
         this.listeners.push(() => this.formEl.removeEventListener('input', inputCb));
 
-        // Reset
-        this.resetEl?.addEventListener('click', () => this.resetAndReload(), { once: true });
+        // Select
+        this.refreshSelect();
+        const changeCb = (): void => this.loadSettings(this.selectEl.value);
+        this.selectEl?.addEventListener('change', changeCb);
+        this.listeners.push(() => this.selectEl.removeEventListener('change', changeCb));
 
-        const resetSelectEl = this.shadowRoot?.querySelector('#reset-settings-select') as HTMLSelectElement;
-        window.authSettings?.getSettings().forEach(item => {
-            const optionEl = document.createElement('option');
-            optionEl.value = String(item.name);
-            optionEl.textContent = item.name;
-            resetSelectEl?.appendChild(optionEl);
-        });
-        const changeCb = (): void => this.resetAndReload(resetSelectEl.value);
-        resetSelectEl?.addEventListener('change', changeCb);
-        this.listeners.push(() => resetSelectEl.removeEventListener('change', changeCb));
+        // Add
+        const addEl = this.shadowRoot?.querySelector('#add-settings-button');
+        const addCb = (): void => this.add();
+        addEl?.addEventListener('click', addCb);
+        this.listeners.push(() => addEl?.removeEventListener('click', addCb));
+
+        // Delete
+        const deleteEl = this.shadowRoot?.querySelector('#delete-settings-button');
+        const deleteCb = (): void => this.delete();
+        deleteEl?.addEventListener('click', deleteCb);
+        this.listeners.push(() => deleteEl?.removeEventListener('click', deleteCb));
+
+        // Save
+        const saveEl = this.shadowRoot?.querySelector('#save-settings-button');
+        const saveCb = (): void => this.saveAndReload();
+        saveEl?.addEventListener('click', saveCb);
+        this.listeners.push(() => saveEl?.removeEventListener('click', saveCb));
 
         // Cancel
         const cancelEl = this.shadowRoot?.querySelector('#cancel-settings-button');
@@ -151,7 +214,7 @@ export class DemoAppSettingsElement extends HTMLElement {
         this.listeners.push(() => cancelEl?.removeEventListener('click', cancelCb));
 
         // Initialize form
-        this.refreshFormContent();
+        this.refreshFormContent(window.appSettings.getCurrentUserSettings());
     }
 
     public disconnectedCallback(): void {
@@ -160,15 +223,37 @@ export class DemoAppSettingsElement extends HTMLElement {
 
     // --- HANDLER(s) ---
 
-    private resetAndReload(settingsName?: string): void {
-        window.authSettings?.resetCurrentSettings(settingsName);
+    public loadSettings(name: string): void {
+        window.appSettings.setCurrentUserSettings(name);
         location.reload();
     }
 
-    private cancel(): void {
+    public add(): void {
+        const name = 'New settings';
+
+        const optionEl = document.createElement('option');
+        optionEl.selected = true;
+        optionEl.value = name;
+        optionEl.textContent = name;
+        this.selectEl.appendChild(optionEl);
+
+        this.formIsNew = true;
+        this.formIsDirty = true;
+        this.classList.add('dirty');
+        this.refreshFormContent({ name, librarySettings: {} });
+    }
+
+    public delete(): void {
+        window.appSettings.deleteCurrentUserSettings();
+        location.reload();
+    }
+
+    public cancel(): void {
+        this.formIsNew = false;
         this.formIsDirty = false;
         this.classList.remove('dirty');
-        this.refreshFormContent();
+        this.refreshSelect();
+        this.refreshFormContent(window.appSettings.getCurrentUserSettings());
     }
 
     // --- HELPER(s) ---
@@ -194,13 +279,32 @@ export class DemoAppSettingsElement extends HTMLElement {
         , settings) as S;
     }
 
-    private refreshFormContent(): void {
+    private refreshSelect(): void {
+        // Clear the select
+        this.selectEl.innerHTML = '';
+
+        // Redraw it
+        const { userSettings, currentUserSettingsIndex } = window.appSettings.get();
+        userSettings.forEach((item, index) => {
+            const optionEl = document.createElement('option');
+            optionEl.selected = (index === currentUserSettingsIndex);
+            optionEl.value = String(item.name);
+            optionEl.textContent = item.name;
+            this.selectEl.appendChild(optionEl);
+        });
+    }
+
+    private refreshFormContent(userSettings: UserSettings<AuthSettings>): void {
         // Clear the page
         this.formContentEl.innerHTML = '';
 
         // Draw the form
-        window.authSettings.getLibrarySettingsDefinition()
-            .sort((a, b) => (b._index || 0) - (a._index || 0))
+        const { librarySettingsDefinition } = window.appSettings.get();
+        const { name: settingName, librarySettings } = userSettings;
+
+        this.settingsNameEl.value = settingName;
+        librarySettingsDefinition
+            .sort((a, b) => (b._sortIndex || 0) - (a._sortIndex || 0))
             .forEach(item => {
                 const formItemContainerEl = document.createElement('div');
                 this.formContentEl.prepend(formItemContainerEl);
@@ -214,7 +318,6 @@ export class DemoAppSettingsElement extends HTMLElement {
                 formItemEl.name = item.name.replace('.', '');
                 formItemEl.required = (item.required === true);
 
-                const librarySettings = window.authSettings.getCurrentSettings().librarySettings;
                 switch (item.type) {
                     case 'boolean':
                         (formItemEl as HTMLInputElement).checked = this.getPathValue(librarySettings, item.name);
@@ -240,7 +343,7 @@ export class DemoAppSettingsElement extends HTMLElement {
                         if (item.type === 'json') {
                             formItemEl.value = (value) ? JSON.stringify(value) : '';
                         } else {
-                            formItemEl.value = value;
+                            formItemEl.value = value ?? '';
                         }
                         formItemContainerEl.classList.add('input', 'column');
                         formItemContainerEl.appendChild(formItemLabelEl);
@@ -253,8 +356,14 @@ export class DemoAppSettingsElement extends HTMLElement {
 
     private saveAndReload(): void {
         if (this.formEl.reportValidity()) {
-            const settings = {};
-            window.authSettings.getLibrarySettingsDefinition()
+            const { currentUserSettingsIndex, librarySettingsDefinition } = window.appSettings.get();
+            const currentUserSettings = (!this.formIsNew) ? window.appSettings.getCurrentUserSettings() : {
+                name: '',
+                librarySettings: {}
+            };
+
+            currentUserSettings.name = this.settingsNameEl.value;
+            librarySettingsDefinition
                 .forEach(item => {
                     const formItemEl = this.shadowRoot?.querySelector(`#${item.name.replace('.', '')}`);
                     let value;
@@ -279,9 +388,15 @@ export class DemoAppSettingsElement extends HTMLElement {
                             value = (formItemEl as HTMLInputElement).value;
                             break;
                     }
-                    this.setPathValue(settings, item.name, value);
+                    this.setPathValue(currentUserSettings.librarySettings, item.name, value);
                 });
-            window.authSettings?.saveCurrentLibrarySettings(settings as OIDCAuthSettings);
+
+            if (this.formIsNew) {
+                window.appSettings.addUserSettings(currentUserSettings);
+                window.appSettings.setCurrentUserSettings(currentUserSettings.name);
+            } else {
+                window.appSettings.addUserSettings(currentUserSettings, currentUserSettingsIndex);
+            }
             location.reload();
         }
     }

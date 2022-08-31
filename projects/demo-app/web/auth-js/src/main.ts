@@ -2,18 +2,18 @@ import './app/app.element.ts';
 
 import { initOidc } from '@badisi/auth-js/oidc';
 
-import { authSettings } from './app/app.settings';
+import { appSettings } from './app/app.settings';
 
 ((): void => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    window.authSettings = authSettings;
+    window.appSettings = appSettings;
 
     const el = document.createElement('div');
     el.innerHTML = 'Loading...';
     document.body.appendChild(el);
 
-    initOidc(authSettings.getCurrentSettings().librarySettings)
+    initOidc(appSettings.getCurrentUserSettings().librarySettings)
         .then(manager => {
             window.authManager = manager;
             el.replaceWith(document.createElement('app-root'));
