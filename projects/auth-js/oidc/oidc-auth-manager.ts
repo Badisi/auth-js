@@ -170,6 +170,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         if (AuthUtils.isNativeMobile()) {
             await this.userManager?.signoutMobile();
             await this.redirect(redirectUrl);
+            this.postLogoutVerification(redirectUrl);
         } else {
             switch (navigationType || this.settings.navigationType) {
                 case Navigation.POPUP:
@@ -356,6 +357,22 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         }
     }
 
+    /**
+     * Triggers a re-login after a logout (if required).
+     *
+     * @example
+     * 1) user is at http://my-app.com, logged-in and loginRequired=true
+     * 2) user triggers a logout and gets redirected to '/'
+     * 3) url did not changed, so no navigation occured and no guards either
+     * 4) at this point, user is logged-out but still inside the app and able to see it
+     */
+    private postLogoutVerification(redirectUrlAskedAfterLogout: string | null): void {
+        const postLogoutUrl = AuthUtils.stringToURL(redirectUrlAskedAfterLogout || '/');
+        if (this.settings.loginRequired && (location.origin === postLogoutUrl.origin)) {
+            location.reload();
+        }
+    }
+
     private notifyRenew(value: boolean): void {
         this._isRenewing = value;
         this.renewingSubs.notify(value);
@@ -415,14 +432,17 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     }
 
     private async backFromSignoutRedirect(): Promise<void> {
+        let redirectUrl = sessionStorage.getItem(REDIRECT_URL_KEY);
         try {
             await this.userManager?.signoutRedirectCallback(location.href);
-            await this.redirect(sessionStorage.getItem(REDIRECT_URL_KEY));
+            await this.redirect(redirectUrl);
             await this.removeUser();
         } catch (error) {
-            await this.redirect('/', error);
+            redirectUrl = '/';
+            await this.redirect(redirectUrl, error);
         } finally {
             sessionStorage.removeItem(REDIRECT_URL_KEY);
+            this.postLogoutVerification(redirectUrl);
         }
     }
 
