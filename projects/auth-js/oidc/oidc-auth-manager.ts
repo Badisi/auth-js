@@ -187,11 +187,14 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     public async login(redirectUrl = location.href, navigationType?: Navigation): Promise<boolean> {
         if (AuthUtils.isNativeMobile()) {
+            this.notifyRenew(true);
             await this.userManager?.signinMobile();
+            this.notifyRenew(false);
             await this.redirect(redirectUrl);
         } else {
             switch (navigationType || this.settings.navigationType) {
                 case Navigation.POPUP:
+                    this.notifyRenew(true);
                     await this.userManager?.signinPopup().catch((error: Error) => {
                         if (error?.message === 'Attempted to navigate on a disposed window') {
                             error = new Error('[OIDCAuthManager] Attempted to navigate on a disposed window.');
@@ -200,6 +203,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                         }
                         throw error;
                     });
+                    this.notifyRenew(false);
                     await this.redirect(redirectUrl);
                     break;
                 case Navigation.REDIRECT:
@@ -352,6 +356,11 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         }
     }
 
+    private notifyRenew(value: boolean): void {
+        this._isRenewing = value;
+        this.renewingSubs.notify(value);
+    }
+
     private async runSyncOrAsync(job: () => Promise<unknown>): Promise<void> {
         // eslint-disable-next-line @typescript-eslint/brace-style, max-statements-per-line
         if (this.settings.loginRequired) { await job(); } else { void job(); }
@@ -382,8 +391,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     }
 
     private async signinSilent(): Promise<void> {
-        this._isRenewing = true;
-        this.renewingSubs.notify(true);
+        this.notifyRenew(true);
 
         try {
             await this.userManager?.signinSilent();
@@ -391,8 +399,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             await this.removeUser();
             throw error;
         } finally {
-            this._isRenewing = false;
-            this.renewingSubs.notify(false);
+            this.notifyRenew(false);
         }
     }
 
