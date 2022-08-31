@@ -110,13 +110,6 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             }),
             this.userManager.events.addUserUnloaded(() => {
                 this.user = null;
-            }),
-            this.userManager.events.addAccessTokenExpired(() => {
-                // Token can expire while the app is in background
-                //   -> try a silent renew in that case and otherwise redirect to home
-                if (this.settings.automaticSilentRenew) {
-                    this.signinSilent().catch(error => this.redirect('/', error));
-                }
             })
         );
 
