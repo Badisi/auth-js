@@ -350,10 +350,10 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
      * 7) isAuthenticated should wait signinSilent to finish before returning
      */
     private async waitForRenew(caller: string): Promise<void> {
-        const startTime = new Date().getTime();
+        const startTime = Date.now();
         // eslint-disable-next-line no-loops/no-loops
         while (this._isRenewing) {
-            if (new Date().getTime() > (startTime + 5000)) {
+            if (Date.now() > (startTime + 5000)) {
                 console.warn('[@badisi/auth-js]', `\`${caller}\``, 'timed out waiting for renew to finish.');
                 break;
             }
