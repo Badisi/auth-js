@@ -9,8 +9,8 @@ const DEFAULT_SETTINGS: Optional<AuthSettings, 'authorityUrl' | 'clientId'> = {
     automaticLoginOn401: true,
     automaticInjectToken: {
         include: (url: string): boolean => {
-            const matches = new RegExp(/^.*?(?<!\/)\/(?!\/)(.*$)/gm).exec(url);
-            return (matches?.[1]?.startsWith('api')) || false;
+            const res = new URL(url, 'http://default-base');
+            return res.pathname.startsWith('/api') || false;
         }
     }
 };
