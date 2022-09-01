@@ -15,13 +15,19 @@
             "x-prompt": "Authority url ?",
             "description": "The authorization server DNS host name or IP address.",
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "format": "uri"
         },
         "clientId": {
             "x-prompt": "Client id ?",
             "description": "The public client application's identifier assigned by the authorization server.",
             "type": "string",
             "minLength": 1
+        },
+        "mobileScheme": {
+            "x-prompt": "Custom scheme name ? (optional, only for mobile)",
+            "description": "The custom Scheme URI's identifier assigned to the native mobile application.",
+            "type": "string"
         },
         "loginRequired": {
             "x-prompt": "Is authentication required at startup ?",

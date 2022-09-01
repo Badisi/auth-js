@@ -10,7 +10,7 @@ export const DEFAULT_AUTH_JS_SETTINGS = (production = false): UserSettings<OIDCA
         librarySettings: {
             authorityUrl: 'https://dev-fijd1e9x.us.auth0.com',
             clientId: 'kRVVEnAWKMpxxpcodl0TqLXfIHgQvmmt',
-            schemeUri: 'demo-app',
+            mobileScheme: 'demo-app',
             scope: 'openid profile email phone offline_access read:current_user',
             internal: {
                 extraQueryParams: {
@@ -32,7 +32,7 @@ export const DEFAULT_AUTH_JS_SETTINGS = (production = false): UserSettings<OIDCA
             librarySettings: {
                 authorityUrl: 'http://localhost:8080/auth/realms/demo',
                 clientId: 'demo-app',
-                schemeUri: 'demo-app',
+                mobileScheme: 'demo-app',
                 scope: 'openid profile email phone',
                 navigationType: Navigation.REDIRECT,
                 logLevel: Log.NONE,

@@ -10,21 +10,25 @@ import { JSONFile } from '@schematics/angular/utility/json-file';
 import { dedent } from '../utils/dedent';
 import { InstallOptions } from './install-options';
 
-const getActualUserConfig = async (context: SchematicContext, options: InstallOptions): Promise<InstallOptions> => {
+const sanitizeOptions = async (context: SchematicContext, userOptions: InstallOptions): Promise<Omit<InstallOptions, 'project'>> => {
     const defaultOptions = await getSchematicSchemaDefaultOptions(context, 'install');
 
-    const config: InstallOptions = {
-        project: 'app-test',
-        authorityUrl: options.authorityUrl,
-        clientId: options.clientId
+    // `project` is omitted as it is only required by the schematic
+    const options: Omit<InstallOptions, 'project'> = {
+        authorityUrl: userOptions.authorityUrl,
+        clientId: userOptions.clientId
     };
-    (['loginRequired', 'retrieveUserSession', 'loadUserInfo'] as (keyof InstallOptions)[]).forEach(name => {
-        if (options[name] !== defaultOptions[name]) {
+
+    // keeps only the user's options that are different from the defaults
+    const optionKeys: (keyof InstallOptions)[] = ['mobileScheme', 'loginRequired', 'retrieveUserSession', 'loadUserInfo'];
+    optionKeys.forEach(name => {
+        if (userOptions[name] && (userOptions[name] !== defaultOptions[name])) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-            (config as any)[name] = options[name];
+            (options as any)[name] = userOptions[name];
         }
     });
-    return config;
+
+    return options;
 };
 
 export default (options: InstallOptions): Rule =>
@@ -62,7 +66,7 @@ export default (options: InstallOptions): Rule =>
                     const initContent = dedent`
                         /**
                          * Auth configuration
-                         * @see https://badisi.github.io/auth-js/site/docs/configuration
+                         * @see https://badisi.github.io/auth-js/site/documentation/configuration
                          */
                         initAuth().then(authProvider => {
                           platformBrowserDynamic([
@@ -92,7 +96,7 @@ export default (options: InstallOptions): Rule =>
                 }
 
                 // Update the configuration
-                const config = await getActualUserConfig(context.schematicContext, options);
+                const config = await sanitizeOptions(context.schematicContext, options);
                 const configContent = JSON.stringify(config, null, 2).replace(/"([^"]+)":/g, '$1:').replace(/"/g, '\'');
                 rules.push(
                     replaceInFile(mainTsPath, /initAuth\((.*?)\)/sm, `initAuth(${configContent})`),

@@ -13,8 +13,8 @@ export const AUTH_JS_LIBRARY_SETTINGS_DEFINITION: LibrarySettingsDefinitionItem<
     type: 'string',
     required: true
 }, {
-    name: 'schemeUri',
-    label: 'Scheme uri',
+    name: 'mobileScheme',
+    label: 'Custom mobile scheme name',
     type: 'string'
 }, {
     name: 'scope',

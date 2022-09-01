@@ -81,7 +81,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
          * Providers like Keycloak does not handle custom redirect urls like `demo-app://?oidc-callback=login`,
          * because they lack a host name. To fix this, `demo-app://localhost/?oidc-callback=login` is used instead.
          */
-        const baseUrl = (isNativeMobile) ? `${userSettings.schemeUri}://localhost/` : AuthUtils.getBaseUrl();
+        const baseUrl = (isNativeMobile) ? `${userSettings.mobileScheme}://localhost/` : AuthUtils.getBaseUrl();
 
         // Initialize settings
         this.settings = merge({}, DEFAULT_SETTINGS, {

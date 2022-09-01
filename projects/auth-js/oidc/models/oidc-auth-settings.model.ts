@@ -13,7 +13,7 @@ type UsefulSettings = 'scope' | 'loadUserInfo' | 'automaticSilentRenew';
 export interface OIDCAuthSettings extends CoreAuthSettings, Pick<UserManagerSettings, UsefulSettings> {
     authorityUrl: string;
     clientId: string;
-    schemeUri?: string;
+    mobileScheme?: string;
     retrieveUserSession?: boolean;
     navigationType?: Navigation;
     logLevel?: Log;
