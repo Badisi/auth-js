@@ -29,7 +29,7 @@
             "type": "boolean",
             "default": false
         },
-        "loadUserSession": {
+        "retrieveUserSession": {
             "x-prompt": "Retrieve user's session at startup ?",
             "description": "Whether any currently opened user's session should be retrieved during the initialization phase.",
             "type": "boolean",

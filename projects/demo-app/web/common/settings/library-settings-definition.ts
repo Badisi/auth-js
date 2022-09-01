@@ -62,8 +62,8 @@ export const AUTH_JS_LIBRARY_SETTINGS_DEFINITION: LibrarySettingsDefinitionItem<
     label: 'Login required',
     type: 'boolean'
 }, {
-    name: 'loadUserSession',
-    label: 'Load user\'s session',
+    name: 'retrieveUserSession',
+    label: 'Retrieve user\'s session',
     type: 'boolean'
 }, {
     name: 'loadUserInfo',

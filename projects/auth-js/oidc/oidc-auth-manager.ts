@@ -15,7 +15,7 @@ const REDIRECT_URL_KEY = 'auth-js:oidc_manager:redirect_url';
 
 const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> = {
     loginRequired: false,
-    loadUserSession: true,
+    retrieveUserSession: true,
     loadUserInfo: false,
     automaticSilentRenew: true,
     navigationType: Navigation.REDIRECT,
@@ -121,7 +121,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             await this.runSyncOrAsync(() => this.backFromSigninRedirect());
         } else if (AuthUtils.isUrlMatching(location.href, this.settings.internal?.post_logout_redirect_uri)) {
             await this.runSyncOrAsync(() => this.backFromSignoutRedirect());
-        } else if (this.settings.loadUserSession || this.settings.loginRequired) {
+        } else if (this.settings.retrieveUserSession || this.settings.loginRequired) {
             const signinSilent = async (): Promise<void> => {
                 await this.runSyncOrAsync(() => this.signinSilent()
                     .catch(async (signinSilentError: ErrorResponse) => {
@@ -142,7 +142,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             const user = await this.userManager?.getUser();
             if (!user || user.expired) {
                 // on desktop -> try a silent renew with iframe
-                if (!isNativeMobile && this.settings.loadUserSession) {
+                if (!isNativeMobile && this.settings.retrieveUserSession) {
                     await signinSilent();
                 // else -> force login if required
                 } else if (this.settings.loginRequired) {

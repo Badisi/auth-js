@@ -20,7 +20,7 @@ export const DEFAULT_AUTH_JS_SETTINGS = (production = false): UserSettings<OIDCA
             navigationType: Navigation.REDIRECT,
             logLevel: Log.NONE,
             loginRequired: false,
-            loadUserSession: true,
+            retrieveUserSession: true,
             loadUserInfo: true,
             automaticSilentRenew: true
         }
@@ -37,7 +37,7 @@ export const DEFAULT_AUTH_JS_SETTINGS = (production = false): UserSettings<OIDCA
                 navigationType: Navigation.REDIRECT,
                 logLevel: Log.NONE,
                 loginRequired: false,
-                loadUserSession: true,
+                retrieveUserSession: true,
                 loadUserInfo: true,
                 automaticSilentRenew: true
             }
