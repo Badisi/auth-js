@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - '**'
+      - '!main' # ignore on main because 'Deploy demo-app' will trigger it
     tags-ignore:
       - '**'
     paths-ignore:
