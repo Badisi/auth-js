@@ -1,16 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-unsafe-assignment */
 
-import type { AppPlugin } from '@capacitor/app/dist/esm/definitions';
-import type { BrowserPlugin } from '@capacitor/browser/dist/esm/definitions';
-import type { PluginListenerHandle } from '@capacitor/core/types/definitions';
+import type { PluginListenerHandle } from '@capacitor/core';
 import { Logger } from 'oidc-client-ts';
 
 import { AuthUtils } from '../../core';
 import { MobileWindowOptions } from '../models/mobile-window-options.model';
 
 const CUSTOM_URL_SCHEME_HANDLER_TIMEOUT = 30 * 1000; // 30s
-const CAPACITOR_APP = window.Capacitor?.Plugins?.['App'] as AppPlugin;
-const CAPACITOR_BROWSER = window.Capacitor?.Plugins?.['Browser'] as BrowserPlugin;
+const CAPACITOR_APP = window.Capacitor?.Plugins?.App;
+const CAPACITOR_BROWSER = window.Capacitor?.Plugins?.Browser;
 const BROWSER_TAB = undefined; // cordova?.plugins?.browsertab;
 
 export class MobileWindow implements IWindow {

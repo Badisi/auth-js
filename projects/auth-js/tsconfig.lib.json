@@ -1,6 +1,7 @@
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
+        "composite": true,
         "rootDir": ".",
         "outDir": "../../dist/auth-js",
         "noEmit": false,

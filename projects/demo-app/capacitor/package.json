@@ -11,15 +11,15 @@
         "start:android:demo-ngx-auth": "npx cap run android --serverUrl https://badisi.github.io/auth-js/demo-app/ngx-auth"
     },
     "dependencies": {
-        "@capacitor/android": "^3.6.0",
-        "@capacitor/app": "^1.1.1",
-        "@capacitor/browser": "^1.0.7",
-        "@capacitor/core": "^3.6.0",
-        "@capacitor/ios": "^3.6.0",
-        "@capacitor/storage": "^1.2.5",
-        "capacitor-secure-storage-plugin": "^0.7.1"
+        "@capacitor/android": "^4.0.0",
+        "@capacitor/app": "^4.0.0",
+        "@capacitor/browser": "^4.0.0",
+        "@capacitor/core": "^4.0.0",
+        "@capacitor/ios": "^4.0.0",
+        "@capacitor/preferences": "^4.0.0",
+        "capacitor-secure-storage-plugin": "^0.8.0"
     },
     "devDependencies": {
-        "@capacitor/cli": "^3.6.0"
+        "@capacitor/cli": "^4.0.0"
     }
 }

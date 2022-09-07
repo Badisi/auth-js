@@ -1,14 +1,17 @@
 /* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-unsafe-assignment */
 
-import type { StoragePlugin } from '@capacitor/storage/dist/esm/definitions';
-import type { SecureStoragePluginPlugin } from 'capacitor-secure-storage-plugin/dist/esm/definitions';
 import { Logger } from 'oidc-client-ts';
 
 import { AsyncStorage } from '../models/async-storage.model';
 
+// defaults
 const LOCAL_STORAGE = window.localStorage;
-const CAPACITOR_STORAGE = window.Capacitor?.Plugins?.['Storage'] as StoragePlugin;
-const CAPACITOR_SECURE_STORAGE = window.Capacitor?.Plugins?.['SecureStoragePlugin'] as SecureStoragePluginPlugin;
+// @capacitor < 4.x
+const CAPACITOR_STORAGE = window.Capacitor?.Plugins?.Storage;
+// @capacitor >= 4.x (`Storage` was renamed `Preferences`)
+const CAPACITOR_PREFERENCES = window.Capacitor?.Plugins?.Preferences;
+// most secured
+const CAPACITOR_SECURE_STORAGE = window.Capacitor?.Plugins?.SecureStoragePlugin;
 
 export class MobileStorage implements AsyncStorage {
     private readonly _logger = new Logger('MobileStorage');
@@ -22,6 +25,8 @@ export class MobileStorage implements AsyncStorage {
 
         if (CAPACITOR_SECURE_STORAGE) {
             this._logger.debug('Using `capacitor-secure-storage-plugin` implementation');
+        } else if (CAPACITOR_PREFERENCES) {
+            this._logger.debug('Using `@capacitor/preferences` implementation');
         } else if (CAPACITOR_STORAGE) {
             this._logger.debug('Using `@capacitor/storage` implementation');
         } else {
@@ -32,6 +37,8 @@ export class MobileStorage implements AsyncStorage {
     public async length(): Promise<number> {
         if (CAPACITOR_SECURE_STORAGE) {
             return (await CAPACITOR_SECURE_STORAGE.keys()).value.length;
+        } else if (CAPACITOR_PREFERENCES) {
+            return (await CAPACITOR_PREFERENCES.keys()).keys.length;
         } else if (CAPACITOR_STORAGE) {
             return (await CAPACITOR_STORAGE.keys()).keys.length;
         } else {
@@ -42,6 +49,8 @@ export class MobileStorage implements AsyncStorage {
     public async key(index: number): Promise<string | null> {
         if (CAPACITOR_SECURE_STORAGE) {
             return (await CAPACITOR_SECURE_STORAGE.keys()).value[index];
+        } else if (CAPACITOR_PREFERENCES) {
+            return (await CAPACITOR_PREFERENCES.keys()).keys[index];
         } else if (CAPACITOR_STORAGE) {
             return (await CAPACITOR_STORAGE.keys()).keys[index];
         } else {
@@ -54,6 +63,8 @@ export class MobileStorage implements AsyncStorage {
 
         if (CAPACITOR_SECURE_STORAGE) {
             await CAPACITOR_SECURE_STORAGE.clear();
+        } else if (CAPACITOR_PREFERENCES) {
+            await CAPACITOR_PREFERENCES.clear();
         } else if (CAPACITOR_STORAGE) {
             await CAPACITOR_STORAGE.clear();
         } else {
@@ -70,6 +81,8 @@ export class MobileStorage implements AsyncStorage {
             } catch {
                 return null;
             }
+        } else if (CAPACITOR_PREFERENCES) {
+            return (await CAPACITOR_PREFERENCES.get({ key })).value;
         } else if (CAPACITOR_STORAGE) {
             return (await CAPACITOR_STORAGE.get({ key })).value;
         } else {
@@ -82,6 +95,8 @@ export class MobileStorage implements AsyncStorage {
 
         if (CAPACITOR_SECURE_STORAGE) {
             await CAPACITOR_SECURE_STORAGE.set({ key, value });
+        } else if (CAPACITOR_PREFERENCES) {
+            await CAPACITOR_PREFERENCES.set({ key, value });
         } else if (CAPACITOR_STORAGE) {
             await CAPACITOR_STORAGE.set({ key, value });
         } else {
@@ -94,6 +109,8 @@ export class MobileStorage implements AsyncStorage {
 
         if (CAPACITOR_SECURE_STORAGE) {
             await CAPACITOR_SECURE_STORAGE.remove({ key });
+        } else if (CAPACITOR_PREFERENCES) {
+            await CAPACITOR_PREFERENCES.remove({ key });
         } else if (CAPACITOR_STORAGE) {
             await CAPACITOR_STORAGE.remove({ key });
         } else {
