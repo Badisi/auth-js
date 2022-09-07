@@ -37,7 +37,7 @@
     "dependencies": {
         "jwt-decode": "^3.1.2",
         "lodash-es": "^4.17.21",
-        "oidc-client-ts": "2.0.5"
+        "oidc-client-ts": "2.0.6"
     },
     "devDependencies": {
         "@types/lodash-es": "^4.17.6",
