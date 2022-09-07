@@ -25,7 +25,7 @@
     ],
     "private": true,
     "scripts": {
-        "ncu": "npx ncu -i --deep --format=group",
+        "ncu": "npx ncu -i --format=group --packageFile 'projects/**/package.json'",
         "lint": "nx run-many --target=lint --projects=auth-js,ngx-auth",
         "test": "nx run-many --target=test --projects=auth-js,ngx-auth"
     },
