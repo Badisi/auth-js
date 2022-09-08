@@ -1,10 +1,11 @@
 import 'demo-app-common';
 
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { PageModule } from './components/page/page.module';
-import { PlaygroundModule } from './components/playground/playground.module';
 import { DemoComponent } from './demo.component';
 import { DemoRoutingModule } from './demo-routing.module';
 
@@ -15,8 +16,9 @@ import { DemoRoutingModule } from './demo-routing.module';
     imports: [
         CommonModule,
         DemoRoutingModule,
-        PageModule,
-        PlaygroundModule
+        FormsModule,
+        HttpClientModule,
+        PageModule
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA

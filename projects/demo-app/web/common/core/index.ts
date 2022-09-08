@@ -37,12 +37,59 @@ export const globalStyle = `
         margin: 12px 6px;
     }
 
-    .card-title {
+    .card .card-status {
+        display: block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-left: 8px;
+        background-color: #f2f2f2;
+    }
+    .card .card-status.error {
+        background-color: #ef5350;
+    }
+    .card .card-status.success {
+        background-color: #66bb6a;
+    }
+
+    .card .card-title {
         padding: 16px;
         font-size: 20px;
         font-weight: 500;
         color: rgba(0, 0, 0, 0.87);
         align-items: center;
+    }
+
+    .card .box {
+        height: 200px;
+        border-top: 1px solid lightgray;
+        word-break: break-all;
+        overflow: auto;
+        background-color: #f2f2f2;
+        padding: 12px;
+    }
+    .card .box pre {
+        margin: 0;
+    }
+
+    .card .card-actions {
+        padding: 0 14px 8px 14px;
+        min-height: 50px;
+    }
+    .card .card-actions .input {
+        display: flex;
+        align-items: center;
+    }
+    .card .card-actions .input:not(:last-child) {
+        margin-bottom: 8px;
+    }
+    .card .card-actions .input label {
+        width: 125px;
+        text-align: right;
+        margin-right: 14px;
+    }
+    .card .card-actions .input input {
+        padding: 4px;
     }
 
     .json-key {

@@ -1,9 +1,10 @@
 import { AuthSubscription, AuthUtils } from '@badisi/auth-js/core';
-import { DemoAppDebugElement, DemoAppMainElement } from 'demo-app-common';
+import { DemoAppDebugElement, DemoAppMainElement, DemoAppPlaygroundElement } from 'demo-app-common';
 
 const template = document.createElement('template');
 template.innerHTML = `
     <demo-app-main>
+        <demo-app-playground tabLabel="Playground"></demo-app-playground>
         <demo-app-debug tabLabel="Debug"></demo-app-debug>
         <demo-app-settings tabLabel="Settings"></demo-app-settings>
     </demo-app-main>
@@ -11,6 +12,7 @@ template.innerHTML = `
 
 export class AppElement extends HTMLElement {
     private demoAppMainEl?: DemoAppMainElement;
+    private demoAppPlaygroundEl?: DemoAppPlaygroundElement;
     private demoAppDebugEl?: DemoAppDebugElement;
     private authManagerSubs: AuthSubscription[] = [];
     private listeners: (() => void)[] = [];
@@ -24,9 +26,11 @@ export class AppElement extends HTMLElement {
 
     public connectedCallback(): void {
         this.demoAppMainEl = this.shadowRoot?.querySelector('demo-app-main') as DemoAppMainElement;
+        this.demoAppPlaygroundEl = this.shadowRoot?.querySelector('demo-app-playground') as DemoAppPlaygroundElement;
         this.demoAppDebugEl = this.shadowRoot?.querySelector('demo-app-debug') as DemoAppDebugElement;
 
         this.listenForHeaderEvents();
+        this.listenForPlaygroundEvents();
         this.listenForAuthChanges();
     }
 
@@ -36,6 +40,30 @@ export class AppElement extends HTMLElement {
     }
 
     // --- HELPER(s) ---
+
+    private async callPrivateApi(url: string, headers: string): Promise<void> {
+        if (window.authManager && url) {
+            const token = await window.authManager.getAccessToken() ?? '';
+            const req = new XMLHttpRequest();
+            req.onreadystatechange = (): void => {
+                if (req.readyState === 4) { // 4 = DONE
+                    this.demoAppPlaygroundEl?.setApiStatus(
+                        (req.responseText !== '') ? JSON.parse(req.responseText) : '',
+                        (req.status !== 200)
+                    );
+                }
+            };
+            req.open('GET', url, true);
+            req.setRequestHeader('Authorization', `Bearer ${token}`);
+            headers?.split(';').forEach(header => {
+                if (header) {
+                    const item = header.split(':');
+                    req.setRequestHeader(item[0]?.trim(), item[1]?.trim() || '');
+                }
+            });
+            req.send();
+        }
+    }
 
     private refreshInfo(key: string, value?: unknown): void {
         if (window.authManager) {
@@ -79,6 +107,15 @@ export class AppElement extends HTMLElement {
                 manager.onIdTokenChanged(value => this.refreshInfo('idToken', value)),
                 manager.onUserProfileChanged(value => this.refreshInfo('userProfile', value))
             );
+        }
+    }
+
+    private listenForPlaygroundEvents(): void {
+        if (this.demoAppPlaygroundEl) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+            const callApi = ((event: CustomEvent): void => void this.callPrivateApi(event.detail?.url, event.detail?.headers)) as EventListener;
+            this.demoAppPlaygroundEl.addEventListener('api', callApi);
+            this.listeners.push(() => this.demoAppPlaygroundEl?.removeEventListener('api', callApi));
         }
     }
 

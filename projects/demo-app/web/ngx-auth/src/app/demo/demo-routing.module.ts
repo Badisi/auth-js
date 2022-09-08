@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AccessToken, AuthGuard, AuthGuardValidator, UserProfile } from '@badisi/ngx-auth';
 
-import { PlaygroundSettings } from './components/playground/playground-settings.model';
 import { DemoComponent } from './demo.component';
 
 /* eslint-disable
@@ -12,8 +11,8 @@ import { DemoComponent } from './demo.component';
 */
 const rolesValidator = (): AuthGuardValidator =>
     (_userProfile?: UserProfile, accessToken?: AccessToken): boolean => {
-        const settings = window.appSettings.getCurrentUserSettings().otherSettings as PlaygroundSettings;
-        const requiredRoles = (settings) ? settings.roles?.split(',') || [] : [];
+        const { otherSettings } = window.appSettings.getCurrentUserSettings();
+        const requiredRoles = (otherSettings) ? (otherSettings['roles'] as string)?.split(',') || [] : [];
         let tokenRoles: string[] = (accessToken as any).resource_access?.account?.roles; // keycloak
         if (!tokenRoles) {
             tokenRoles = (accessToken as any)?.['http://ngx-auth.com/roles']; // auth0

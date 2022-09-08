@@ -7,6 +7,10 @@ import { UserSettings } from 'demo-app-common';
 export const DEFAULT_AUTH_JS_SETTINGS = (production = false): UserSettings<OIDCAuthSettings>[] => {
     const settings: UserSettings<OIDCAuthSettings>[] = [{
         name: 'Auth0',
+        otherSettings: {
+            privateApiUrl: 'https://dev-fijd1e9x.us.auth0.com/api/v2/users/auth0|620573a0e0fb5b00693d8433',
+            privateApiHeaders: ''
+        },
         librarySettings: {
             authorityUrl: 'https://dev-fijd1e9x.us.auth0.com',
             clientId: 'kRVVEnAWKMpxxpcodl0TqLXfIHgQvmmt',
@@ -29,6 +33,10 @@ export const DEFAULT_AUTH_JS_SETTINGS = (production = false): UserSettings<OIDCA
     if (!production) {
         settings.push({
             name: 'Keycloak (local)',
+            otherSettings: {
+                privateApiUrl: '/api/my-api',
+                privateApiHeaders: ''
+            },
             librarySettings: {
                 authorityUrl: 'http://localhost:8080/auth/realms/demo',
                 clientId: 'demo-app',
@@ -53,9 +61,8 @@ export const DEFAULT_NGX_AUTH_SETTINGS = (production = false): UserSettings<Auth
     const settings: UserSettings<AuthSettings>[] = [{
         name: 'Auth0',
         otherSettings: {
-            roles: 'view-profile',
-            privateApiUrl: 'https://dev-fijd1e9x.us.auth0.com/api/v2/users/auth0|620573a0e0fb5b00693d8433',
-            privateApiHeaders: ''
+            ...defaultAuthJsSettings[0].otherSettings,
+            roles: 'view-profile'
         },
         librarySettings: {
             ...defaultAuthJsSettings[0].librarySettings,
@@ -69,9 +76,8 @@ export const DEFAULT_NGX_AUTH_SETTINGS = (production = false): UserSettings<Auth
         settings.push({
             name: 'Keycloak (local)',
             otherSettings: {
-                roles: 'view-profile',
-                privateApiUrl: '/api/my-api',
-                privateApiHeaders: ''
+                ...defaultAuthJsSettings[1].otherSettings,
+                roles: 'view-profile'
             },
             librarySettings: {
                 ...defaultAuthJsSettings[1].librarySettings,

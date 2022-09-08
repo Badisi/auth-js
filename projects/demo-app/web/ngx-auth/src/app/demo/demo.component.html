@@ -3,7 +3,43 @@
                (login)="authService.login()"
                (logout)="authService.logout('/')"
                (silentRenew)="authService.renew()">
-    <app-playground tabLabel="Playground"></app-playground>
+
+    <!-- playground -->
+    <demo-app-playground #demoAppPlayground
+                         tabLabel="Playground"
+                         (api)="callPrivateApi($event)">
+        <div class="card routes">
+            <div class="card-title">Routes access</div>
+            <div class="card-actions column">
+                <div class="route">
+                    <button routerLink="/">HOME</button>
+                    <div class="info">Home page</div>
+                </div>
+                <div class="route">
+                    <button routerLink="/public">PUBLIC</button>
+                    <div class="info">Public content (no login required)</div>
+                </div>
+                <div class="route">
+                    <button routerLink="/private">PRIVATE</button>
+                    <div class="info">Private content (login required)</div>
+                </div>
+                <div class="route">
+                    <button routerLink="/protected">PROTECTED</button>
+                    <div class="info">Protected content (login required + role(s):
+                        <input id="roles-input"
+                               (input)="saveSettings()"
+                               (keydown.enter)="router.navigateByUrl('/protected')"
+                               [(ngModel)]="roles" />)
+                    </div>
+                </div>
+            </div>
+            <div class="box">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </demo-app-playground>
+
+    <!-- debug -->
     <demo-app-debug tabLabel="Debug"
                     [isAuthenticated]="authService.isAuthenticated$ | async"
                     [userProfile]="authService.userProfile$ | async"
@@ -13,5 +49,7 @@
                     [accessToken]="authService.accessToken$ | async"
                     [accessTokenDecoded]="authService.accessTokenDecoded$ | async">
     </demo-app-debug>
+
+    <!-- settings -->
     <demo-app-settings tabLabel="Settings"></demo-app-settings>
 </demo-app-main>
