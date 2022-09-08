@@ -9,7 +9,6 @@ export const appSettings: DemoAppSettings<OIDCAuthSettings> = new DemoAppSetting
     `auth-js:${(pkgJson as any).version as string}:demo-app:settings`, {
         showTip: true,
         currentTabIndex: 0,
-        currentUserSettingsIndex: 0,
         userSettings: DEFAULT_AUTH_JS_SETTINGS(environment.production),
         librarySettingsDefinition: AUTH_JS_LIBRARY_SETTINGS_DEFINITION
     });

@@ -166,13 +166,6 @@ export class DemoAppSettingsElement extends HTMLElement {
         this.selectEl = this.shadowRoot?.querySelector('#settings-select') as HTMLSelectElement;
         this.settingsNameEl = this.shadowRoot?.querySelector('#settingsName') as HTMLInputElement;
 
-        /* const testEl = this.shadowRoot?.querySelector('.form-actions') as HTMLElement;
-        const height = window.visualViewport.height;
-        const resizeHandler = (): void => {
-            testEl.style.bottom = `${height - window.visualViewport.height + 10}px`;
-        };
-        window.visualViewport.addEventListener('resize', resizeHandler);*/
-
         // Form events
         const inputCb = (e: Event): void => {
             if (!this.formIsDirty && ((e.target as HTMLElement).id !== 'settings-select')) {
@@ -284,14 +277,16 @@ export class DemoAppSettingsElement extends HTMLElement {
         this.selectEl.innerHTML = '';
 
         // Redraw it
-        const { userSettings, currentUserSettingsIndex } = window.appSettings.get();
-        userSettings.forEach((item, index) => {
-            const optionEl = document.createElement('option');
-            optionEl.selected = (index === currentUserSettingsIndex);
-            optionEl.value = String(item.name);
-            optionEl.textContent = item.name;
-            this.selectEl.appendChild(optionEl);
-        });
+        const { userSettings, currentUserSettingsId } = window.appSettings.get();
+        userSettings
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .forEach(item => {
+                const optionEl = document.createElement('option');
+                optionEl.selected = (item.name === currentUserSettingsId);
+                optionEl.value = String(item.name);
+                optionEl.textContent = item.name;
+                this.selectEl.appendChild(optionEl);
+            });
     }
 
     private refreshFormContent(userSettings: UserSettings<AuthSettings>): void {
@@ -356,7 +351,7 @@ export class DemoAppSettingsElement extends HTMLElement {
 
     private saveAndReload(): void {
         if (this.formEl.reportValidity()) {
-            const { currentUserSettingsIndex, librarySettingsDefinition } = window.appSettings.get();
+            const { librarySettingsDefinition } = window.appSettings.get();
             const currentUserSettings = (!this.formIsNew) ? window.appSettings.getCurrentUserSettings() : {
                 name: '',
                 librarySettings: {}
@@ -391,11 +386,9 @@ export class DemoAppSettingsElement extends HTMLElement {
                     this.setPathValue(currentUserSettings.librarySettings, item.name, value);
                 });
 
+            window.appSettings.addOrUpdateUserSettings(currentUserSettings);
             if (this.formIsNew) {
-                window.appSettings.addUserSettings(currentUserSettings);
                 window.appSettings.setCurrentUserSettings(currentUserSettings.name);
-            } else {
-                window.appSettings.addUserSettings(currentUserSettings, currentUserSettingsIndex);
             }
             location.reload();
         }

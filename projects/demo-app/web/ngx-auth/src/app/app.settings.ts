@@ -9,7 +9,6 @@ export const appSettings: DemoAppSettings<AuthSettings> = new DemoAppSettings(
     `ngx-auth:${(pkgJson as any).version as string}:demo-app:settings`, {
         showTip: true,
         currentTabIndex: 0,
-        currentUserSettingsIndex: 0,
         userSettings: DEFAULT_NGX_AUTH_SETTINGS(environment.production),
         librarySettingsDefinition: NGX_AUTH_LIBRARY_SETTINGS_DEFINITION
     });

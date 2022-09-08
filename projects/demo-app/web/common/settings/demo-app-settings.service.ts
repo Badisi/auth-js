@@ -26,7 +26,7 @@ export interface LibrarySettingsDefinitionItem<LS extends AuthSettings = AuthSet
 export interface AppSettings<LS extends AuthSettings = AuthSettings> {
     showTip: boolean;
     currentTabIndex: number;
-    currentUserSettingsIndex: number;
+    currentUserSettingsId?: string;
     userSettings: UserSettings<LS>[];
     librarySettingsDefinition: LibrarySettingsDefinitionItem<LS>[];
 }
@@ -67,9 +67,9 @@ export class DemoAppSettings<S extends AuthSettings = AuthSettings> {
         this.saveAppSettings(appSettings);
     }
 
-    public addUserSettings(settings: UserSettings<S>, index?: number): void {
+    public addOrUpdateUserSettings(settings: UserSettings<S>): void {
         const appSettings = this.get();
-        const findIndex = index ?? appSettings.userSettings.findIndex(s => s.name === settings.name);
+        const findIndex = appSettings.userSettings.findIndex(s => s.name === settings.name);
         if (findIndex !== -1) {
             appSettings.userSettings[findIndex] = settings;
         } else {
@@ -80,9 +80,10 @@ export class DemoAppSettings<S extends AuthSettings = AuthSettings> {
 
     public deleteCurrentUserSettings(): void {
         const appSettings = this.get();
-        if (appSettings.currentUserSettingsIndex < appSettings.userSettings.length) {
-            appSettings.userSettings.splice(appSettings.currentUserSettingsIndex, 1);
-            appSettings.currentUserSettingsIndex = 0;
+        const findIndex = appSettings.userSettings.findIndex(s => s.name === appSettings.currentUserSettingsId);
+        if (findIndex !== -1) {
+            appSettings.userSettings.splice(findIndex, 1);
+            delete appSettings.currentUserSettingsId;
             this.saveAppSettings(appSettings);
         }
     }
@@ -91,14 +92,18 @@ export class DemoAppSettings<S extends AuthSettings = AuthSettings> {
         const appSettings = this.get();
         const findIndex = appSettings.userSettings.findIndex(s => s.name === name);
         if (findIndex !== -1) {
-            appSettings.currentUserSettingsIndex = findIndex;
+            appSettings.currentUserSettingsId = name;
             this.saveAppSettings(appSettings);
         }
     }
 
     public getCurrentUserSettings(): UserSettings<S> {
         const appSettings = this.get();
-        return appSettings.userSettings[appSettings.currentUserSettingsIndex];
+        const findIndex = appSettings.userSettings.findIndex(s => s.name === appSettings.currentUserSettingsId);
+        if (findIndex !== -1) {
+            return appSettings.userSettings[findIndex];
+        }
+        return appSettings.userSettings[0];
     }
 
     public get(): AppSettings<S> {

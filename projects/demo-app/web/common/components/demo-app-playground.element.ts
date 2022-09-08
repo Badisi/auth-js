@@ -121,7 +121,7 @@ export class DemoAppPlaygroundElement extends HTMLElement {
             ...currentUserSettings.otherSettings,
             ...value
         };
-        window.appSettings.addUserSettings(currentUserSettings);
+        window.appSettings.addOrUpdateUserSettings(currentUserSettings);
     }
 }
 
