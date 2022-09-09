@@ -47,10 +47,13 @@ export class AppElement extends HTMLElement {
             const req = new XMLHttpRequest();
             req.onreadystatechange = (): void => {
                 if (req.readyState === 4) { // 4 = DONE
-                    this.demoAppPlaygroundEl?.setApiStatus(
-                        (req.responseText !== '') ? JSON.parse(req.responseText) : '',
-                        (req.status !== 200)
-                    );
+                    let resp;
+                    try {
+                        resp = JSON.parse(req.responseText ?? '') as string;
+                    } catch {
+                        resp = `${req.status} ${req.statusText}`;
+                    }
+                    this.demoAppPlaygroundEl?.setApiStatus(resp, (req.status !== 200));
                 }
             };
             req.open('GET', url, true);

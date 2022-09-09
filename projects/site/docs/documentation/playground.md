@@ -10,9 +10,9 @@ Draft document..
 
 Url: [demo site][demo-site]
 
-```js title="Auth0 - demo account"
-Username: demo@ngx-auth.com
-Password: Pa55w0rd
+```js title="Auth0/Zitadel - demo account"
+Username: demo
+Password: Pa55w0rd!
 ```
 
 

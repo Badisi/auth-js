@@ -8,7 +8,7 @@ export const DEFAULT_AUTH_JS_SETTINGS = (production = false): UserSettings<OIDCA
     const settings: UserSettings<OIDCAuthSettings>[] = [{
         name: 'Auth0',
         otherSettings: {
-            privateApiUrl: 'https://dev-fijd1e9x.us.auth0.com/api/v2/users/auth0|620573a0e0fb5b00693d8433',
+            privateApiUrl: 'https://dev-fijd1e9x.us.auth0.com/api/v2/users/auth0|631b171682c639d40cb84d5c',
             privateApiHeaders: ''
         },
         librarySettings: {
@@ -21,6 +21,24 @@ export const DEFAULT_AUTH_JS_SETTINGS = (production = false): UserSettings<OIDCA
                     audience: 'https://dev-fijd1e9x.us.auth0.com/api/v2/'
                 }
             },
+            navigationType: Navigation.REDIRECT,
+            logLevel: Log.NONE,
+            loginRequired: false,
+            retrieveUserSession: true,
+            loadUserInfo: true,
+            automaticSilentRenew: true
+        }
+    }, {
+        name: 'Zitadel',
+        otherSettings: {
+            privateApiUrl: '',
+            privateApiHeaders: ''
+        },
+        librarySettings: {
+            authorityUrl: 'https://auth-js-0pdipf.zitadel.cloud',
+            clientId: '178200751804317953@demo-app',
+            mobileScheme: 'demo-app',
+            scope: 'openid profile email phone offline_access',
             navigationType: Navigation.REDIRECT,
             logLevel: Log.NONE,
             loginRequired: false,
@@ -70,17 +88,29 @@ export const DEFAULT_NGX_AUTH_SETTINGS = (production = false): UserSettings<Auth
             automaticLoginOn401: true,
             automaticInjectToken: true
         }
+    }, {
+        name: 'Zitadel',
+        otherSettings: {
+            ...defaultAuthJsSettings[1].otherSettings,
+            roles: 'view-profile'
+        },
+        librarySettings: {
+            ...defaultAuthJsSettings[1].librarySettings,
+            authGuardRedirectUrl: '/forbidden',
+            automaticLoginOn401: true,
+            automaticInjectToken: true
+        }
     }];
 
     if (!production) {
         settings.push({
             name: 'Keycloak (local)',
             otherSettings: {
-                ...defaultAuthJsSettings[1].otherSettings,
+                ...defaultAuthJsSettings[settings.length - 1].otherSettings,
                 roles: 'view-profile'
             },
             librarySettings: {
-                ...defaultAuthJsSettings[1].librarySettings,
+                ...defaultAuthJsSettings[settings.length - 1].librarySettings,
                 authGuardRedirectUrl: '/forbidden',
                 automaticLoginOn401: true,
                 automaticInjectToken: true

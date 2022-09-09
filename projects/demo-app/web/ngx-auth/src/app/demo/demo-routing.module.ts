@@ -1,29 +1,33 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { OIDCAuthSettings } from '@badisi/auth-js/oidc';
 import { AccessToken, AuthGuard, AuthGuardValidator, UserProfile } from '@badisi/ngx-auth';
+import { UserSettings } from 'demo-app-common';
 
 import { DemoComponent } from './demo.component';
 
-/* eslint-disable
-    @typescript-eslint/no-explicit-any,
-    @typescript-eslint/no-unsafe-assignment,
-    @typescript-eslint/no-unsafe-member-access
-*/
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 const rolesValidator = (): AuthGuardValidator =>
     (_userProfile?: UserProfile, accessToken?: AccessToken): boolean => {
-        const { otherSettings } = window.appSettings.getCurrentUserSettings();
+        const { otherSettings, librarySettings } = window.appSettings.getCurrentUserSettings() as UserSettings<OIDCAuthSettings>;
         const requiredRoles = (otherSettings) ? (otherSettings['roles'] as string)?.split(',') || [] : [];
-        let tokenRoles: string[] = (accessToken as any).resource_access?.account?.roles; // keycloak
-        if (!tokenRoles) {
-            tokenRoles = (accessToken as any)?.['http://ngx-auth.com/roles']; // auth0
+
+        let tokenRoles: string[];
+        // auth0
+        if (librarySettings.authorityUrl.includes('auth0')) {
+            tokenRoles = (accessToken as any)?.['http://ngx-auth.com/roles'];
+        // zitadel
+        } else if (librarySettings.authorityUrl.includes('zitadel')) {
+            const roles: Record<string, unknown> = (accessToken as any)?.['urn:zitadel:iam:org:project:roles'];
+            tokenRoles = Object.keys(roles ?? {});
+        // keycloak
+        } else {
+            tokenRoles = (accessToken as any).resource_access?.account?.roles;
         }
-        return requiredRoles.every(role => (tokenRoles || []).includes(role));
+
+        return requiredRoles.every(role => (tokenRoles ?? []).includes(role));
     };
-/* eslint-enable
-    @typescript-eslint/no-explicit-any,
-    @typescript-eslint/no-unsafe-assignment,
-    @typescript-eslint/no-unsafe-member-access
-*/
+/* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 
 const routes: Routes = [
     {
