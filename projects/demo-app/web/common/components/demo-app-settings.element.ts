@@ -258,10 +258,9 @@ export class DemoAppSettingsElement extends HTMLElement {
                 (obj as any)[prop] = value;
             } else if (!Object.prototype.hasOwnProperty.call(obj, prop)) {
                 (obj as any)[prop] = {};
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-                return (obj as any)[prop];
             }
-            return obj;
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            return (obj as any)[prop];
         }, settings);
     }
 
@@ -356,7 +355,6 @@ export class DemoAppSettingsElement extends HTMLElement {
                 name: '',
                 librarySettings: {}
             };
-
             currentUserSettings.name = this.settingsNameEl.value;
             librarySettingsDefinition
                 .forEach(item => {

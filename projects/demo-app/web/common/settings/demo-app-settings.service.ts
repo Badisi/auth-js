@@ -80,7 +80,8 @@ export class DemoAppSettings<S extends AuthSettings = AuthSettings> {
 
     public deleteCurrentUserSettings(): void {
         const appSettings = this.get();
-        const findIndex = appSettings.userSettings.findIndex(s => s.name === appSettings.currentUserSettingsId);
+        const { name } = this.getCurrentUserSettings();
+        const findIndex = appSettings.userSettings.findIndex(s => s.name === name);
         if (findIndex !== -1) {
             appSettings.userSettings.splice(findIndex, 1);
             delete appSettings.currentUserSettingsId;
@@ -103,7 +104,7 @@ export class DemoAppSettings<S extends AuthSettings = AuthSettings> {
         if (findIndex !== -1) {
             return appSettings.userSettings[findIndex];
         }
-        return appSettings.userSettings[0];
+        return appSettings.userSettings.sort((a, b) => a.name.localeCompare(b.name))[0];
     }
 
     public get(): AppSettings<S> {
