@@ -182,22 +182,23 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     public async login(redirectUrl = location.href, navigationType?: Navigation): Promise<boolean> {
         if (AuthUtils.isNativeMobile()) {
             this.notifyRenew(true);
-            await this.userManager?.signinMobile();
-            this.notifyRenew(false);
+            await this.userManager?.signinMobile()
+                .finally(() => this.notifyRenew(false));
             await this.redirect(redirectUrl);
         } else {
             switch (navigationType || this.settings.navigationType) {
                 case Navigation.POPUP:
                     this.notifyRenew(true);
-                    await this.userManager?.signinPopup().catch((error: Error) => {
-                        if (error?.message === 'Attempted to navigate on a disposed window') {
-                            error = new Error('[OIDCAuthManager] Attempted to navigate on a disposed window.');
-                            error.stack = undefined;
-                            error.message += '\n\nⓘ This may be due to an ad blocker.';
-                        }
-                        throw error;
-                    });
-                    this.notifyRenew(false);
+                    await this.userManager?.signinPopup()
+                        .catch((error: Error) => {
+                            if (error?.message === 'Attempted to navigate on a disposed window') {
+                                error = new Error('[OIDCAuthManager] Attempted to navigate on a disposed window.');
+                                error.stack = undefined;
+                                error.message += '\n\nⓘ This may be due to an ad blocker.';
+                            }
+                            throw error;
+                        })
+                        .finally(() => this.notifyRenew(false));
                     await this.redirect(redirectUrl);
                     break;
                 case Navigation.REDIRECT:

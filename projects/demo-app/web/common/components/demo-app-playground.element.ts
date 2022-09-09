@@ -12,6 +12,10 @@ template.innerHTML = `
             padding: 20px 28px;
         }
 
+        :host .card.apis input {
+            width: 100%; /* fix for android-chrome */
+        }
+
         :host .card.apis .card-actions {
             padding-bottom: 16px;
         }

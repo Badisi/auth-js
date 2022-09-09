@@ -6,7 +6,7 @@ import { Logger } from 'oidc-client-ts';
 import { AuthUtils } from '../../core';
 import { MobileWindowOptions } from '../models/mobile-window-options.model';
 
-const CUSTOM_URL_SCHEME_HANDLER_TIMEOUT = 30 * 1000; // 30s
+const CUSTOM_URL_SCHEME_HANDLER_TIMEOUT = 10 * 1000; // 10s
 const CAPACITOR_APP = window.Capacitor?.Plugins?.App;
 const CAPACITOR_BROWSER = window.Capacitor?.Plugins?.Browser;
 const BROWSER_TAB = undefined; // cordova?.plugins?.browsertab;
@@ -128,7 +128,10 @@ export class MobileWindow implements IWindow {
         const logger = this._logger.create('installCustomUrlSchemeHandler');
 
         // Set a timeout in case no response is received
-        this.timer = setTimeout(() => void this.onError(''), CUSTOM_URL_SCHEME_HANDLER_TIMEOUT);
+        this.timer = setTimeout(
+            () => void this.onError('Installing custom url scheme handler, timed out without a response'),
+            CUSTOM_URL_SCHEME_HANDLER_TIMEOUT
+        );
 
         // Clean-up
         await this.cleanup();

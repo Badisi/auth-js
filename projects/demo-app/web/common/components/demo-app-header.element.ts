@@ -134,7 +134,15 @@ template.innerHTML = `
         @media only screen and (max-width: 600px) {
             :host header .title {
                 align-self: flex-start;
-                margin-left: 24px;
+                margin-left: 18px;
+            }
+
+            :host header .status {
+                right: 54px;
+            }
+
+            :host header .github-icon {
+                right: 24px;
             }
         }
         @media only screen and (max-width: 1000px) {
