@@ -106,11 +106,11 @@ export const DEFAULT_NGX_AUTH_SETTINGS = (production = false): UserSettings<Auth
         settings.push({
             name: 'Keycloak (local)',
             otherSettings: {
-                ...defaultAuthJsSettings[settings.length - 1].otherSettings,
+                ...defaultAuthJsSettings[defaultAuthJsSettings.length - 1].otherSettings,
                 roles: 'view-profile'
             },
             librarySettings: {
-                ...defaultAuthJsSettings[settings.length - 1].librarySettings,
+                ...defaultAuthJsSettings[defaultAuthJsSettings.length - 1].librarySettings,
                 authGuardRedirectUrl: '/forbidden',
                 automaticLoginOn401: true,
                 automaticInjectToken: true
