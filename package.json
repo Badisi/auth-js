@@ -27,7 +27,8 @@
     "scripts": {
         "ncu": "npx ncu -i --format=group --packageFile '{,projects/**/}package.json'",
         "lint": "nx run-many --target=lint --projects=auth-js,ngx-auth",
-        "test": "nx run-many --target=test --projects=auth-js,ngx-auth"
+        "test": "nx run-many --target=test --projects=auth-js,ngx-auth",
+        "publish": "npx multi-semantic-release --ignore-private-packages --debug --yes"
     },
     "workspaces": [
         "projects/auth-js",
