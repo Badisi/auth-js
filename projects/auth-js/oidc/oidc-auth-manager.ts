@@ -110,6 +110,9 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             }),
             this.userManager.events.addUserUnloaded(() => {
                 this.user = null;
+            }),
+            this.userManager.events.addSilentRenewError(async () => {
+                await this.removeUser();
             })
         );
 
@@ -127,7 +130,8 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                     .catch(async (signinSilentError: ErrorResponse) => {
                         if (this.settings.loginRequired) {
                             const { error, message } = signinSilentError;
-                            if ([error, message].includes('login_required')) {
+                            // Ex: login_required, consent_required, interaction_required, account_selection_required
+                            if ([error, message].includes('_required')) {
                                 await this.login();
                             } else {
                                 throw signinSilentError;
