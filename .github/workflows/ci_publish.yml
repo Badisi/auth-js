@@ -11,7 +11,7 @@ jobs:
     uses: ./.github/workflows/ci_tests.yml
 
   ci_publish:
-    needs: ci_tests
+    #needs: ci_tests
     runs-on: ubuntu-latest
 
     steps:
@@ -56,4 +56,4 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx multi-semantic-release --ignore-packages="projects/demo-app/**","projects/demo-e2e/**","projects/demo-idp/**" --yes
+        run: npm run publish
