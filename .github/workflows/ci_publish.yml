@@ -56,4 +56,4 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx multi-semantic-release --yes
+        run: npx multi-semantic-release --ignore-packages="projects/demo-app/**","projects/demo-e2e/**","projects/demo-idp/**" --yes
