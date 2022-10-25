@@ -36,12 +36,14 @@
     },
     "dependencies": {
         "@badisi/auth-js": "0.0.0-semantically-released",
-        "@hug/ngx-schematics-utilities": "^4.0.2"
+        "@hug/ngx-schematics-utilities": "^4.0.2",
+        "tslib": "^1.9.0 || ^2.2.0"
     },
     "peerDependencies": {
         "@angular/common": ">=7.0.0",
         "@angular/core": ">=7.0.0",
-        "@angular/router": ">=7.0.0"
+        "@angular/router": ">=7.0.0",
+        "rxjs": ">=6.0.0"
     },
     "publishConfig": {
         "access": "public"
