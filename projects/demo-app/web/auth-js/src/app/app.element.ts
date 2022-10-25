@@ -128,7 +128,10 @@ export class AppElement extends HTMLElement {
             const login = () => void manager.login();
             this.demoAppMainEl.addEventListener('login', login);
 
-            const logout = () => void manager.logout('/').then(() => location.href = '/');
+            const logout = () => void manager.logout('/').then(() => {
+                const baseUrl = document.baseURI || document.querySelector('base')?.href || location.origin;
+                location.href = (baseUrl.endsWith('/')) ? baseUrl : `${baseUrl}/`;
+            });
             this.demoAppMainEl.addEventListener('logout', logout);
 
             const silentRenew = () => void manager.renew();
