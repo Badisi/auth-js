@@ -51,7 +51,7 @@
         "zone.js": "^0.11.8"
     },
     "devDependencies": {
-        "@angular-devkit/build-angular": "^12.x",
+        "@angular-devkit/build-angular": "^15.x",
         "@angular/cli": "^12.x",
         "@angular/compiler-cli": "^12.x",
         "@hug/eslint-config": "^8.0.1",
@@ -61,7 +61,7 @@
         "@nrwl/jest": "^14.7.3",
         "@nrwl/linter": "^14.7.3",
         "@nrwl/tao": "^14.7.3",
-        "@nrwl/web": "^14.7.3",
+        "@nrwl/web": "^14.8.6",
         "@nrwl/workspace": "^14.7.3",
         "@types/jest": "^29.0.0",
         "@types/node": "^18.7.16",
