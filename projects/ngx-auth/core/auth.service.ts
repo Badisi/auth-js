@@ -135,7 +135,13 @@ export class AuthService implements OnDestroy {
                 // Avoid cancelling any current navigation
                 if (!this.router.getCurrentNavigation()) {
                     this.ngZone.run(() => {
-                        void this.router.navigateByUrl(`${value.pathname}${value.search}`);
+                        /**
+                         * Angular only navigates to an absolute path from the base url.
+                         * So we need to substract the base url from the received url.
+                         * ex: transform 'http://domain/base/private' to '/private'
+                         */
+                        const absUrl = value.href.replace(AuthUtils.getBaseUrl(), '');
+                        void this.router.navigateByUrl(`${absUrl}${value.search}`);
                     });
                 }
             })
