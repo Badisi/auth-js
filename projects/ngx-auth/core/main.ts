@@ -10,7 +10,7 @@ const DEFAULT_SETTINGS: Optional<AuthSettings, 'authorityUrl' | 'clientId'> = {
     automaticInjectToken: {
         include: (url: string): boolean => {
             const res = new URL(url, 'http://default-base');
-            return res.pathname.startsWith('/api') || false;
+            return res.hostname.startsWith('api') || res.pathname.startsWith('/api') || false;
         }
     }
 };
