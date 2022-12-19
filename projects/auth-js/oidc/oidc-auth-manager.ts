@@ -130,8 +130,8 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                     .catch(async (signinSilentError: ErrorResponse) => {
                         if (this.settings.loginRequired) {
                             const { error, message } = signinSilentError;
-                            // Ex: login_required, consent_required, interaction_required, account_selection_required
-                            if ([error, message].includes('_required')) {
+                            // ex: login_required, consent_required, interaction_required, account_selection_required
+                            if (error?.includes('_required') || message?.includes('_required')) {
                                 await this.login();
                             } else {
                                 throw signinSilentError;
