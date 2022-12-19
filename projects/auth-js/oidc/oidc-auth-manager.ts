@@ -428,6 +428,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             await this.redirect(sessionStorage.getItem(REDIRECT_URL_KEY));
         } catch (error) {
             await this.redirect('/', error);
+            throw error;
         } finally {
             sessionStorage.removeItem(REDIRECT_URL_KEY);
         }
@@ -442,6 +443,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         } catch (error) {
             redirectUrl = '/';
             await this.redirect(redirectUrl, error);
+            throw error;
         } finally {
             sessionStorage.removeItem(REDIRECT_URL_KEY);
             this.postLogoutVerification(redirectUrl);
