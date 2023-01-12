@@ -25,10 +25,12 @@
     ],
     "private": true,
     "scripts": {
+        "postinstall": "node ./scripts/patch-semantic-release-npm.js",
         "ncu": "npx ncu -i --format=group --packageFile '{,projects/**/}package.json'",
         "lint": "nx run-many --target=lint --projects=auth-js,ngx-auth",
         "test": "nx run-many --target=test --projects=auth-js,ngx-auth",
-        "publish": "npx multi-semantic-release --ignore-private-packages --debug --yes"
+        "publish": "multi-semantic-release --ignore-private-packages --yes",
+        "publish-dry-run": "GITHUB_TOKEN=XXX NPM_TOKEN=XXX npm run publish -- --no-ci"
     },
     "workspaces": [
         "projects/auth-js",
@@ -40,12 +42,12 @@
     ],
     "dependencies": {
         "@angular/common": "^12.x",
-        "@angular/compiler": "^12.x",
         "@angular/core": "^12.x",
+        "@angular/router": "^12.x",
+        "@angular/compiler": "^12.x",
         "@angular/forms": "^12.x",
         "@angular/platform-browser": "^12.x",
         "@angular/platform-browser-dynamic": "^12.x",
-        "@angular/router": "^12.x",
         "rxjs": "^7.5.6",
         "tslib": "^2.4.0",
         "zone.js": "^0.11.8"
@@ -71,6 +73,7 @@
         "jest": "^28.1.3",
         "jest-environment-jsdom": "^28.1.3",
         "jest-preset-angular": "^12.2.2",
+        "multi-semantic-release": "^3.0.1",
         "ng-packagr": "^12.x",
         "postcss": "^8.4.16",
         "postcss-import": "^15.0.0",
