@@ -45,7 +45,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     private _accessToken?: string;
     private _userProfile?: UserProfile;
     private _userSession?: UserSession;
-    private _isAuthenticated?: boolean;
+    private _isAuthenticated = false;
     private _isRenewing = false;
 
     private userManager?: UserManager;
@@ -212,7 +212,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                     break;
             }
         }
-        return (this._isAuthenticated === true);
+        return (this._isAuthenticated);
     }
 
     public async renew(): Promise<void> {
@@ -227,7 +227,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         return this._isRenewing;
     }
 
-    public async isAuthenticated(): Promise<boolean | undefined> {
+    public async isAuthenticated(): Promise<boolean> {
         await this.waitForRenew('isAuthenticated()');
         return this._isAuthenticated;
     }

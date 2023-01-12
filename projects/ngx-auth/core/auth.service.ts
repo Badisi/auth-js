@@ -14,7 +14,7 @@ export class AuthService implements OnDestroy {
     private _accessToken$: ReplaySubject<string | undefined> = new ReplaySubject<string | undefined>(1);
     private _userProfile$: ReplaySubject<UserProfile | undefined> = new ReplaySubject<UserProfile | undefined>(1);
     private _userSession$: ReplaySubject<UserSession | undefined> = new ReplaySubject<UserSession | undefined>(1);
-    private _isAuthenticated$: ReplaySubject<boolean | undefined> = new ReplaySubject<boolean | undefined>(1);
+    private _isAuthenticated$: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
     private _isRenewing$: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
 
     private authManagerSubs: AuthSubscription[] = [];
@@ -32,12 +32,12 @@ export class AuthService implements OnDestroy {
     }
 
     /* eslint-disable @typescript-eslint/member-ordering */
-    public readonly isRenewing$: Observable<boolean | undefined> =
+    public readonly isRenewing$: Observable<boolean> =
         this._isRenewing$.asObservable().pipe(
             distinctUntilChanged()
         );
 
-    public readonly isAuthenticated$: Observable<boolean | undefined> =
+    public readonly isAuthenticated$: Observable<boolean> =
         this._isAuthenticated$.asObservable().pipe(
             distinctUntilChanged()
         );
@@ -93,7 +93,11 @@ export class AuthService implements OnDestroy {
         return this.manager.getSettings() as AuthSettings;
     }
 
-    public isAuthenticated(): Promise<boolean | undefined> {
+    public isRenewing(): boolean {
+        return this.manager.isRenewing();
+    }
+
+    public isAuthenticated(): Promise<boolean> {
         return this.manager.isAuthenticated();
     }
 
