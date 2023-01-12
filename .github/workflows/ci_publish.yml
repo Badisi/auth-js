@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  NODE: 16
+  NODE: 18
 
 jobs:
   ci_tests:
