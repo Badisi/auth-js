@@ -5,7 +5,7 @@
     "prefix": "badisi",
     "targets": {
         "build-schematics": {
-            "executor": "@nrwl/workspace:run-commands",
+            "executor": "nx:run-commands",
             "outputs": [
                 "dist/ngx-auth"
             ],
@@ -19,7 +19,7 @@
             }
         },
         "copy-assets": {
-            "executor": "@nrwl/workspace:run-commands",
+            "executor": "nx:run-commands",
             "outputs": [
                 "dist/ngx-auth"
             ],
