@@ -87,7 +87,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         this.settings = merge({}, DEFAULT_SETTINGS, {
             internal: {
                 userStore: new WebStorageStateStore({
-                    store: (isNativeMobile) ? new MobileStorage() as unknown as Storage : new InMemoryWebStorage()
+                    store: (isNativeMobile) ? new MobileStorage() : new InMemoryWebStorage()
                 }),
                 redirect_uri: `${baseUrl}${DEFAULT_SETTINGS.internal?.redirect_uri}`,
                 post_logout_redirect_uri: `${baseUrl}${DEFAULT_SETTINGS.internal?.post_logout_redirect_uri}`,

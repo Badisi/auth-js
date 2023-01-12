@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-unsafe-assignment */
 
-import { Logger } from 'oidc-client-ts';
-
-import { AsyncStorage } from '../models/async-storage.model';
+import { AsyncStorage, Logger } from 'oidc-client-ts';
 
 // defaults
 const LOCAL_STORAGE = window.localStorage;
@@ -34,16 +32,18 @@ export class MobileStorage implements AsyncStorage {
         }
     }
 
-    public async length(): Promise<number> {
-        if (CAPACITOR_SECURE_STORAGE) {
-            return (await CAPACITOR_SECURE_STORAGE.keys()).value.length;
-        } else if (CAPACITOR_PREFERENCES) {
-            return (await CAPACITOR_PREFERENCES.keys()).keys.length;
-        } else if (CAPACITOR_STORAGE) {
-            return (await CAPACITOR_STORAGE.keys()).keys.length;
-        } else {
-            return LOCAL_STORAGE.length;
-        }
+    public get length(): Promise<number> {
+        return (async (): Promise<number> => {
+            if (CAPACITOR_SECURE_STORAGE) {
+                return (await CAPACITOR_SECURE_STORAGE.keys()).value.length;
+            } else if (CAPACITOR_PREFERENCES) {
+                return (await CAPACITOR_PREFERENCES.keys()).keys.length;
+            } else if (CAPACITOR_STORAGE) {
+                return (await CAPACITOR_STORAGE.keys()).keys.length;
+            } else {
+                return LOCAL_STORAGE.length;
+            }
+        })();
     }
 
     public async key(index: number): Promise<string | null> {
