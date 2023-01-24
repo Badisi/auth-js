@@ -133,12 +133,11 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                             // ex: login_required, consent_required, interaction_required, account_selection_required
                             if (error?.includes('_required') || message?.includes('_required')) {
                                 await this.login();
-                            } else {
-                                throw signinSilentError;
+                                return;
                             }
-                        } else {
-                            this.authenticatedSubs.notify(false);
                         }
+                        console.error(signinSilentError);
+                        this.authenticatedSubs.notify(false);
                     }));
             };
 
