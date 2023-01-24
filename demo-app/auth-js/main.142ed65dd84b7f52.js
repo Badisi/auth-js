@@ -6851,12 +6851,13 @@ class OIDCAuthManager extends AuthManager {
 
             if (error != null && error.includes('_required') || message != null && message.includes('_required')) {
               await _this.login();
-            } else {
-              throw signinSilentError;
+              return;
             }
-          } else {
-            _this.authenticatedSubs.notify(false);
           }
+
+          console.error(signinSilentError);
+
+          _this.authenticatedSubs.notify(false);
         }));
       }; // Try to load user from storage
 
