@@ -79,15 +79,15 @@ await initAuth(settings: AuthSettings);
 
 #### `automaticInjectToken`
 > **type**: boolean or custom object<br/>
-> **default**: see the examples
+> **default**: any hostname or pathname that starts with 'api'
 
-```ts title="Examples"
-// default: any url that starts with "/api"
+```ts title="Custom object example"
 automaticInjectToken: {
-  include: (url: string): boolean => {
-    const matches = new RegExp(/^.*?(?<!\/)\/(?!\/)(.*$)/gm).exec(url);
-    return (matches?.[1]?.startsWith('api')) || false;
-  }
+  include: (url: string): boolean => url?.includes('user'),
+  exclude: [
+    '/public-api',
+    /^\/my-custom-api\/.*$/gm
+  ]
 }
 ```
 
