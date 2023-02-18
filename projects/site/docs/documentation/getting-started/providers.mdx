@@ -16,15 +16,18 @@ http://localhost:4200
 
 #### Allowed Callback URLs
 ```
-http://localhost:4200/?oidc-callback=login,
-http://localhost:4200/oidc/callback/popup_redirect.html,
+http://localhost:4200/?oidc-callback=login
+http://localhost:4200/oidc/callback/popup_redirect.html
 http://localhost:4200/oidc/callback/silent_redirect.html
+demo-app://localhost/?oidc-callback=login (for mobile)
 ```
 
 #### Allowed Logout URLs
 ```
-http://localhost:4200/?oidc-callback=logout,
+http://localhost:4200/?oidc-callback=logout
 http://localhost:4200/oidc/callback/popup_redirect.html
+demo-app://localhost/?oidc-callback=logout (for mobile)
+
 ```
 
 #### Grants
