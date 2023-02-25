@@ -25,6 +25,9 @@
 .main-wrapper {
     display: flex;
 }
+.main-wrapper > div {
+    flex: 1;
+}
 /**/
 
 .navbar__brand:hover {

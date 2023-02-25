@@ -17,20 +17,34 @@ const config = {
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
     favicon: 'img/favicon.ico',
-
+    i18n: {
+        defaultLocale: 'en-US',
+        locales: ['en-US']
+    },
+    plugins: [
+        [
+            require.resolve('@cmfcmf/docusaurus-search-local'),
+            {
+                language: 'en'
+            }
+        ]
+    ],
     presets: [
         [
-            '@docusaurus/preset-classic',
+            'classic',
             /** @type {import('@docusaurus/preset-classic').Options} */
             ({
                 docs: {
-                    breadcrumbs: false,
                     routeBasePath: '/',
+                    breadcrumbs: false,
                     sidebarPath: require.resolve('./sidebars.js'),
                     editUrl: 'https://github.com/Badisi/auth-js/edit/main/projects/site/'
                 },
                 theme: {
-                    customCss: require.resolve('./src/css/custom.css')
+                    customCss: [
+                        require.resolve('./src/css/custom.css'),
+                        require.resolve('./src/css/search.css')
+                    ]
                 }
             })
         ]
@@ -41,6 +55,7 @@ const config = {
         ({
             navbar: {
                 title: 'Auth-js',
+                hideOnScroll: false,
                 logo: {
                     alt: 'logo',
                     src: 'img/logo.svg'
