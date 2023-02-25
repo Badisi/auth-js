@@ -1,6 +1,7 @@
 {
+    "name": "demo-app-common",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
     "projectType": "library",
-    "root": "projects/demo-app/web/common",
     "sourceRoot": "projects/demo-app/web/common",
     "targets": {
         "lint": {

@@ -1,6 +1,7 @@
 {
+    "name": "demo-app-ngx-auth",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
     "projectType": "application",
-    "root": "projects/demo-app/web/ngx-auth",
     "sourceRoot": "projects/demo-app/web/ngx-auth/src",
     "prefix": "badisi",
     "targets": {

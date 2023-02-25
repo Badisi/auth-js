@@ -1,6 +1,7 @@
 {
+    "name": "ngx-auth",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "projectType": "library",
-    "root": "projects/ngx-auth",
     "sourceRoot": "projects/ngx-auth/src",
     "prefix": "badisi",
     "targets": {
