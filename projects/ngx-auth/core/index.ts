@@ -5,8 +5,8 @@
  * SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2022 Badisi
  */
-export { UserSession, Navigation, Log } from '@badisi/auth-js/oidc';
-export type { UserProfile, AccessToken } from '@badisi/auth-js/oidc';
+export { UserSession, DesktopNavigation, Log } from '@badisi/auth-js/oidc';
+export type { UserProfile, AccessToken, LoginArgs, LogoutArgs, RenewArgs } from '@badisi/auth-js/oidc';
 
 export * from './auth-settings.model';
 export * from './auth.guard';

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { Log, Navigation, OIDCAuthSettings } from '@badisi/auth-js/oidc';
+import { DesktopNavigation, Log, OIDCAuthSettings } from '@badisi/auth-js/oidc';
 import { AuthSettings } from '@badisi/ngx-auth';
 import { UserSettings } from 'demo-app-common';
 
@@ -21,7 +21,7 @@ export const DEFAULT_AUTH_JS_SETTINGS = (production = false): UserSettings<OIDCA
                     audience: 'https://dev-fijd1e9x.us.auth0.com/api/v2/'
                 }
             },
-            navigationType: Navigation.REDIRECT,
+            desktopNavigationType: DesktopNavigation.REDIRECT,
             logLevel: Log.NONE,
             loginRequired: false,
             retrieveUserSession: true,
@@ -39,7 +39,7 @@ export const DEFAULT_AUTH_JS_SETTINGS = (production = false): UserSettings<OIDCA
             clientId: '178200751804317953@demo-app',
             mobileScheme: 'demo-app',
             scope: 'openid profile email phone offline_access',
-            navigationType: Navigation.REDIRECT,
+            desktopNavigationType: DesktopNavigation.REDIRECT,
             logLevel: Log.NONE,
             loginRequired: false,
             retrieveUserSession: true,
@@ -60,7 +60,7 @@ export const DEFAULT_AUTH_JS_SETTINGS = (production = false): UserSettings<OIDCA
                 clientId: 'demo-app',
                 mobileScheme: 'demo-app',
                 scope: 'openid profile email phone',
-                navigationType: Navigation.REDIRECT,
+                desktopNavigationType: DesktopNavigation.REDIRECT,
                 logLevel: Log.NONE,
                 loginRequired: false,
                 retrieveUserSession: true,

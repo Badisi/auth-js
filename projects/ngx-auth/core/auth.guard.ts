@@ -83,7 +83,7 @@ export class AuthGuard implements CanLoad, CanActivate, CanActivateChild {
                 take(1),
                 switchMap(isAuthenticated => {
                     if (!isAuthenticated) {
-                        return from(this.authService.login(redirectUrl))
+                        return from(this.authService.login({ redirectUrl }))
                             .pipe(
                                 catchError(() => of(false))
                             );

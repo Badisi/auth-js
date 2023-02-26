@@ -4,7 +4,7 @@ import type { PluginListenerHandle } from '@capacitor/core';
 import { Logger } from 'oidc-client-ts';
 
 import { AuthUtils } from '../../core';
-import { MobileWindowOptions } from '../models/mobile-window-options.model';
+import { MobileWindowParams } from '../models/mobile-window-params.model';
 
 const CUSTOM_URL_SCHEME_HANDLER_TIMEOUT = 10 * 1000; // 10s
 const CAPACITOR_APP = window.Capacitor?.Plugins?.App;
@@ -24,7 +24,7 @@ export class MobileWindow implements IWindow {
     private _reject?: (reason?: unknown) => void;
 
     constructor(
-        public options: MobileWindowOptions,
+        public options: MobileWindowParams,
         public redirectUrl: string
     ) {
         if (!AuthUtils.isCapacitor() && !AuthUtils.isCordova()) {

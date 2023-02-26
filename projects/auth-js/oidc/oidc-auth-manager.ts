@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions, @typescript-eslint/naming-convention, camelcase */
 
 import { merge } from 'lodash-es';
-import { ErrorResponse, InMemoryWebStorage, Log, User, UserProfile, WebStorageStateStore } from 'oidc-client-ts';
+import {
+    ErrorResponse, ExtraSigninRequestArgs, ExtraSignoutRequestArgs, IFrameWindowParams, InMemoryWebStorage, Log,
+    PopupWindowParams, RedirectParams, SigninSilentArgs, User, UserProfile, WebStorageStateStore
+} from 'oidc-client-ts';
 
 import { AuthManager, AuthSubscriber, AuthSubscription, AuthSubscriptions, AuthUtils, Optional } from '../core';
 import { MobileStorage } from './mobile/mobile-storage';
 import { AccessToken } from './models/access-token.model';
 import { IdToken } from './models/id-token.model';
-import { Navigation, OIDCAuthSettings } from './models/oidc-auth-settings.model';
+import { MobileWindowParams } from './models/mobile-window-params.model';
+import { DesktopNavigation, OIDCAuthSettings } from './models/oidc-auth-settings.model';
 import { UserSession } from './models/user-session.model';
 import { UserManager } from './user-manager';
 
@@ -18,7 +22,7 @@ const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> 
     retrieveUserSession: true,
     loadUserInfo: false,
     automaticSilentRenew: true,
-    navigationType: Navigation.REDIRECT,
+    desktopNavigationType: DesktopNavigation.REDIRECT,
     scope: 'openid profile email phone',
     logLevel: Log.NONE,
     internal: {
@@ -30,6 +34,18 @@ const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> 
         silent_redirect_uri: 'oidc/callback/silent_redirect.html'
     }
 };
+
+export type LoginArgs = MobileWindowParams & PopupWindowParams & RedirectParams & Omit<ExtraSigninRequestArgs, 'redirect_uri'> & {
+    redirectUrl?: string;
+    desktopNavigationType?: DesktopNavigation;
+};
+
+export type LogoutArgs = MobileWindowParams & PopupWindowParams & RedirectParams & Omit<ExtraSignoutRequestArgs, 'post_logout_redirect_uri'> & {
+    redirectUrl?: string;
+    desktopNavigationType?: DesktopNavigation;
+};
+
+export type RenewArgs = IFrameWindowParams & ExtraSigninRequestArgs;
 
 export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     private idTokenSubs: AuthSubscriptions<[string | undefined]> = new AuthSubscriptions();
@@ -73,7 +89,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     // --- PUBLIC API(s) ---
 
     public async init(userSettings: OIDCAuthSettings): Promise<void> {
-        Log.setLevel(userSettings.logLevel || DEFAULT_SETTINGS.logLevel || Log.NONE);
+        Log.setLevel(userSettings.logLevel ?? DEFAULT_SETTINGS.logLevel ?? Log.NONE);
         Log.setLogger(console);
 
         const isNativeMobile = AuthUtils.isNativeMobile();
@@ -162,37 +178,39 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         }
     }
 
-    public async logout(redirectUrl = location.href, navigationType?: Navigation): Promise<void> {
+    public async logout(args?: LogoutArgs): Promise<void> {
+        const redirectUrl = args?.redirectUrl ?? location.href;
         if (AuthUtils.isNativeMobile()) {
-            await this.userManager?.signoutMobile();
+            await this.userManager?.signoutMobile(args);
             await this.redirect(redirectUrl);
             this.postLogoutVerification(redirectUrl);
         } else {
-            switch (navigationType || this.settings.navigationType) {
-                case Navigation.POPUP:
-                    await this.userManager?.signoutPopup();
+            switch (args?.desktopNavigationType ?? this.settings.desktopNavigationType) {
+                case DesktopNavigation.POPUP:
+                    await this.userManager?.signoutPopup(args);
                     await this.redirect(redirectUrl);
                     break;
-                case Navigation.REDIRECT:
+                case DesktopNavigation.REDIRECT:
                 default:
                     sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
-                    await this.userManager?.signoutRedirect();
+                    await this.userManager?.signoutRedirect(args);
                     break;
             }
         }
     }
 
-    public async login(redirectUrl = location.href, navigationType?: Navigation): Promise<boolean> {
+    public async login(args?: LoginArgs): Promise<boolean> {
+        const redirectUrl = args?.redirectUrl ?? location.href;
         if (AuthUtils.isNativeMobile()) {
             this.notifyRenew(true);
-            await this.userManager?.signinMobile()
+            await this.userManager?.signinMobile(args)
                 .finally(() => this.notifyRenew(false));
             await this.redirect(redirectUrl);
         } else {
-            switch (navigationType || this.settings.navigationType) {
-                case Navigation.POPUP:
+            switch (args?.desktopNavigationType ?? this.settings.desktopNavigationType) {
+                case DesktopNavigation.POPUP:
                     this.notifyRenew(true);
-                    await this.userManager?.signinPopup()
+                    await this.userManager?.signinPopup(args)
                         .catch((error: Error) => {
                             if (error?.message === 'Attempted to navigate on a disposed window') {
                                 error = new Error('[OIDCAuthManager] Attempted to navigate on a disposed window.');
@@ -204,18 +222,18 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                         .finally(() => this.notifyRenew(false));
                     await this.redirect(redirectUrl);
                     break;
-                case Navigation.REDIRECT:
+                case DesktopNavigation.REDIRECT:
                 default:
                     sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
-                    await this.userManager?.signinRedirect();
+                    await this.userManager?.signinRedirect(args);
                     break;
             }
         }
         return (this._isAuthenticated);
     }
 
-    public async renew(): Promise<void> {
-        return this.signinSilent().catch(error => console.error(error));
+    public async renew(args?: RenewArgs): Promise<void> {
+        return this.signinSilent(args).catch(error => console.error(error));
     }
 
     public getSettings(): OIDCAuthSettings {
@@ -320,8 +338,8 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     private assertNotInInceptionLoop(): void {
         [this.settings.internal?.silent_redirect_uri, this.settings.internal?.popup_redirect_uri]
             .forEach(uri => {
-                const htmlFileName = (new RegExp(/^.*\/(.*).html$/gm).exec(uri || ''))?.[1];
-                const error = new Error(`[OIDCAuthManager] ${uri || 'redirect uri'} was not found.`);
+                const htmlFileName = (new RegExp(/^.*\/(.*).html$/gm).exec(uri ?? ''))?.[1];
+                const error = new Error(`[OIDCAuthManager] ${uri ?? 'redirect uri'} was not found.`);
                 error.stack = undefined;
 
                 if (AuthUtils.isUrlMatching(location.href, uri)) {
@@ -368,7 +386,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
      * 4) at this point, user is logged-out but still inside the app and able to see it
      */
     private postLogoutVerification(redirectUrlAskedAfterLogout: string | null): void {
-        const postLogoutUrl = AuthUtils.stringToURL(redirectUrlAskedAfterLogout || '/');
+        const postLogoutUrl = AuthUtils.stringToURL(redirectUrlAskedAfterLogout ?? '/');
         if (this.settings.loginRequired && (location.origin === postLogoutUrl.origin)) {
             location.reload();
         }
@@ -390,7 +408,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             await this.removeUser();
         }
 
-        const redirectUrl = AuthUtils.stringToURL(url || '/');
+        const redirectUrl = AuthUtils.stringToURL(url ?? '/');
         // History cannot be rewritten when origin is different
         if (location.origin === redirectUrl.origin) {
             history.replaceState(history.state, '', redirectUrl.href);
@@ -408,11 +426,11 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         ]);
     }
 
-    private async signinSilent(): Promise<void> {
+    private async signinSilent(args?: SigninSilentArgs): Promise<void> {
         this.notifyRenew(true);
 
         try {
-            await this.userManager?.signinSilent();
+            await this.userManager?.signinSilent(args);
         } catch (error) {
             await this.removeUser();
             throw error;
@@ -459,8 +477,8 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
      */
     private patchAuth0Logout(): void {
         if (this.settings.authorityUrl.endsWith('auth0.com')) {
-            const { authorityUrl, clientId, navigationType } = this.settings;
-            const returnTo = (navigationType === Navigation.POPUP) ?
+            const { authorityUrl, clientId, desktopNavigationType } = this.settings;
+            const returnTo = (desktopNavigationType === DesktopNavigation.POPUP) ?
                 this.settings.internal?.popup_post_logout_redirect_uri :
                 this.settings.internal?.post_logout_redirect_uri;
             this.settings.internal = merge({}, {

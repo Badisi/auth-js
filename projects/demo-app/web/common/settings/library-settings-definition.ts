@@ -1,4 +1,4 @@
-import { Log, Navigation, OIDCAuthSettings } from '@badisi/auth-js/oidc';
+import { DesktopNavigation, Log, OIDCAuthSettings } from '@badisi/auth-js/oidc';
 import { AuthSettings } from '@badisi/ngx-auth';
 import { LibrarySettingsDefinitionItem } from 'demo-app-common';
 
@@ -27,15 +27,15 @@ export const AUTH_JS_LIBRARY_SETTINGS_DEFINITION: LibrarySettingsDefinitionItem<
     label: 'Extra query params',
     type: 'json'
 }, {
-    name: 'navigationType',
+    name: 'desktopNavigationType',
     label: 'Navigation type',
     type: 'list',
     values: [{
         label: 'REDIRECT',
-        value: Navigation.REDIRECT
+        value: DesktopNavigation.REDIRECT
     }, {
         label: 'POPUP',
-        value: Navigation.POPUP
+        value: DesktopNavigation.POPUP
     }]
 }, {
     name: 'logLevel',

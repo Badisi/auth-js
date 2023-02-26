@@ -5,12 +5,12 @@ import {
 } from 'oidc-client-ts';
 
 import { MobileNavigator } from './mobile/mobile-navigator';
-import { MobileWindowOptions } from './models/mobile-window-options.model';
+import { MobileWindowParams } from './models/mobile-window-params.model';
 import { OIDCAuthSettings } from './models/oidc-auth-settings.model';
 
-export type SigninMobileArgs = MobileWindowOptions & ExtraSigninRequestArgs;
+export type SigninMobileArgs = MobileWindowParams & ExtraSigninRequestArgs;
 
-export type SignoutMobileArgs = MobileWindowOptions & ExtraSignoutRequestArgs;
+export type SignoutMobileArgs = MobileWindowParams & ExtraSignoutRequestArgs;
 
 /**
  * Extended UserManager class that adds helpers and mobile capabilities
@@ -50,8 +50,8 @@ export class UserManager extends OidcClientUserManager {
 
     public async signoutMobile(args: SignoutMobileArgs = {}): Promise<void> {
         const logger = this._logger.create('signout');
-        const { name, ...requestArgs } = args;
-        const handle = this._mobileNavigator.prepare({ name }, this.settings.post_logout_redirect_uri as string);
+        const { mobileWindowName, ...requestArgs } = args;
+        const handle = this._mobileNavigator.prepare({ mobileWindowName }, this.settings.post_logout_redirect_uri as string);
 
         await this._signout({
             request_type: 'so:m',
@@ -64,8 +64,8 @@ export class UserManager extends OidcClientUserManager {
 
     public async signinMobile(args: SigninMobileArgs = {}): Promise<void> {
         const logger = this._logger.create('signin');
-        const { name, ...requestArgs } = args;
-        const handle = this._mobileNavigator.prepare({ name }, this.settings.redirect_uri);
+        const { mobileWindowName, ...requestArgs } = args;
+        const handle = this._mobileNavigator.prepare({ mobileWindowName }, this.settings.redirect_uri);
 
         const user = await this._signin({
             request_type: 'si:m',
