@@ -29,7 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
                     if (this.loginOn401 && (error.status === 401)) {
                         void this.authService.login();
                     }
-                    return throwError(error);
+                    return throwError(() => error);
                 })
             );
     }
