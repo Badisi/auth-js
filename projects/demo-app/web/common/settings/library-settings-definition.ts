@@ -28,7 +28,7 @@ export const AUTH_JS_LIBRARY_SETTINGS_DEFINITION: LibrarySettingsDefinitionItem<
     type: 'json'
 }, {
     name: 'desktopNavigationType',
-    label: 'Navigation type',
+    label: 'Desktop navigation type',
     type: 'list',
     values: [{
         label: 'REDIRECT',
