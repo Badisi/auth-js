@@ -1,6 +1,7 @@
 import { Log, UserManagerSettings } from 'oidc-client-ts';
 
 import { AuthSettings as CoreAuthSettings } from '../../core';
+import { MobileWindowParams } from './mobile-window-params.model';
 
 export enum DesktopNavigation {
     REDIRECT = 'REDIRECT',
@@ -17,5 +18,5 @@ export interface OIDCAuthSettings extends CoreAuthSettings, Pick<UserManagerSett
     retrieveUserSession?: boolean;
     desktopNavigationType?: DesktopNavigation;
     logLevel?: Log;
-    internal?: Partial<Omit<UserManagerSettings, UsefulSettings | 'authority' | 'client_id'>>;
+    internal?: Partial<Omit<UserManagerSettings, UsefulSettings | 'authority' | 'client_id'>> & MobileWindowParams;
 }

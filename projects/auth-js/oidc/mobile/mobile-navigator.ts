@@ -1,4 +1,4 @@
-import { Logger, UserManagerSettingsStore } from 'oidc-client-ts';
+import { Logger } from 'oidc-client-ts';
 
 import { MobileWindowParams } from '../models/mobile-window-params.model';
 import { MobileWindow } from './mobile-window';
@@ -6,15 +6,8 @@ import { MobileWindow } from './mobile-window';
 export class MobileNavigator {
     private readonly _logger = new Logger('MobileNavigator');
 
-    constructor(
-        public settings: UserManagerSettingsStore
-    ) {
-        // TODO: manage settings
-    }
-
-    public prepare(params: MobileWindowParams, redirectUrl: string): MobileWindow {
-        // TODO: manage params
+    public prepare(redirectUrl: string, params: MobileWindowParams): MobileWindow {
         this._logger.create('prepare');
-        return new MobileWindow(params, redirectUrl);
+        return new MobileWindow(redirectUrl, params);
     }
 }

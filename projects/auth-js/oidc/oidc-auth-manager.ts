@@ -13,7 +13,7 @@ import { IdToken } from './models/id-token.model';
 import { MobileWindowParams } from './models/mobile-window-params.model';
 import { DesktopNavigation, OIDCAuthSettings } from './models/oidc-auth-settings.model';
 import { UserSession } from './models/user-session.model';
-import { UserManager } from './user-manager';
+import { OidcUserManager } from './oidc-user-manager';
 
 const REDIRECT_URL_KEY = 'auth-js:oidc_manager:redirect_url';
 
@@ -31,7 +31,8 @@ const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> 
         post_logout_redirect_uri: '?oidc-callback=logout',
         popup_redirect_uri: 'oidc/callback/popup_redirect.html',
         popup_post_logout_redirect_uri: 'oidc/callback/popup_redirect.html',
-        silent_redirect_uri: 'oidc/callback/silent_redirect.html'
+        silent_redirect_uri: 'oidc/callback/silent_redirect.html',
+        mobileWindowPresentationStyle: 'popover'
     }
 };
 
@@ -64,7 +65,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     private _isAuthenticated = false;
     private _isRenewing = false;
 
-    private userManager?: UserManager;
+    private userManager?: OidcUserManager;
     private settings = DEFAULT_SETTINGS as OIDCAuthSettings;
 
     private _user?: User | null;
@@ -117,7 +118,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         this.patchAuth0Logout();
 
         // Configure the user manager
-        this.userManager = new UserManager(this.settings);
+        this.userManager = new OidcUserManager(this.settings);
 
         // Listen for events
         this.userManagerSubs.push(

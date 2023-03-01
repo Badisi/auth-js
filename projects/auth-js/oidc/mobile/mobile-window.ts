@@ -24,8 +24,8 @@ export class MobileWindow implements IWindow {
     private _reject?: (reason?: unknown) => void;
 
     constructor(
-        public options: MobileWindowParams,
-        public redirectUrl: string
+        public redirectUrl: string,
+        public params: MobileWindowParams
     ) {
         if (!AuthUtils.isCapacitor() && !AuthUtils.isCordova()) {
             let message = '[@badisi/auth-js] Required core dependency not found.\n\n';
@@ -39,8 +39,7 @@ export class MobileWindow implements IWindow {
             console.error(message);
         }
 
-        // TODO:
-        /* if (!BROWSER_TAB && CAPACITOR_BROWSER) {
+        /* TODO: if (!BROWSER_TAB && CAPACITOR_BROWSER) {
             let message = '[@badisi/auth-js] This application is currently using a non recommended browser plugin.\n\n';
             message += 'ⓘ Please follow the recommended guide and use `@badisi/capacitor-browsertab` instead.';
             console.warn(message);
@@ -112,7 +111,10 @@ export class MobileWindow implements IWindow {
 
         await CAPACITOR_BROWSER?.open({
             url: params.url,
-            presentationStyle: 'popover'
+            toolbarColor: this.params.mobileWindowToolbarColor,
+            presentationStyle: this.params.mobileWindowPresentationStyle,
+            width: this.params.mobileWindowWidth,
+            height: this.params.mobileWindowWidth
         });
     }
 

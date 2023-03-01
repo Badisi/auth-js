@@ -11,6 +11,7 @@ export type { UserProfile } from 'oidc-client-ts';
 export type { Optional, AuthSubscriber, AuthSubscription } from '../core';
 export type { AccessToken } from './models/access-token.model';
 export type { IdToken } from './models/id-token.model';
+export type { MobileWindowParams } from './models/mobile-window-params.model';
 
 export * from '../core';
 export * from './models/oidc-auth-settings.model';

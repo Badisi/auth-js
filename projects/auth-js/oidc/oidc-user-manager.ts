@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention, camelcase */
 
 import {
-    ExtraSigninRequestArgs, ExtraSignoutRequestArgs, UserManager as OidcClientUserManager, UserManagerSettings
+    ExtraSigninRequestArgs, ExtraSignoutRequestArgs, UserManager, UserManagerSettings
 } from 'oidc-client-ts';
 
 import { MobileNavigator } from './mobile/mobile-navigator';
@@ -16,7 +16,7 @@ export type SignoutMobileArgs = MobileWindowParams & ExtraSignoutRequestArgs;
  * Extended UserManager class that adds helpers and mobile capabilities
  * (ex: signinMobile, signoutMobile, MobileNavigator, MobileWindow)
  */
-export class UserManager extends OidcClientUserManager {
+export class OidcUserManager extends UserManager {
     private _mobileNavigator!: MobileNavigator;
 
     constructor(
@@ -31,7 +31,7 @@ export class UserManager extends OidcClientUserManager {
             ...libSettings.internal
         } as UserManagerSettings);
 
-        this._mobileNavigator = new MobileNavigator(this.settings);
+        this._mobileNavigator = new MobileNavigator();
     }
 
     /* public async readRequestTypeFromState(url = location.href): Promise<string | null> {
@@ -50,8 +50,23 @@ export class UserManager extends OidcClientUserManager {
 
     public async signoutMobile(args: SignoutMobileArgs = {}): Promise<void> {
         const logger = this._logger.create('signout');
-        const { mobileWindowName, ...requestArgs } = args;
-        const handle = this._mobileNavigator.prepare({ mobileWindowName }, this.settings.post_logout_redirect_uri as string);
+
+        const {
+            mobileWindowToolbarColor,
+            mobileWindowPresentationStyle,
+            mobileWindowWidth,
+            mobileWindowHeight,
+            ...requestArgs
+        } = args;
+
+        const params = {
+            mobileWindowToolbarColor: mobileWindowToolbarColor ?? this.libSettings.internal?.mobileWindowToolbarColor,
+            mobileWindowPresentationStyle: mobileWindowPresentationStyle ?? this.libSettings.internal?.mobileWindowPresentationStyle,
+            mobileWindowWidth: mobileWindowWidth ?? this.libSettings.internal?.mobileWindowWidth,
+            mobileWindowHeight: mobileWindowHeight ?? this.libSettings.internal?.mobileWindowHeight
+        };
+
+        const handle = this._mobileNavigator.prepare(this.settings.post_logout_redirect_uri as string, params);
 
         await this._signout({
             request_type: 'so:m',
@@ -64,8 +79,23 @@ export class UserManager extends OidcClientUserManager {
 
     public async signinMobile(args: SigninMobileArgs = {}): Promise<void> {
         const logger = this._logger.create('signin');
-        const { mobileWindowName, ...requestArgs } = args;
-        const handle = this._mobileNavigator.prepare({ mobileWindowName }, this.settings.redirect_uri);
+
+        const {
+            mobileWindowToolbarColor,
+            mobileWindowPresentationStyle,
+            mobileWindowWidth,
+            mobileWindowHeight,
+            ...requestArgs
+        } = args;
+
+        const params = {
+            mobileWindowToolbarColor: mobileWindowToolbarColor ?? this.libSettings.internal?.mobileWindowToolbarColor,
+            mobileWindowPresentationStyle: mobileWindowPresentationStyle ?? this.libSettings.internal?.mobileWindowPresentationStyle,
+            mobileWindowWidth: mobileWindowWidth ?? this.libSettings.internal?.mobileWindowWidth,
+            mobileWindowHeight: mobileWindowHeight ?? this.libSettings.internal?.mobileWindowHeight
+        };
+
+        const handle = this._mobileNavigator.prepare(this.settings.redirect_uri, params);
 
         const user = await this._signin({
             request_type: 'si:m',
