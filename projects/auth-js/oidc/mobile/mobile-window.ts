@@ -39,11 +39,12 @@ export class MobileWindow implements IWindow {
             console.error(message);
         }
 
-        if (!BROWSER_TAB && CAPACITOR_BROWSER) {
+        // TODO:
+        /* if (!BROWSER_TAB && CAPACITOR_BROWSER) {
             let message = '[@badisi/auth-js] This application is currently using a non recommended browser plugin.\n\n';
             message += 'ⓘ Please follow the recommended guide and use `@badisi/capacitor-browsertab` instead.';
             console.warn(message);
-        }
+        }*/
 
         if (BROWSER_TAB) {
             this._logger.debug('Using `@badisi/capacitor-browsertab` implementation');
