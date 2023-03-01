@@ -4,7 +4,9 @@
     "license": "GPL-3.0-only",
     "type": "module",
     "scripts": {
-        "start": "wdio run wdio.config.ts --debug=true --headless=false --watch=true"
+        "start": "wdio run wdio.config.ts --watch=false --debug=true --headless=true",
+        "watch": "wdio run wdio.config.ts --watch=true --debug=true --headless=false",
+        "ci": "wdio run wdio.config.ts --watch=false --debug=false --headless=true"
     },
     "devDependencies": {
         "@wdio/cli": "^8.3.11",

@@ -104,18 +104,17 @@ describe('Desktop - Auth Code + PKCE', () => {
             await browser.pause(1000);
         });
 
-        it('should be injected in matching requests', async () => {
-            const urls = [
-                'http://localhost:4200/api/users',
-                '/api/cars'
-            ];
-            for (const url of urls) {
+        [
+            'http://localhost:4200/api/users',
+            '/api/cars'
+        ].forEach(url => {
+            it(`should be injected in matching requests: ${url}`, async () => {
                 await demoPage.api(url);
                 await expectRequest('GET', url, 404);
                 const apiRequest = (await browser.getRequests()).find(req => (req.url === url));
-                expect(Object.keys(apiRequest.headers)).withContext(url).toContain('authorization');
-                expect(apiRequest.headers['authorization']).withContext(url).toContain('Bearer ');
-            }
+                expect(Object.keys(apiRequest.headers)).toContain('authorization');
+                expect(apiRequest.headers['authorization']).toContain('Bearer ');
+            });
         });
 
         /* it('should not be injected in non matching requests', async () => {
@@ -136,7 +135,7 @@ describe('Desktop - Auth Code + PKCE', () => {
             await demoPage.api(url, 'my-custom-header: custom-value; my-other-custom-header: 12');
             await expectRequest('GET', url, 404);
             const apiRequest = (await browser.getRequests()).find(req => (req.url === url));
-            expect(apiRequest.headers).toEqual(jasmine.objectContaining({
+            expect(apiRequest.headers).toEqual(expect.objectContaining({
                 'my-custom-header': 'custom-value',
                 'my-other-custom-header': '12'
             }));

@@ -1,14 +1,18 @@
 {
     "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
+        "moduleResolution": "node",
+        "module": "ESNext",
+        "target": "es2022",
+        "lib": [
+            "es2020",
+            "dom"
+        ],
         "types": [
             "node",
-            "webdriverio/async",
+            "jest",
             "wdio-intercept-service",
-            "expect-webdriverio/jasmine",
-            "@wdio/local-runner",
-            "@wdio/jasmine-framework"
+            "@wdio/globals/types",
+            "expect-webdriverio/jest"
         ]
     }
 }
