@@ -37,10 +37,10 @@
     "dependencies": {
         "jwt-decode": "^3.1.2",
         "lodash-es": "^4.17.21",
-        "oidc-client-ts": "2.2.1"
+        "oidc-client-ts": "2.2.2"
     },
     "devDependencies": {
-        "@types/lodash-es": "^4.17.6",
+        "@types/lodash-es": "^4.17.7",
         "@types/cordova": "^11.0.0"
     },
     "publishConfig": {
