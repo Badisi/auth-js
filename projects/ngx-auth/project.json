@@ -38,7 +38,8 @@
                 "dist/ngx-auth"
             ],
             "options": {
-                "project": "projects/ngx-auth/ng-package.json"
+                "project": "projects/ngx-auth/ng-package.json",
+                "updateBuildableProjectDepsInPackageJson": false
             },
             "configurations": {
                 "production": {
