@@ -11,6 +11,9 @@ const CAPACITOR_APP = window.Capacitor?.Plugins?.App;
 const CAPACITOR_BROWSER = window.Capacitor?.Plugins?.Browser;
 const BROWSER_TAB = undefined; // cordova?.plugins?.browsertab;
 
+/**
+ * @internal
+ */
 export class MobileWindow implements IWindow {
     private readonly _logger = new Logger('MobileWindow');
 

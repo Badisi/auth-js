@@ -11,6 +11,9 @@ const CAPACITOR_PREFERENCES = window.Capacitor?.Plugins?.Preferences;
 // most secured
 const CAPACITOR_SECURE_STORAGE = window.Capacitor?.Plugins?.SecureStoragePlugin;
 
+/**
+ * @internal
+ */
 export class MobileStorage implements AsyncStorage {
     private readonly _logger = new Logger('MobileStorage');
 
