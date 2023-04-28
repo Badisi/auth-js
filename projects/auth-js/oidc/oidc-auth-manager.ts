@@ -145,16 +145,17 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             const signinSilent = async (): Promise<void> => {
                 await this.runSyncOrAsync(() => this.signinSilent()
                     .catch(async (signinSilentError: ErrorResponse) => {
-                        if (this.settings.loginRequired) {
-                            const { error, message } = signinSilentError;
-                            // ex: login_required, consent_required, interaction_required, account_selection_required
-                            if (error?.includes('_required') || message?.includes('_required')) {
-                                await this.login();
-                                return;
+                        const { error, message } = signinSilentError;
+                        // Ex: login_required, consent_required, interaction_required, account_selection_required
+                        if (this.settings.loginRequired && (error?.includes('_required') || message?.includes('_required'))) {
+                            await this.login();
+                        } else {
+                            console.error(signinSilentError);
+                            this.authenticatedSubs.notify(false);
+                            if (this.settings.loginRequired) {
+                                throw signinSilentError;
                             }
                         }
-                        console.error(signinSilentError);
-                        this.authenticatedSubs.notify(false);
                     }));
             };
 
