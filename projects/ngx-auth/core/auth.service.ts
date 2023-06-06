@@ -78,51 +78,87 @@ export class AuthService implements OnDestroy {
 
     // --- OIDCAuthManager ---
 
-    public login(args?: LoginArgs): Promise<boolean> {
+    /**
+     * @see {@link OIDCAuthManager.login}
+     */
+    public async login(args?: LoginArgs): Promise<boolean> {
         return this.manager.login(args);
     }
 
-    public logout(args?: LogoutArgs): Promise<void> {
+    /**
+     * @see {@link OIDCAuthManager.logout}
+     */
+    public async logout(args?: LogoutArgs): Promise<void> {
         return this.manager.logout(args);
     }
 
-    public renew(args?: RenewArgs): Promise<void> {
+    /**
+     * @see {@link OIDCAuthManager.renew}
+     */
+    public async renew(args?: RenewArgs): Promise<void> {
         return this.manager.renew(args);
     }
 
+    /**
+     * @see {@link OIDCAuthManager.getSettings}
+     */
     public getSettings(): AuthSettings {
         return this.manager.getSettings() as AuthSettings;
     }
 
+    /**
+     * @see {@link OIDCAuthManager.isRenewing}
+     */
     public isRenewing(): boolean {
         return this.manager.isRenewing();
     }
 
-    public isAuthenticated(): Promise<boolean> {
+    /**
+     * @see {@link OIDCAuthManager.isAuthenticated}
+     */
+    public async isAuthenticated(): Promise<boolean> {
         return this.manager.isAuthenticated();
     }
 
-    public getUserProfile(): Promise<UserProfile | undefined> {
+    /**
+     * @see {@link OIDCAuthManager.getUserProfile}
+     */
+    public async getUserProfile(): Promise<UserProfile | undefined> {
         return this.manager.getUserProfile();
     }
 
-    public getUserSession(): Promise<UserSession | undefined> {
+    /**
+     * @see {@link OIDCAuthManager.getUserSession}
+     */
+    public async getUserSession(): Promise<UserSession | undefined> {
         return this.manager.getUserSession();
     }
 
-    public getIdToken(): Promise<string | undefined> {
+    /**
+     * @see {@link OIDCAuthManager.getIdToken}
+     */
+    public async getIdToken(): Promise<string | undefined> {
         return this.manager.getIdToken();
     }
 
-    public getIdTokenDecoded(): Promise<IdToken | string | undefined> {
+    /**
+     * @see {@link OIDCAuthManager.getIdTokenDecoded}
+     */
+    public async getIdTokenDecoded(): Promise<IdToken | string | undefined> {
         return this.manager.getIdTokenDecoded();
     }
 
-    public getAccessToken(): Promise<string | undefined> {
+    /**
+     * @see {@link OIDCAuthManager.getAccessToken}
+     */
+    public async getAccessToken(): Promise<string | undefined> {
         return this.manager.getAccessToken();
     }
 
-    public getAccessTokenDecoded(): Promise<AccessToken | string | undefined> {
+    /**
+     * @see {@link OIDCAuthManager.getAccessTokenDecoded}
+     */
+    public async getAccessTokenDecoded(): Promise<AccessToken | string | undefined> {
         return this.manager.getAccessTokenDecoded();
     }
 

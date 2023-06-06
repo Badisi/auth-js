@@ -12,7 +12,7 @@ export type { AuthSettings } from './models/auth-settings.model';
 export type { AuthSubscriber } from './models/auth-subscriber.model';
 export type { AuthSubscription } from './models/auth-subscription.model';
 
-export * from './auth-subscriptions';
-export * from './auth-manager';
-export * from './auth-utils';
-export * from './main';
+export { AuthManager } from './auth-manager';
+export { AuthSubscriptions } from './auth-subscriptions';
+export { AuthUtils } from './auth-utils';
+export { createAuthManager } from './main';

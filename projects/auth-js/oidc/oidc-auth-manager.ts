@@ -2,16 +2,16 @@
 
 import { merge } from 'lodash-es';
 import {
-    ErrorResponse, ExtraSigninRequestArgs, ExtraSignoutRequestArgs, IFrameWindowParams, InMemoryWebStorage, Log,
-    PopupWindowParams, RedirectParams, SigninSilentArgs, User, UserProfile, WebStorageStateStore
+    ErrorResponse, InMemoryWebStorage, Log, SigninSilentArgs, User, UserProfile, WebStorageStateStore
 } from 'oidc-client-ts';
 
 import { AuthManager, AuthSubscriber, AuthSubscription, AuthSubscriptions, AuthUtils, Optional } from '../core';
 import { MobileStorage } from './mobile/mobile-storage';
 import { AccessToken } from './models/access-token.model';
+import { LoginArgs, LogoutArgs, RenewArgs } from './models/args.model';
+import { DesktopNavigation } from './models/desktop-navigation.enum';
 import { IdToken } from './models/id-token.model';
-import { MobileWindowParams } from './models/mobile-window-params.model';
-import { DesktopNavigation, OIDCAuthSettings } from './models/oidc-auth-settings.model';
+import { OIDCAuthSettings } from './models/oidc-auth-settings.model';
 import { UserSession } from './models/user-session.model';
 import { OidcUserManager } from './oidc-user-manager';
 
@@ -35,18 +35,6 @@ const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> 
         mobileWindowPresentationStyle: 'popover'
     }
 };
-
-export type LoginArgs = MobileWindowParams & PopupWindowParams & RedirectParams & Omit<ExtraSigninRequestArgs, 'redirect_uri'> & {
-    redirectUrl?: string;
-    desktopNavigationType?: DesktopNavigation;
-};
-
-export type LogoutArgs = MobileWindowParams & PopupWindowParams & RedirectParams & Omit<ExtraSignoutRequestArgs, 'post_logout_redirect_uri'> & {
-    redirectUrl?: string;
-    desktopNavigationType?: DesktopNavigation;
-};
-
-export type RenewArgs = IFrameWindowParams & ExtraSigninRequestArgs;
 
 export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     private idTokenSubs: AuthSubscriptions<[string | undefined]> = new AuthSubscriptions();

@@ -8,13 +8,16 @@
 
 export { Log } from 'oidc-client-ts';
 export type { UserProfile } from 'oidc-client-ts';
+
 export type { Optional, AuthSubscriber, AuthSubscription } from '../core';
 export type { AccessToken } from './models/access-token.model';
 export type { IdToken } from './models/id-token.model';
+export type { OIDCAuthSettings } from './models/oidc-auth-settings.model';
 export type { MobileWindowParams } from './models/mobile-window-params.model';
+export type { LoginArgs, LogoutArgs, RenewArgs, SigninMobileArgs, SignoutMobileArgs } from './models/args.model';
 
-export * from '../core';
-export * from './models/oidc-auth-settings.model';
-export * from './models/user-session.model';
-export * from './oidc-auth-manager';
-export * from './main';
+export { AuthManager, AuthSubscriptions, AuthUtils } from '../core';
+export { DesktopNavigation } from './models/desktop-navigation.enum';
+export { UserSession } from './models/user-session.model';
+export { OIDCAuthManager } from './oidc-auth-manager';
+export { initOidc } from './main';
