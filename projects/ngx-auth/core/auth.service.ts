@@ -146,7 +146,7 @@ export class AuthService implements OnDestroy {
                          * ex: transform 'http://domain/base/private' to '/private'
                          */
                         const absUrl = value.href.replace(AuthUtils.getBaseUrl(), '');
-                        void this.router.navigateByUrl(`${absUrl}${value.search}`);
+                        void this.router.navigateByUrl(absUrl);
                     });
                 }
             })
