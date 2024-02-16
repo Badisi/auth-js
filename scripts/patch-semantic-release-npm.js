@@ -11,8 +11,8 @@ if (existsSync(filePath)) {
     let data = readFileSync(filePath, { encoding: 'utf8' });
 
     if (!data.match(/cwd: basePath/gm)) {
-        data = data.replace("'publish', basePath,", "'publish',");
-        data = data.replace("cwd, env,", "cwd: basePath, env,");
+        data = data.replace('\'publish\', basePath,', '\'publish\',');
+        data = data.replace('cwd, env,', 'cwd: basePath, env,');
         writeFileSync(filePath, data, { encoding: 'utf8' });
         console.log(green('success'), '@semantic-release/npm patched.');
     } else {
