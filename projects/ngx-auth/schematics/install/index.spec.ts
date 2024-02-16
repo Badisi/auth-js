@@ -46,7 +46,7 @@ const getCleanAppTree = async (): Promise<UnitTestTree> => {
         .toPromise();
 };
 
-const occurrences = (str: string, pattern: string): number => (str.match(new RegExp(pattern, 'g')) || []).length;
+const occurrences = (str: string, pattern: string): number => (str.match(new RegExp(pattern, 'g')) ?? []).length;
 
 interface Log {
     name: string;

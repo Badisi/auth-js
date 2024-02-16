@@ -50,7 +50,7 @@
             "defaultConfiguration": "production"
         },
         "serve": {
-            "executor": "@nrwl/web:dev-server",
+            "executor": "@nrwl/webpack:dev-server",
             "options": {
                 "host": "0.0.0.0",
                 "buildTarget": "demo-app-auth-js:build"

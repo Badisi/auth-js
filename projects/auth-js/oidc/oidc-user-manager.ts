@@ -62,7 +62,7 @@ export class OidcUserManager extends UserManager {
             mobileWindowHeight: mobileWindowHeight ?? this.libSettings.internal?.mobileWindowHeight
         };
 
-        const handle = this._mobileNavigator.prepare(this.settings.post_logout_redirect_uri as string, params);
+        const handle = this._mobileNavigator.prepare(this.settings.post_logout_redirect_uri!, params);
 
         await this._signout({
             request_type: 'so:m',

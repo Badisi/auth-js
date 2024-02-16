@@ -37,13 +37,13 @@ const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> 
 };
 
 export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
-    private idTokenSubs: AuthSubscriptions<[string | undefined]> = new AuthSubscriptions();
-    private accessTokenSubs: AuthSubscriptions<[string | undefined]> = new AuthSubscriptions();
-    private userProfileSubs: AuthSubscriptions<[UserProfile | undefined]> = new AuthSubscriptions();
-    private userSessionSubs: AuthSubscriptions<[UserSession | undefined]> = new AuthSubscriptions();
-    private authenticatedSubs: AuthSubscriptions<[boolean]> = new AuthSubscriptions();
-    private renewingSubs: AuthSubscriptions<[boolean]> = new AuthSubscriptions();
-    private redirectSubs: AuthSubscriptions<[URL]> = new AuthSubscriptions();
+    private idTokenSubs = new AuthSubscriptions<[string | undefined]>();
+    private accessTokenSubs = new AuthSubscriptions<[string | undefined]>();
+    private userProfileSubs = new AuthSubscriptions<[UserProfile | undefined]>();
+    private userSessionSubs = new AuthSubscriptions<[UserSession | undefined]>();
+    private authenticatedSubs = new AuthSubscriptions<[boolean]>();
+    private renewingSubs = new AuthSubscriptions<[boolean]>();
+    private redirectSubs = new AuthSubscriptions<[URL]>();
     private userManagerSubs: (() => void)[] = [];
 
     private _idToken?: string;
