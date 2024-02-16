@@ -31,7 +31,7 @@
         "publish": "multi-semantic-release --ignore-private-packages --yes",
         "publish-dry-run": "GITHUB_TOKEN=XXX NPM_TOKEN=XXX npm run publish -- --no-ci",
         "postinstall": "node ./scripts/patch-semantic-release-npm.js",
-        "prepare": "husky"
+        "prepare": "husky || true"
     },
     "workspaces": [
         "projects/auth-js",
