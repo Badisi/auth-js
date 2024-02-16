@@ -5,6 +5,7 @@ on:
 
 env:
   NODE: 18
+  HUSKY: 0
 
 jobs:
   ci_tests:
