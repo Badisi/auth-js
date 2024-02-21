@@ -54,7 +54,7 @@ jobs:
             node_modules
 
       - name: Install dependencies
-
+        if: steps.cache-step.outputs.cache-hit != 'true'
         run: npm clean-install --engine-strict
 
       - name: Lint demo-app
