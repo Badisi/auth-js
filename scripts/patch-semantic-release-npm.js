@@ -6,19 +6,23 @@ const { readFileSync, writeFileSync, existsSync } = require('fs-extra');
 const { green, red, gray } = require('@colors/colors/safe');
 const { dirname, join } = require('path');
 
-const filePath = join(dirname(require.resolve('@semantic-release/npm')), '/lib/publish.js');
-if (existsSync(filePath)) {
-    let data = readFileSync(filePath, { encoding: 'utf8' });
+try {
+    const filePath = join(dirname(require.resolve('@semantic-release/npm')), '/lib/publish.js');
+    if (existsSync(filePath)) {
+        let data = readFileSync(filePath, { encoding: 'utf8' });
 
-    if (!data.match(/cwd: basePath/gm)) {
-        data = data.replace('\'publish\', basePath,', '\'publish\',');
-        data = data.replace('cwd, env,', 'cwd: basePath, env,');
-        writeFileSync(filePath, data, { encoding: 'utf8' });
-        console.log(green('success'), '@semantic-release/npm patched.');
+        if (!data.match(/cwd: basePath/gm)) {
+            data = data.replace('\'publish\', basePath,', '\'publish\',');
+            data = data.replace('cwd, env,', 'cwd: basePath, env,');
+            writeFileSync(filePath, data, { encoding: 'utf8' });
+            console.log(green('success'), '@semantic-release/npm patched.');
+        } else {
+            console.log(green('success'), '@semantic-release/npm already patched.');
+        }
     } else {
-        console.log(green('success'), '@semantic-release/npm already patched.');
+        console.error(red('error'), 'cannot patch @semantic-release/npm.');
+        console.error(gray(`"${filePath}" not found`));
     }
-} else {
-    console.error(red('error'), 'cannot patch @semantic-release/npm.');
-    console.error(gray(`"${filePath}" not found`));
+} catch (error) {
+    // Swallow exception in case @semantic-release/npm was not found
 }
