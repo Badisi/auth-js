@@ -1,11 +1,18 @@
 :host {
-
-   .card.routes {
+    .card.routes {
         margin-top: 20px;
 
         .route {
             display: flex;
             align-items: center;
+
+            &.query-params {
+                margin: 10px 0 10px 24px;
+
+                input {
+                    width: 500px;
+                }
+            }
 
             button {
                 padding: 2px 10px;
@@ -35,6 +42,23 @@
     @media only screen and (max-width: 600px) {
         .card.routes {
             margin-top: 12px;
+
+            .route {
+                &.query-params {
+                    margin: 14px 0 10px 10px;
+
+                    .info {
+                        width: 100%;
+                        input {
+                            width: 70%;
+                        }
+                    }
+                }
+
+                #roles-input {
+                    width: 90%;
+                }
+            }
         }
     }
 }

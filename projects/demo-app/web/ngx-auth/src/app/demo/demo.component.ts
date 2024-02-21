@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
+import { AfterViewInit, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Params, Router } from '@angular/router';
 import { AuthService } from '@badisi/ngx-auth';
 import { DemoAppPlaygroundElement, globalStyle } from 'demo-app-common';
 
@@ -11,17 +11,37 @@ import { DemoAppPlaygroundElement, globalStyle } from 'demo-app-common';
     styles: [globalStyle],
     encapsulation: ViewEncapsulation.ShadowDom
 })
-export class DemoComponent {
+export class DemoComponent implements AfterViewInit {
     @ViewChild('demoAppPlayground')
-    private demoAppPlaygroundEl!: ElementRef;
+    private demoAppPlaygroundEl!: ElementRef<DemoAppPlaygroundElement>;
 
-    public roles = window.appSettings.getCurrentUserSettings().otherSettings?.['roles'];
+    @ViewChild('queryParamsInput')
+    private queryParamsInputEl!: ElementRef<HTMLInputElement>;
+
+    public roles?: string;
+    public queryParams?: Params;
 
     constructor(
         public router: Router,
         public authService: AuthService,
         private httpClient: HttpClient
     ) { }
+
+    public ngAfterViewInit(): void {
+        setTimeout(() => {
+            const settings = window.appSettings.getCurrentUserSettings().otherSettings;
+            this.roles = settings?.['roles'] as string;
+            this.queryParams = settings?.['queryParams'] as Params;
+            let queryParamsString = '';
+            Object.entries(this.queryParams).forEach(([key, value], index) => {
+                if (index > 0) {
+                    queryParamsString += '&';
+                }
+                queryParamsString += `${key}=${value}`;
+            });
+            this.queryParamsInputEl.nativeElement.value = queryParamsString;
+        });
+    }
 
     // --- HANDLER(s) ---
 
@@ -30,8 +50,6 @@ export class DemoComponent {
         const { url, headers } = (event as CustomEvent).detail as { url: string; headers: string };
 
         if (url) {
-            const demoPlayground = this.demoAppPlaygroundEl?.nativeElement as DemoAppPlaygroundElement;
-
             let httpHeaders = new HttpHeaders();
             headers?.split(';').forEach(header => {
                 if (header) {
@@ -40,6 +58,7 @@ export class DemoComponent {
                 }
             });
 
+            const demoPlayground = this.demoAppPlaygroundEl?.nativeElement;
             this.httpClient
                 .get<unknown>(url, headers ? { headers: httpHeaders } : {})
                 .subscribe({
@@ -50,7 +69,19 @@ export class DemoComponent {
     }
 
     public saveSettings(): void {
-        const demoPlayground = this.demoAppPlaygroundEl?.nativeElement as DemoAppPlaygroundElement;
-        demoPlayground.saveSettings({ roles: this.roles });
+        const demoPlayground = this.demoAppPlaygroundEl?.nativeElement;
+        demoPlayground.saveSettings({ roles: this.roles, queryParams: this.queryParams });
+    }
+
+    public onQueryParamsInputChange(value: string): void {
+        const params: Params = {};
+        value?.split('&').forEach(attr => {
+            const vals = attr.split('=');
+            if (vals.length === 2) {
+                params[vals[0]] = vals[1];
+            }
+        });
+        this.queryParams = params;
+        this.saveSettings();
     }
 }

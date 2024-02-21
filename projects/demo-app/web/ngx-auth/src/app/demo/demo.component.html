@@ -12,24 +12,36 @@
             <div class="card-title">Routes access</div>
             <div class="card-actions column">
                 <div class="route">
-                    <button routerLink="/">HOME</button>
+                    <button routerLink="/"
+                            [queryParams]="queryParams">HOME</button>
                     <div class="info">Home page</div>
                 </div>
                 <div class="route">
-                    <button routerLink="/public">PUBLIC</button>
+                    <button routerLink="/public"
+                            [queryParams]="queryParams">PUBLIC</button>
                     <div class="info">Public content (no login required)</div>
                 </div>
                 <div class="route">
-                    <button routerLink="/private">PRIVATE</button>
+                    <button routerLink="/private"
+                            [queryParams]="queryParams">PRIVATE</button>
                     <div class="info">Private content (login required)</div>
                 </div>
                 <div class="route">
-                    <button routerLink="/protected">PROTECTED</button>
+                    <button routerLink="/protected"
+                            [queryParams]="queryParams">PROTECTED</button>
                     <div class="info">Protected content (login required + role(s):
                         <input id="roles-input"
                                (input)="saveSettings()"
                                (keydown.enter)="router.navigateByUrl('/protected')"
                                [(ngModel)]="roles" />)
+                    </div>
+                </div>
+                <div class="route query-params">
+                    <div class="info">
+                        use query params:
+                        <input #queryParamsInput
+                               placeholder="param1=one&param2=two"
+                               (input)="onQueryParamsInputChange(queryParamsInput.value)" />
                     </div>
                 </div>
             </div>

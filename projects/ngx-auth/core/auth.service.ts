@@ -181,8 +181,8 @@ export class AuthService implements OnDestroy {
                          * So we need to substract the base url from the received url.
                          * ex: transform 'http://domain/base/private' to '/private'
                          */
-                        const absUrl = value.href.replace(AuthUtils.getBaseUrl(), '');
-                        void this.router.navigateByUrl(absUrl);
+                        const absoluteUrl = value.href.replace(AuthUtils.getBaseUrl(), '');
+                        void this.router.navigateByUrl(absoluteUrl);
                     });
                 }
             })
