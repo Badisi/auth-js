@@ -138,7 +138,12 @@ export const globalStyle = `
         }
 
         :host .card {
-            border: 0;
+            &:first-of-type {
+                border-top: 0;
+            }
+            border-left: 0;
+            border-right: 0;
+            border-radius: 0;
             margin: 0;
             margin-bottom: 6px;
         }
