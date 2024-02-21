@@ -1,4 +1,4 @@
-import { jwtDecode } from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 
 export class AuthUtils {
     public static isCordova = (): boolean => !!(window.cordova || window.phonegap || window.PhoneGap);
