@@ -11,10 +11,11 @@
                 "dist/ngx-auth"
             ],
             "options": {
+                "cwd": "projects/ngx-auth",
                 "commands": [
-                    "tsc -p projects/ngx-auth/tsconfig.schematics.json",
-                    "cpy schematics/*/schema.json dist/ngx-auth/schematics --cwd=./projects/ngx-auth/",
-                    "cpy projects/ngx-auth/schematics/collection.json dist/ngx-auth/schematics --flat"
+                    "tsc -p tsconfig.schematics.json",
+                    "cpy schematics/*/schema.json ../../dist/ngx-auth",
+                    "cpy schematics/collection.json ../../dist/ngx-auth"
                 ],
                 "color": true
             }
@@ -27,7 +28,7 @@
             "options": {
                 "commands": [
                     "cpy projects/auth-js/oidc/assets dist/ngx-auth/oidc/assets --flat",
-                    "cpy LICENSE dist/ngx-auth/ --flat"
+                    "cpy LICENSE dist/ngx-auth --flat"
                 ],
                 "color": true
             }

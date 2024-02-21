@@ -68,7 +68,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (typeof this.injectToken === 'boolean') {
             isAllowed = this.injectToken;
         } else {
-            const { include, exclude } = this.injectToken || {};
+            const { include, exclude } = this.injectToken ?? {};
 
             if (Array.isArray(include)) {
                 isAllowed = include.some((pattern: string | RegExp) => this.isMatching(request.url, pattern));

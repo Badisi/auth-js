@@ -2,16 +2,16 @@
 
 import { merge } from 'lodash-es';
 import {
-    ErrorResponse, ExtraSigninRequestArgs, ExtraSignoutRequestArgs, IFrameWindowParams, InMemoryWebStorage, Log,
-    PopupWindowParams, RedirectParams, SigninSilentArgs, User, UserProfile, WebStorageStateStore
+    ErrorResponse, InMemoryWebStorage, Log, SigninSilentArgs, User, UserProfile, WebStorageStateStore
 } from 'oidc-client-ts';
 
 import { AuthManager, AuthSubscriber, AuthSubscription, AuthSubscriptions, AuthUtils, Optional } from '../core';
 import { MobileStorage } from './mobile/mobile-storage';
 import { AccessToken } from './models/access-token.model';
+import { LoginArgs, LogoutArgs, RenewArgs } from './models/args.model';
+import { DesktopNavigation } from './models/desktop-navigation.enum';
 import { IdToken } from './models/id-token.model';
-import { MobileWindowParams } from './models/mobile-window-params.model';
-import { DesktopNavigation, OIDCAuthSettings } from './models/oidc-auth-settings.model';
+import { OIDCAuthSettings } from './models/oidc-auth-settings.model';
 import { UserSession } from './models/user-session.model';
 import { OidcUserManager } from './oidc-user-manager';
 
@@ -36,26 +36,14 @@ const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> 
     }
 };
 
-export type LoginArgs = MobileWindowParams & PopupWindowParams & RedirectParams & Omit<ExtraSigninRequestArgs, 'redirect_uri'> & {
-    redirectUrl?: string;
-    desktopNavigationType?: DesktopNavigation;
-};
-
-export type LogoutArgs = MobileWindowParams & PopupWindowParams & RedirectParams & Omit<ExtraSignoutRequestArgs, 'post_logout_redirect_uri'> & {
-    redirectUrl?: string;
-    desktopNavigationType?: DesktopNavigation;
-};
-
-export type RenewArgs = IFrameWindowParams & ExtraSigninRequestArgs;
-
 export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
-    private idTokenSubs: AuthSubscriptions<[string | undefined]> = new AuthSubscriptions();
-    private accessTokenSubs: AuthSubscriptions<[string | undefined]> = new AuthSubscriptions();
-    private userProfileSubs: AuthSubscriptions<[UserProfile | undefined]> = new AuthSubscriptions();
-    private userSessionSubs: AuthSubscriptions<[UserSession | undefined]> = new AuthSubscriptions();
-    private authenticatedSubs: AuthSubscriptions<[boolean]> = new AuthSubscriptions();
-    private renewingSubs: AuthSubscriptions<[boolean]> = new AuthSubscriptions();
-    private redirectSubs: AuthSubscriptions<[URL]> = new AuthSubscriptions();
+    private idTokenSubs = new AuthSubscriptions<[string | undefined]>();
+    private accessTokenSubs = new AuthSubscriptions<[string | undefined]>();
+    private userProfileSubs = new AuthSubscriptions<[UserProfile | undefined]>();
+    private userSessionSubs = new AuthSubscriptions<[UserSession | undefined]>();
+    private authenticatedSubs = new AuthSubscriptions<[boolean]>();
+    private renewingSubs = new AuthSubscriptions<[boolean]>();
+    private redirectSubs = new AuthSubscriptions<[URL]>();
     private userManagerSubs: (() => void)[] = [];
 
     private _idToken?: string;
@@ -150,7 +138,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                         if (this.settings.loginRequired && (error?.includes('_required') || message?.includes('_required'))) {
                             await this.login();
                         } else {
-                            console.error(signinSilentError);
+                            console.error('[OIDCAuthManager] User\'s session cannot be retrieved:', signinSilentError.message);
                             this.authenticatedSubs.notify(false);
                             if (this.settings.loginRequired) {
                                 throw signinSilentError;

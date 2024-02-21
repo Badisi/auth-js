@@ -5,7 +5,7 @@ export interface MobileWindowParams {
     mobileWindowToolbarColor?: string;
 
     /**
-     * iOS only: The presentation style of the browser. Defaults to fullscreen.
+     * iOS only: The presentation style of the browser. Defaults to 'popover'.
      *
      * Ignored on other platforms.
      */

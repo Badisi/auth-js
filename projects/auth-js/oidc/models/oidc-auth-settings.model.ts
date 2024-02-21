@@ -1,12 +1,8 @@
 import { Log, UserManagerSettings } from 'oidc-client-ts';
 
 import { AuthSettings as CoreAuthSettings } from '../../core';
+import { DesktopNavigation } from './desktop-navigation.enum';
 import { MobileWindowParams } from './mobile-window-params.model';
-
-export enum DesktopNavigation {
-    REDIRECT = 'REDIRECT',
-    POPUP = 'POPUP'
-}
 
 // TODO: check if `monitorSession` and `revokeAccessTokenOnSignout` might be useful too ?
 type UsefulSettings = 'scope' | 'loadUserInfo' | 'automaticSilentRenew';

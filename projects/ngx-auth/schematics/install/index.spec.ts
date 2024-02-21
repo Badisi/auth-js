@@ -46,7 +46,7 @@ const getCleanAppTree = async (): Promise<UnitTestTree> => {
         .toPromise();
 };
 
-const occurrences = (str: string, pattern: string): number => (str.match(new RegExp(pattern, 'g')) || []).length;
+const occurrences = (str: string, pattern: string): number => (str.match(new RegExp(pattern, 'g')) ?? []).length;
 
 interface Log {
     name: string;
@@ -84,7 +84,7 @@ describe('Test - install schematic', () => {
 
     it('should not create any new files', async () => {
         tree = await runner.runSchematicAsync('install', schematicOptions, tree).toPromise();
-        expect(tree.files.length).toEqual(nbFiles);
+        void expect(tree.files.length).toEqual(nbFiles);
     });
 
     it('should not create duplicates when running twice', async () => {
@@ -93,23 +93,23 @@ describe('Test - install schematic', () => {
 
         const angularJsonPath = 'angular.json';
         const angularJsonContent = tree.read(angularJsonPath)?.toString('utf-8') || '';
-        expect(occurrences(angularJsonContent, 'crypto-js')).toEqual(1);
-        expect(occurrences(angularJsonContent, 'node_modules/@badisi/ngx-auth/oidc/assets')).toEqual(2);
+        void expect(occurrences(angularJsonContent, 'crypto-js')).toEqual(1);
+        void expect(occurrences(angularJsonContent, 'node_modules/@badisi/ngx-auth/oidc/assets')).toEqual(2);
 
         const mainTsPath = '/projects/app-test/src/main.ts';
         const mainTsContent = tree.read(mainTsPath)?.toString('utf-8') || '';
-        expect(occurrences(mainTsContent, '@badisi/ngx-auth')).toEqual(1);
-        expect(occurrences(mainTsContent, 'initAuth')).toEqual(2);
+        void expect(occurrences(mainTsContent, '@badisi/ngx-auth')).toEqual(1);
+        void expect(occurrences(mainTsContent, 'initAuth')).toEqual(2);
 
         const appModuleTsPath = '/projects/app-test/src/app/app.module.ts';
         const appModuleTsContent = tree.read(appModuleTsPath)?.toString('utf-8') || '';
-        expect(occurrences(appModuleTsContent, '@badisi/ngx-auth')).toEqual(1);
-        expect(occurrences(appModuleTsContent, 'AuthModule')).toEqual(2);
+        void expect(occurrences(appModuleTsContent, '@badisi/ngx-auth')).toEqual(1);
+        void expect(occurrences(appModuleTsContent, 'AuthModule')).toEqual(2);
     });
 
     it('should display an action message', async () => {
         tree = await runner.runSchematicAsync('install', schematicOptions, tree).toPromise();
-        expect(logs).toContainEqual(expect.objectContaining({
+        void expect(logs).toContainEqual(expect.objectContaining({
             name: 'install',
             level: 'info',
             message: '\r>  ACTION  Have a look at main.ts file and update the auth configuration according to your needs.\n'
@@ -122,12 +122,12 @@ describe('Test - install schematic', () => {
         tree.overwrite(mainTsPath, mainTsContent.replace('bootstrapModule', 'bootstrapModuleERROR'));
 
         tree = await runner.runSchematicAsync('install', schematicOptions, tree).toPromise();
-        expect(logs).toContainEqual(expect.objectContaining({
+        void expect(logs).toContainEqual(expect.objectContaining({
             name: 'install',
             level: 'info',
             message: '\r>  ERROR  There were some conflict during the installation, please have a look at main.ts file and resolve it.\n'
         }));
-        expect(logs).toContainEqual(expect.objectContaining({
+        void expect(logs).toContainEqual(expect.objectContaining({
             name: 'install',
             level: 'info',
             message: '\r>  ACTION  Have a look at main.ts file and update the auth configuration according to your needs.\n'

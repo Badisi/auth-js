@@ -1,18 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention, camelcase */
 
-import {
-    ExtraSigninRequestArgs, ExtraSignoutRequestArgs, UserManager, UserManagerSettings
-} from 'oidc-client-ts';
+import { UserManager, UserManagerSettings } from 'oidc-client-ts';
 
 import { MobileNavigator } from './mobile/mobile-navigator';
-import { MobileWindowParams } from './models/mobile-window-params.model';
+import { SigninMobileArgs, SignoutMobileArgs } from './models/args.model';
 import { OIDCAuthSettings } from './models/oidc-auth-settings.model';
 
-export type SigninMobileArgs = MobileWindowParams & ExtraSigninRequestArgs;
-
-export type SignoutMobileArgs = MobileWindowParams & ExtraSignoutRequestArgs;
-
 /**
+ * @internal
+ *
  * Extended UserManager class that adds helpers and mobile capabilities
  * (ex: signinMobile, signoutMobile, MobileNavigator, MobileWindow)
  */
@@ -66,7 +62,7 @@ export class OidcUserManager extends UserManager {
             mobileWindowHeight: mobileWindowHeight ?? this.libSettings.internal?.mobileWindowHeight
         };
 
-        const handle = this._mobileNavigator.prepare(this.settings.post_logout_redirect_uri as string, params);
+        const handle = this._mobileNavigator.prepare(this.settings.post_logout_redirect_uri!, params);
 
         await this._signout({
             request_type: 'so:m',
