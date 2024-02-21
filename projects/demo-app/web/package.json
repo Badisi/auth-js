@@ -7,6 +7,6 @@
         "start:ngx-auth": "NODE_OPTIONS=--openssl-legacy-provider nx run demo-app-ngx-auth:serve",
         "lint": "nx run-many --target=lint --projects=demo-app-common,demo-app-auth-js,demo-app-ngx-auth",
         "build:auth-js": "cd ../../../; nx run demo-app-auth-js:build",
-        "build:ngx-auth": "cd ../../../; nx run demo-app-ngx-auth:build"
+        "build:ngx-auth": "NODE_OPTIONS=--openssl-legacy-provider cd ../../../; nx run demo-app-ngx-auth:build"
     }
 }
