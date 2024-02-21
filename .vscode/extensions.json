@@ -1,7 +1,6 @@
 {
     "recommendations": [
         "angular.ng-template",
-        "dbaeumer.vscode-eslint",
         "sibiraj-s.vscode-scss-formatter",
         "pkief.material-icon-theme"
     ]
