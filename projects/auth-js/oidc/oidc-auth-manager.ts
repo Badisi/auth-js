@@ -115,6 +115,10 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             }),
             this.userManager.events.addUserUnloaded(() => {
                 this.user = null;
+                // If user is kicked out for any reason -> reload the app if login is required
+                if (this.settings.loginRequired) {
+                    location.reload();
+                }
             }),
             this.userManager.events.addSilentRenewError(async () => {
                 await this.removeUser();
