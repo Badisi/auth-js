@@ -23,6 +23,31 @@ template.innerHTML = `
         :host .card.apis .card-actions button {
             margin-left: 14px;
         }
+
+        @media only screen and (max-width: 600px) {
+            :host .card.apis .card-actions {
+                flex-direction: column;
+            }
+            :host .card.apis .card-actions button {
+                margin-top: 12px;
+                margin-left: 0;
+                padding: 2px 10px;
+                min-width: 104px;
+                align-self: flex-start;
+            }
+            :host .card.apis .input label {
+                text-align: left;
+            }
+            :host .card.apis .input {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            :host .card.apis input {
+                width: inherit;
+                align-self: normal;
+            }
+        }
     </style>
 
     <div class="card apis">

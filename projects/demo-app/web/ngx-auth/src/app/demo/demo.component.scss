@@ -45,12 +45,17 @@
 
             .route {
                 &.query-params {
-                    margin: 14px 0 10px 10px;
+                    margin: 14px 0 10px 0;
 
                     .info {
-                        width: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        flex: 1;
+                        text-align: center;
+
                         input {
-                            width: 70%;
+                            width: inherit;
+                            align-self: normal;
                         }
                     }
                 }

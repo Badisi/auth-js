@@ -32,14 +32,16 @@ export class DemoComponent implements AfterViewInit {
             const settings = window.appSettings.getCurrentUserSettings().otherSettings;
             this.roles = settings?.['roles'] as string;
             this.queryParams = settings?.['queryParams'] as Params;
-            let queryParamsString = '';
-            Object.entries(this.queryParams).forEach(([key, value], index) => {
-                if (index > 0) {
-                    queryParamsString += '&';
-                }
-                queryParamsString += `${key}=${value}`;
-            });
-            this.queryParamsInputEl.nativeElement.value = queryParamsString;
+            if (this.queryParams) {
+                let queryParamsString = '';
+                Object.entries(this.queryParams).forEach(([key, value], index) => {
+                    if (index > 0) {
+                        queryParamsString += '&';
+                    }
+                    queryParamsString += `${key}=${value}`;
+                });
+                this.queryParamsInputEl.nativeElement.value = queryParamsString;
+            }
         });
     }
 
