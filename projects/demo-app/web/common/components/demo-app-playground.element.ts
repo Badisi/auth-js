@@ -27,6 +27,7 @@ template.innerHTML = `
         @media only screen and (max-width: 600px) {
             :host .card.apis .card-actions {
                 flex-direction: column;
+                margin-left: 3px;
             }
             :host .card.apis .card-actions button {
                 margin-top: 12px;

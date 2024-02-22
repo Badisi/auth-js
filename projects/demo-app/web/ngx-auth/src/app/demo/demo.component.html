@@ -11,6 +11,14 @@
         <div class="card routes">
             <div class="card-title">Routes access</div>
             <div class="card-actions column">
+                <div class="route query-params">
+                    <div class="info">
+                        <label>Query params</label>
+                        <input #queryParamsInput
+                               placeholder="param1=one&param2=two"
+                               (input)="onQueryParamsInputChange(queryParamsInput.value)" />
+                    </div>
+                </div>
                 <div class="route">
                     <button routerLink="/"
                             [queryParams]="queryParams">HOME</button>
@@ -34,14 +42,6 @@
                                (input)="saveSettings()"
                                (keydown.enter)="router.navigateByUrl('/protected')"
                                [(ngModel)]="roles" />)
-                    </div>
-                </div>
-                <div class="route query-params">
-                    <div class="info">
-                        use query params:
-                        <input #queryParamsInput
-                               placeholder="param1=one&param2=two"
-                               (input)="onQueryParamsInputChange(queryParamsInput.value)" />
                     </div>
                 </div>
             </div>

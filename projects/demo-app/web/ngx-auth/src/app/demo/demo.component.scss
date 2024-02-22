@@ -7,7 +7,13 @@
             align-items: center;
 
             &.query-params {
-                margin: 10px 0 10px 24px;
+                margin: 0 0 10px 10px;
+
+                label {
+                    font-size: 16px;
+                    color: black;
+                    margin-right: 12px;
+                }
 
                 input {
                     width: 500px;
@@ -44,16 +50,17 @@
             margin-top: 12px;
 
             .route {
-                &.query-params {
-                    margin: 14px 0 10px 0;
+                margin-left: 3px !important;
 
+                &.query-params {
                     .info {
                         display: flex;
                         flex-direction: column;
                         flex: 1;
-                        text-align: center;
+                        gap: 8px;
 
                         input {
+                            margin: 0;
                             width: inherit;
                             align-self: normal;
                         }
@@ -62,6 +69,10 @@
 
                 #roles-input {
                     width: 90%;
+                }
+
+                button {
+                    margin-left: 3px;
                 }
             }
         }
