@@ -4,7 +4,7 @@ import pkgJson from 'projects/ngx-auth/package.json';
 
 import { environment } from '../environments/environment';
 
-export const appSettings: DemoAppSettings<AuthSettings> = new DemoAppSettings(
+export const appSettings = new DemoAppSettings<AuthSettings>(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
     `ngx-auth:${(pkgJson as any).version as string}:demo-app:settings`, {
         showTip: true,

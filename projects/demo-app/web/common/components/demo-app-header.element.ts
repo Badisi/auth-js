@@ -201,12 +201,12 @@ export class DemoAppHeaderElement extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot?.appendChild(document.importNode(template.content, true));
 
-        this.implSelectEl = this.shadowRoot?.querySelector('#implementation-select') as HTMLSelectElement;
-        this.statusEl = this.shadowRoot?.querySelector('.status') as HTMLElement;
-        this.versionEl = this.shadowRoot?.querySelector('.version') as HTMLElement;
-        this.loginButtonEl = this.shadowRoot?.querySelector('#login-button') as HTMLElement;
-        this.logoutButtonEl = this.shadowRoot?.querySelector('#logout-button') as HTMLElement;
-        this.silentRenewButtonEl = this.shadowRoot?.querySelector('#silent-renew-button') as HTMLElement;
+        this.implSelectEl = this.shadowRoot!.querySelector<HTMLSelectElement>('#implementation-select')!;
+        this.statusEl = this.shadowRoot!.querySelector<HTMLElement>('.status')!;
+        this.versionEl = this.shadowRoot!.querySelector<HTMLElement>('.version')!;
+        this.loginButtonEl = this.shadowRoot!.querySelector<HTMLElement>('#login-button')!;
+        this.logoutButtonEl = this.shadowRoot!.querySelector<HTMLElement>('#logout-button')!;
+        this.silentRenewButtonEl = this.shadowRoot!.querySelector<HTMLElement>('#silent-renew-button')!;
     }
 
     public set isRenewing(value: boolean) {

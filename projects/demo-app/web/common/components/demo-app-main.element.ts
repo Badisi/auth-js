@@ -79,8 +79,8 @@ export class DemoAppMainElement extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot?.appendChild(document.importNode(template.content, true));
 
-        this.tabsContentEl = this.shadowRoot?.querySelector('.tabs-content') as HTMLElement;
-        this.demoAppHeaderEl = this.shadowRoot?.querySelector('demo-app-header') as DemoAppHeaderElement;
+        this.tabsContentEl = this.shadowRoot!.querySelector<HTMLElement>('.tabs-content')!;
+        this.demoAppHeaderEl = this.shadowRoot!.querySelector<DemoAppHeaderElement>('demo-app-header')!;
     }
 
     public set isRenewing(value: boolean) {
@@ -103,8 +103,8 @@ export class DemoAppMainElement extends HTMLElement {
     // --- HELPER(s) ---
 
     private drawTabs(): void {
-        const viewsEl = this.shadowRoot?.querySelector('#views') as HTMLSlotElement;
-        const tabsEl = this.shadowRoot?.querySelector('#tabs') as HTMLElement;
+        const viewsEl = this.shadowRoot!.querySelector<HTMLSlotElement>('#views')!;
+        const tabsEl = this.shadowRoot!.querySelector('#tabs')!;
         if (viewsEl && tabsEl) {
             this.views = viewsEl.assignedElements() as HTMLElement[];
             this.views.forEach((view, index) => {

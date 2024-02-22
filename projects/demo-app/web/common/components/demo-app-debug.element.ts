@@ -94,7 +94,7 @@ export class DemoAppDebugElement extends HTMLElement {
         }
     }
 
-    public set userSession(value: unknown | undefined) {
+    public set userSession(value: unknown) {
         this.update('#userSession', prettyPrint(value, ['expires_at']));
     }
 
@@ -102,7 +102,7 @@ export class DemoAppDebugElement extends HTMLElement {
         this.update('#accessToken', value);
     }
 
-    public set accessTokenDecoded(value: unknown | undefined) {
+    public set accessTokenDecoded(value: unknown) {
         const text = (typeof value !== 'string') ?
             prettyPrint(value, ['exp', 'iat', 'auth_time']) : '(no decoded info as it is not a JWT token)';
         this.update('#accessTokenDecoded', text);
@@ -112,11 +112,11 @@ export class DemoAppDebugElement extends HTMLElement {
         this.update('#idToken', value);
     }
 
-    public set idTokenDecoded(value: unknown | undefined) {
+    public set idTokenDecoded(value: unknown) {
         this.update('#idTokenDecoded', prettyPrint(value, ['exp', 'iat', 'auth_time']));
     }
 
-    public set userProfile(value: unknown | undefined) {
+    public set userProfile(value: unknown) {
         this.update('#userProfile', prettyPrint(value));
     }
 

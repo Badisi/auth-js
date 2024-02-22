@@ -25,9 +25,9 @@ export class AppElement extends HTMLElement {
     }
 
     public connectedCallback(): void {
-        this.demoAppMainEl = this.shadowRoot?.querySelector('demo-app-main') as DemoAppMainElement;
-        this.demoAppPlaygroundEl = this.shadowRoot?.querySelector('demo-app-playground') as DemoAppPlaygroundElement;
-        this.demoAppDebugEl = this.shadowRoot?.querySelector('demo-app-debug') as DemoAppDebugElement;
+        this.demoAppMainEl = this.shadowRoot!.querySelector<DemoAppMainElement>('demo-app-main')!;
+        this.demoAppPlaygroundEl = this.shadowRoot!.querySelector<DemoAppPlaygroundElement>('demo-app-playground')!;
+        this.demoAppDebugEl = this.shadowRoot!.querySelector<DemoAppDebugElement>('demo-app-debug')!;
 
         this.listenForHeaderEvents();
         this.listenForPlaygroundEvents();

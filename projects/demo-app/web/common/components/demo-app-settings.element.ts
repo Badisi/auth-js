@@ -161,10 +161,10 @@ export class DemoAppSettingsElement extends HTMLElement {
     }
 
     public connectedCallback(): void {
-        this.formEl = this.shadowRoot?.querySelector('form') as HTMLFormElement;
-        this.formContentEl = this.shadowRoot?.querySelector('.form-content') as HTMLElement;
-        this.selectEl = this.shadowRoot?.querySelector('#settings-select') as HTMLSelectElement;
-        this.settingsNameEl = this.shadowRoot?.querySelector('#settingsName') as HTMLInputElement;
+        this.formEl = this.shadowRoot!.querySelector<HTMLFormElement>('form')!;
+        this.formContentEl = this.shadowRoot!.querySelector<HTMLElement>('.form-content')!;
+        this.selectEl = this.shadowRoot!.querySelector<HTMLSelectElement>('#settings-select')!;
+        this.settingsNameEl = this.shadowRoot!.querySelector<HTMLInputElement>('#settingsName')!;
 
         // Form events
         const inputCb = (e: Event): void => {

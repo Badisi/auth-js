@@ -4,7 +4,7 @@ import pkgJson from 'projects/auth-js/package.json';
 
 import { environment } from '../environments/environment';
 
-export const appSettings: DemoAppSettings<OIDCAuthSettings> = new DemoAppSettings(
+export const appSettings = new DemoAppSettings<OIDCAuthSettings>(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
     `auth-js:${(pkgJson as any).version as string}:demo-app:settings`, {
         showTip: true,

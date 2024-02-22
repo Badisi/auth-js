@@ -3,6 +3,7 @@
 import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { disable as disableColors } from '@colors/colors';
+import { describe, expect, it } from '@jest/globals';
 import { Schema as ApplicationOptions, Style } from '@schematics/angular/application/schema';
 import { Schema as WorkspaceOptions } from '@schematics/angular/workspace/schema';
 import { join } from 'path';
@@ -84,7 +85,7 @@ describe('Test - install schematic', () => {
 
     it('should not create any new files', async () => {
         tree = await runner.runSchematicAsync('install', schematicOptions, tree).toPromise();
-        void expect(tree.files.length).toEqual(nbFiles);
+        expect(tree.files.length).toEqual(nbFiles);
     });
 
     it('should not create duplicates when running twice', async () => {
@@ -93,23 +94,23 @@ describe('Test - install schematic', () => {
 
         const angularJsonPath = 'angular.json';
         const angularJsonContent = tree.read(angularJsonPath)?.toString('utf-8') || '';
-        void expect(occurrences(angularJsonContent, 'crypto-js')).toEqual(1);
-        void expect(occurrences(angularJsonContent, 'node_modules/@badisi/ngx-auth/oidc/assets')).toEqual(2);
+        expect(occurrences(angularJsonContent, 'crypto-js')).toEqual(1);
+        expect(occurrences(angularJsonContent, 'node_modules/@badisi/ngx-auth/oidc/assets')).toEqual(2);
 
         const mainTsPath = '/projects/app-test/src/main.ts';
         const mainTsContent = tree.read(mainTsPath)?.toString('utf-8') || '';
-        void expect(occurrences(mainTsContent, '@badisi/ngx-auth')).toEqual(1);
-        void expect(occurrences(mainTsContent, 'initAuth')).toEqual(2);
+        expect(occurrences(mainTsContent, '@badisi/ngx-auth')).toEqual(1);
+        expect(occurrences(mainTsContent, 'initAuth')).toEqual(2);
 
         const appModuleTsPath = '/projects/app-test/src/app/app.module.ts';
         const appModuleTsContent = tree.read(appModuleTsPath)?.toString('utf-8') || '';
-        void expect(occurrences(appModuleTsContent, '@badisi/ngx-auth')).toEqual(1);
-        void expect(occurrences(appModuleTsContent, 'AuthModule')).toEqual(2);
+        expect(occurrences(appModuleTsContent, '@badisi/ngx-auth')).toEqual(1);
+        expect(occurrences(appModuleTsContent, 'AuthModule')).toEqual(2);
     });
 
     it('should display an action message', async () => {
         tree = await runner.runSchematicAsync('install', schematicOptions, tree).toPromise();
-        void expect(logs).toContainEqual(expect.objectContaining({
+        expect(logs).toContainEqual(expect.objectContaining({
             name: 'install',
             level: 'info',
             message: '\r>  ACTION  Have a look at main.ts file and update the auth configuration according to your needs.\n'
@@ -122,12 +123,12 @@ describe('Test - install schematic', () => {
         tree.overwrite(mainTsPath, mainTsContent.replace('bootstrapModule', 'bootstrapModuleERROR'));
 
         tree = await runner.runSchematicAsync('install', schematicOptions, tree).toPromise();
-        void expect(logs).toContainEqual(expect.objectContaining({
+        expect(logs).toContainEqual(expect.objectContaining({
             name: 'install',
             level: 'info',
             message: '\r>  ERROR  There were some conflict during the installation, please have a look at main.ts file and resolve it.\n'
         }));
-        void expect(logs).toContainEqual(expect.objectContaining({
+        expect(logs).toContainEqual(expect.objectContaining({
             name: 'install',
             level: 'info',
             message: '\r>  ACTION  Have a look at main.ts file and update the auth configuration according to your needs.\n'

@@ -67,10 +67,10 @@ export class DemoAppPlaygroundElement extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot?.appendChild(document.importNode(template.content, true));
 
-        this.apiStatusEl = this.shadowRoot?.querySelector('#api-status') as HTMLElement;
-        this.apiResponseEl = this.shadowRoot?.querySelector('#api-response') as HTMLElement;
-        this.apiUrlEl = this.shadowRoot?.querySelector('#api-url-input') as HTMLInputElement;
-        this.apiHeadersEl = this.shadowRoot?.querySelector('#api-headers-input') as HTMLInputElement;
+        this.apiStatusEl = this.shadowRoot!.querySelector<HTMLElement>('#api-status')!;
+        this.apiResponseEl = this.shadowRoot!.querySelector<HTMLElement>('#api-response')!;
+        this.apiUrlEl = this.shadowRoot!.querySelector<HTMLInputElement>('#api-url-input')!;
+        this.apiHeadersEl = this.shadowRoot!.querySelector<HTMLInputElement>('#api-headers-input')!;
     }
 
     public connectedCallback(): void {
@@ -113,7 +113,7 @@ export class DemoAppPlaygroundElement extends HTMLElement {
 
     // --- API(s) ---
 
-    public setApiStatus(data: unknown | Error, isError: boolean): void {
+    public setApiStatus(data: unknown, isError: boolean): void {
         this.apiStatusEl.classList.remove(isError ? 'success' : 'error');
         this.apiStatusEl.classList.add(isError ? 'error' : 'success');
         this.apiResponseEl.innerHTML = prettyPrint(data);
