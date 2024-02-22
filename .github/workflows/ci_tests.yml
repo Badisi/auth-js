@@ -61,8 +61,13 @@ jobs:
             .angular/cache
             node_modules
 
+      # https://github.com/npm/cli/issues/3079 (use --maxsockets=1)
+      - name: Install dependencies (with workaround for Windows)
+        if: ${{ steps.cache-step.outputs.cache-hit != 'true' && matrix.os == 'windows-latest' }}
+        run: npm clean-install --engine-strict --maxsockets=1
+
       - name: Install dependencies
-        if: steps.cache-step.outputs.cache-hit != 'true'
+        if: ${{ steps.cache-step.outputs.cache-hit != 'true' && matrix.os != 'windows-latest' }}
         run: npm clean-install --engine-strict
 
       - name: Lint
