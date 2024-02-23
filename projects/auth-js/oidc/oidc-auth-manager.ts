@@ -114,10 +114,12 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                 this.user = user;
             }),
             this.userManager.events.addUserUnloaded(() => {
-                this.user = null;
-                // If user is kicked out for any reason -> reload the app if login is required
-                if (this.settings.loginRequired) {
-                    location.reload();
+                if (this.user) {
+                    this.user = null;
+                    // If user is kicked out for any reason -> reload the app if login is required
+                    if (this.settings.loginRequired) {
+                        location.reload();
+                    }
                 }
             }),
             this.userManager.events.addSilentRenewError(async () => {
@@ -162,13 +164,13 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                     await this.login();
                 // else -> gracefully notify that we are not authenticated
                 } else {
-                    this.authenticatedSubs.notify(false);
+                    this.user = null;
                 }
             } else {
                 this.user = user;
             }
         } else {
-            this.authenticatedSubs.notify(false);
+            this.user = null;
         }
     }
 
