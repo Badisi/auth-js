@@ -3,8 +3,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
     appId: 'demoapp',
     appName: 'demo-app',
-    loggingBehavior: 'debug',
-    bundledWebRuntime: false
+    loggingBehavior: 'debug'
 };
 
 // eslint-disable-next-line no-loops/no-loops
