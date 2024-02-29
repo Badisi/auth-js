@@ -25,6 +25,8 @@ export class MobileWindow implements IWindow {
     private navigateLogger?: Logger;
     private _resolve?: (value: NavigateResponse) => void;
     private _reject?: (reason?: unknown) => void;
+    private _isClosed = true;
+    private _receivedResult = false;
 
     constructor(
         public redirectUrl: string,
@@ -59,6 +61,9 @@ export class MobileWindow implements IWindow {
         this.navigateLogger = this._logger.create('navigate');
         this.navigateLogger.debug('url', params.url);
 
+        this._isClosed = false;
+        this._receivedResult = false;
+
         return new Promise((resolve, reject) => {
             this._resolve = resolve;
             this._reject = reject;
@@ -76,8 +81,15 @@ export class MobileWindow implements IWindow {
 
     public async close(): Promise<void> {
         const logger = this._logger.create('close');
-        await CAPACITOR_BROWSER?.close().catch(err => logger.error(err));
-        // TODO: BROWSER_TAB?.close();
+        /**
+         * Trying to close the browser while it's actually closing, can cause issues on Android.
+         * So we make sure it is not already closed before calling it.
+         * @see https://github.com/ionic-team/capacitor-plugins/issues/2045
+         */
+        if (!this._isClosed) {
+            await CAPACITOR_BROWSER?.close().catch(err => logger.error(err));
+            // TODO: BROWSER_TAB?.close();
+        }
         logger.debug('success');
     }
 
@@ -94,22 +106,37 @@ export class MobileWindow implements IWindow {
 
     private async onError(message: string): Promise<void> {
         this.navigateLogger?.error('error response:', message);
-        await this.cleanup();
         await this.close();
+        await this.cleanup();
         this._reject?.(new Error(message));
+        this._receivedResult = true;
     }
 
     private async onSuccess(url: string): Promise<void> {
         this.navigateLogger?.debug('successful response:', url);
-        await this.cleanup();
         await this.close();
+        await this.cleanup();
         this._resolve?.({ url });
+        this._receivedResult = true;
     }
 
     private async useCapacitorBrowser(params: NavigateParams): Promise<void> {
         this.capacitorBrowserFinishedHandle = await CAPACITOR_BROWSER?.addListener(
             'browserFinished',
-            (): void => void this.onError('Capacitor browser closed by user')
+            (): void => {
+                this._isClosed = true;
+                /**
+                 * Browser can close before custom url scheme handler finishes its job (ie. onSuccess, omError is called).
+                 * So we give it some extra time, and in case we still didn't received any results, we consider that the
+                 * browser was simply closed by the user.
+                 */
+                setTimeout(() => {
+                    if (!this._receivedResult) {
+                        void this.cleanup();
+                        this._reject?.('Capacitor browser closed by user');
+                    }
+                }, 1000);
+            }
         );
 
         await CAPACITOR_BROWSER?.open({
