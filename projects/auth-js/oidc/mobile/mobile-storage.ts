@@ -111,7 +111,11 @@ export class MobileStorage implements AsyncStorage {
         this._logger.create(`removeItem('${key}')`);
 
         if (CAPACITOR_SECURE_STORAGE) {
-            await CAPACITOR_SECURE_STORAGE.remove({ key });
+            try {
+                await CAPACITOR_SECURE_STORAGE.remove({ key });
+            } catch {
+                /* no-op */
+            }
         } else if (CAPACITOR_PREFERENCES) {
             await CAPACITOR_PREFERENCES.remove({ key });
         } else if (CAPACITOR_STORAGE) {

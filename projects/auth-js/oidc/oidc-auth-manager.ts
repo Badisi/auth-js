@@ -132,9 +132,19 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
         // Decide what to do..
         if (AuthUtils.isUrlMatching(location.href, this.settings.internal?.redirect_uri)) {
-            await this.runSyncOrAsync(() => this.backFromSigninRedirect());
+            // Back from signin redirect
+            await this.runSyncOrAsync(async () => {
+                const redirectUrl = sessionStorage.getItem(REDIRECT_URL_KEY);
+                await this.callSignin(() => this.userManager!.signinRedirectCallback(location.href), redirectUrl);
+                sessionStorage.removeItem(REDIRECT_URL_KEY);
+            });
         } else if (AuthUtils.isUrlMatching(location.href, this.settings.internal?.post_logout_redirect_uri)) {
-            await this.runSyncOrAsync(() => this.backFromSignoutRedirect());
+            // Back from signout redirect
+            await this.runSyncOrAsync(async () => {
+                const redirectUrl = sessionStorage.getItem(REDIRECT_URL_KEY);
+                await this.callSignout(() => this.userManager!.signoutRedirectCallback(location.href), redirectUrl);
+                sessionStorage.removeItem(REDIRECT_URL_KEY);
+            });
         } else if (this.settings.retrieveUserSession || this.settings.loginRequired) {
             const signinSilent = async (): Promise<void> => {
                 await this.runSyncOrAsync(() => this.signinSilent()
@@ -177,14 +187,11 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     public async logout(args?: LogoutArgs): Promise<void> {
         const redirectUrl = args?.redirectUrl ?? location.href;
         if (AuthUtils.isNativeMobile()) {
-            await this.userManager?.signoutMobile(args);
-            await this.redirect(redirectUrl);
-            this.postLogoutVerification(redirectUrl);
+            await this.callSignout(() => this.userManager!.signoutMobile(args), redirectUrl);
         } else {
             switch (args?.desktopNavigationType ?? this.settings.desktopNavigationType) {
                 case DesktopNavigation.POPUP:
-                    await this.userManager?.signoutPopup(args);
-                    await this.redirect(redirectUrl);
+                    await this.callSignout(() => this.userManager!.signoutPopup(args), redirectUrl);
                     break;
                 case DesktopNavigation.REDIRECT:
                 default:
@@ -198,25 +205,11 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     public async login(args?: LoginArgs): Promise<boolean> {
         const redirectUrl = args?.redirectUrl ?? location.href;
         if (AuthUtils.isNativeMobile()) {
-            this.notifyRenew(true);
-            await this.userManager?.signinMobile(args)
-                .finally(() => this.notifyRenew(false));
-            await this.redirect(redirectUrl);
+            await this.callSignin(() => this.userManager!.signinMobile(args), redirectUrl);
         } else {
             switch (args?.desktopNavigationType ?? this.settings.desktopNavigationType) {
                 case DesktopNavigation.POPUP:
-                    this.notifyRenew(true);
-                    await this.userManager?.signinPopup(args)
-                        .catch((error: Error) => {
-                            if (error?.message === 'Attempted to navigate on a disposed window') {
-                                error = new Error('[OIDCAuthManager] Attempted to navigate on a disposed window.');
-                                error.stack = undefined;
-                                error.message += '\n\nⓘ This may be due to an ad blocker.';
-                            }
-                            throw error;
-                        })
-                        .finally(() => this.notifyRenew(false));
-                    await this.redirect(redirectUrl);
+                    await this.callSignin(() => this.userManager!.signinPopup(args), redirectUrl);
                     break;
                 case DesktopNavigation.REDIRECT:
                 default:
@@ -435,30 +428,41 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         }
     }
 
-    private async backFromSigninRedirect(): Promise<void> {
+    private async callSignin(managerCall: () => Promise<unknown>, redirectUrl: string | null): Promise<void> {
         try {
-            await this.userManager?.signinRedirectCallback(location.href);
-            await this.redirect(sessionStorage.getItem(REDIRECT_URL_KEY));
+            this.notifyRenew(true);
+            await managerCall().catch((error: Error) => {
+                if (error?.message === 'Attempted to navigate on a disposed window') {
+                    error = new Error('[OIDCAuthManager] Attempted to navigate on a disposed window.');
+                    error.stack = undefined;
+                    error.message += '\n\nⓘ This may be due to an ad blocker.';
+                }
+                throw error;
+            });
+            await this.redirect(redirectUrl);
         } catch (error) {
             await this.redirect('/', error);
-            throw error;
         } finally {
-            sessionStorage.removeItem(REDIRECT_URL_KEY);
+            this.notifyRenew(false);
         }
     }
 
-    private async backFromSignoutRedirect(): Promise<void> {
-        let redirectUrl = sessionStorage.getItem(REDIRECT_URL_KEY);
+    private async callSignout(managerCall: () => Promise<unknown>, redirectUrl: string | null): Promise<void> {
         try {
-            await this.userManager?.signoutRedirectCallback(location.href);
+            await managerCall().catch((error: Error) => {
+                if (error?.message === 'Attempted to navigate on a disposed window') {
+                    error = new Error('[OIDCAuthManager] Attempted to navigate on a disposed window.');
+                    error.stack = undefined;
+                    error.message += '\n\nⓘ This may be due to an ad blocker.';
+                }
+                throw error;
+            });
             await this.redirect(redirectUrl);
             await this.removeUser();
         } catch (error) {
             redirectUrl = '/';
             await this.redirect(redirectUrl, error);
-            throw error;
         } finally {
-            sessionStorage.removeItem(REDIRECT_URL_KEY);
             this.postLogoutVerification(redirectUrl);
         }
     }
