@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-unsafe-assignment */
 
 import type { PluginListenerHandle } from '@capacitor/core';
-import { Logger } from 'oidc-client-ts';
+import { IWindow, Logger, NavigateParams, NavigateResponse } from 'oidc-client-ts';
 
 import { AuthUtils } from '../../core';
 import { MobileWindowParams } from '../models/mobile-window-params.model';

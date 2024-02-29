@@ -3,7 +3,6 @@
     "compilerOptions": {
         "outDir": "../../../../dist/out-tsc",
         "types": [
-            "../../../auth-js/@types/oidc-client-ts",
             "../../../auth-js/@types/mobile"
         ],
         "target": "ES2017"
