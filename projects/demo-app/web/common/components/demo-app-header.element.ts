@@ -175,13 +175,13 @@ template.innerHTML = `
             <div class="tip"><span class="hand">👈</span> choose an implementation</div>
         </div>
 
-        <div class="version"></div>
-
         <div class="row">
             <button id="login-button">LOGIN</button>
             <button id="logout-button">LOGOUT</button>
             <button id="silent-renew-button">SILENT RENEW</button>
         </div>
+
+        <div class="version"></div>
     </header>
 `;
 
@@ -284,7 +284,7 @@ export class DemoAppHeaderElement extends HTMLElement {
 
     private refreshImplementation(): void {
         const impls = window.appSettings.getImplementations();
-        if (!window.location.href.includes('localhost')) {
+        if (!window.location.href.includes(':4200')) {
             const implIndex = impls.findIndex(item => window.location.href.includes(item.demoUrl));
             const impl = (implIndex !== -1) ? impls[implIndex] : impls[0];
             this.implSelectEl.selectedIndex = (implIndex !== -1) ? implIndex : 0;
