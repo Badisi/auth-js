@@ -225,7 +225,7 @@ export class DemoAppHeaderElement extends HTMLElement {
     }
 
     public connectedCallback(): void {
-        if (window.location.href.includes('localhost')) {
+        if (window.location.href.includes(':4200')) {
             const optionEl = document.createElement('option');
             optionEl.textContent = 'localhost';
             this.implSelectEl.appendChild(optionEl);
