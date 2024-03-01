@@ -102,9 +102,6 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             }
         }, userSettings);
 
-        // Apply some patches
-        this.patchAuth0Logout();
-
         // Configure the user manager
         this.userManager = new OidcUserManager(this.settings);
 
@@ -464,28 +461,6 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             await this.redirect(redirectUrl, error);
         } finally {
             this.postLogoutVerification(redirectUrl);
-        }
-    }
-
-    // --- PATCHE(s) ---
-
-    /**
-     * Auth0 does not conform to OIDC's logout session and as such does not provide an `end_session_endpoint`.
-     * This patch make sure the `end_session_endpoint` is set in that case.
-     * @see https://github.com/damienbod/angular-auth-oidc-client/issues/1197
-     * @see https://auth0.com/docs/api/authentication#logout
-     */
-    private patchAuth0Logout(): void {
-        if (this.settings.authorityUrl.endsWith('auth0.com')) {
-            const { authorityUrl, desktopNavigationType } = this.settings;
-            const returnTo = (desktopNavigationType === DesktopNavigation.POPUP) ?
-                this.settings.internal?.popup_post_logout_redirect_uri :
-                this.settings.internal?.post_logout_redirect_uri;
-            this.settings.internal = merge({}, {
-                metadataSeed: {
-                    end_session_endpoint: `${authorityUrl}/v2/logout?returnTo=${returnTo}`
-                }
-            }, this.settings.internal);
         }
     }
 }
