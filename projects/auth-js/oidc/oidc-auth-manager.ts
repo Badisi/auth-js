@@ -477,13 +477,13 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
      */
     private patchAuth0Logout(): void {
         if (this.settings.authorityUrl.endsWith('auth0.com')) {
-            const { authorityUrl, clientId, desktopNavigationType } = this.settings;
+            const { authorityUrl, desktopNavigationType } = this.settings;
             const returnTo = (desktopNavigationType === DesktopNavigation.POPUP) ?
                 this.settings.internal?.popup_post_logout_redirect_uri :
                 this.settings.internal?.post_logout_redirect_uri;
             this.settings.internal = merge({}, {
                 metadataSeed: {
-                    end_session_endpoint: `${authorityUrl}/v2/logout?client_id=${clientId}&returnTo=${returnTo}`
+                    end_session_endpoint: `${authorityUrl}/v2/logout?returnTo=${returnTo}`
                 }
             }, this.settings.internal);
         }
