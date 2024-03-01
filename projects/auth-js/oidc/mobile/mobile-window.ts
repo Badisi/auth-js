@@ -126,7 +126,7 @@ export class MobileWindow implements IWindow {
             (): void => {
                 this._isClosed = true;
                 /**
-                 * Browser can close before custom url scheme handler finishes its job (ie. onSuccess, omError is called).
+                 * Browser can close before custom url scheme handler finishes its job (ie. onSuccess, onError is called).
                  * So we give it some extra time, and in case we still didn't received any results, we consider that the
                  * browser was simply closed by the user.
                  */
