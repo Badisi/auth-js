@@ -2,8 +2,9 @@
     "name": "demo-app-ngx-auth",
     "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
     "projectType": "application",
-    "sourceRoot": "projects/demo-app/web/ngx-auth/src",
     "prefix": "badisi",
+    "sourceRoot": "projects/demo-app/web/ngx-auth/src",
+    "tags": [],
     "targets": {
         "build": {
             "executor": "@angular-devkit/build-angular:browser",
@@ -14,7 +15,9 @@
                 "outputPath": "dist/demo-app/ngx-auth",
                 "index": "projects/demo-app/web/ngx-auth/src/index.html",
                 "main": "projects/demo-app/web/ngx-auth/src/main.ts",
-                "polyfills": "projects/demo-app/web/ngx-auth/src/polyfills.ts",
+                "polyfills": [
+                    "zone.js"
+                ],
                 "tsConfig": "projects/demo-app/web/ngx-auth/tsconfig.app.json",
                 "inlineStyleLanguage": "scss",
                 "allowedCommonJsDependencies": [
@@ -45,12 +48,6 @@
                             "type": "anyComponentStyle",
                             "maximumWarning": "2kb",
                             "maximumError": "4kb"
-                        }
-                    ],
-                    "fileReplacements": [
-                        {
-                            "replace": "projects/demo-app/web/ngx-auth/src/environments/environment.ts",
-                            "with": "projects/demo-app/web/ngx-auth/src/environments/environment.prod.ts"
                         }
                     ],
                     "outputHashing": "all"
@@ -88,7 +85,10 @@
             }
         },
         "lint": {
-            "executor": "@nrwl/linter:eslint",
+            "executor": "@nx/linter:eslint",
+            "outputs": [
+                "{options.outputFile}"
+            ],
             "options": {
                 "lintFilePatterns": [
                     "projects/demo-app/web/ngx-auth/src/**/*.ts",
@@ -97,15 +97,20 @@
             }
         },
         "test": {
-            "executor": "@nrwl/jest:jest",
+            "executor": "@nx/jest:jest",
             "outputs": [
-                "coverage/projects/demo-app/web/ngx-auth"
+                "{workspaceRoot}/coverage/{projectRoot}"
             ],
             "options": {
-                "jestConfig": "projects/demo-app/web/ngx-auth/jest.config.js",
+                "jestConfig": "projects/demo-app/web/ngx-auth/jest.config.ts",
                 "passWithNoTests": true
             }
         }
     },
-    "tags": []
+    "serve-static": {
+        "executor": "@nx/web:file-server",
+        "options": {
+            "buildTarget": "demo-app-ngx-auth:build"
+        }
+    }
 }

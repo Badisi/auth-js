@@ -1,4 +1,4 @@
-import './app/app.element.ts';
+import './app/app.element';
 
 import { initOidc } from '@badisi/auth-js/oidc';
 

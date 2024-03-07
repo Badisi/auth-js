@@ -1,20 +1,14 @@
-import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { initAuth } from '@badisi/ngx-auth';
 import { DemoAppSettings } from 'demo-app-common';
 
 import { AppModule } from './app/app.module';
 import { appSettings } from './app/app.settings';
-import { environment } from './environments/environment';
 
 declare global {
     interface Window {
         authSettings: DemoAppSettings;
     }
-}
-
-if (environment.production) {
-    enableProdMode();
 }
 
 ((): void => {

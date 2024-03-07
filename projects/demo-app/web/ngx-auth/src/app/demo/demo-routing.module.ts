@@ -36,7 +36,7 @@ const routes: Routes = [
         children: [
             {
                 path: 'public',
-                loadChildren: (): Promise<unknown> => import('./components/page/page.module').then(m => m.PageModule),
+                loadChildren: () => import('./components/page/page.module').then(m => m.PageModule),
                 runGuardsAndResolvers: 'always',
                 data: {
                     title: 'PUBLIC CONTENT'
@@ -44,7 +44,7 @@ const routes: Routes = [
             },
             {
                 path: 'private',
-                loadChildren: (): Promise<unknown> => import('./components/page/page.module').then(m => m.PageModule),
+                loadChildren: () => import('./components/page/page.module').then(m => m.PageModule),
                 runGuardsAndResolvers: 'always',
                 canLoad: [AuthGuard],
                 canActivate: [AuthGuard],
@@ -55,7 +55,7 @@ const routes: Routes = [
             },
             {
                 path: 'forbidden',
-                loadChildren: (): Promise<unknown> => import('./components/page/page.module').then(m => m.PageModule),
+                loadChildren: () => import('./components/page/page.module').then(m => m.PageModule),
                 runGuardsAndResolvers: 'always',
                 data: {
                     title: 'ACCESS FORBIDDEN'
@@ -63,7 +63,7 @@ const routes: Routes = [
             },
             {
                 path: 'protected',
-                loadChildren: (): Promise<unknown> => import('./components/page/page.module').then(m => m.PageModule),
+                loadChildren: () => import('./components/page/page.module').then(m => m.PageModule),
                 runGuardsAndResolvers: 'always',
                 canLoad: [AuthGuard],
                 canActivate: [AuthGuard],

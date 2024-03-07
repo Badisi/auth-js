@@ -1,17 +1,11 @@
 {
     "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
     "dest": "../../dist/ngx-auth",
-    "assets": [
-        "./ngcc.config.js"
-    ],
     "allowedNonPeerDependencies": [
         "@hug/ngx-schematics-utilities",
         "@badisi/auth-js"
     ],
     "lib": {
-        "entryFile": "./index.ts",
-        "umdModuleIds": {
-            "@badisi/auth-js/oidc": "@badisi/auth-js/oidc"
-        }
+        "entryFile": "./index.ts"
     }
 }

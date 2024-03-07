@@ -38,7 +38,7 @@ export class DemoComponent implements AfterViewInit {
                     if (index > 0) {
                         queryParamsString += '&';
                     }
-                    queryParamsString += `${key}=${value}`;
+                    queryParamsString += `${key}=${value as string}`;
                 });
                 this.queryParamsInputEl.nativeElement.value = queryParamsString;
             }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { AuthSubscription, AuthUtils } from '@badisi/auth-js/core';
 import { DemoAppDebugElement, DemoAppMainElement, DemoAppPlaygroundElement } from 'demo-app-common';
 

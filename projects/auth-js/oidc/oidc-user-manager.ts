@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/naming-convention, camelcase */
 
 import { UserManager, UserManagerSettings } from 'oidc-client-ts';

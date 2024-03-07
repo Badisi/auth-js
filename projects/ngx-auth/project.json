@@ -1,14 +1,15 @@
 {
     "name": "ngx-auth",
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "projectType": "library",
-    "sourceRoot": "projects/ngx-auth/src",
+    "sourceRoot": "projects/ngx-auth",
     "prefix": "badisi",
+    "tags": [],
+    "projectType": "library",
     "targets": {
         "build-schematics": {
             "executor": "nx:run-commands",
             "outputs": [
-                "dist/ngx-auth"
+                "{workspaceRoot}/dist/ngx-auth"
             ],
             "options": {
                 "cwd": "projects/ngx-auth",
@@ -23,7 +24,7 @@
         "copy-assets": {
             "executor": "nx:run-commands",
             "outputs": [
-                "dist/ngx-auth"
+                "{workspaceRoot}/dist/ngx-auth"
             ],
             "options": {
                 "commands": [
@@ -34,9 +35,9 @@
             }
         },
         "build": {
-            "executor": "@nrwl/angular:package",
+            "executor": "@nx/angular:package",
             "outputs": [
-                "dist/ngx-auth"
+                "{workspaceRoot}/dist/ngx-auth"
             ],
             "options": {
                 "project": "projects/ngx-auth/ng-package.json",
@@ -53,17 +54,20 @@
             "defaultConfiguration": "production"
         },
         "test": {
-            "executor": "@nrwl/jest:jest",
+            "executor": "@nx/jest:jest",
             "outputs": [
-                "coverage/projects/ngx-auth"
+                "{workspaceRoot}/coverage/{projectRoot}"
             ],
             "options": {
-                "jestConfig": "projects/ngx-auth/jest.config.js",
+                "jestConfig": "projects/ngx-auth/jest.config.ts",
                 "passWithNoTests": true
             }
         },
         "lint": {
-            "executor": "@nrwl/linter:eslint",
+            "executor": "@nx/linter:eslint",
+            "outputs": [
+                "{options.outputFile}"
+            ],
             "options": {
                 "lintFilePatterns": [
                     "projects/ngx-auth/**/*.ts",
