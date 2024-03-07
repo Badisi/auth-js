@@ -35,7 +35,7 @@
         "build": "cd ../../ && nx run ngx-auth:build && nx run ngx-auth:copy-assets && nx run ngx-auth:build-schematics"
     },
     "dependencies": {
-        "@badisi/auth-js": "0.0.0-semantically-released",
+        "@badisi/auth-js": "1.0.0",
         "@hug/ngx-schematics-utilities": "4.0.2",
         "tslib": "^1.9.0 || ^2.2.0"
     },
