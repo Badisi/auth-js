@@ -35,7 +35,8 @@ if (environment.production) {
             ]).bootstrapModule(AppModule).catch(err => console.error(err));
         })
         .catch((err: Error) => {
-            el.innerHTML = `${err.message}<br/><button id="loginButton">Login</button>`;
+            const message = (err instanceof Error) ? err.message : err;
+            el.innerHTML = `${message}<br/><button id="loginButton">Login</button>`;
             document.body.querySelector('#loginButton')?.addEventListener(
                 'click', () => location.reload(), { once: true }
             );

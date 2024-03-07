@@ -64,17 +64,13 @@ export class OidcUserManager extends UserManager {
 
         const handle = this._mobileNavigator.prepare(this.settings.post_logout_redirect_uri!, params);
 
-        try {
-            await this._signout({
-                request_type: 'so:m',
-                post_logout_redirect_uri: this.settings.post_logout_redirect_uri,
-                ...requestArgs
-            }, handle);
+        await this._signout({
+            request_type: 'so:m',
+            post_logout_redirect_uri: this.settings.post_logout_redirect_uri,
+            ...requestArgs
+        }, handle);
 
-            logger.info('success');
-        } catch (err) {
-            logger.error(err);
-        }
+        logger.info('success');
     }
 
     public async signinMobile(args: SigninMobileArgs = {}): Promise<void> {
@@ -97,20 +93,16 @@ export class OidcUserManager extends UserManager {
 
         const handle = this._mobileNavigator.prepare(this.settings.redirect_uri, params);
 
-        try {
-            const user = await this._signin({
-                request_type: 'si:m',
-                redirect_uri: this.settings.redirect_uri,
-                ...requestArgs
-            }, handle);
+        const user = await this._signin({
+            request_type: 'si:m',
+            redirect_uri: this.settings.redirect_uri,
+            ...requestArgs
+        }, handle);
 
-            if (user?.profile?.sub) {
-                logger.info('success, signed in subject', user.profile.sub);
-            } else {
-                logger.info('no subject');
-            }
-        } catch (err) {
-            logger.error(err);
+        if (user?.profile?.sub) {
+            logger.info('success, signed in subject', user.profile.sub);
+        } else {
+            logger.info('no subject');
         }
     }
 }

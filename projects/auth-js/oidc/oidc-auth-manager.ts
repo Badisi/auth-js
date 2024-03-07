@@ -439,6 +439,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             await this.redirect(redirectUrl);
         } catch (error) {
             await this.redirect('/', error);
+            throw error;
         } finally {
             this.notifyRenew(false);
         }
@@ -459,6 +460,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         } catch (error) {
             redirectUrl = '/';
             await this.redirect(redirectUrl, error);
+            throw error;
         } finally {
             this.postLogoutVerification(redirectUrl);
         }
