@@ -1,5 +1,6 @@
 {
     "name": "@badisi/auth-js",
+    "private": true,
     "version": "0.0.0-semantically-released",
     "description": "Authentication and authorization support for web based desktop and mobile applications.",
     "homepage": "https://github.com/Badisi/auth-js/tree/main/projects/auth-js",

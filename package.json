@@ -29,7 +29,7 @@
         "lint": "nx run-many --target=lint --projects=auth-js,ngx-auth",
         "test": "nx run-many --target=test --projects=auth-js,ngx-auth",
         "publish": "multi-semantic-release --ignore-private-packages --yes",
-        "publish-dry-run": "GITHUB_TOKEN=XXX NPM_TOKEN=XXX npm run publish -- --no-ci",
+        "publish-dry-run": "GITHUB_TOKEN=XXX NPM_TOKEN=XXX npm run publish -- --dry-run --no-ci",
         "postinstall": "node ./scripts/patch-semantic-release-npm.js",
         "prepare": "husky || true"
     },

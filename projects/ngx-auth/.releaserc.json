@@ -1,5 +1,6 @@
 {
     "branches": [
+        "main",
         {
             "name": "ngx-auth-2.x",
             "range": "2.x",
