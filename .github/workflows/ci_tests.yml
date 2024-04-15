@@ -32,10 +32,10 @@ jobs:
 
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
           registry-url: https://registry.npmjs.org/
@@ -51,7 +51,7 @@ jobs:
         run: npm install -g npm@latest
 
       - name: Cache .angular and node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: cache-step
         with:
           key: cache-${{ matrix.os }}-node${{ matrix.node }}-${{ hashFiles('package-lock.json') }}
