@@ -3,6 +3,7 @@
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "projects/auth-js",
     "projectType": "library",
+    "tags": [],
     "targets": {
         "build": {
             "executor": "nx:run-commands",
@@ -17,15 +18,10 @@
             }
         },
         "lint": {
-            "executor": "@nx/linter:eslint",
+            "executor": "@nx/eslint:lint",
             "outputs": [
                 "{options.outputFile}"
-            ],
-            "options": {
-                "lintFilePatterns": [
-                    "projects/auth-js/**/*.ts"
-                ]
-            }
+            ]
         },
         "test": {
             "executor": "@nx/jest:jest",
@@ -33,10 +29,8 @@
                 "{workspaceRoot}/coverage/{projectRoot}"
             ],
             "options": {
-                "jestConfig": "projects/auth-js/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "projects/auth-js/jest.config.ts"
             }
         }
-    },
-    "tags": []
+    }
 }

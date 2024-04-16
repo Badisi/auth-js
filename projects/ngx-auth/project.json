@@ -3,8 +3,8 @@
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "projects/ngx-auth",
     "prefix": "badisi",
-    "tags": [],
     "projectType": "library",
+    "tags": [],
     "targets": {
         "build-schematics": {
             "executor": "nx:run-commands",
@@ -59,21 +59,14 @@
                 "{workspaceRoot}/coverage/{projectRoot}"
             ],
             "options": {
-                "jestConfig": "projects/ngx-auth/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "projects/ngx-auth/jest.config.ts"
             }
         },
         "lint": {
-            "executor": "@nx/linter:eslint",
+            "executor": "@nx/eslint:lint",
             "outputs": [
                 "{options.outputFile}"
-            ],
-            "options": {
-                "lintFilePatterns": [
-                    "projects/ngx-auth/**/*.ts",
-                    "projects/ngx-auth/**/*.html"
-                ]
-            }
+            ]
         }
     }
 }

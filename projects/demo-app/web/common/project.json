@@ -3,18 +3,13 @@
     "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "projects/demo-app/web/common",
     "projectType": "library",
+    "tags": [],
     "targets": {
         "lint": {
-            "executor": "@nx/linter:eslint",
+            "executor": "@nx/eslint:lint",
             "outputs": [
                 "{options.outputFile}"
-            ],
-            "options": {
-                "lintFilePatterns": [
-                    "projects/demo-app/web/common/**/*.ts",
-                    "projects/demo-app/web/common/**/*.html"
-                ]
-            }
+            ]
         },
         "test": {
             "executor": "@nx/jest:jest",
@@ -22,10 +17,8 @@
                 "{workspaceRoot}/coverage/{projectRoot}"
             ],
             "options": {
-                "jestConfig": "projects/demo-app/web/common/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "projects/demo-app/web/common/jest.config.ts"
             }
         }
-    },
-    "tags": []
+    }
 }

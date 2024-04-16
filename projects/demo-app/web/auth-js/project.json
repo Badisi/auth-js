@@ -3,6 +3,7 @@
     "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "projects/demo-app/web/auth-js/src",
     "projectType": "application",
+    "tags": [],
     "targets": {
         "build": {
             "executor": "@nx/webpack:webpack",
@@ -27,7 +28,8 @@
                 "styles": [
                     "projects/demo-app/web/auth-js/src/styles.scss"
                 ],
-                "scripts": []
+                "scripts": [],
+                "webpackConfig": "projects/demo-app/web/auth-js/webpack.config.js"
             },
             "configurations": {
                 "production": {
@@ -65,16 +67,10 @@
             "defaultConfiguration": "development"
         },
         "lint": {
-            "executor": "@nx/linter:eslint",
+            "executor": "@nx/eslint:lint",
             "outputs": [
                 "{options.outputFile}"
-            ],
-            "options": {
-                "lintFilePatterns": [
-                    "projects/demo-app/web/auth-js/src/**/*.ts",
-                    "projects/demo-app/web/auth-js/src/**/*.html"
-                ]
-            }
+            ]
         },
         "test": {
             "executor": "@nx/jest:jest",
@@ -82,10 +78,8 @@
                 "{workspaceRoot}/coverage/{projectRoot}"
             ],
             "options": {
-                "jestConfig": "projects/demo-app/web/auth-js/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "projects/demo-app/web/auth-js/jest.config.ts"
             }
         }
-    },
-    "tags": []
+    }
 }

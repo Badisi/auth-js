@@ -4,6 +4,12 @@
     "projectType": "application",
     "prefix": "badisi",
     "sourceRoot": "projects/demo-app/web/ngx-auth/src",
+    "serve-static": {
+        "executor": "@nx/web:file-server",
+        "options": {
+            "buildTarget": "demo-app-ngx-auth:build"
+        }
+    },
     "tags": [],
     "targets": {
         "build": {
@@ -85,16 +91,10 @@
             }
         },
         "lint": {
-            "executor": "@nx/linter:eslint",
+            "executor": "@nx/eslint:lint",
             "outputs": [
                 "{options.outputFile}"
-            ],
-            "options": {
-                "lintFilePatterns": [
-                    "projects/demo-app/web/ngx-auth/src/**/*.ts",
-                    "projects/demo-app/web/ngx-auth/src/**/*.html"
-                ]
-            }
+            ]
         },
         "test": {
             "executor": "@nx/jest:jest",
@@ -102,15 +102,8 @@
                 "{workspaceRoot}/coverage/{projectRoot}"
             ],
             "options": {
-                "jestConfig": "projects/demo-app/web/ngx-auth/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "projects/demo-app/web/ngx-auth/jest.config.ts"
             }
-        }
-    },
-    "serve-static": {
-        "executor": "@nx/web:file-server",
-        "options": {
-            "buildTarget": "demo-app-ngx-auth:build"
         }
     }
 }
