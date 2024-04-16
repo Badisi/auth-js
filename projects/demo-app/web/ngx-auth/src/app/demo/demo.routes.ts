@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { OIDCAuthSettings } from '@badisi/auth-js/oidc';
 import { AccessToken, AuthGuard, AuthGuardValidator, UserProfile } from '@badisi/ngx-auth';
 import { UserSettings } from 'demo-app-common';
@@ -29,14 +28,14 @@ const rolesValidator = (): AuthGuardValidator =>
     };
 /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 
-const routes: Routes = [
+export const routes: Routes = [
     {
         path: '',
         component: DemoComponent,
         children: [
             {
                 path: 'public',
-                loadChildren: () => import('./components/page/page.module').then(m => m.PageModule),
+                loadComponent: () => import('./components/page/page.component').then(m => m.PageComponent),
                 runGuardsAndResolvers: 'always',
                 data: {
                     title: 'PUBLIC CONTENT'
@@ -44,7 +43,7 @@ const routes: Routes = [
             },
             {
                 path: 'private',
-                loadChildren: () => import('./components/page/page.module').then(m => m.PageModule),
+                loadComponent: () => import('./components/page/page.component').then(m => m.PageComponent),
                 runGuardsAndResolvers: 'always',
                 canLoad: [AuthGuard],
                 canActivate: [AuthGuard],
@@ -55,7 +54,7 @@ const routes: Routes = [
             },
             {
                 path: 'forbidden',
-                loadChildren: () => import('./components/page/page.module').then(m => m.PageModule),
+                loadComponent: () => import('./components/page/page.component').then(m => m.PageComponent),
                 runGuardsAndResolvers: 'always',
                 data: {
                     title: 'ACCESS FORBIDDEN'
@@ -63,7 +62,7 @@ const routes: Routes = [
             },
             {
                 path: 'protected',
-                loadChildren: () => import('./components/page/page.module').then(m => m.PageModule),
+                loadComponent: () => import('./components/page/page.component').then(m => m.PageComponent),
                 runGuardsAndResolvers: 'always',
                 canLoad: [AuthGuard],
                 canActivate: [AuthGuard],
@@ -76,9 +75,3 @@ const routes: Routes = [
         ]
     }
 ];
-
-@NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule]
-})
-export class DemoRoutingModule { }

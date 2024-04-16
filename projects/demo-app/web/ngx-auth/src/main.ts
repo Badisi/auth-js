@@ -1,8 +1,9 @@
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { initAuth } from '@badisi/ngx-auth';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { initAuth, provideAuth } from '@badisi/ngx-auth';
 import { DemoAppSettings } from 'demo-app-common';
 
-import { AppModule } from './app/app.module';
+import { AppComponent } from './app/app.component';
+import { appConfig } from './app/app.config';
 import { appSettings } from './app/app.settings';
 
 declare global {
@@ -24,9 +25,9 @@ declare global {
         .then(authProvider => {
             el.replaceWith(document.createElement('app-root'));
 
-            platformBrowserDynamic([
-                authProvider
-            ]).bootstrapModule(AppModule).catch(err => console.error(err));
+            appConfig.providers.push(provideAuth(authProvider));
+            bootstrapApplication(AppComponent, appConfig)
+                .catch(err => console.error(err));
         })
         .catch((err: Error) => {
             const message = (err instanceof Error) ? err.message : err;

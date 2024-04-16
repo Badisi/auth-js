@@ -1,6 +1,8 @@
+import { AsyncPipe } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Params, Router } from '@angular/router';
+import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Params, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from '@badisi/ngx-auth';
 import { DemoAppPlaygroundElement, globalStyle } from 'demo-app-common';
 
@@ -9,6 +11,9 @@ import { DemoAppPlaygroundElement, globalStyle } from 'demo-app-common';
     templateUrl: './demo.component.html',
     styleUrls: ['./demo.component.scss'],
     styles: [globalStyle],
+    standalone: true,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [AsyncPipe, FormsModule, RouterOutlet, RouterLink],
     encapsulation: ViewEncapsulation.ShadowDom
 })
 export class DemoComponent implements AfterViewInit {
