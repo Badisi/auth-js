@@ -7,7 +7,7 @@
     "author": "Badisi",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Badisi/auth-js.git"
+        "url": "git+https://github.com/Badisi/auth-js.git"
     },
     "keywords": [
         "angular",
