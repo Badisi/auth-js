@@ -7,7 +7,7 @@ import { MobileWindowParams } from './mobile-window-params.model';
 // TODO: check if `monitorSession` and `revokeAccessTokenOnSignout` might be useful too ?
 type UsefulSettings = 'scope' | 'loadUserInfo' | 'automaticSilentRenew';
 
-export interface OIDCAuthSettings extends CoreAuthSettings, Pick<UserManagerSettings, UsefulSettings> {
+export interface OIDCAuthSettings extends CoreAuthSettings, Partial<Pick<UserManagerSettings, UsefulSettings>> {
     authorityUrl: string;
     clientId: string;
     mobileScheme?: string;
