@@ -40,9 +40,9 @@
         "tslib": "^2.6.2"
     },
     "peerDependencies": {
-        "@angular/common": ">= 14",
-        "@angular/core": ">= 14",
-        "@angular/router": ">= 14",
+        "@angular/common": ">= 15",
+        "@angular/core": ">= 15",
+        "@angular/router": ">= 15",
         "rxjs": "^6.5.3 || ^7.4.0"
     },
     "publishConfig": {
