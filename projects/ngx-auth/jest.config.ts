@@ -9,14 +9,22 @@ export default {
       'jest-preset-angular',
       {
         tsconfig: '<rootDir>/tsconfig.spec.json',
-        stringifyContentPathRegex: '\\.(html|svg)$',
+        stringifyContentPathRegex: '\\.(html|svg)$'
       },
     ],
   },
-  transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
+  moduleNameMapper: {
+    '@angular-devkit/core/src/json/schema/index': '<rootDir>/../../node_modules/@angular-devkit/core/src/json/schema/index.js'
+  },
+  transformIgnorePatterns: [`node_modules/(?!.*\\.mjs$)`],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',
     'jest-preset-angular/build/serializers/html-comment',
   ],
+  testMatch: [
+    '<rootDir>/**/__tests__/**/*.[jt]s?(x)',
+    '<rootDir>/**/*(*.)@(spec|test).[jt]s?(x)',
+  ],
+  testPathIgnorePatterns: ['<rootDir>/schematics/schematics.spec.ts']
 };

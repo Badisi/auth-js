@@ -40,8 +40,7 @@
                 "{workspaceRoot}/dist/ngx-auth"
             ],
             "options": {
-                "project": "projects/ngx-auth/ng-package.json",
-                "updateBuildableProjectDepsInPackageJson": false
+                "project": "projects/ngx-auth/ng-package.json"
             },
             "configurations": {
                 "production": {
