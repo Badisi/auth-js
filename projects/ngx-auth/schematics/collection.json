@@ -5,11 +5,6 @@
             "description": "Run ng-add schematic",
             "factory": "./ng-add/index",
             "schema": "./ng-add/schema.json"
-        },
-        "install": {
-            "description": "Run install schematic",
-            "factory": "./install/index",
-            "schema": "./install/schema.json"
         }
     }
 }

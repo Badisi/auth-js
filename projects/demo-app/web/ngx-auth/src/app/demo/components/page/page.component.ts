@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -10,9 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 export class PageComponent implements OnInit {
     public title = '';
 
-    constructor(
-        private route: ActivatedRoute
-    ) { }
+    private route = inject(ActivatedRoute);
 
     public ngOnInit(): void {
         this.title = this.route.snapshot.data['title'] as string;

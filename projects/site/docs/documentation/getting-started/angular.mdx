@@ -6,7 +6,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 
-This guide explains how to set up your Angular project to begin using `@badisi/ngx-auth`.
+This guide explains how to set up your Angular project to begin using [`@badisi/ngx-auth`][ngx-auth].
 
 🚀 The fastest, simplest and preferred way is the [schematic](#schematic) way but you can also install this library [manually](#manual-installation).
 
@@ -73,15 +73,40 @@ If you wish to install this library manually, please follow the steps below:
     ```
 
     :::info
-    This library depends on [`oidc-client-ts`][oidc-client] which itself depends on [`crypto-js`][crypto-js] which is a **commonjs** dependency.
-
-    **Assets** needs to be copy over to your application because some html web pages are used and required when navigating back from the Authentication Provider.
+    - This library depends on [`oidc-client-ts`][oidc-client] which itself depends on [`crypto-js`][crypto-js] which is a **commonjs** dependency.
+    - **Assets** needs to be copy over to your application because some html web pages are used and required when navigating back from the Authentication Provider.
     :::
-    <br/>
 
-3. Modify your **main.ts** file
+3. Provide the library *(according to the type of your Angular application)*
 
-    ```ts title="main.ts" {3,12-15,19}
+    <Tabs>
+    <TabItem value="standalone" label="Standalone" default>
+
+    > Modify your **main.ts** file
+
+    ```ts title="main.ts" {2,7-11,14}
+    import { bootstrapApplication } from '@angular/platform-browser';
+    import { initAuth, provideAuth } from '@badisi/ngx-auth';
+
+    import { appConfig } from './app/app.config';
+    import { AppComponent } from './app/app.component';
+
+    initAuth({
+      authorityUrl: 'https://dev-fijd1e9x.us.auth0.com',
+      clientId: 'kRVVEnAWKMpxxpcodl0TqLXfIHgQvmmt'
+    }).then(authProvider => {
+      appConfig.providers.push(provideAuth(authProvider));
+      bootstrapApplication(AppComponent, appConfig)
+        .catch((err) => console.error(err));
+    }).catch(error => console.error(error));
+    ```
+
+    </TabItem>
+    <TabItem value="module" label="Module">
+
+    > Modify your **main.ts** file
+
+    ```ts title="main.ts" {3,12-15,17,19}
     import { enableProdMode } from '@angular/core';
     import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
     import { initAuth } from '@badisi/ngx-auth';
@@ -103,16 +128,9 @@ If you wish to install this library manually, please follow the steps below:
     }).catch(error => console.error(error));
     ```
 
-    :::tip
-    For more info on how to **configure** the library please have a look at the [`configuration`](../configuration) page.
-    :::
-
-    :::info
-    Initializing the library prior to your Angular application bootstrapping ensures that all the security checks are made upstream (if needed) and avoid the whole Angular application to be loaded twice when using redirects.
-    :::
     <br/>
 
-4. Modify your **app.module.ts** file
+    > Modify your **app.module.ts** file
 
     ```ts title="app.module.ts" {2,6}
     import { NgModule } from '@angular/core';
@@ -126,10 +144,17 @@ If you wish to install this library manually, please follow the steps below:
     export class AppModule {}
     ```
 
+    </TabItem>
+    </Tabs>
+
     :::info
-    By importing the **AuthModule**, an [`AuthService`](../../apis/angular/auth-service), [`AuthInterceptor`](../../apis/angular/auth-interceptor) and [`AuthGuard`](../../apis/angular/auth-guard) will be provided to your application.
+    - Initializing the library prior to your Angular application bootstrapping ensures that all the security checks are made upstream (if needed) and avoid the whole Angular application to be loaded twice when using redirects.
+    - By providing the library, an [`AuthService`](../../apis/angular/auth-service), [`AuthGuard`](../../apis/angular/auth-guard) and [`AuthInterceptor`](../../apis/angular/auth-interceptor) will be also provided to your application.
     :::
-    <br/>
+
+    :::tip
+    For more info on how to **configure** the library please have a look at the [`configuration`](../configuration) page.
+    :::
 
 5. You're done! 🚀
 
@@ -139,3 +164,4 @@ If you wish to install this library manually, please follow the steps below:
 [schematics]: https://material.angular.io/guide/schematics
 [oidc-client]: https://github.com/authts/oidc-client-ts/issues/275
 [crypto-js]: https://github.com/brix/crypto-js
+[ngx-auth]: https://github.com/badisi/auth-js/tree/main/projects/ngx-auth

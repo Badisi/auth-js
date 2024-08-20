@@ -1,8 +1,9 @@
 /* eslint-disable rxjs/finnish */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
-    ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanLoad, Data, Route, Router, RouterStateSnapshot, UrlTree
+    ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanLoad, Data, Route, Router,
+    RouterStateSnapshot, UrlTree
 } from '@angular/router';
 import { AccessToken, UserProfile } from '@badisi/auth-js/oidc';
 import { forkJoin, from, isObservable, Observable, of } from 'rxjs';
@@ -19,10 +20,8 @@ export interface AuthGuardData extends Data {
 
 @Injectable()
 export class AuthGuard implements CanLoad, CanActivate, CanActivateChild {
-    constructor(
-        private authService: AuthService,
-        private router: Router
-    ) { }
+    private authService = inject(AuthService);
+    private router = inject(Router);
 
     public canLoad(route: Route): Observable<UrlTree | boolean> {
         const inFlightUrl = this.router.getCurrentNavigation()?.extractedUrl?.toString();

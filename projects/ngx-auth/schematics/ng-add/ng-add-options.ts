@@ -1,4 +1,4 @@
-export class InstallOptions {
+export class NgAddOptions {
     public project!: string;
     public authorityUrl!: string;
     public clientId!: string;

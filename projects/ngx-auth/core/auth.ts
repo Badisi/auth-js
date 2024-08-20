@@ -15,9 +15,6 @@ const DEFAULT_SETTINGS: Optional<AuthSettings, 'authorityUrl' | 'clientId'> = {
     }
 };
 
-/**
- * @internal
- */
 export const AUTH_MANAGER = new InjectionToken<string>('AUTH_MANAGER');
 
 export const initAuth = async (settings: AuthSettings): Promise<StaticProvider> => ({

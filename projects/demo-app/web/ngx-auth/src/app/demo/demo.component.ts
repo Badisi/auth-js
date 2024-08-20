@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Params, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from '@badisi/ngx-auth';
@@ -26,11 +26,9 @@ export class DemoComponent implements AfterViewInit {
     public roles?: string;
     public queryParams?: Params;
 
-    constructor(
-        public router: Router,
-        public authService: AuthService,
-        private httpClient: HttpClient
-    ) { }
+    protected router = inject(Router);
+    protected authService = inject(AuthService);
+    private httpClient = inject(HttpClient);
 
     public ngAfterViewInit(): void {
         setTimeout(() => {
@@ -54,7 +52,10 @@ export class DemoComponent implements AfterViewInit {
 
     public callPrivateApi(event: Event): void {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const { url, headers } = (event as CustomEvent).detail as { url: string; headers: string };
+        const { url, headers } = (event as CustomEvent).detail as {
+            url: string;
+            headers: string;
+        };
 
         if (url) {
             let httpHeaders = new HttpHeaders();

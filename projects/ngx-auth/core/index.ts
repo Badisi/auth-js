@@ -16,6 +16,7 @@ export type { AuthGuardValidator, AuthGuardData } from './auth.guard';
 
 export { AuthInterceptor } from './auth.interceptor';
 export { AuthService } from './auth.service';
+export { provideAuth } from './auth.provider';
 export { AuthModule } from './auth.module';
 export { AuthGuard } from './auth.guard';
-export { initAuth } from './main';
+export { initAuth } from './auth';
