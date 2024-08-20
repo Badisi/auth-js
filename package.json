@@ -27,7 +27,7 @@
     "scripts": {
         "ncu": "npx npm-check-updates -i --format=group --packageFile='{,projects/**/}package.json'",
         "migrate": "nx migrate latest",
-        "lint": "nx run-many --target=lint --projects=auth-js,ngx-auth",
+        "lint": "nx run-many --target=lint --projects=auth-js,ngx-auth,demo-app-web",
         "test": "nx run-many --target=test --projects=auth-js,ngx-auth",
         "publish": "multi-semantic-release --ignore-private-packages --yes",
         "publish-dry-run": "GITHUB_TOKEN=XXX NPM_TOKEN=XXX npm run publish -- --dry-run --no-ci",
