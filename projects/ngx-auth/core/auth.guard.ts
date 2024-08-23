@@ -20,20 +20,20 @@ export interface AuthGuardData extends Data {
 
 @Injectable()
 export class AuthGuard implements CanLoad, CanActivate, CanActivateChild {
-    private authService = inject(AuthService);
-    private router = inject(Router);
+    #authService = inject(AuthService);
+    #router = inject(Router);
 
     public canLoad(route: Route): Observable<UrlTree | boolean> {
-        const inFlightUrl = this.router.getCurrentNavigation()?.extractedUrl?.toString();
-        return this.isAllowed(route.data, inFlightUrl);
+        const inFlightUrl = this.#router.getCurrentNavigation()?.extractedUrl?.toString();
+        return this.#isAllowed(route.data, inFlightUrl);
     }
 
     public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<UrlTree | boolean> {
-        return this.isAllowed(route.data, state.url);
+        return this.#isAllowed(route.data, state.url);
     }
 
     public canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<UrlTree | boolean> {
-        return this.isAllowed(childRoute.data, state.url);
+        return this.#isAllowed(childRoute.data, state.url);
     }
 
     public isAuthorized(): Observable<boolean> | Promise<boolean> | boolean {
@@ -42,17 +42,17 @@ export class AuthGuard implements CanLoad, CanActivate, CanActivateChild {
 
     // ---- HELPER(s) ----
 
-    private isPromise(value: Promise<unknown>): value is Promise<unknown> {
+    #isPromise(value: Promise<unknown>): value is Promise<unknown> {
         return Boolean(value?.then && typeof value.then === 'function');
     }
 
-    private isAuthorized$(data?: AuthGuardData): Observable<boolean> {
+    #isAuthorized$(data?: AuthGuardData): Observable<boolean> {
         const transformToObs = (value: Observable<boolean> | Promise<boolean> | boolean): Observable<boolean> => {
             if (typeof value === 'boolean') {
                 return of(value);
             } else if (isObservable(value)) {
                 return value;
-            } else if (this.isPromise(value)) {
+            } else if (this.#isPromise(value)) {
                 return from(value);
             } else {
                 return of(false);
@@ -62,8 +62,8 @@ export class AuthGuard implements CanLoad, CanActivate, CanActivateChild {
         const validator = data?.authGuardValidator;
         if (typeof validator === 'function') {
             return forkJoin({
-                userProfile: this.authService.userProfile$.pipe(take(1)),
-                accessToken: this.authService.accessTokenDecoded$.pipe(take(1))
+                userProfile: this.#authService.userProfile$.pipe(take(1)),
+                accessToken: this.#authService.accessTokenDecoded$.pipe(take(1))
             }).pipe(
                 switchMap(({ userProfile, accessToken }) => transformToObs(validator(userProfile, accessToken)))
             );
@@ -75,14 +75,14 @@ export class AuthGuard implements CanLoad, CanActivate, CanActivateChild {
         }
     }
 
-    private isAuthenticated$(redirectUrl = location.href): Observable<boolean> {
-        return this.authService
+    #isAuthenticated$(redirectUrl = location.href): Observable<boolean> {
+        return this.#authService
             .isAuthenticated$
             .pipe(
                 take(1),
                 switchMap(isAuthenticated => {
                     if (!isAuthenticated) {
-                        return from(this.authService.login({ redirectUrl }))
+                        return from(this.#authService.login({ redirectUrl }))
                             .pipe(
                                 catchError(() => of(false))
                             );
@@ -92,14 +92,14 @@ export class AuthGuard implements CanLoad, CanActivate, CanActivateChild {
             );
     }
 
-    private isAllowed(data?: AuthGuardData, redirectUrl = location.href): Observable<UrlTree | boolean> {
-        return this.isAuthenticated$(redirectUrl)
+    #isAllowed(data?: AuthGuardData, redirectUrl = location.href): Observable<UrlTree | boolean> {
+        return this.#isAuthenticated$(redirectUrl)
             .pipe(
-                switchMap(isAuthenticated => (isAuthenticated) ? this.isAuthorized$(data) : of(false)),
+                switchMap(isAuthenticated => (isAuthenticated) ? this.#isAuthorized$(data) : of(false)),
                 map(isAuthorized => {
                     if (!isAuthorized) {
-                        const notAllowedUrl = data?.authGuardRedirectUrl || this.authService.getSettings()?.authGuardRedirectUrl;
-                        return this.router.parseUrl(notAllowedUrl ? notAllowedUrl : this.router.url);
+                        const notAllowedUrl = data?.authGuardRedirectUrl || this.#authService.getSettings()?.authGuardRedirectUrl;
+                        return this.#router.parseUrl(notAllowedUrl ? notAllowedUrl : this.#router.url);
                     }
                     return true;
                 })

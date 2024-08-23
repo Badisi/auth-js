@@ -38,41 +38,41 @@ const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> 
 };
 
 export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
-    private idTokenSubs = new AuthSubscriptions<[string | undefined]>();
-    private accessTokenSubs = new AuthSubscriptions<[string | undefined]>();
-    private userProfileSubs = new AuthSubscriptions<[UserProfile | undefined]>();
-    private userSessionSubs = new AuthSubscriptions<[UserSession | undefined]>();
-    private authenticatedSubs = new AuthSubscriptions<[boolean]>();
-    private renewingSubs = new AuthSubscriptions<[boolean]>();
-    private redirectSubs = new AuthSubscriptions<[URL]>();
-    private userManagerSubs: (() => void)[] = [];
+    #idTokenSubs = new AuthSubscriptions<[string | undefined]>();
+    #accessTokenSubs = new AuthSubscriptions<[string | undefined]>();
+    #userProfileSubs = new AuthSubscriptions<[UserProfile | undefined]>();
+    #userSessionSubs = new AuthSubscriptions<[UserSession | undefined]>();
+    #authenticatedSubs = new AuthSubscriptions<[boolean]>();
+    #renewingSubs = new AuthSubscriptions<[boolean]>();
+    #redirectSubs = new AuthSubscriptions<[URL]>();
+    #userManagerSubs: (() => void)[] = [];
 
-    private _idToken?: string;
-    private _accessToken?: string;
-    private _userProfile?: UserProfile;
-    private _userSession?: UserSession;
-    private _isAuthenticated = false;
-    private _isRenewing = false;
+    #idToken?: string;
+    #accessToken?: string;
+    #userProfile?: UserProfile;
+    #userSession?: UserSession;
+    #isAuthenticated = false;
+    #isRenewing = false;
 
-    private userManager?: OidcUserManager;
-    private settings = DEFAULT_SETTINGS as OIDCAuthSettings;
+    #userManager?: OidcUserManager;
+    #settings = DEFAULT_SETTINGS as OIDCAuthSettings;
 
-    private _user?: User | null;
+    #user?: User | null;
     private set user(value: User | null | undefined) {
-        if (this._user !== value) {
-            this._user = value;
+        if (this.#user !== value) {
+            this.#user = value;
 
-            this._idToken = (value) ? value.id_token : undefined;
-            this._accessToken = (value) ? value.access_token : undefined;
-            this._userProfile = (value?.profile) ? value.profile : undefined;
-            this._userSession = (value) ? UserSession.deserialize(value) : undefined;
-            this._isAuthenticated = !!(value && !value.expired);
+            this.#idToken = (value) ? value.id_token : undefined;
+            this.#accessToken = (value) ? value.access_token : undefined;
+            this.#userProfile = (value?.profile) ? value.profile : undefined;
+            this.#userSession = (value) ? UserSession.deserialize(value) : undefined;
+            this.#isAuthenticated = !!(value && !value.expired);
 
-            this.idTokenSubs.notify(this._idToken);
-            this.accessTokenSubs.notify(this._accessToken);
-            this.userProfileSubs.notify(this._userProfile);
-            this.userSessionSubs.notify(this._userSession);
-            this.authenticatedSubs.notify(this._isAuthenticated);
+            this.#idTokenSubs.notify(this.#idToken);
+            this.#accessTokenSubs.notify(this.#accessToken);
+            this.#userProfileSubs.notify(this.#userProfile);
+            this.#userSessionSubs.notify(this.#userSession);
+            this.#authenticatedSubs.notify(this.#isAuthenticated);
         }
     }
 
@@ -90,7 +90,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         const baseUrl = (isNativeMobile) ? `${userSettings.mobileScheme}://localhost/` : AuthUtils.getBaseUrl();
 
         // Initialize settings
-        this.settings = merge({}, DEFAULT_SETTINGS, {
+        this.#settings = merge({}, DEFAULT_SETTINGS, {
             internal: {
                 userStore: new WebStorageStateStore({
                     store: (isNativeMobile) ? new MobileStorage() : new InMemoryWebStorage()
@@ -104,57 +104,57 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         }, userSettings);
 
         // Configure the user manager
-        this.userManager = new OidcUserManager(this.settings);
+        this.#userManager = new OidcUserManager(this.#settings);
 
         // Listen for events
-        this.userManagerSubs.push(
-            this.userManager.events.addUserLoaded(user => {
+        this.#userManagerSubs.push(
+            this.#userManager.events.addUserLoaded(user => {
                 this.user = user;
             }),
-            this.userManager.events.addUserUnloaded(() => {
-                if (this.user) {
+            this.#userManager.events.addUserUnloaded(() => {
+                if (this.#user) {
                     this.user = null;
                     // If user is kicked out for any reason -> reload the app if login is required
-                    if (this.settings.loginRequired) {
+                    if (this.#settings.loginRequired) {
                         location.reload();
                     }
                 }
             }),
-            this.userManager.events.addSilentRenewError(async () => {
-                await this.removeUser();
+            this.#userManager.events.addSilentRenewError(async () => {
+                await this.#removeUser();
             })
         );
 
         // Make sure we are not trapped in the inception loop
-        this.assertNotInInceptionLoop();
+        this.#assertNotInInceptionLoop();
 
         // Decide what to do..
-        if (AuthUtils.isUrlMatching(location.href, this.settings.internal?.redirect_uri)) {
+        if (AuthUtils.isUrlMatching(location.href, this.#settings.internal?.redirect_uri)) {
             // Back from signin redirect
-            await this.runSyncOrAsync(async () => {
+            await this.#runSyncOrAsync(async () => {
                 const redirectUrl = sessionStorage.getItem(REDIRECT_URL_KEY);
-                await this.callSignin(() => this.userManager!.signinRedirectCallback(location.href), redirectUrl);
+                await this.#callSignin(() => this.#userManager!.signinRedirectCallback(location.href), redirectUrl);
                 sessionStorage.removeItem(REDIRECT_URL_KEY);
             });
-        } else if (AuthUtils.isUrlMatching(location.href, this.settings.internal?.post_logout_redirect_uri)) {
+        } else if (AuthUtils.isUrlMatching(location.href, this.#settings.internal?.post_logout_redirect_uri)) {
             // Back from signout redirect
-            await this.runSyncOrAsync(async () => {
+            await this.#runSyncOrAsync(async () => {
                 const redirectUrl = sessionStorage.getItem(REDIRECT_URL_KEY);
-                await this.callSignout(() => this.userManager!.signoutRedirectCallback(location.href), redirectUrl);
+                await this.#callSignout(() => this.#userManager!.signoutRedirectCallback(location.href), redirectUrl);
                 sessionStorage.removeItem(REDIRECT_URL_KEY);
             });
-        } else if (this.settings.retrieveUserSession || this.settings.loginRequired) {
+        } else if (this.#settings.retrieveUserSession || this.#settings.loginRequired) {
             const signinSilent = async (): Promise<void> => {
-                await this.runSyncOrAsync(() => this.signinSilent()
+                await this.#runSyncOrAsync(() => this.#signinSilent()
                     .catch(async (signinSilentError: ErrorResponse) => {
                         const { error, message } = signinSilentError;
                         // Ex: login_required, consent_required, interaction_required, account_selection_required
-                        if (this.settings.loginRequired && (error?.includes('_required') || message?.includes('_required'))) {
+                        if (this.#settings.loginRequired && (error?.includes('_required') || message?.includes('_required'))) {
                             await this.login();
                         } else {
                             console.error('[OIDCAuthManager] User\'s session cannot be retrieved:', signinSilentError.message);
-                            this.authenticatedSubs.notify(false);
-                            if (this.settings.loginRequired) {
+                            this.#authenticatedSubs.notify(false);
+                            if (this.#settings.loginRequired) {
                                 throw signinSilentError;
                             }
                         }
@@ -162,15 +162,15 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             };
 
             // Try to load user from storage
-            const user = await this.userManager?.getUser();
+            const user = await this.#userManager?.getUser();
             if (!user || user.expired) {
                 // on desktop -> try a silent renew with iframe
-                if (!isNativeMobile && this.settings.retrieveUserSession) {
+                if (!isNativeMobile && this.#settings.retrieveUserSession) {
                     await signinSilent();
-                // else -> force login if required
-                } else if (this.settings.loginRequired) {
+                    // else -> force login if required
+                } else if (this.#settings.loginRequired) {
                     await this.login();
-                // else -> gracefully notify that we are not authenticated
+                    // else -> gracefully notify that we are not authenticated
                 } else {
                     this.user = null;
                 }
@@ -185,16 +185,16 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     public async logout(args?: LogoutArgs): Promise<void> {
         const redirectUrl = args?.redirectUrl ?? location.href;
         if (AuthUtils.isNativeMobile()) {
-            await this.callSignout(() => this.userManager!.signoutMobile(args), redirectUrl);
+            await this.#callSignout(() => this.#userManager!.signoutMobile(args), redirectUrl);
         } else {
-            switch (args?.desktopNavigationType ?? this.settings.desktopNavigationType) {
+            switch (args?.desktopNavigationType ?? this.#settings.desktopNavigationType) {
                 case DesktopNavigation.POPUP:
-                    await this.callSignout(() => this.userManager!.signoutPopup(args), redirectUrl);
+                    await this.#callSignout(() => this.#userManager!.signoutPopup(args), redirectUrl);
                     break;
                 case DesktopNavigation.REDIRECT:
                 default:
                     sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
-                    await this.userManager?.signoutRedirect(args);
+                    await this.#userManager?.signoutRedirect(args);
                     break;
             }
         }
@@ -203,110 +203,110 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     public async login(args?: LoginArgs): Promise<boolean> {
         const redirectUrl = args?.redirectUrl ?? location.href;
         if (AuthUtils.isNativeMobile()) {
-            await this.callSignin(() => this.userManager!.signinMobile(args), redirectUrl);
+            await this.#callSignin(() => this.#userManager!.signinMobile(args), redirectUrl);
         } else {
-            switch (args?.desktopNavigationType ?? this.settings.desktopNavigationType) {
+            switch (args?.desktopNavigationType ?? this.#settings.desktopNavigationType) {
                 case DesktopNavigation.POPUP:
-                    await this.callSignin(() => this.userManager!.signinPopup(args), redirectUrl);
+                    await this.#callSignin(() => this.#userManager!.signinPopup(args), redirectUrl);
                     break;
                 case DesktopNavigation.REDIRECT:
                 default:
                     sessionStorage.setItem(REDIRECT_URL_KEY, redirectUrl);
-                    await this.userManager?.signinRedirect(args);
+                    await this.#userManager?.signinRedirect(args);
                     break;
             }
         }
-        return (this._isAuthenticated);
+        return (this.#isAuthenticated);
     }
 
     public async renew(args?: RenewArgs): Promise<void> {
-        return this.signinSilent(args).catch(error => console.error(error));
+        return this.#signinSilent(args).catch(error => console.error(error));
     }
 
     public getSettings(): OIDCAuthSettings {
-        return this.settings;
+        return this.#settings;
     }
 
     public isRenewing(): boolean {
-        return this._isRenewing;
+        return this.#isRenewing;
     }
 
     public async isAuthenticated(): Promise<boolean> {
-        await this.waitForRenew('isAuthenticated()');
-        return this._isAuthenticated;
+        await this.#waitForRenew('isAuthenticated()');
+        return this.#isAuthenticated;
     }
 
     public async getUserProfile(): Promise<UserProfile | undefined> {
-        await this.waitForRenew('getUserProfile()');
-        return this._userProfile;
+        await this.#waitForRenew('getUserProfile()');
+        return this.#userProfile;
     }
 
     public async getUserSession(): Promise<UserSession | undefined> {
-        await this.waitForRenew('getUserSession()');
-        return this._userSession;
+        await this.#waitForRenew('getUserSession()');
+        return this.#userSession;
     }
 
     public async getIdToken(): Promise<string | undefined> {
-        await this.waitForRenew('getIdToken()');
-        return this._idToken;
+        await this.#waitForRenew('getIdToken()');
+        return this.#idToken;
     }
 
     public async getIdTokenDecoded(): Promise<IdToken | string | undefined> {
-        await this.waitForRenew('getIdTokenDecoded()');
-        return AuthUtils.decodeJwt<IdToken>(this._idToken);
+        await this.#waitForRenew('getIdTokenDecoded()');
+        return AuthUtils.decodeJwt<IdToken>(this.#idToken);
     }
 
     public async getAccessToken(): Promise<string | undefined> {
-        await this.waitForRenew('getAccessToken()');
-        return this._accessToken;
+        await this.#waitForRenew('getAccessToken()');
+        return this.#accessToken;
     }
 
     public async getAccessTokenDecoded(): Promise<AccessToken | string | undefined> {
-        await this.waitForRenew('getAccessTokenDecoded()');
-        return AuthUtils.decodeJwt<AccessToken>(this._accessToken);
+        await this.#waitForRenew('getAccessTokenDecoded()');
+        return AuthUtils.decodeJwt<AccessToken>(this.#accessToken);
     }
 
     // --- DESTROY ---
 
     public destroy(): void {
-        this.idTokenSubs.unsubscribe();
-        this.accessTokenSubs.unsubscribe();
-        this.userProfileSubs.unsubscribe();
-        this.userSessionSubs.unsubscribe();
-        this.authenticatedSubs.unsubscribe();
-        this.renewingSubs.unsubscribe();
-        this.redirectSubs.unsubscribe();
-        this.userManagerSubs.forEach(unsub => unsub());
+        this.#idTokenSubs.unsubscribe();
+        this.#accessTokenSubs.unsubscribe();
+        this.#userProfileSubs.unsubscribe();
+        this.#userSessionSubs.unsubscribe();
+        this.#authenticatedSubs.unsubscribe();
+        this.#renewingSubs.unsubscribe();
+        this.#redirectSubs.unsubscribe();
+        this.#userManagerSubs.forEach(unsub => unsub());
     }
 
     // --- HANDLER(s) ---
 
     public onIdTokenChanged(handler: AuthSubscriber<[string | undefined]>): AuthSubscription {
-        return this.idTokenSubs.add(handler);
+        return this.#idTokenSubs.add(handler);
     }
 
     public onAccessTokenChanged(handler: AuthSubscriber<[string | undefined]>): AuthSubscription {
-        return this.accessTokenSubs.add(handler);
+        return this.#accessTokenSubs.add(handler);
     }
 
     public onUserProfileChanged(handler: AuthSubscriber<[UserProfile | undefined]>): AuthSubscription {
-        return this.userProfileSubs.add(handler);
+        return this.#userProfileSubs.add(handler);
     }
 
     public onUserSessionChanged(handler: AuthSubscriber<[UserSession | undefined]>): AuthSubscription {
-        return this.userSessionSubs.add(handler);
+        return this.#userSessionSubs.add(handler);
     }
 
     public onAuthenticatedChanged(handler: AuthSubscriber<[boolean]>): AuthSubscription {
-        return this.authenticatedSubs.add(handler);
+        return this.#authenticatedSubs.add(handler);
     }
 
     public onRenewingChanged(handler: AuthSubscriber<[boolean]>): AuthSubscription {
-        return this.renewingSubs.add(handler);
+        return this.#renewingSubs.add(handler);
     }
 
     public onRedirect(handler: AuthSubscriber<[URL]>): AuthSubscription {
-        return this.redirectSubs.add(handler);
+        return this.#redirectSubs.add(handler);
     }
 
     // --- HELPER(s) ---
@@ -322,8 +322,8 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
      * 5) the web app (instead of the proper redirect_uri) is loaded in the iframe or popup
      * 6) an inception loop occurs -> app in iframe in iframe in iframe or popup in popup in popup..
      */
-    private assertNotInInceptionLoop(): void {
-        [this.settings.internal?.silent_redirect_uri, this.settings.internal?.popup_redirect_uri]
+    #assertNotInInceptionLoop(): void {
+        [this.#settings.internal?.silent_redirect_uri, this.#settings.internal?.popup_redirect_uri]
             .forEach(uri => {
                 const htmlFileName = (new RegExp(/^.*\/(.*).html$/gm).exec(uri ?? ''))?.[1];
                 const error = new Error(`[OIDCAuthManager] ${uri ?? 'redirect uri'} was not found.`);
@@ -351,10 +351,10 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
      * 6) in parallel user navigates somewhere and triggers isAuthenticated
      * 7) isAuthenticated should wait signinSilent to finish before returning
      */
-    private async waitForRenew(caller: string): Promise<void> {
+    async #waitForRenew(caller: string): Promise<void> {
         const startTime = Date.now();
         // eslint-disable-next-line no-loops/no-loops
-        while (this._isRenewing) {
+        while (this.#isRenewing) {
             if (Date.now() > (startTime + 5000)) {
                 console.warn('[@badisi/auth-js]', `\`${caller}\``, 'timed out waiting for renew to finish.');
                 break;
@@ -372,63 +372,63 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
      * 3) url did not changed, so no navigation occured and no guards either
      * 4) at this point, user is logged-out but still inside the app and able to see it
      */
-    private postLogoutVerification(redirectUrlAskedAfterLogout: string | null): void {
+    #postLogoutVerification(redirectUrlAskedAfterLogout: string | null): void {
         const postLogoutUrl = AuthUtils.stringToURL(redirectUrlAskedAfterLogout ?? '/');
-        if (this.settings.loginRequired && (location.origin === postLogoutUrl.origin)) {
+        if (this.#settings.loginRequired && (location.origin === postLogoutUrl.origin)) {
             location.reload();
         }
     }
 
-    private notifyRenew(value: boolean): void {
-        this._isRenewing = value;
-        this.renewingSubs.notify(value);
+    #notifyRenew(value: boolean): void {
+        this.#isRenewing = value;
+        this.#renewingSubs.notify(value);
     }
 
-    private async runSyncOrAsync(job: () => Promise<unknown>): Promise<void> {
+    async #runSyncOrAsync(job: () => Promise<unknown>): Promise<void> {
         // eslint-disable-next-line @typescript-eslint/brace-style, max-statements-per-line
-        if (this.settings.loginRequired) { await job(); } else { void job(); }
+        if (this.#settings.loginRequired) { await job(); } else { void job(); }
     }
 
-    private async redirect(url: string | null, error?: unknown): Promise<void> {
+    async #redirect(url: string | null, error?: unknown): Promise<void> {
         if (error) {
             console.error(error);
-            await this.removeUser();
+            await this.#removeUser();
         }
 
         const redirectUrl = AuthUtils.stringToURL(url ?? '/');
         // History cannot be rewritten when origin is different
         if (location.origin === redirectUrl.origin) {
             history.replaceState(history.state, '', redirectUrl.href);
-            this.redirectSubs.notify(redirectUrl);
+            this.#redirectSubs.notify(redirectUrl);
         } else {
             location.href = redirectUrl.href;
         }
     }
 
-    private async removeUser(): Promise<void> {
+    async #removeUser(): Promise<void> {
         this.user = null;
         await Promise.all([
-            this.userManager?.clearStaleState(),
-            this.userManager?.removeUser()
+            this.#userManager?.clearStaleState(),
+            this.#userManager?.removeUser()
         ]);
     }
 
-    private async signinSilent(args?: SigninSilentArgs): Promise<void> {
-        this.notifyRenew(true);
+    async #signinSilent(args?: SigninSilentArgs): Promise<void> {
+        this.#notifyRenew(true);
 
         try {
-            await this.userManager?.signinSilent(args);
+            await this.#userManager?.signinSilent(args);
         } catch (error) {
-            await this.removeUser();
+            await this.#removeUser();
             throw error;
         } finally {
-            this.notifyRenew(false);
+            this.#notifyRenew(false);
         }
     }
 
-    private async callSignin(managerCall: () => Promise<unknown>, redirectUrl: string | null): Promise<void> {
+    async #callSignin(managerCall: () => Promise<unknown>, redirectUrl: string | null): Promise<void> {
         try {
-            this.notifyRenew(true);
+            this.#notifyRenew(true);
             await managerCall().catch((error: Error) => {
                 if (error?.message === 'Attempted to navigate on a disposed window') {
                     error = new Error('[OIDCAuthManager] Attempted to navigate on a disposed window.');
@@ -437,16 +437,16 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                 }
                 throw error;
             });
-            await this.redirect(redirectUrl);
+            await this.#redirect(redirectUrl);
         } catch (error) {
-            await this.redirect('/', error);
+            await this.#redirect('/', error);
             throw error;
         } finally {
-            this.notifyRenew(false);
+            this.#notifyRenew(false);
         }
     }
 
-    private async callSignout(managerCall: () => Promise<unknown>, redirectUrl: string | null): Promise<void> {
+    async #callSignout(managerCall: () => Promise<unknown>, redirectUrl: string | null): Promise<void> {
         try {
             await managerCall().catch((error: Error) => {
                 if (error?.message === 'Attempted to navigate on a disposed window') {
@@ -456,14 +456,14 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                 }
                 throw error;
             });
-            await this.redirect(redirectUrl);
-            await this.removeUser();
+            await this.#redirect(redirectUrl);
+            await this.#removeUser();
         } catch (error) {
             redirectUrl = '/';
-            await this.redirect(redirectUrl, error);
+            await this.#redirect(redirectUrl, error);
             throw error;
         } finally {
-            this.postLogoutVerification(redirectUrl);
+            this.#postLogoutVerification(redirectUrl);
         }
     }
 }

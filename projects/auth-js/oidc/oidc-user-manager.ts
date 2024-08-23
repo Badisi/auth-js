@@ -14,7 +14,7 @@ import { OIDCAuthSettings } from './models/oidc-auth-settings.model';
  * (ex: signinMobile, signoutMobile, MobileNavigator, MobileWindow)
  */
 export class OidcUserManager extends UserManager {
-    private _mobileNavigator!: MobileNavigator;
+    #mobileNavigator!: MobileNavigator;
 
     constructor(
         public libSettings: OIDCAuthSettings
@@ -28,7 +28,7 @@ export class OidcUserManager extends UserManager {
             ...libSettings.internal
         } as UserManagerSettings);
 
-        this._mobileNavigator = new MobileNavigator();
+        this.#mobileNavigator = new MobileNavigator();
     }
 
     /* public async readRequestTypeFromState(url = location.href): Promise<string | null> {
@@ -63,7 +63,7 @@ export class OidcUserManager extends UserManager {
             mobileWindowHeight: mobileWindowHeight ?? this.libSettings.internal?.mobileWindowHeight
         };
 
-        const handle = this._mobileNavigator.prepare(this.settings.post_logout_redirect_uri!, params);
+        const handle = this.#mobileNavigator.prepare(this.settings.post_logout_redirect_uri!, params);
 
         await this._signout({
             request_type: 'so:m',
@@ -92,7 +92,7 @@ export class OidcUserManager extends UserManager {
             mobileWindowHeight: mobileWindowHeight ?? this.libSettings.internal?.mobileWindowHeight
         };
 
-        const handle = this._mobileNavigator.prepare(this.settings.redirect_uri, params);
+        const handle = this.#mobileNavigator.prepare(this.settings.redirect_uri, params);
 
         const user = await this._signin({
             request_type: 'si:m',
