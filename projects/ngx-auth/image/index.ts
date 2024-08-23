@@ -6,4 +6,3 @@
  * Copyright (C) 2018 Badisi
  */
 export * from './auth-image.component';
-export * from './auth-image.module';
