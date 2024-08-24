@@ -79,6 +79,8 @@ export class MobileWindow implements IWindow {
         });
     }
 
+    // TODO: oidc-client-ts impose a sync method but an async one is needed because of Capacitor Browser
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     public async close(): Promise<void> {
         const logger = this._logger.create('close');
         /**

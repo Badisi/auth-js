@@ -385,7 +385,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     }
 
     async #runSyncOrAsync(job: () => Promise<unknown>): Promise<void> {
-        // eslint-disable-next-line @typescript-eslint/brace-style, max-statements-per-line
+        // eslint-disable-next-line @stylistic/brace-style, @stylistic/max-statements-per-line
         if (this.#settings.loginRequired) { await job(); } else { void job(); }
     }
 

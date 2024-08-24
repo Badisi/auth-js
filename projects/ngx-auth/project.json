@@ -14,7 +14,7 @@
             "options": {
                 "cwd": "projects/ngx-auth",
                 "commands": [
-                    "tsc -p tsconfig.schematics.json",
+                    "tsc -p schematics/tsconfig.json",
                     "cpy schematics/*/schema.json ../../dist/ngx-auth",
                     "cpy schematics/collection.json ../../dist/ngx-auth"
                 ],

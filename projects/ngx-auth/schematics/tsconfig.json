@@ -1,8 +1,8 @@
 {
-    "extends": "./tsconfig.json",
+    "extends": "../tsconfig.json",
     "compilerOptions": {
-        "outDir": "../../dist/ngx-auth/schematics",
-        "rootDir": "schematics",
+        "outDir": "../../../dist/ngx-auth/schematics",
+        "rootDir": ".",
         "lib": [
             "es2018",
             "dom"
@@ -14,16 +14,16 @@
         "skipDefaultLibCheck": true,
         "skipLibCheck": true,
         "sourceMap": true,
-        "target": "es6",
+        "target": "es2018",
         "types": [
             "jest",
             "node"
         ]
     },
     "include": [
-        "schematics/**/*"
+        "**/*"
     ],
     "exclude": [
-        "schematics/**/*.spec.ts"
+        "**/*.spec.ts"
     ]
 }

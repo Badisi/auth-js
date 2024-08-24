@@ -14,7 +14,7 @@ export interface UserSettings<LS extends AuthSettings = AuthSettings> {
     otherSettings?: Record<string, unknown>;
 }
 
-export interface LibrarySettingsDefinitionItem<LS extends AuthSettings = AuthSettings>{
+export interface LibrarySettingsDefinitionItem<LS extends AuthSettings = AuthSettings> {
     _sortIndex?: number;
     name: keyof LS;
     label: string;
