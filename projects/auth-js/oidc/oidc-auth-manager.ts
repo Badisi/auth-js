@@ -144,29 +144,25 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                 sessionStorage.removeItem(REDIRECT_URL_KEY);
             });
         } else if (this.#settings.retrieveUserSession || this.#settings.loginRequired) {
-            const signinSilent = async (): Promise<void> => {
-                await this.#runSyncOrAsync(() => this.#signinSilent()
-                    .catch(async (signinSilentError: ErrorResponse) => {
-                        const { error, message } = signinSilentError;
-                        // Ex: login_required, consent_required, interaction_required, account_selection_required
-                        if (this.#settings.loginRequired && (error?.includes('_required') || message?.includes('_required'))) {
-                            await this.login();
-                        } else {
-                            console.error('[OIDCAuthManager] User\'s session cannot be retrieved:', signinSilentError.message);
-                            this.#authenticatedSubs.notify(false);
-                            if (this.#settings.loginRequired) {
-                                throw signinSilentError;
-                            }
-                        }
-                    }));
-            };
-
             // Try to load user from storage
             const user = await this.#userManager?.getUser();
             if (!user || user.expired) {
                 // on desktop -> try a silent renew with iframe
                 if (!isNativeMobile && this.#settings.retrieveUserSession) {
-                    await signinSilent();
+                    await this.#runSyncOrAsync(() => this.#signinSilent()
+                        .catch(async (signinSilentError: ErrorResponse) => {
+                            const { error, message } = signinSilentError;
+                            // Ex: login_required, consent_required, interaction_required, account_selection_required
+                            if (this.#settings.loginRequired && (error?.includes('_required') || message?.includes('_required'))) {
+                                await this.login();
+                            } else {
+                                console.error('[OIDCAuthManager] User\'s session cannot be retrieved:', signinSilentError.message);
+                                this.#authenticatedSubs.notify(false);
+                                if (this.#settings.loginRequired) {
+                                    throw signinSilentError;
+                                }
+                            }
+                        }));
                     // else -> force login if required
                 } else if (this.#settings.loginRequired) {
                     await this.login();
