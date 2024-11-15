@@ -13,7 +13,7 @@ export type LogoutArgs = MobileWindowParams & PopupWindowParams & RedirectParams
     desktopNavigationType?: DesktopNavigation;
 };
 
-export type RenewArgs = IFrameWindowParams & ExtraSigninRequestArgs;
+export type RenewArgs = IFrameWindowParams & ExtraSigninRequestArgs & { refreshToken?: string };
 
 export type SigninMobileArgs = MobileWindowParams & ExtraSigninRequestArgs;
 

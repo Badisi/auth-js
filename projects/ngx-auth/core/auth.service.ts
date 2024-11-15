@@ -20,6 +20,7 @@ export class AuthService implements OnDestroy {
 
     #idToken$: ReplaySubject<string | undefined> = new ReplaySubject<string | undefined>(1);
     #accessToken$: ReplaySubject<string | undefined> = new ReplaySubject<string | undefined>(1);
+    #refreshToken$: ReplaySubject<string | undefined> = new ReplaySubject<string | undefined>(1);
     #userProfile$: ReplaySubject<UserProfile | undefined> = new ReplaySubject<UserProfile | undefined>(1);
     #userSession$: ReplaySubject<UserSession | undefined> = new ReplaySubject<UserSession | undefined>(1);
     #isAuthenticated$: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
@@ -76,6 +77,11 @@ export class AuthService implements OnDestroy {
         this.#accessToken$.asObservable().pipe(
             distinctUntilChanged(),
             map(token => AuthUtils.decodeJwt<AccessToken>(token))
+        );
+
+    public readonly refreshToken$: Observable<string | undefined> =
+        this.#refreshToken$.asObservable().pipe(
+            distinctUntilChanged()
         );
     /* eslint-enable @typescript-eslint/member-ordering */
 
@@ -165,12 +171,20 @@ export class AuthService implements OnDestroy {
         return this.#manager.getAccessTokenDecoded();
     }
 
+    /**
+     * @see {@link OIDCAuthManager.getRefreshToken}
+     */
+    public async getRefreshToken(): Promise<string | undefined> {
+        return this.#manager.getRefreshToken();
+    }
+
     // --- HELPER(s) ----
 
     #listenForManagerChanges(): void {
         this.#authManagerSubs.push(
             this.#manager.onIdTokenChanged(value => this.#ngZone.run(() => this.#idToken$.next(value))),
             this.#manager.onAccessTokenChanged(value => this.#ngZone.run(() => this.#accessToken$.next(value))),
+            this.#manager.onRefreshTokenChanged(value => this.#ngZone.run(() => this.#refreshToken$.next(value))),
             this.#manager.onUserProfileChanged(value => this.#ngZone.run(() => this.#userProfile$.next(value))),
             this.#manager.onUserSessionChanged(value => this.#ngZone.run(() => this.#userSession$.next(value))),
             this.#manager.onAuthenticatedChanged(value => this.#ngZone.run(() => this.#isAuthenticated$.next(value))),
