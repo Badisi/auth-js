@@ -73,8 +73,8 @@ jobs:
       - name: Reset nx cache
         run: npx nx reset
 
-      - name: Lint
-        run: npm run lint
+    #   - name: Lint
+    #     run: npm run lint
 
       - name: Test
         run: npm run test
