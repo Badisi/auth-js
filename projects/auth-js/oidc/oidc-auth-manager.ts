@@ -3,7 +3,7 @@
 
 import { merge } from 'lodash-es';
 import {
-    ErrorResponse, InMemoryWebStorage, Log, SigninSilentArgs, User, UserProfile, WebStorageStateStore
+    ErrorResponse, IdTokenClaims, InMemoryWebStorage, Log, SigninSilentArgs, User, UserProfile, WebStorageStateStore
 } from 'oidc-client-ts';
 
 import { AuthManager, AuthSubscriber, AuthSubscription, AuthSubscriptions, AuthUtils, Optional } from '../core';
@@ -40,6 +40,7 @@ const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> 
 export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     #idTokenSubs = new AuthSubscriptions<[string | undefined]>();
     #accessTokenSubs = new AuthSubscriptions<[string | undefined]>();
+    #refreshTokenSubs = new AuthSubscriptions<[string | undefined]>();
     #userProfileSubs = new AuthSubscriptions<[UserProfile | undefined]>();
     #userSessionSubs = new AuthSubscriptions<[UserSession | undefined]>();
     #authenticatedSubs = new AuthSubscriptions<[boolean]>();
@@ -49,6 +50,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     #idToken?: string;
     #accessToken?: string;
+    #refreshToken?: string;
     #userProfile?: UserProfile;
     #userSession?: UserSession;
     #isAuthenticated = false;
@@ -62,14 +64,16 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         if (this.#user !== value) {
             this.#user = value;
 
-            this.#idToken = (value) ? value.id_token : undefined;
-            this.#accessToken = (value) ? value.access_token : undefined;
-            this.#userProfile = (value?.profile) ? value.profile : undefined;
-            this.#userSession = (value) ? UserSession.deserialize(value) : undefined;
+            this.#idToken = value ? value.id_token : undefined;
+            this.#accessToken = value ? value.access_token : undefined;
+            this.#refreshToken = value ? value.refresh_token : undefined;
+            this.#userProfile = value?.profile ? value.profile : undefined;
+            this.#userSession = value ? UserSession.deserialize(value) : undefined;
             this.#isAuthenticated = !!(value && !value.expired);
 
             this.#idTokenSubs.notify(this.#idToken);
             this.#accessTokenSubs.notify(this.#accessToken);
+            this.#refreshTokenSubs.notify(this.#refreshToken);
             this.#userProfileSubs.notify(this.#userProfile);
             this.#userSessionSubs.notify(this.#userSession);
             this.#authenticatedSubs.notify(this.#isAuthenticated);
@@ -216,6 +220,17 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     }
 
     public async renew(args?: RenewArgs): Promise<void> {
+        if (args?.refreshToken) {
+            await this.#userManager?.storeUser(
+                new User({
+                    refresh_token: args.refreshToken,
+                    access_token: undefined as unknown as string,
+                    profile: undefined as unknown as IdTokenClaims,
+                    token_type: undefined as unknown as string
+                })
+            );
+        }
+
         return this.#signinSilent(args).catch(error => console.error(error));
     }
 
@@ -262,11 +277,17 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         return AuthUtils.decodeJwt<AccessToken>(this.#accessToken);
     }
 
+    public async getRefreshToken(): Promise<string | undefined> {
+        await this.#waitForRenew('getRefreshToken()');
+        return this.#refreshToken;
+    }
+
     // --- DESTROY ---
 
     public destroy(): void {
         this.#idTokenSubs.unsubscribe();
         this.#accessTokenSubs.unsubscribe();
+        this.#refreshTokenSubs.unsubscribe();
         this.#userProfileSubs.unsubscribe();
         this.#userSessionSubs.unsubscribe();
         this.#authenticatedSubs.unsubscribe();
@@ -283,6 +304,10 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     public onAccessTokenChanged(handler: AuthSubscriber<[string | undefined]>): AuthSubscription {
         return this.#accessTokenSubs.add(handler);
+    }
+
+    public onRefreshTokenChanged(handler: AuthSubscriber<[string | undefined]>): AuthSubscription {
+        return this.#refreshTokenSubs.add(handler);
     }
 
     public onUserProfileChanged(handler: AuthSubscriber<[UserProfile | undefined]>): AuthSubscription {
