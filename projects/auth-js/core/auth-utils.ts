@@ -9,11 +9,10 @@ export class AuthUtils {
 
     public static decodeJwt = <O>(value?: string): O | string | undefined => {
         try {
-            if (value) {
-                return jwtDecode<O>(value);
-            }
-            return value;
+            return value ? jwtDecode<O>(value) : value;
         } catch {
+            // TODO: message cannot contain "access token" as it is also used with "id token"
+            // => solution: move the catch to caller?
             console.warn('[@badisi/auth-js] Access token was not decoded as it is not a valid JWT.');
             return value;
         }
@@ -59,7 +58,9 @@ export class AuthUtils {
     };
 
     public static getBaseUrl = (): string => {
-        const baseUrl = document.baseURI || document.querySelector('base')?.href || location.origin;
+        // TODO:
+        // const baseURIWithoutQueryParams = new URL(document.baseURI).origin + new URL(document.baseURI).pathname;
+        const baseUrl = document.baseURI ?? document.querySelector('base')?.href ?? location.origin;
         return (baseUrl.endsWith('/')) ? baseUrl : `${baseUrl}/`;
     };
 

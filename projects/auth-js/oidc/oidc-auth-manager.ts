@@ -156,6 +156,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                             if (this.#settings.loginRequired && (error?.includes('_required') || message?.includes('_required'))) {
                                 await this.login();
                             } else {
+                                // TODO: rename OIDCAuthManager with the name of the lib
                                 console.error('[OIDCAuthManager] User\'s session cannot be retrieved:', signinSilentError.message);
                                 this.#authenticatedSubs.notify(false);
                                 if (this.#settings.loginRequired) {
