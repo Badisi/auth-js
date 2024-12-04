@@ -1,0 +1,55 @@
+{
+    "name": "@badisi/ngx-auth",
+    "version": "0.0.0-semantically-released",
+    "description": "Authentication and authorization support for Angular based desktop and mobile applications.",
+    "homepage": "https://github.com/Badisi/auth-js/tree/main/projects/ngx-auth",
+    "license": "GPL-3.0-only",
+    "author": "Badisi",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Badisi/auth-js.git"
+    },
+    "keywords": [
+        "angular",
+        "ionic",
+        "capacitor",
+        "cordova",
+        "hybrid",
+        "authentication",
+        "authorization",
+        "oidc",
+        "openidconnect",
+        "openid",
+        "security",
+        "identity",
+        "oauth2",
+        "oauth",
+        "auth",
+        "authn",
+        "web",
+        "mobile"
+    ],
+    "scripts": {
+        "lint": "nx run ngx-auth:lint",
+        "test": "nx run ngx-auth:test",
+        "build": "nx run ngx-auth:build-lib"
+    },
+    "dependencies": {
+        "@badisi/auth-js": "0.0.0-semantically-released",
+        "@hug/ngx-schematics-utilities": "^10.1.4",
+        "tslib": "^2.7.0"
+    },
+    "peerDependencies": {
+        "@angular/common": ">= 15",
+        "@angular/core": ">= 15",
+        "@angular/router": ">= 15",
+        "rxjs": "^6.5.3 || ^7.4.0"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "schematics": "./schematics/collection.json",
+    "ng-add": {
+        "save": "dependencies"
+    }
+}

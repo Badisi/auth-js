@@ -1,0 +1,12 @@
+.angular
+.git
+.nx
+.docusaurus
+node_modules
+dist
+capacitor
+package-lock.json
+
+**/*.mdx
+**/*.md
+**/*.ts

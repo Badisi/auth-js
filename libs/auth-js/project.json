@@ -1,0 +1,33 @@
+{
+    "name": "auth-js",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/auth-js",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "nx:run-commands",
+            "outputs": [
+                "{workspaceRoot}/dist/auth-js"
+            ],
+            "options": {
+                "commands": [
+                    "node libs/auth-js/build.mjs"
+                ],
+                "color": true
+            }
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint"
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": [
+                "{workspaceRoot}/coverage/{projectRoot}"
+            ],
+            "options": {
+                "jestConfig": "libs/auth-js/jest.config.ts"
+            }
+        }
+    }
+}

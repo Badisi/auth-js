@@ -1,51 +1,51 @@
 name: Deploy site
 
 on:
-  push:
-    branches:
-      - main
-    tags-ignore:
-      - '**'
-    paths:
-      - '.github/workflows/ci_site.yml'
-      - 'projects/site/**'
-  workflow_dispatch:
+    push:
+        branches:
+            - main
+        tags-ignore:
+            - '**'
+        paths:
+            - '.github/workflows/ci_site.yml'
+            - 'projects/site/**'
+    workflow_dispatch:
 
 env:
-  HUSKY: 0
+    HUSKY: 0
 
 concurrency:
-  group: deploy-site-group-${{ github.ref }}
-  cancel-in-progress: true
+    group: deploy-site-group-${{ github.ref }}
+    cancel-in-progress: true
 
 jobs:
-  ci_site:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v4
+    ci_site:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout sources
+              uses: actions/checkout@v4
 
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          registry-url: https://registry.npmjs.org/
-          cache: npm
-          cache-dependency-path: package-lock.json
+            - name: Setup node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 18
+                  registry-url: https://registry.npmjs.org/
+                  cache: npm
+                  cache-dependency-path: package-lock.json
 
-      - name: Install latest npm
-        run: npm install -g npm@latest
+            - name: Install latest npm
+              run: npm install -g npm@latest
 
-      - name: Build site
-        working-directory: projects/site
-        run: |
-          npm clean-install --engine-strict
-          npm run build
+            - name: Build site
+              working-directory: projects/site
+              run: |
+                  npm clean-install --engine-strict
+                  npm run build
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./projects/site/build
-          destination_dir: site
-          commit_message: 'deploy(site):'
+            - name: Deploy to GitHub Pages
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./projects/site/build
+                  destination_dir: site
+                  commit_message: 'deploy(site):'

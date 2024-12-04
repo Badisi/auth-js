@@ -1,0 +1,21 @@
+/**
+ * @license GPL-3.0-only
+ * Package @badisi/auth-js (oidc build) <https://github.com/Badisi/auth-js/tree/main/projects/auth-js>
+ * Released under GNU General Public License v3.0 only <https://github.com/Badisi/auth-js/blob/main/LICENSE>
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Copyright (C) 2018 Badisi
+ */
+
+export type { AuthSubscriber, AuthSubscription, Optional } from '../core';
+export { AuthManager, AuthSubscriptions, AuthUtils } from '../core';
+export { initOidc } from './main';
+export type { AccessToken } from './models/access-token.model';
+export type { LoginArgs, LogoutArgs, RenewArgs, SigninMobileArgs, SignoutMobileArgs } from './models/args.model';
+export { DesktopNavigation } from './models/desktop-navigation.enum';
+export type { IdToken } from './models/id-token.model';
+export type { MobileWindowParams } from './models/mobile-window-params.model';
+export type { OIDCAuthSettings } from './models/oidc-auth-settings.model';
+export { UserSession } from './models/user-session.model';
+export { OIDCAuthManager } from './oidc-auth-manager';
+export type { UserProfile } from 'oidc-client-ts';
+export { Log } from 'oidc-client-ts';

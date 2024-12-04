@@ -1,0 +1,18 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "rootDir": ".",
+        "outDir": "../../dist/auth-js",
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "types": []
+    },
+    "exclude": [
+        "jest.config.ts",
+        "**/*.spec.ts",
+        "**/*.test.ts"
+    ],
+    "include": [
+        "**/*.ts"
+    ]
+}
