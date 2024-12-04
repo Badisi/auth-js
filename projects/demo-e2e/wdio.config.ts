@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+
 import type { Options } from '@wdio/types';
 
 const argv = process.argv.slice(2).reverse();
@@ -24,29 +26,29 @@ export const config: Options.Testrunner = {
     // Runner Configuration
     // ====================
     runner: 'local',
-    injectGlobals: true,
-    autoCompileOpts: {
-        tsNodeOpts: {
-            project: 'tsconfig.json'
-        }
-    },
+    tsConfigPath: './tsconfig.json',
     // ==================
     // Specify Test Files
     // ==================
     specs: [
-        './**/*.e2e.ts'
+        './src/specs/**/*.ts'
+    ],
+    filesToWatch: [
+        './src/**/*.ts'
     ],
     // ============
     // Capabilities
     // ============
     maxInstances: debug ? 1 : 100,
     capabilities: [{
-        maxInstances: 5,
         browserName: 'chrome',
+        browserVersion: 'stable',
         acceptInsecureCerts: true,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         'goog:chromeOptions': {
-            args: headless ? ['--headless', '--disable-gpu', '--disable-dev-shm-usage'] : [debug ? '--auto-open-devtools-for-tabs' : '']
+            args: [
+                ...(headless ? ['--headless', '--disable-gpu', '--disable-dev-shm-usage'] : []),
+                ...(debug ? ['--auto-open-devtools-for-tabs'] : [])
+            ]
         }
     }],
     // ===================
@@ -58,7 +60,7 @@ export const config: Options.Testrunner = {
     waitforTimeout: 10000,
     connectionRetryTimeout: 120000,
     connectionRetryCount: 3,
-    services: ['chromedriver'],
+    services: [],
     framework: 'jasmine',
     reporters: ['spec'],
     jasmineOpts: {

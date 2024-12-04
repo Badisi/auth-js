@@ -120,6 +120,14 @@ export class DemoAppDebugElement extends HTMLElement {
         this.update('#userProfile', prettyPrint(value));
     }
 
+    public connectedCallback(): void {
+        // empty
+    }
+
+    public disconnectedCallback(): void {
+        // empty
+    }
+
     // --- HELPER(s) ---
 
     private update(elementName: string, value?: unknown): void {

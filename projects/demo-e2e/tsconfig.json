@@ -1,18 +1,23 @@
 {
+    "extends": "../../tsconfig.strict.json",
     "compilerOptions": {
         "moduleResolution": "node",
         "module": "ESNext",
         "target": "es2022",
-        "lib": [
-            "es2020",
-            "dom"
-        ],
+        "lib": ["es2020", "dom"],
         "types": [
             "node",
-            "jest",
-            "wdio-intercept-service",
+            "jasmine",
             "@wdio/globals/types",
-            "expect-webdriverio/jest"
-        ]
-    }
+            "expect-webdriverio/jasmine",
+            "@wdio/jasmine-framework"
+        ],
+        "noEmit": true,
+        "skipLibCheck": true,
+        "isolatedModules": true,
+        "resolveJsonModule": true,
+        "allowImportingTsExtensions": true,
+        "allowSyntheticDefaultImports": true
+    },
+    "include": ["src", "wdio.config.ts", "polyfills"]
 }

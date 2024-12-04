@@ -1,17 +1,15 @@
-version: '3'
-
 services:
-  keycloak:
-    container_name: badisi-auth-js-demo-idp
-    image: quay.io/keycloak/keycloak:legacy
-    environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: Pa55w0rd
-      # KEYCLOAK_LOGLEVEL: DEBUG
-      # WILDFLY_LOGLEVEL: DEBUG
-      KEYCLOAK_IMPORT: /tmp/realm-config/demo-realm.json
-    volumes:
-      - ./demo-realm.json:/tmp/realm-config/demo-realm.json
-      # - ./:/tmp/realm-config
-    ports:
-      - 8080:8080
+    keycloak:
+        container_name: badisi-auth-js-demo-idp
+        image: quay.io/keycloak/keycloak:legacy
+        environment:
+            KEYCLOAK_USER: admin
+            KEYCLOAK_PASSWORD: Pa55w0rd
+            # KEYCLOAK_LOGLEVEL: DEBUG
+            # WILDFLY_LOGLEVEL: DEBUG
+            KEYCLOAK_IMPORT: /tmp/realm-config/demo-realm.json
+        volumes:
+            - ./demo-realm.json:/tmp/realm-config/demo-realm.json
+            # - ./:/tmp/realm-config
+        ports:
+            - 8080:8080

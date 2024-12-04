@@ -61,8 +61,11 @@ export class AppElement extends HTMLElement {
             req.setRequestHeader('Authorization', `Bearer ${token}`);
             headers?.split(';').forEach(header => {
                 if (header) {
+                    const quoteRegex = /^"?([^"]*)"?$/;
                     const item = header.split(':');
-                    req.setRequestHeader(item[0]?.trim(), item[1]?.trim() || '');
+                    const name = quoteRegex.exec(item[0]?.trim())?.[1] ?? '';
+                    const value = quoteRegex.exec(item[1]?.trim())?.[1] ?? '';
+                    req.setRequestHeader(name, value);
                 }
             });
             req.send();

@@ -113,7 +113,8 @@ export class DemoAppMainElement extends HTMLElement {
 
                 // Create associated tab
                 const tab = document.createElement('a');
-                tab.textContent = view.getAttribute('tabLabel') || '?';
+                tab.id = `${(view.getAttribute('tabLabel') ?? '?').toLowerCase()}-button`;
+                tab.textContent = view.getAttribute('tabLabel') ?? '?';
                 const cb = (): void => this.showView(index);
                 tab.addEventListener('click', cb);
                 this.listeners.push(() => tab.removeEventListener('click', cb));
