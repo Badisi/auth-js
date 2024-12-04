@@ -36,7 +36,7 @@
     },
     "dependencies": {
         "@badisi/auth-js": "0.0.0-semantically-released",
-        "@hug/ngx-schematics-utilities": "^10.1.2",
+        "@hug/ngx-schematics-utilities": "^10.1.4",
         "tslib": "^2.7.0"
     },
     "peerDependencies": {
