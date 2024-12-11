@@ -6,7 +6,7 @@
  * Copyright (C) 2018 Badisi
  */
 
-export { Log } from 'oidc-client-ts';
+export { Log, User } from 'oidc-client-ts';
 export type { UserProfile } from 'oidc-client-ts';
 
 export type { Optional, AuthSubscriber, AuthSubscription } from '../core';

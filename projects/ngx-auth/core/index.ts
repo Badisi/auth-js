@@ -6,7 +6,7 @@
  * Copyright (C) 2018 Badisi
  */
 
-export { Log, AuthUtils, UserSession, DesktopNavigation } from '@badisi/auth-js/oidc';
+export { Log, AuthUtils, User, UserSession, DesktopNavigation } from '@badisi/auth-js/oidc';
 export type {
     UserProfile, AccessToken, IdToken, MobileWindowParams, LoginArgs, LogoutArgs, RenewArgs, SigninMobileArgs, SignoutMobileArgs
 } from '@badisi/auth-js/oidc';
