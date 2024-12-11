@@ -2,7 +2,7 @@ import { inject, Injectable, NgZone, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
     AccessToken, AuthSubscription, AuthUtils, IdToken, LoginArgs, LogoutArgs, OIDCAuthManager,
-    RenewArgs, UserProfile, UserSession
+    RenewArgs, User, UserProfile, UserSession
 } from '@badisi/auth-js/oidc';
 import { Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
@@ -103,6 +103,20 @@ export class AuthService implements OnDestroy {
     }
 
     /**
+    * @see {@link OIDCAuthManager.storeUser}
+    */
+    public async storeUser(user: User): Promise<void> {
+        return this.#manager.storeUser(user);
+    }
+
+    /**
+    * @see {@link OIDCAuthManager.removeUser}
+    */
+    public async removeUser(): Promise<void> {
+        return this.#manager.removeUser();
+    }
+
+    /**
      * @see {@link OIDCAuthManager.getSettings}
      */
     public getSettings(): AuthSettings {
@@ -163,6 +177,13 @@ export class AuthService implements OnDestroy {
      */
     public async getAccessTokenDecoded(): Promise<AccessToken | string | undefined> {
         return this.#manager.getAccessTokenDecoded();
+    }
+
+    /**
+     * @see {@link OIDCAuthManager.getUser}
+     */
+    public async getUser(): Promise<User | null | undefined> {
+        return this.#manager.getUser();
     }
 
     // --- HELPER(s) ----

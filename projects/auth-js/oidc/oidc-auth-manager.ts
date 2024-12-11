@@ -121,7 +121,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                 }
             }),
             this.#userManager.events.addSilentRenewError(async () => {
-                await this.#removeUser();
+                await this.removeUser();
             })
         );
 
@@ -219,6 +219,18 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         return this.#signinSilent(args).catch(error => console.error(error));
     }
 
+    public async storeUser(user: User): Promise<void> {
+        await this.#userManager?.storeUser(user);
+    }
+
+    public async removeUser(): Promise<void> {
+        this.user = null;
+        await Promise.all([
+            this.#userManager?.clearStaleState(),
+            this.#userManager?.removeUser()
+        ]);
+    }
+
     public getSettings(): OIDCAuthSettings {
         return this.#settings;
     }
@@ -260,6 +272,11 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     public async getAccessTokenDecoded(): Promise<AccessToken | string | undefined> {
         await this.#waitForRenew('getAccessTokenDecoded()');
         return AuthUtils.decodeJwt<AccessToken>(this.#accessToken);
+    }
+
+    public async getUser(): Promise<User | null | undefined> {
+        await this.#waitForRenew('getUser()');
+        return this.#user;
     }
 
     // --- DESTROY ---
@@ -388,7 +405,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     async #redirect(url: string | null, error?: unknown): Promise<void> {
         if (error) {
             console.error(error);
-            await this.#removeUser();
+            await this.removeUser();
         }
 
         const redirectUrl = AuthUtils.stringToURL(url ?? '/');
@@ -401,21 +418,13 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         }
     }
 
-    async #removeUser(): Promise<void> {
-        this.user = null;
-        await Promise.all([
-            this.#userManager?.clearStaleState(),
-            this.#userManager?.removeUser()
-        ]);
-    }
-
     async #signinSilent(args?: SigninSilentArgs): Promise<void> {
         this.#notifyRenew(true);
 
         try {
             await this.#userManager?.signinSilent(args);
         } catch (error) {
-            await this.#removeUser();
+            await this.removeUser();
             throw error;
         } finally {
             this.#notifyRenew(false);
@@ -453,7 +462,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                 throw error;
             });
             await this.#redirect(redirectUrl);
-            await this.#removeUser();
+            await this.removeUser();
         } catch (error) {
             redirectUrl = '/';
             await this.#redirect(redirectUrl, error);
