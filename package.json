@@ -99,10 +99,10 @@
     },
     "lint-staged": {
         "**/*.{js,json,ts,html}": [
-            "npm run lint"
+            "eslint"
         ],
         "**/*.{scss,html,json}": [
-            "npm run prettier"
+            "prettier --check"
         ]
     },
     "packageManager": "npm@10.9.2"
