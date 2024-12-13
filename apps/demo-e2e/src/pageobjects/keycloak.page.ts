@@ -21,7 +21,7 @@ class KeyCloakPage extends IdpPage {
         );
     }
 
-    public async login(): Promise<void> {
+    public async authenticate(): Promise<void> {
         await this.usernameInput.setValue(this.username);
         await this.passwordInput.setValue(this.password);
         await this.submitButton.click();

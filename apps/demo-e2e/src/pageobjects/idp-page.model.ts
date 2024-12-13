@@ -8,6 +8,6 @@ export abstract class IdpPage {
     public abstract get passwordInput(): ChainablePromiseElement;
 
     public abstract openUserAccount(): Promise<void>;
-    public abstract login(): Promise<void>;
+    public abstract authenticate(): Promise<void>;
     public abstract logout(): Promise<void>;
 }

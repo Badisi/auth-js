@@ -36,7 +36,6 @@ class DemoPage {
 
     public async login(): Promise<void> {
         await this.loginButton.click();
-        await browser.pause(100);
     }
 
     public async logout(): Promise<void> {
@@ -75,7 +74,6 @@ class DemoPage {
         await this.apiUrlInput.setValue(url);
         await this.apiHeadersInput.setValue(headers);
         await this.apiGetButton.click();
-        await browser.pause(100);
     }
 }
 

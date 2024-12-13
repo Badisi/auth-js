@@ -24,7 +24,6 @@
     },
     "include": [
         "src",
-        "wdio.config.ts",
-        "polyfills"
+        "wdio.config.ts"
     ]
 }

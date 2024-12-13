@@ -3,7 +3,7 @@
 import '../../polyfills/puppeteer';
 
 import { browser, expect } from '@wdio/globals';
-import type { Page } from 'puppeteer-core';
+import type { OidcMetadata } from 'oidc-client-ts';
 
 import demoPage from '../../pageobjects/demo.page';
 import keycloakPage from '../../pageobjects/keycloak.page';
@@ -21,20 +21,24 @@ const CONFIG = {
 describe('Auth code + PKCE (with redirect)', () => {
     [keycloakPage].forEach(idpPage => {
         describe(idpPage.name, () => {
-            let currentPage: Page;
+            let openIdConfig: OidcMetadata;
 
             beforeAll(async () => {
-                currentPage = await browser.getPage();
-
                 await demoPage.navigate();
                 await demoPage.openSettings();
+
+                let selectIdpAction;
                 switch (idpPage.name) {
-                    case 'Keycloak':
-                        await demoPage.selectKeycloak();
-                        break;
                     default:
-                        throw new Error(`No select option for idp '${idpPage.name as string}'`);
+                        selectIdpAction = (): Promise<void> => demoPage.selectKeycloak();
                 }
+
+                const mock = await browser.mock('*/.well-known/openid-configuration');
+                const [response] = await Promise.all([
+                    mock.waitForResponse(),
+                    selectIdpAction()
+                ]);
+                openIdConfig = await response.json() as OidcMetadata;
             });
 
             beforeEach(async () => {
@@ -44,20 +48,15 @@ describe('Auth code + PKCE (with redirect)', () => {
 
             describe('login', () => {
                 it('should get .well-known configuration', async () => {
-                    const [response] = await Promise.all([
-                        currentPage.waitForResponse(resp => resp.url().includes('/.well-known/openid-configuration')),
-                        browser.refresh()
-                    ]);
-                    await expect(response).toBeDefined();
+                    await expect(openIdConfig).toBeDefined();
                 });
 
                 it('should navigate to the IDP with proper parameters', async () => {
-                    const [response] = await Promise.all([
-                        currentPage.waitForNavigation(),
+                    const [url] = await Promise.all([
+                        browser.waitForNavigation(),
                         demoPage.login()
                     ]);
-                    const url = response?.url();
-                    await expect(url).toContain(`${idpPage.url}/auth/realms/demo/protocol/openid-connect/auth`);
+                    await expect(url).toContain(openIdConfig.authorization_endpoint);
                     await expect(url).toContain(`client_id=${CONFIG.CLIENT_ID}`);
                     await expect(url).toContain(`redirect_uri=${encodeURIComponent(CONFIG.LOGIN_REDIRECT_URI)}`);
                     await expect(url).toContain(`response_type=${CONFIG.RESPONSE_TYPE}`);
@@ -69,18 +68,17 @@ describe('Auth code + PKCE (with redirect)', () => {
                 });
 
                 it('should ask for log in', async () => {
-                    await Promise.all([currentPage.waitForNavigation(), demoPage.login()]);
+                    await demoPage.login();
+
                     await expect(idpPage.usernameInput).toBeDisplayed();
                     await expect(idpPage.passwordInput).toBeDisplayed();
                 });
 
                 it('should log in and redirect to the application with proper parameters', async () => {
                     await demoPage.login();
-                    const [response] = await Promise.all([
-                        currentPage.waitForNavigation(),
-                        idpPage.login()
-                    ]);
-                    const url = response?.url();
+                    await idpPage.authenticate();
+
+                    const url = await browser.getUrl();
                     await expect(url).toContain(CONFIG.LOGIN_REDIRECT_URI);
                     await expect(url).toContain('state=');
                     await expect(url).toContain('session_state=');
@@ -89,10 +87,11 @@ describe('Auth code + PKCE (with redirect)', () => {
 
                 it('should clear parameters from url', async () => {
                     await demoPage.login();
-                    await idpPage.login();
-                    await browser.pause(1000);
+                    await idpPage.authenticate();
 
-                    const url = await browser.getUrl();
+                    // Wait for the library to rewrite the url
+                    const url = await browser.waitForNavigation();
+
                     await expect(url).not.toContain('code=');
                     await expect(url).not.toContain('state=');
                     await expect(url).not.toContain('session_state=');
@@ -100,11 +99,12 @@ describe('Auth code + PKCE (with redirect)', () => {
 
                 it('should exchange code with tokens', async () => {
                     await demoPage.login();
-                    const [response] = await Promise.all([
-                        currentPage.waitForResponse(resp => resp.url().includes('/auth/realms/demo/protocol/openid-connect/token')),
-                        idpPage.login()
-                    ]);
 
+                    const mock = await browser.mock(openIdConfig.token_endpoint);
+                    const [response] = await Promise.all([
+                        mock.waitForResponse(),
+                        idpPage.authenticate()
+                    ]);
                     await expect(response.request().method()).toEqual('POST');
                     await expect(response.status()).toEqual(200);
 
@@ -122,7 +122,7 @@ describe('Auth code + PKCE (with redirect)', () => {
                         'session_state': jasmine.any(String),
                         'scope': jasmine.stringContaining('openid'),
                         'token_type': 'Bearer',
-                        'expires_in': 120,
+                        'expires_in': 900,
                         'refresh_expires_in': 1800
                     }));
                 });
@@ -168,15 +168,17 @@ describe('Auth code + PKCE (with redirect)', () => {
             //         });*/
             // });
 
-            fdescribe('api requests', () => {
+            describe('api requests', () => {
                 it('should keep custom request headers', async () => {
-                    await demoPage.openPlayground();
                     await demoPage.login();
-                    await idpPage.login();
+                    await idpPage.authenticate();
+                    await demoPage.openPlayground();
 
                     const url = '/api/with/custom/headers';
+
+                    const mock = await browser.mock(url);
                     const [response] = await Promise.all([
-                        currentPage.waitForResponse(resp => resp.url().includes(url)),
+                        mock.waitForResponse(),
                         demoPage.api(url, 'my-custom-header: custom-value; my-other-custom-header: 12')
                     ]);
                     await expect(response.request().headers()).toEqual(jasmine.objectContaining({
@@ -190,10 +192,11 @@ describe('Auth code + PKCE (with redirect)', () => {
                 it('should keep application query parameters after logged in', async () => {
                     await demoPage.navigate('?my-param=A&my-other-param=B');
                     await demoPage.login();
-                    await idpPage.login();
-                    await browser.pause(1000);
+                    await idpPage.authenticate();
 
-                    const url = await browser.getUrl();
+                    // Wait for the library to rewrite the url
+                    const url = await browser.waitForNavigation();
+
                     await expect(url).toContain(demoPage.url);
                     await expect(url).toContain('my-param=A');
                     await expect(url).toContain('my-other-param=B');
