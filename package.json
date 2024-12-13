@@ -29,7 +29,7 @@
         "ncu": "npx npm-check-updates -i --format=group --packageFile='{,apps/**/,libs/**/}package.json'",
         "migrate": "nx migrate latest",
         "prettier": "prettier . --check",
-        "lint": "nx run-many --target=lint --projects=auth-js,ngx-auth,demo-app-web --output-style=static",
+        "lint": "eslint .",
         "test": "nx run-many --target=test --projects=auth-js,ngx-auth --output-style=static",
         "publish": "multi-semantic-release --ignore-private-packages --yes",
         "publish-dry-run": "GITHUB_TOKEN=XXX NPM_TOKEN=XXX npm run publish -- --dry-run --no-ci",
