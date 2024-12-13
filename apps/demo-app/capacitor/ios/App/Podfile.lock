@@ -1,12 +1,12 @@
 PODS:
-  - Capacitor (5.7.0):
+  - Capacitor (5.7.8):
     - CapacitorCordova
-  - CapacitorApp (5.0.7):
+  - CapacitorApp (5.0.8):
     - Capacitor
-  - CapacitorBrowser (5.2.0):
+  - CapacitorBrowser (5.2.1):
     - Capacitor
-  - CapacitorCordova (5.7.0)
-  - CapacitorPreferences (5.0.7):
+  - CapacitorCordova (5.7.8)
+  - CapacitorPreferences (5.0.8):
     - Capacitor
   - CapacitorSecureStoragePlugin (0.9.0):
     - Capacitor
@@ -40,11 +40,11 @@ EXTERNAL SOURCES:
     :path: "../../../../../node_modules/capacitor-secure-storage-plugin"
 
 SPEC CHECKSUMS:
-  Capacitor: fc155ee2ee45a2093d716f13cf5aa5a865e2d85a
-  CapacitorApp: 17fecd0e6cb23feafac7eb0939417389038b0979
-  CapacitorBrowser: a6deae9e5bf87f62b62a753cff7992c5def9e771
-  CapacitorCordova: e825fce1a2e14e4b5730641c7e098dccf74397b7
-  CapacitorPreferences: 77ac427e98db83bace772455f8ba447430382c4c
+  Capacitor: 747aadb4fa786f460d8cd9d0557cb81440a13747
+  CapacitorApp: 102e553c3b1fdc255969c39aa19b529675690ef4
+  CapacitorBrowser: bac3132be6506411704149f9f2099843ffe470a0
+  CapacitorCordova: 31ab98dca2ddcee051027a1afe7e8c85c82f7297
+  CapacitorPreferences: 9e59596c5fd9915ed45279d1fda68978c5706401
   CapacitorSecureStoragePlugin: e91d7df060f2495a1acff9583641a6953e3aacba
   SwiftKeychainWrapper: 807ba1d63c33a7d0613288512399cd1eda1e470c
 

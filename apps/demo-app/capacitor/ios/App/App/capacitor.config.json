@@ -1,8 +1,9 @@
 {
-    "appId": "demoapp",
-    "appName": "demo-app",
-    "loggingBehavior": "debug",
-    "server": {
-        "url": "http://localhost:4200"
-    }
+	"appId": "demoapp",
+	"appName": "demo-app",
+	"loggingBehavior": "debug",
+	"server": {
+		"url": "http://localhost:4200",
+		"cleartext": true
+	}
 }
