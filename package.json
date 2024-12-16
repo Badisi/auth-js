@@ -28,6 +28,7 @@
     "scripts": {
         "ncu": "npx npm-check-updates -i --format=group --packageFile='{,apps/**/,libs/**/}package.json'",
         "migrate": "nx migrate latest",
+        "migrate:cap": "cap migrate",
         "prettier": "prettier . --check",
         "lint": "eslint .",
         "test": "nx run-many --target=test --projects=auth-js,ngx-auth --output-style=static",
