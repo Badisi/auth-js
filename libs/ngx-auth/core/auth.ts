@@ -1,4 +1,5 @@
 import { InjectionToken, type StaticProvider } from '@angular/core';
+import { AuthLogger } from '@badisi/auth-js';
 import { initOidc, type Optional } from '@badisi/auth-js/oidc';
 
 import type { AuthSettings } from './auth-settings.model';
@@ -12,6 +13,8 @@ const DEFAULT_SETTINGS: Optional<AuthSettings, 'authorityUrl' | 'clientId'> = {
         }
     }
 };
+
+AuthLogger.init('@badisi/ngx-auth');
 
 export const AUTH_MANAGER = new InjectionToken<string>('AUTH_MANAGER');
 

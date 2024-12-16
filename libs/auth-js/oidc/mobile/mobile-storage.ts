@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-deprecated */
-import { type AsyncStorage, Logger } from 'oidc-client-ts';
+import type { AsyncStorage } from 'oidc-client-ts';
+
+import { AuthLogger } from '../../core';
+
+const logger = new AuthLogger('MobileStorage');
 
 // defaults
 const LOCAL_STORAGE = window.localStorage;
@@ -14,23 +18,21 @@ const CAPACITOR_SECURE_STORAGE = window.Capacitor?.Plugins.SecureStoragePlugin;
  * @internal
  */
 export class MobileStorage implements AsyncStorage {
-    private readonly _logger = new Logger('MobileStorage');
-
     constructor() {
         if (!CAPACITOR_SECURE_STORAGE) {
             let message = '[@badisi/auth-js] This application is currently using an unsafe storage.\n\n';
             message += 'ⓘ Please follow the recommended guide and use `capacitor-secure-storage-plugin` instead.';
-            console.warn(message);
+            logger.notif(message);
         }
 
         if (CAPACITOR_SECURE_STORAGE) {
-            this._logger.debug('Using `capacitor-secure-storage-plugin` implementation');
+            logger.debug('Using `capacitor-secure-storage-plugin` implementation');
         } else if (CAPACITOR_PREFERENCES) {
-            this._logger.debug('Using `@capacitor/preferences` implementation');
+            logger.debug('Using `@capacitor/preferences` implementation');
         } else if (CAPACITOR_STORAGE) {
-            this._logger.debug('Using `@capacitor/storage` implementation');
+            logger.debug('Using `@capacitor/storage` implementation');
         } else {
-            this._logger.debug('Using `localStorage` implementation');
+            logger.debug('Using `localStorage` implementation');
         }
     }
 
@@ -61,7 +63,7 @@ export class MobileStorage implements AsyncStorage {
     }
 
     public async clear(): Promise<void> {
-        this._logger.create('clear');
+        logger.debug('clear');
 
         if (CAPACITOR_SECURE_STORAGE) {
             await CAPACITOR_SECURE_STORAGE.clear();
@@ -75,7 +77,7 @@ export class MobileStorage implements AsyncStorage {
     }
 
     public async getItem(key: string): Promise<string | null> {
-        this._logger.create(`getItem('${key}')`);
+        logger.debug(`getItem('${key}')`);
 
         if (CAPACITOR_SECURE_STORAGE) {
             try {
@@ -93,7 +95,7 @@ export class MobileStorage implements AsyncStorage {
     }
 
     public async setItem(key: string, value: string): Promise<void> {
-        this._logger.create(`setItem('${key}')`);
+        logger.debug(`setItem('${key}')`);
 
         if (CAPACITOR_SECURE_STORAGE) {
             await CAPACITOR_SECURE_STORAGE.set({ key, value });
@@ -107,7 +109,7 @@ export class MobileStorage implements AsyncStorage {
     }
 
     public async removeItem(key: string): Promise<void> {
-        this._logger.create(`removeItem('${key}')`);
+        logger.debug(`removeItem('${key}')`);
 
         if (CAPACITOR_SECURE_STORAGE) {
             try {

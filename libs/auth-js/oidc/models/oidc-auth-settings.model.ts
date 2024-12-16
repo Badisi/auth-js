@@ -1,6 +1,6 @@
-import type { Log, UserManagerSettings } from 'oidc-client-ts';
+import type { UserManagerSettings } from 'oidc-client-ts';
 
-import type { AuthSettings as CoreAuthSettings } from '../../core';
+import type { AuthSettings as CoreAuthSettings, LogLevel } from '../../core';
 import type { DesktopNavigation } from './desktop-navigation.enum';
 import type { MobileWindowParams } from './mobile-window-params.model';
 
@@ -13,6 +13,6 @@ export interface OIDCAuthSettings extends CoreAuthSettings, Partial<Pick<UserMan
     mobileScheme?: string;
     retrieveUserSession?: boolean;
     desktopNavigationType?: DesktopNavigation;
-    logLevel?: Log;
+    logLevel?: LogLevel;
     internal?: Partial<Omit<UserManagerSettings, UsefulSettings | 'authority' | 'client_id'>> & MobileWindowParams;
 }

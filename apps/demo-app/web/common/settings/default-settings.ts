@@ -1,4 +1,5 @@
-import { DesktopNavigation, Log, type OIDCAuthSettings } from '@badisi/auth-js/oidc';
+import { LogLevel } from '@badisi/auth-js';
+import { DesktopNavigation, type OIDCAuthSettings } from '@badisi/auth-js/oidc';
 import type { AuthSettings } from '@badisi/ngx-auth';
 import type { UserSettings } from 'demo-app-common';
 
@@ -20,7 +21,7 @@ export const DEFAULT_AUTH_JS_SETTINGS = (production = false): UserSettings<OIDCA
                 }
             },
             desktopNavigationType: DesktopNavigation.REDIRECT,
-            logLevel: Log.NONE,
+            logLevel: LogLevel.NONE,
             loginRequired: false,
             retrieveUserSession: true,
             loadUserInfo: true,
@@ -38,7 +39,7 @@ export const DEFAULT_AUTH_JS_SETTINGS = (production = false): UserSettings<OIDCA
             mobileScheme: 'demo-app',
             scope: 'openid profile email phone offline_access',
             desktopNavigationType: DesktopNavigation.REDIRECT,
-            logLevel: Log.NONE,
+            logLevel: LogLevel.NONE,
             loginRequired: false,
             retrieveUserSession: true,
             loadUserInfo: true,
@@ -59,7 +60,7 @@ export const DEFAULT_AUTH_JS_SETTINGS = (production = false): UserSettings<OIDCA
                 mobileScheme: 'demo-app',
                 scope: 'openid profile email phone',
                 desktopNavigationType: DesktopNavigation.REDIRECT,
-                logLevel: Log.NONE,
+                logLevel: LogLevel.NONE,
                 loginRequired: false,
                 retrieveUserSession: true,
                 loadUserInfo: true,

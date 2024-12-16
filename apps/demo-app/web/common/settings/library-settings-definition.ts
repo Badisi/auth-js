@@ -1,4 +1,4 @@
-import { DesktopNavigation, Log, type OIDCAuthSettings } from '@badisi/auth-js/oidc';
+import { DesktopNavigation, LogLevel, type OIDCAuthSettings } from '@badisi/auth-js/oidc';
 import type { AuthSettings } from '@badisi/ngx-auth';
 import type { LibrarySettingsDefinitionItem } from 'demo-app-common';
 
@@ -43,19 +43,19 @@ export const AUTH_JS_LIBRARY_SETTINGS_DEFINITION: LibrarySettingsDefinitionItem<
     type: 'list',
     values: [{
         label: 'NONE',
-        value: Log.NONE
+        value: LogLevel.NONE
     }, {
         label: 'ERROR',
-        value: Log.ERROR
+        value: LogLevel.ERROR
     }, {
         label: 'WARN',
-        value: Log.WARN
+        value: LogLevel.WARN
     }, {
         label: 'INFO',
-        value: Log.INFO
+        value: LogLevel.INFO
     }, {
         label: 'DEBUG',
-        value: Log.DEBUG
+        value: LogLevel.DEBUG
     }]
 }, {
     name: 'loginRequired',

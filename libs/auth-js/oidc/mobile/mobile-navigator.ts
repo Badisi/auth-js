@@ -1,16 +1,16 @@
-import { Logger } from 'oidc-client-ts';
+import { AuthLogger } from '@badisi/auth-js';
 
 import type { MobileWindowParams } from '../models/mobile-window-params.model';
 import { MobileWindow } from './mobile-window';
+
+const logger = new AuthLogger('MobileNavigator');
 
 /**
  * @internal
  */
 export class MobileNavigator {
-    private readonly _logger = new Logger('MobileNavigator');
-
     public prepare(redirectUrl: string, params: MobileWindowParams): MobileWindow {
-        this._logger.create('prepare');
+        logger.debug('prepare');
         return new MobileWindow(redirectUrl, params);
     }
 }

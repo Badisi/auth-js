@@ -15,7 +15,7 @@ export { provideAuth } from './auth.provider';
 export { AuthService } from './auth.service';
 export type { AuthSettings, InjectToken, InjectTokenPattern } from './auth-settings.model';
 export type {
-    AccessToken, IdToken, LoginArgs, LogoutArgs, MobileWindowParams, RenewArgs, SigninMobileArgs, SignoutMobileArgs,
-    UserProfile
+    AccessToken, IdToken, LoginArgs, LogoutArgs, MobileWindowParams, RenewArgs,
+    SigninMobileArgs, SignoutMobileArgs, UserProfile
 } from '@badisi/auth-js/oidc';
-export { AuthUtils, DesktopNavigation, Log, UserSession } from '@badisi/auth-js/oidc';
+export { AuthUtils, DesktopNavigation, LogLevel, UserSession } from '@badisi/auth-js/oidc';

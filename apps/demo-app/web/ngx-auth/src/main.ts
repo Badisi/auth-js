@@ -35,5 +35,6 @@ declare global {
             document.body.querySelector('#loginButton')?.addEventListener(
                 'click', () => { location.reload(); }, { once: true }
             );
+            console.error(err);
         });
 })();

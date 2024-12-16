@@ -8,6 +8,7 @@
 
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
+export { AuthLogger, LogLevel } from './auth-logger';
 export { AuthManager } from './auth-manager';
 export { AuthSubscriptions } from './auth-subscriptions';
 export { AuthUtils } from './auth-utils';

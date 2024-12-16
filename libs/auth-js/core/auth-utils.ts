@@ -1,5 +1,9 @@
 import jwtDecode from 'jwt-decode';
 
+import { AuthLogger } from './auth-logger';
+
+const logger = new AuthLogger('AuthUtils');
+
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class AuthUtils {
     public static isCordova = (): boolean =>
@@ -13,9 +17,7 @@ export class AuthUtils {
         try {
             return value ? jwtDecode(value) : value;
         } catch {
-            // TODO: message cannot contain "access token" as it is also used with "id token"
-            // => solution: move the catch to caller?
-            console.warn('[@badisi/auth-js] Access token was not decoded as it is not a valid JWT.');
+            logger.createChild('decodeJwt').warn('Token was not decoded as it is not a valid JWT.');
             return value;
         }
     };

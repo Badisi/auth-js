@@ -24,5 +24,6 @@ import { appSettings } from './app/app.settings';
             document.body.querySelector('#loginButton')?.addEventListener(
                 'click', () => { location.reload(); }, { once: true }
             );
+            console.error(err);
         });
 })();

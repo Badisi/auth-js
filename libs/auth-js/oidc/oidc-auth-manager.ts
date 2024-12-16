@@ -6,11 +6,13 @@
 
 import { merge } from 'lodash-es';
 import {
-    type ErrorResponse, InMemoryWebStorage, Log, type SigninSilentArgs, type User,
-    type UserProfile, WebStorageStateStore
+    type ErrorResponse, InMemoryWebStorage,
+    type SigninSilentArgs, type User, type UserProfile, WebStorageStateStore
 } from 'oidc-client-ts';
 
-import { AuthManager, type AuthSubscriber, type AuthSubscription, AuthSubscriptions, AuthUtils } from '../core';
+import { AuthLogger, AuthManager, type AuthSubscriber, type AuthSubscription, AuthSubscriptions,
+    AuthUtils, LogLevel
+} from '../core';
 import { MobileStorage } from './mobile/mobile-storage';
 import type { AccessToken } from './models/access-token.model';
 import type { LoginArgs, LogoutArgs, RenewArgs } from './models/args.model';
@@ -23,7 +25,6 @@ import { OidcUserManager } from './oidc-user-manager';
 
 const REDIRECT_URL_KEY = 'auth-js:oidc_manager:redirect_url';
 
-//const DEFAULT_SETTINGS: Optional<OIDCAuthSettings, 'authorityUrl' | 'clientId'> = {
 const DEFAULT_SETTINGS: DefaultSettings = {
     loginRequired: false,
     retrieveUserSession: true,
@@ -31,7 +32,7 @@ const DEFAULT_SETTINGS: DefaultSettings = {
     automaticSilentRenew: true,
     desktopNavigationType: DesktopNavigation.REDIRECT,
     scope: 'openid profile email phone',
-    logLevel: Log.NONE,
+    logLevel: LogLevel.NONE,
     internal: {
         response_type: 'code',
         redirect_uri: '?oidc-callback=login',
@@ -42,6 +43,10 @@ const DEFAULT_SETTINGS: DefaultSettings = {
         mobileWindowPresentationStyle: 'popover'
     }
 };
+
+AuthLogger.init('@badisi/auth-js');
+
+const logger = new AuthLogger('OIDCAuthManager');
 
 export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     #idTokenSubs = new AuthSubscriptions<[string | undefined]>();
@@ -85,12 +90,11 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     // --- PUBLIC API(s) ---
 
     public async init(userSettings: OIDCAuthSettings): Promise<void> {
-        Log.setLevel(userSettings.logLevel ?? DEFAULT_SETTINGS.logLevel);
-        Log.setLogger(console);
+        AuthLogger.setLogLevel(userSettings.logLevel ?? DEFAULT_SETTINGS.logLevel);
 
         const isNativeMobile = AuthUtils.isNativeMobile();
         if (isNativeMobile && !userSettings.mobileScheme) {
-            throw new Error('TODO:');
+            throw logger.getError('Parameter `mobileScheme` is required for mobile platform');
         }
 
         /**
@@ -113,6 +117,9 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             }
         }, userSettings);
 
+        // Make sure we are not trapped in the inception loop
+        this.#assertNotInInceptionLoop();
+
         // Configure the user manager
         this.#userManager = new OidcUserManager(this.#settings);
 
@@ -134,9 +141,6 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                 await this.#removeUser();
             })
         );
-
-        // Make sure we are not trapped in the inception loop
-        this.#assertNotInInceptionLoop();
 
         // Decide what to do..
         if (AuthUtils.isUrlMatching(location.href, this.#settings.internal?.redirect_uri)) {
@@ -166,8 +170,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                             if (this.#settings.loginRequired && (error?.includes('_required') || message.includes('_required'))) {
                                 await this.login();
                             } else {
-                                // TODO: rename OIDCAuthManager with the name of the lib
-                                console.error('[OIDCAuthManager] User\'s session cannot be retrieved:', message);
+                                logger.warn("User's session cannot be retrieved:", message);
                                 this.#authenticatedSubs.notify(false);
                                 if (this.#settings.loginRequired) {
                                     throw signinSilentError;
@@ -227,7 +230,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     }
 
     public async renew(args?: RenewArgs): Promise<void> {
-        return this.#signinSilent(args).catch((error: unknown) => { console.error(error); });
+        return this.#signinSilent(args).catch((error: unknown) => { logger.error(error); });
     }
 
     public getSettings(): OIDCAuthSettings {
@@ -332,14 +335,14 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         [this.#settings.internal?.silent_redirect_uri, this.#settings.internal?.popup_redirect_uri]
             .forEach(uri => {
                 const htmlFileName = (new RegExp(/^.*\/(.*).html$/gm).exec(uri ?? ''))?.[1];
-                const error = new Error(`[OIDCAuthManager] ${uri ?? 'redirect uri'} was not found.`);
+                const error = new Error(`${uri ?? 'redirect uri'} was not found.`);
                 error.stack = undefined;
 
                 if (AuthUtils.isUrlMatching(location.href, uri)) {
-                    error.message += '\n\nⓘ This usually means you forgot to include the redirect html files in your application assets.';
+                    logger.notif('ⓘ Encountered an error that usually means you forgot to include the redirect html files in your application assets.');
                     throw error;
                 } else if (htmlFileName && location.href.includes(`/${htmlFileName}.html`)) {
-                    error.message += '\n\nⓘ This usually means your redirect urls are misconfigured.';
+                    logger.notif('ⓘ Encountered an error that usually means your redirect urls are misconfigured.');
                     throw error;
                 }
             });
@@ -362,7 +365,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         // eslint-disable-next-line no-loops/no-loops
         while (this.#isRenewing) {
             if (Date.now() > (startTime + 5000)) {
-                console.warn('[@badisi/auth-js]', `\`${caller}\``, 'timed out waiting for renew to finish.');
+                logger.error(`\`${caller}\``, 'timed out waiting for renew to finish.');
                 break;
             }
             await new Promise(resolve => setTimeout(resolve, 100));
@@ -396,7 +399,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     async #redirect(url: string | null, error?: unknown): Promise<void> {
         if (error) {
-            console.error(error);
+            logger.error(error);
             await this.#removeUser();
         }
 
@@ -434,14 +437,13 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     async #callSignin(managerCall: () => Promise<unknown>, redirectUrl: string | null): Promise<void> {
         try {
             this.#notifyRenew(true);
-            await managerCall().catch((error: unknown) => {
-                let err = error as Error;
-                if (err.message === 'Attempted to navigate on a disposed window') {
-                    err = new Error('[OIDCAuthManager] Attempted to navigate on a disposed window.');
-                    err.stack = undefined;
-                    err.message += '\n\nⓘ This may be due to an ad blocker.';
+            await managerCall().catch((err: unknown) => {
+                const error = err as Error;
+                if (error.message === 'Attempted to navigate on a disposed window') {
+                    logger.notif('ⓘ Encountered an error that may be due to an ad blocker.');
+                    error.stack = undefined;
                 }
-                throw err;
+                throw error;
             });
             await this.#redirect(redirectUrl);
         } catch (error) {
@@ -454,14 +456,13 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     async #callSignout(managerCall: () => Promise<unknown>, redirectUrl: string | null): Promise<void> {
         try {
-            await managerCall().catch((error: unknown) => {
-                let err = error as Error;
-                if (err.message === 'Attempted to navigate on a disposed window') {
-                    err = new Error('[OIDCAuthManager] Attempted to navigate on a disposed window.');
-                    err.stack = undefined;
-                    err.message += '\n\nⓘ This may be due to an ad blocker.';
+            await managerCall().catch((err: unknown) => {
+                const error = err as Error;
+                if (error.message === 'Attempted to navigate on a disposed window') {
+                    logger.notif('ⓘ Encountered an error that may be due to an ad blocker.');
+                    error.stack = undefined;
                 }
-                throw err;
+                throw error;
             });
             await this.#redirect(redirectUrl);
             await this.#removeUser();

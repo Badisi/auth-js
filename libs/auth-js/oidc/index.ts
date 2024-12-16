@@ -7,7 +7,7 @@
  */
 
 export type { AuthSubscriber, AuthSubscription, Optional } from '../core';
-export { AuthManager, AuthSubscriptions, AuthUtils } from '../core';
+export { AuthManager, AuthSubscriptions, AuthUtils, LogLevel } from '../core';
 export { initOidc } from './main';
 export type { AccessToken } from './models/access-token.model';
 export type { LoginArgs, LogoutArgs, RenewArgs, SigninMobileArgs, SignoutMobileArgs } from './models/args.model';
@@ -18,4 +18,3 @@ export type { OIDCAuthSettings } from './models/oidc-auth-settings.model';
 export { UserSession } from './models/user-session.model';
 export { OIDCAuthManager } from './oidc-auth-manager';
 export type { UserProfile } from 'oidc-client-ts';
-export { Log } from 'oidc-client-ts';
