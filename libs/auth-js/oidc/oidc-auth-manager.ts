@@ -10,7 +10,7 @@ import {
     type SigninSilentArgs, type User, type UserProfile, WebStorageStateStore
 } from 'oidc-client-ts';
 
-import { AuthLogger, AuthManager, type AuthSubscriber, type AuthSubscription, AuthSubscriptions,
+import { AuthLogger, AuthManager, type AuthSubscriber, type AuthSubscriberOptions, type AuthSubscription, AuthSubscriptions,
     AuthUtils, LogLevel
 } from '../core';
 import { MobileStorage } from './mobile/mobile-storage';
@@ -291,32 +291,32 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     // --- HANDLER(s) ---
 
-    public onIdTokenChanged(handler: AuthSubscriber<[string | undefined]>): AuthSubscription {
-        return this.#idTokenSubs.add(handler);
+    public onIdTokenChanged(handler: AuthSubscriber<[string | undefined]>, options?: AuthSubscriberOptions): AuthSubscription {
+        return this.#idTokenSubs.add(handler, options);
     }
 
-    public onAccessTokenChanged(handler: AuthSubscriber<[string | undefined]>): AuthSubscription {
-        return this.#accessTokenSubs.add(handler);
+    public onAccessTokenChanged(handler: AuthSubscriber<[string | undefined]>, options?: AuthSubscriberOptions): AuthSubscription {
+        return this.#accessTokenSubs.add(handler, options);
     }
 
-    public onUserProfileChanged(handler: AuthSubscriber<[UserProfile | undefined]>): AuthSubscription {
-        return this.#userProfileSubs.add(handler);
+    public onUserProfileChanged(handler: AuthSubscriber<[UserProfile | undefined]>, options?: AuthSubscriberOptions): AuthSubscription {
+        return this.#userProfileSubs.add(handler, options);
     }
 
-    public onUserSessionChanged(handler: AuthSubscriber<[UserSession | undefined]>): AuthSubscription {
-        return this.#userSessionSubs.add(handler);
+    public onUserSessionChanged(handler: AuthSubscriber<[UserSession | undefined]>, options?: AuthSubscriberOptions): AuthSubscription {
+        return this.#userSessionSubs.add(handler, options);
     }
 
-    public onAuthenticatedChanged(handler: AuthSubscriber<[boolean]>): AuthSubscription {
-        return this.#authenticatedSubs.add(handler);
+    public onAuthenticatedChanged(handler: AuthSubscriber<[boolean]>, options?: AuthSubscriberOptions): AuthSubscription {
+        return this.#authenticatedSubs.add(handler, options);
     }
 
-    public onRenewingChanged(handler: AuthSubscriber<[boolean]>): AuthSubscription {
-        return this.#renewingSubs.add(handler);
+    public onRenewingChanged(handler: AuthSubscriber<[boolean]>, options?: AuthSubscriberOptions): AuthSubscription {
+        return this.#renewingSubs.add(handler, options);
     }
 
-    public onRedirect(handler: AuthSubscriber<[URL]>): AuthSubscription {
-        return this.#redirectSubs.add(handler);
+    public onRedirect(handler: AuthSubscriber<[URL]>, options?: AuthSubscriberOptions): AuthSubscription {
+        return this.#redirectSubs.add(handler, options);
     }
 
     // --- HELPER(s) ---

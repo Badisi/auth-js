@@ -15,4 +15,5 @@ export { AuthUtils } from './auth-utils';
 export { createAuthManager } from './main';
 export type { AuthSettings } from './models/auth-settings.model';
 export type { AuthSubscriber } from './models/auth-subscriber.model';
+export type { AuthSubscriberOptions } from './models/auth-subscriber-options.model';
 export type { AuthSubscription } from './models/auth-subscription.model';

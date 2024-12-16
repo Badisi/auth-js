@@ -6,7 +6,7 @@
  * Copyright (C) 2018 Badisi
  */
 
-export type { AuthSubscriber, AuthSubscription, Optional } from '../core';
+export type { AuthSubscriber, AuthSubscriberOptions, AuthSubscription, Optional } from '../core';
 export { AuthManager, AuthSubscriptions, AuthUtils, LogLevel } from '../core';
 export { initOidc } from './main';
 export type { AccessToken } from './models/access-token.model';
