@@ -22,10 +22,10 @@ declare global {
     document.body.appendChild(el);
 
     initAuth(appSettings.getCurrentUserSettings().librarySettings)
-        .then(authProvider => {
+        .then(authManager => {
             el.replaceWith(document.createElement('app-root'));
 
-            appConfig.providers.push(provideAuth(authProvider));
+            appConfig.providers.push(provideAuth(authManager));
             bootstrapApplication(AppComponent, appConfig)
                 .catch((err: unknown) => { console.error(err); });
         })

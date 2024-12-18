@@ -1,4 +1,4 @@
-import { Inject, inject, Injectable, NgZone, OnDestroy } from '@angular/core';
+import { inject, Injectable, NgZone, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
     AccessToken, AuthSubscription, AuthUtils, IdToken, OIDCAuthManager,
@@ -7,12 +7,9 @@ import {
 import { Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
-import { AUTH_MANAGER } from './auth';
 import { AuthSettings } from './auth-settings.model';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class AuthService extends OIDCAuthService<AuthSettings> implements OnDestroy {
     #authManagerSubs: AuthSubscription[] = [];
 
@@ -26,7 +23,7 @@ export class AuthService extends OIDCAuthService<AuthSettings> implements OnDest
     #ngZone = inject(NgZone);
     #router = inject(Router);
 
-    constructor(@Inject(AUTH_MANAGER) manager: OIDCAuthManager) {
+    constructor(manager: OIDCAuthManager) {
         super(manager);
         this.#listenForManagerChanges();
     }
