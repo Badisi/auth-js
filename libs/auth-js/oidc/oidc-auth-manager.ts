@@ -6,12 +6,14 @@
 
 import { merge } from 'lodash-es';
 import {
-    type ErrorResponse, InMemoryWebStorage,
-    type SigninSilentArgs, type User, type UserProfile, WebStorageStateStore
+    type ErrorResponse, InMemoryWebStorage, type SigninSilentArgs, type User, type UserProfile,
+    WebStorageStateStore
 } from 'oidc-client-ts';
 
-import { AuthLogger, AuthManager, type AuthSubscriber, type AuthSubscriberOptions, type AuthSubscription, AuthSubscriptions,
-    AuthUtils, LogLevel
+import {
+    type AuthGuardOptions,
+    AuthLogger, AuthManager, type AuthSubscriber, type AuthSubscriberOptions, type AuthSubscription,
+    AuthSubscriptions, AuthUtils, LogLevel
 } from '../core';
 import { MobileStorage } from './mobile/mobile-storage';
 import type { AccessToken } from './models/access-token.model';
@@ -21,6 +23,7 @@ import { DesktopNavigation } from './models/desktop-navigation.enum';
 import type { IdToken } from './models/id-token.model';
 import type { OIDCAuthSettings } from './models/oidc-auth-settings.model';
 import { UserSession } from './models/user-session.model';
+import { OIDCAuthGuard } from './oidc-auth-guard';
 import { OidcUserManager } from './oidc-user-manager';
 
 const REDIRECT_URL_KEY = 'auth-js:oidc_manager:redirect_url';
@@ -244,6 +247,11 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     public async isAuthenticated(): Promise<boolean> {
         await this.#waitForRenew('isAuthenticated()');
         return this.#isAuthenticated;
+    }
+
+    public async runGuard(toUrl: string, options?: AuthGuardOptions): Promise<string | boolean> {
+        const authGuard = new OIDCAuthGuard(this);
+        return authGuard.validate(toUrl, options);
     }
 
     public async getUserProfile(): Promise<UserProfile | undefined> {

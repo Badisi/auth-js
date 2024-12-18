@@ -1,32 +1,34 @@
 import type { Routes } from '@angular/router';
 import type { OIDCAuthSettings } from '@badisi/auth-js/oidc';
-import { type AccessToken, AuthGuard, type AuthGuardValidator, type UserProfile } from '@badisi/ngx-auth';
+import { type AccessToken, authGuard, type AuthGuardValidator, type UserProfile } from '@badisi/ngx-auth';
 import type { UserSettings } from 'demo-app-common';
 
 import { DemoComponent } from './demo.component';
 
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 const rolesValidator = (): AuthGuardValidator =>
-    (_userProfile?: UserProfile, accessToken?: AccessToken): boolean => {
+    (_userProfile?: UserProfile, accessToken?: AccessToken): boolean | string => {
         const { otherSettings, librarySettings } = window.appSettings.getCurrentUserSettings() as UserSettings<OIDCAuthSettings>;
         const requiredRoles = (otherSettings) ? (otherSettings['roles'] as string | undefined ?? '').split(',') : [];
 
         let tokenRoles: string[] | undefined;
         // auth0
         if (librarySettings.authorityUrl.includes('auth0')) {
-            tokenRoles = (accessToken as any)?.['http://ngx-auth.com/roles'];
+            tokenRoles = (accessToken as Record<string, string[] | undefined>)['http://ngx-auth.com/roles'];
         // zitadel
         } else if (librarySettings.authorityUrl.includes('zitadel')) {
-            const roles: Record<string, unknown> | undefined = (accessToken as any)?.['urn:zitadel:iam:org:project:roles'];
+            const roles = (accessToken as Record<string, string[] | undefined>)['urn:zitadel:iam:org:project:roles'];
             tokenRoles = Object.keys(roles ?? {});
         // keycloak
         } else {
-            tokenRoles = (accessToken as any).resource_access?.account?.roles;
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+            tokenRoles = (accessToken as any)?.resource_access?.account?.roles;
         }
 
-        return requiredRoles.every(role => (tokenRoles ?? []).includes(role));
+        const isAllowed = requiredRoles.every(role => (tokenRoles ?? []).includes(role));
+        return isAllowed ? true : 'forbidden';
     };
-/* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
+
+const rolesGuard = authGuard({ validator: rolesValidator() });
 
 export const routes: Routes = [
     {
@@ -45,9 +47,9 @@ export const routes: Routes = [
                 path: 'private',
                 loadComponent: () => import('./components/page/page.component').then(m => m.PageComponent),
                 runGuardsAndResolvers: 'always',
-                canLoad: [AuthGuard],
-                canActivate: [AuthGuard],
-                canActivateChild: [AuthGuard],
+                canMatch: [authGuard()],
+                canActivate: [authGuard()],
+                canActivateChild: [authGuard()],
                 data: {
                     title: 'PRIVATE CONTENT'
                 }
@@ -64,12 +66,11 @@ export const routes: Routes = [
                 path: 'protected',
                 loadComponent: () => import('./components/page/page.component').then(m => m.PageComponent),
                 runGuardsAndResolvers: 'always',
-                canLoad: [AuthGuard],
-                canActivate: [AuthGuard],
-                canActivateChild: [AuthGuard],
+                canMatch: [rolesGuard],
+                canActivate: [rolesGuard],
+                canActivateChild: [rolesGuard],
                 data: {
-                    title: 'PROTECTED CONTENT',
-                    authGuardValidator: rolesValidator()
+                    title: 'PROTECTED CONTENT'
                 }
             }
         ]

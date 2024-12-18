@@ -13,6 +13,8 @@ export { AuthManager } from './auth-manager';
 export { AuthSubscriptions } from './auth-subscriptions';
 export { AuthUtils } from './auth-utils';
 export { createAuthManager } from './main';
+export type { AuthGuardOptions } from './models/auth-guard-options.model';
+export type { AuthGuardValidator } from './models/auth-guard-validator.model';
 export type { AuthSettings } from './models/auth-settings.model';
 export type { AuthSubscriber } from './models/auth-subscriber.model';
 export type { AuthSubscriberOptions } from './models/auth-subscriber-options.model';
