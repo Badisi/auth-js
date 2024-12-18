@@ -51,7 +51,6 @@ export class DemoComponent implements AfterViewInit {
     // --- HANDLER(s) ---
 
     public callPrivateApi(event: Event): void {
-
         const { url, headers } = (event as CustomEvent).detail as {
             url: string;
             headers: string;
@@ -59,10 +58,10 @@ export class DemoComponent implements AfterViewInit {
 
         if (url) {
             let httpHeaders = new HttpHeaders();
-            headers.split(';').forEach(header => {
+            headers.split(',').forEach(header => {
                 if (header) {
                     const item = header.split(':');
-                    httpHeaders = httpHeaders.append(item[0]?.trim(), item[1]?.trim() || '');
+                    httpHeaders = httpHeaders.append(item[0]?.trim(), item[1]?.trim() ?? '');
                 }
             });
 
