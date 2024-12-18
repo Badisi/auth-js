@@ -1,10 +1,16 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { type EnvironmentProviders, makeEnvironmentProviders, type StaticProvider } from '@angular/core';
+import { type EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
+import type { OIDCAuthManager } from '@badisi/auth-js/oidc';
 
 import { authInterceptorFn } from './auth.interceptor';
+import { AuthService } from './auth.service';
 
-export const provideAuth = (authProvider: StaticProvider): EnvironmentProviders =>
+export const provideAuth = (authManager: OIDCAuthManager): EnvironmentProviders =>
     makeEnvironmentProviders([
-        authProvider,
+        {
+            provide: AuthService,
+            useFactory: () => new AuthService(authManager),
+            multi: false
+        },
         provideHttpClient(withInterceptors([authInterceptorFn]))
     ]);
