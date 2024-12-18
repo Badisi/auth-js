@@ -87,8 +87,8 @@ const ngxAuthLibSettingsDef: LibrarySettingsDefinitionItem<AuthSettings>[] = [
     }
 ];
 ngxAuthLibSettingsDef.splice(3, 0, {
-    name: 'authGuardRedirectUrl',
-    label: 'AuthGuard redirect url',
+    name: 'authGuardFallbackUrl',
+    label: 'AuthGuard fallback url',
     type: 'string'
 });
 export const NGX_AUTH_LIBRARY_SETTINGS_DEFINITION = ngxAuthLibSettingsDef;

@@ -7,5 +7,4 @@ export type InjectToken = boolean | { include?: InjectTokenPattern; exclude?: In
 export interface AuthSettings extends OIDCAuthSettings {
     automaticLoginOn401?: boolean;
     automaticInjectToken?: InjectToken;
-    authGuardRedirectUrl?: string;
 }

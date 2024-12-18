@@ -83,7 +83,6 @@ export const DEFAULT_NGX_AUTH_SETTINGS = (production = false): UserSettings<Auth
         },
         librarySettings: {
             ...defaultAuthJsSettings[0].librarySettings,
-            authGuardRedirectUrl: '/forbidden',
             automaticLoginOn401: true,
             automaticInjectToken: true
         }
@@ -95,7 +94,6 @@ export const DEFAULT_NGX_AUTH_SETTINGS = (production = false): UserSettings<Auth
         },
         librarySettings: {
             ...defaultAuthJsSettings[1].librarySettings,
-            authGuardRedirectUrl: '/forbidden',
             automaticLoginOn401: true,
             automaticInjectToken: true
         }
@@ -110,7 +108,6 @@ export const DEFAULT_NGX_AUTH_SETTINGS = (production = false): UserSettings<Auth
             },
             librarySettings: {
                 ...defaultAuthJsSettings[defaultAuthJsSettings.length - 1].librarySettings,
-                authGuardRedirectUrl: '/forbidden',
                 automaticLoginOn401: true,
                 automaticInjectToken: true
             }

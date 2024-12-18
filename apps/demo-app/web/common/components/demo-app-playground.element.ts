@@ -64,7 +64,7 @@ template.innerHTML = `
                 </div>
                 <div class="input row">
                     <label for="api-headers-input">Custom headers</label>
-                    <input id="api-headers-input" class="flex" placeholder='"name": "value";' />
+                    <input id="api-headers-input" class="flex" placeholder='ex: "name": "value";' />
                 </div>
             </div>
             <button id="api-get-button">GET</button>

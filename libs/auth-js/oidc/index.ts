@@ -6,7 +6,7 @@
  * Copyright (C) 2018 Badisi
  */
 
-export type { AuthSubscriber, AuthSubscriberOptions, AuthSubscription, Optional } from '../core';
+export type { AuthGuardOptions, AuthGuardValidator, AuthSubscriber, AuthSubscriberOptions, AuthSubscription, Optional } from '../core';
 export { AuthManager, AuthSubscriptions, AuthUtils, LogLevel } from '../core';
 export { initOidc } from './main';
 export type { AccessToken } from './models/access-token.model';
@@ -17,4 +17,5 @@ export type { MobileWindowParams } from './models/mobile-window-params.model';
 export type { OIDCAuthSettings } from './models/oidc-auth-settings.model';
 export { UserSession } from './models/user-session.model';
 export { OIDCAuthManager } from './oidc-auth-manager';
+export { OIDCAuthService } from './oidc-auth-service';
 export type { UserProfile } from 'oidc-client-ts';
