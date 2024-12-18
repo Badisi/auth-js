@@ -6,46 +6,24 @@
 
 import { merge } from 'lodash-es';
 import {
-    type ErrorResponse, InMemoryWebStorage, type SigninSilentArgs, type User, type UserProfile,
-    WebStorageStateStore
+    type ErrorResponse, InMemoryWebStorage, type SigninSilentArgs, type User, type UserProfile, WebStorageStateStore
 } from 'oidc-client-ts';
 
 import {
-    type AuthGuardOptions,
-    AuthLogger, AuthManager, type AuthSubscriber, type AuthSubscriberOptions, type AuthSubscription,
-    AuthSubscriptions, AuthUtils, LogLevel
+    type AuthGuardOptions, AuthLogger, AuthManager, type AuthSubscriber, type AuthSubscriberOptions,
+    type AuthSubscription, AuthSubscriptions, AuthUtils
 } from '../core';
+import { DEFAULT_SETTINGS, REDIRECT_URL_KEY } from './default-settings';
 import { MobileStorage } from './mobile/mobile-storage';
 import type { AccessToken } from './models/access-token.model';
 import type { LoginArgs, LogoutArgs, RenewArgs } from './models/args.model';
-import type { DefaultSettings } from './models/default-settings.model';
 import { DesktopNavigation } from './models/desktop-navigation.enum';
 import type { IdToken } from './models/id-token.model';
 import type { OIDCAuthSettings } from './models/oidc-auth-settings.model';
 import { UserSession } from './models/user-session.model';
 import { OIDCAuthGuard } from './oidc-auth-guard';
-import { OidcUserManager } from './oidc-user-manager';
-
-const REDIRECT_URL_KEY = 'auth-js:oidc_manager:redirect_url';
-
-const DEFAULT_SETTINGS: DefaultSettings = {
-    loginRequired: false,
-    retrieveUserSession: true,
-    loadUserInfo: false,
-    automaticSilentRenew: true,
-    desktopNavigationType: DesktopNavigation.REDIRECT,
-    scope: 'openid profile email phone',
-    logLevel: LogLevel.NONE,
-    internal: {
-        response_type: 'code',
-        redirect_uri: '?oidc-callback=login',
-        post_logout_redirect_uri: '?oidc-callback=logout',
-        popup_redirect_uri: 'oidc/callback/popup_redirect.html',
-        popup_post_logout_redirect_uri: 'oidc/callback/popup_redirect.html',
-        silent_redirect_uri: 'oidc/callback/silent_redirect.html',
-        mobileWindowPresentationStyle: 'popover'
-    }
-};
+import { OIDCAuthInterceptor } from './oidc-auth-interceptor';
+import { OIDCUserManager } from './oidc-user-manager';
 
 AuthLogger.init('@badisi/auth-js');
 
@@ -68,7 +46,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     #isAuthenticated = false;
     #isRenewing = false;
 
-    #userManager?: OidcUserManager;
+    #userManager?: OIDCUserManager;
     #settings = DEFAULT_SETTINGS as OIDCAuthSettings;
 
     #user?: User | null;
@@ -95,6 +73,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     public async init(userSettings: OIDCAuthSettings): Promise<void> {
         AuthLogger.setLogLevel(userSettings.logLevel ?? DEFAULT_SETTINGS.logLevel);
 
+        // Sanity checks
         const isNativeMobile = AuthUtils.isNativeMobile();
         if (isNativeMobile && !userSettings.mobileScheme) {
             throw logger.getError('Parameter `mobileScheme` is required for mobile platform');
@@ -124,7 +103,12 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         this.#assertNotInInceptionLoop();
 
         // Configure the user manager
-        this.#userManager = new OidcUserManager(this.#settings);
+        this.#userManager = new OIDCUserManager(this.#settings);
+
+        // Configure the interceptor
+        if (this.#settings.automaticLoginOn401 || this.#settings.automaticInjectToken) {
+            new OIDCAuthInterceptor(this);
+        }
 
         // Listen for events
         this.#userManagerSubs.push(
@@ -180,10 +164,10 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                                 }
                             }
                         }));
-                    // else -> force login if required
+                // else -> force login if required
                 } else if (this.#settings.loginRequired) {
                     await this.login();
-                    // else -> gracefully notify that we are not authenticated
+                // else -> gracefully notify that we are not authenticated
                 } else {
                     this.user = null;
                 }

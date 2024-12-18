@@ -12,7 +12,7 @@ import type { OIDCAuthSettings } from './models/oidc-auth-settings.model';
  * (ex: signinMobile, signoutMobile, MobileNavigator, MobileWindow)
  * @internal
  */
-export class OidcUserManager extends UserManager {
+export class OIDCUserManager extends UserManager {
     #mobileNavigator!: MobileNavigator;
 
     constructor(

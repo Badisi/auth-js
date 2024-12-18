@@ -1,16 +1,13 @@
 import { inject, Injectable, NgZone, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-    AccessToken, AuthSubscription, AuthUtils, IdToken, OIDCAuthManager,
-    OIDCAuthService, UserProfile, UserSession
+    AccessToken, AuthSubscription, AuthUtils, IdToken, OIDCAuthManager, OIDCAuthService, UserProfile, UserSession
 } from '@badisi/auth-js/oidc';
 import { Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
-import { AuthSettings } from './auth-settings.model';
-
 @Injectable()
-export class AuthService extends OIDCAuthService<AuthSettings> implements OnDestroy {
+export class AuthService extends OIDCAuthService implements OnDestroy {
     #authManagerSubs: AuthSubscription[] = [];
 
     #idToken$: ReplaySubject<string | undefined> = new ReplaySubject<string | undefined>(1);

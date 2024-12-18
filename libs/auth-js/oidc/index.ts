@@ -6,13 +6,17 @@
  * Copyright (C) 2018 Badisi
  */
 
-export type { AuthGuardOptions, AuthGuardValidator, AuthSubscriber, AuthSubscriberOptions, AuthSubscription, Optional } from '../core';
+export type {
+    AuthGuardOptions, AuthGuardValidator, AuthSubscriber, AuthSubscriberOptions, AuthSubscription, Optional
+} from '../core';
 export { AuthManager, AuthSubscriptions, AuthUtils, LogLevel } from '../core';
 export { initOidc } from './main';
 export type { AccessToken } from './models/access-token.model';
 export type { LoginArgs, LogoutArgs, RenewArgs, SigninMobileArgs, SignoutMobileArgs } from './models/args.model';
 export { DesktopNavigation } from './models/desktop-navigation.enum';
 export type { IdToken } from './models/id-token.model';
+export type { InjectToken } from './models/inject-token.model';
+export type { InjectTokenPattern } from './models/inject-token-pattern.model';
 export type { MobileWindowParams } from './models/mobile-window-params.model';
 export type { OIDCAuthSettings } from './models/oidc-auth-settings.model';
 export { UserSession } from './models/user-session.model';
