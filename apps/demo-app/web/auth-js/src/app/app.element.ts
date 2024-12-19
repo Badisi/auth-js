@@ -1,10 +1,24 @@
 import { type AuthSubscription, AuthUtils } from '@badisi/auth-js';
-import type { DemoAppDebugElement, DemoAppMainElement, DemoAppPlaygroundElement } from 'demo-app-common';
+import { type DemoAppDebugElement, type DemoAppMainElement, type DemoAppPlaygroundElement,rolesValidator } from 'demo-app-common';
 
 const template = document.createElement('template');
 template.innerHTML = `
+    <style>
+        :host #demo-app-playground-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-transform: uppercase;
+            height: 100%;
+            margin: 0;
+            color: #bdbdbd;
+        }
+    </style>
+
     <demo-app-main>
-        <demo-app-playground tabLabel="Playground"></demo-app-playground>
+        <demo-app-playground tabLabel="Playground">
+            <h2 id="demo-app-playground-content"></h2>
+        </demo-app-playground>
         <demo-app-debug tabLabel="Debug"></demo-app-debug>
         <demo-app-settings tabLabel="Settings"></demo-app-settings>
     </demo-app-main>
@@ -32,6 +46,7 @@ export class AppElement extends HTMLElement {
         this.listenForHeaderEvents();
         this.listenForPlaygroundEvents();
         this.listenForAuthChanges();
+        this.installGuard();
     }
 
     public disconnectedCallback(): void {
@@ -41,34 +56,66 @@ export class AppElement extends HTMLElement {
 
     // --- HELPER(s) ---
 
-    private async callPrivateApi(url: string, headers: string): Promise<void> {
+    private callPrivateApi(url: string, headers?: Record<string, string | number>): void {
         if (url) {
-            const token = await window.authManager.getAccessToken() ?? '';
             const req = new XMLHttpRequest();
             req.onreadystatechange = (): void => {
-                if (req.readyState === 4) { // 4 = DONE
+                if (req.readyState === XMLHttpRequest.DONE) {
                     let resp;
                     try {
                         resp = JSON.parse(req.responseText) as string;
                     } catch {
-                        resp = `${String(req.status)} ${req.statusText}`;
+                        resp = {
+                            status: req.status,
+                            statusText: (req.statusText !== '') ? req.statusText : 'Unknown Error',
+                            url: req.url
+                        };
                     }
                     this.demoAppPlaygroundEl?.setApiStatus(resp, (req.status !== 200));
                 }
             };
             req.open('GET', url, true);
-            req.setRequestHeader('Authorization', `Bearer ${token}`);
-            headers.split(';').forEach(header => {
-                if (header) {
-                    const quoteRegex = /^"?([^"]*)"?$/;
-                    const item = header.split(':');
-                    const name = quoteRegex.exec(item[0]?.trim())?.[1] ?? '';
-                    const value = quoteRegex.exec(item[1]?.trim())?.[1] ?? '';
-                    req.setRequestHeader(name, value);
-                }
-            });
+            if (headers) {
+                Object.entries(headers).forEach(([key, value]) => {
+                    req.setRequestHeader(key, String(value));
+                });
+            }
             req.send();
         }
+    }
+
+    private async callGuard(url = location.href): Promise<void> {
+        const contentEl = this.demoAppPlaygroundEl?.querySelector('#demo-app-playground-content');
+        if (contentEl) {
+            const pathname = (new URL(url)).pathname.slice(1);
+            if (['protected', 'private'].includes(pathname)) {
+                const options = (pathname === 'protected') ? { validator: rolesValidator() } : undefined;
+                const isAllowed = await window.authManager.runGuard(url, options);
+
+                if (typeof isAllowed === 'string') {
+                    contentEl.textContent = isAllowed;
+                } else if (isAllowed) {
+                    contentEl.textContent = `${pathname} content`;
+                }
+            } else if (pathname === 'public') {
+                contentEl.textContent = 'public content';
+            } else {
+                contentEl.textContent = '';
+            }
+        }
+    }
+
+    private installGuard(): void {
+        const originalPushState = history.pushState.bind(history);
+        history.pushState = (...args): void => {
+            originalPushState(...args);
+            void this.callGuard();
+        };
+        const originalReplaceState = history.replaceState.bind(history);
+        history.replaceState = (...args): void => {
+            originalReplaceState(...args);
+            void this.callGuard();
+        };
     }
 
     private refreshInfo(key: string, value?: unknown): void {
@@ -113,12 +160,29 @@ export class AppElement extends HTMLElement {
     }
 
     private listenForPlaygroundEvents(): void {
+        /* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access */
         if (this.demoAppPlaygroundEl) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-            const callApi = ((event: CustomEvent): void => void this.callPrivateApi(event.detail?.url, event.detail?.headers)) as EventListener;
+            const callApi = ((event: CustomEvent): void => { this.callPrivateApi(event.detail?.url, event.detail?.headers); }) as EventListener;
             this.demoAppPlaygroundEl.addEventListener('api', callApi);
             this.listeners.push(() => this.demoAppPlaygroundEl?.removeEventListener('api', callApi));
+
+            const callNavigate = ((event: CustomEvent): void => {
+                const url = new URL(event.type, location.origin);
+                Object.entries(event.detail?.queryParams as Record<string, string>).forEach(([key, value]) => {
+                    url.searchParams.set(key, value);
+                })
+                history.pushState({}, '', url);
+            }) as EventListener;
+            this.demoAppPlaygroundEl.addEventListener('home', callNavigate);
+            this.listeners.push(() => this.demoAppPlaygroundEl?.removeEventListener('home', callNavigate));
+            this.demoAppPlaygroundEl.addEventListener('public', callNavigate);
+            this.listeners.push(() => this.demoAppPlaygroundEl?.removeEventListener('public', callNavigate));
+            this.demoAppPlaygroundEl.addEventListener('private', callNavigate);
+            this.listeners.push(() => this.demoAppPlaygroundEl?.removeEventListener('private', callNavigate));
+            this.demoAppPlaygroundEl.addEventListener('protected', callNavigate);
+            this.listeners.push(() => this.demoAppPlaygroundEl?.removeEventListener('protected', callNavigate));
         }
+        /* eslint-enable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access */
     }
 
     private listenForHeaderEvents(): void {

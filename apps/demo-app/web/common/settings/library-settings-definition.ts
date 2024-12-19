@@ -1,8 +1,7 @@
 import { DesktopNavigation, LogLevel, type OIDCAuthSettings } from '@badisi/auth-js/oidc';
-import type { AuthSettings } from '@badisi/ngx-auth';
 import type { LibrarySettingsDefinitionItem } from 'demo-app-common';
 
-export const AUTH_JS_LIBRARY_SETTINGS_DEFINITION: LibrarySettingsDefinitionItem<OIDCAuthSettings>[] = [{
+export const LIBRARY_SETTINGS_DEFINITION: LibrarySettingsDefinitionItem<OIDCAuthSettings>[] = [{
     name: 'authorityUrl',
     label: 'Authority url',
     type: 'string',
@@ -19,13 +18,19 @@ export const AUTH_JS_LIBRARY_SETTINGS_DEFINITION: LibrarySettingsDefinitionItem<
 }, {
     name: 'scope',
     label: 'Scope',
-    type: 'string'
+    type: 'string',
+    placeholder: 'ex: openid profile email phone offline_access'
 }, {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-expect-error Not a key of OIDCAuthSettings
     name: 'internal.extraQueryParams',
     label: 'Extra query params',
-    type: 'json'
+    type: 'json',
+    placeholder: 'ex: {"audience":"value"}'
+}, {
+    name: 'authGuardFallbackUrl',
+    label: 'AuthGuard fallback url',
+    type: 'string',
+    placeholder: 'ex: forbidden'
 }, {
     name: 'desktopNavigationType',
     label: 'Desktop navigation type',
@@ -73,22 +78,24 @@ export const AUTH_JS_LIBRARY_SETTINGS_DEFINITION: LibrarySettingsDefinitionItem<
     name: 'automaticSilentRenew',
     label: 'Automatic silent renew',
     type: 'boolean'
+}, {
+    name: 'automaticInjectToken',
+    label: 'Automatic inject token',
+    type: 'boolean'
+}, {
+    // @ts-expect-error Not a key of OIDCAuthSettings
+    name: 'automaticInjectToken.include',
+    label: 'Include url(s)',
+    type: 'string',
+    placeholder: 'ex: http://localhost, /pathname'
+}, {
+    // @ts-expect-error Not a key of OIDCAuthSettings
+    name: 'automaticInjectToken.exclude',
+    label: 'Exclude url(s)',
+    type: 'string',
+    placeholder: 'ex: http://localhost, /pathname'
+}, {
+    name: 'automaticLoginOn401',
+    label: 'Automatic login on 401',
+    type: 'boolean'
 }];
-
-const ngxAuthLibSettingsDef: LibrarySettingsDefinitionItem<AuthSettings>[] = [
-    ...AUTH_JS_LIBRARY_SETTINGS_DEFINITION, {
-        name: 'automaticLoginOn401',
-        label: 'Automatic login on 401',
-        type: 'boolean'
-    }, {
-        name: 'automaticInjectToken',
-        label: 'Automatic inject token',
-        type: 'boolean'
-    }
-];
-ngxAuthLibSettingsDef.splice(3, 0, {
-    name: 'authGuardFallbackUrl',
-    label: 'AuthGuard fallback url',
-    type: 'string'
-});
-export const NGX_AUTH_LIBRARY_SETTINGS_DEFINITION = ngxAuthLibSettingsDef;

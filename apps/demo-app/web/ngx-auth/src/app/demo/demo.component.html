@@ -5,48 +5,15 @@
     (logout)="authService.logout({ redirectUrl: '/' })"
     (silentRenew)="authService.renew()">
     <!-- playground -->
-    <demo-app-playground #demoAppPlayground tabLabel="Playground" (api)="callPrivateApi($event)">
-        <div class="card routes">
-            <div class="card-title">Routes access</div>
-            <div class="card-actions column">
-                <div class="route query-params">
-                    <div class="info">
-                        <div class="text">Query params</div>
-                        <input
-                            #queryParamsInput
-                            placeholder="ex: param1=one&param2=two"
-                            (input)="onQueryParamsInputChange(queryParamsInput.value)" />
-                    </div>
-                </div>
-                <div class="route">
-                    <button routerLink="/" [queryParams]="queryParams">HOME</button>
-                    <div class="info">Home page</div>
-                </div>
-                <div class="route">
-                    <button routerLink="/public" [queryParams]="queryParams">PUBLIC</button>
-                    <div class="info">Public content (no login required)</div>
-                </div>
-                <div class="route">
-                    <button routerLink="/private" [queryParams]="queryParams">PRIVATE</button>
-                    <div class="info">Private content (login required)</div>
-                </div>
-                <div class="route">
-                    <button routerLink="/protected" [queryParams]="queryParams">PROTECTED</button>
-                    <div class="info">
-                        Protected content (login required + role(s):
-                        <input
-                            id="roles-input"
-                            (input)="saveSettings()"
-                            (keydown.enter)="router.navigateByUrl('/protected')"
-                            [(ngModel)]="roles" />
-                        )
-                    </div>
-                </div>
-            </div>
-            <div class="box">
-                <router-outlet></router-outlet>
-            </div>
-        </div>
+    <demo-app-playground
+        #demoAppPlayground
+        tabLabel="Playground"
+        (api)="callPrivateApi($event)"
+        (home)="navigate('/', $event)"
+        (public)="navigate('public', $event)"
+        (private)="navigate('private', $event)"
+        (protected)="navigate('protected', $event)">
+        <router-outlet></router-outlet>
     </demo-app-playground>
 
     <!-- debug -->

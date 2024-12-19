@@ -1,32 +1,8 @@
 import type { Routes } from '@angular/router';
-import type { OIDCAuthSettings } from '@badisi/auth-js/oidc';
-import { type AccessToken, authGuard, type AuthGuardValidator, type UserProfile } from '@badisi/ngx-auth';
-import type { UserSettings } from 'demo-app-common';
+import { authGuard } from '@badisi/ngx-auth';
+import { rolesValidator } from 'demo-app-common';
 
 import { DemoComponent } from './demo.component';
-
-const rolesValidator = (): AuthGuardValidator =>
-    (_userProfile?: UserProfile, accessToken?: AccessToken): boolean | string => {
-        const { otherSettings, librarySettings } = window.appSettings.getCurrentUserSettings() as UserSettings<OIDCAuthSettings>;
-        const requiredRoles = (otherSettings) ? (otherSettings['roles'] as string | undefined ?? '').split(',') : [];
-
-        let tokenRoles: string[] | undefined;
-        // auth0
-        if (librarySettings.authorityUrl.includes('auth0')) {
-            tokenRoles = (accessToken as Record<string, string[] | undefined>)['http://ngx-auth.com/roles'];
-        // zitadel
-        } else if (librarySettings.authorityUrl.includes('zitadel')) {
-            const roles = (accessToken as Record<string, string[] | undefined>)['urn:zitadel:iam:org:project:roles'];
-            tokenRoles = Object.keys(roles ?? {});
-        // keycloak
-        } else {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-            tokenRoles = (accessToken as any)?.resource_access?.account?.roles;
-        }
-
-        const isAllowed = requiredRoles.every(role => (tokenRoles ?? []).includes(role));
-        return isAllowed ? true : 'forbidden';
-    };
 
 const rolesGuard = authGuard({ validator: rolesValidator() });
 
