@@ -150,10 +150,11 @@ export class OIDCAuthInterceptor {
                     logger.debug('received xhr url:', url);
 
                     // Do a login on 401
-                    const onReadyStateChange = (): void => {
-                        if (this.readyState === XMLHttpRequest.DONE) {
-                            removeListeners();
+                    const originalReadyStateChange = this.onreadystatechange;
+                    this.onreadystatechange = (event: Event): void => {
+                        originalReadyStateChange?.apply(this, [event]);
 
+                        if (this.readyState === XMLHttpRequest.DONE) {
                             if (this.status === 401) {
                                 const shouldLoginOn401 = interceptor.#manager.getSettings().automaticLoginOn401 ?? false;
                                 if (shouldLoginOn401) {
@@ -162,17 +163,6 @@ export class OIDCAuthInterceptor {
                             }
                         }
                     }
-                    const removeListeners = (): void => {
-                        this.removeEventListener('readystatechange', onReadyStateChange);
-                        this.removeEventListener('timeout', removeListeners);
-                        this.removeEventListener('error', removeListeners);
-                        this.removeEventListener('abort', removeListeners);
-
-                    };
-                    this.addEventListener('readystatechange', onReadyStateChange);
-                    this.addEventListener('timeout', removeListeners);
-                    this.addEventListener('error', removeListeners);
-                    this.addEventListener('abort', removeListeners);
 
                     // Add token to request headers
                     const shouldInjectToken = url ? interceptor.#shouldInjectAuthToken(url) : false;
