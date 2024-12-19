@@ -5,9 +5,10 @@
 */
 
 import type { AuthSettings } from '@badisi/auth-js';
+import type { OIDCAuthSettings } from '@badisi/auth-js/oidc';
 
 import { globalStyle } from '../core';
-import type { UserSettings } from '../settings/demo-app-settings.service';
+import type { Settings } from '../settings/demo-app-settings.service';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -31,6 +32,32 @@ template.innerHTML = `
 
         :host form .input, :host .form-content > * {
             margin-bottom: 24px;
+        }
+
+        :host form div:has(#automaticInjectToken:not(:checked)) > div:has(#automaticInjectTokeninclude),
+        :host form div:has(#automaticInjectToken:not(:checked)) > div:has(#automaticInjectTokenexclude) {
+            label {
+                color: lightgray;
+            }
+            input {
+                opacity: 50%;
+            }
+        }
+
+        :host form div.input:has(#automaticInjectTokeninclude),
+        :host form div.input:has(#automaticInjectTokenexclude) {
+            flex-direction: row;
+            align-items: center;
+            margin-left: 32px;
+
+            label {
+                margin-bottom: 0;
+                margin-right: 8px;
+            }
+
+            input {
+                flex: 1;
+            }
         }
 
         :host form label {
@@ -211,7 +238,7 @@ export class DemoAppSettingsElement extends HTMLElement {
         this.listeners.push(() => cancelEl?.removeEventListener('click', cancelCb));
 
         // Initialize form
-        this.refreshFormContent(window.appSettings.getCurrentUserSettings());
+        this.refreshFormContent(window.appSettings.getCurrentSettings());
     }
 
     public disconnectedCallback(): void {
@@ -221,7 +248,7 @@ export class DemoAppSettingsElement extends HTMLElement {
     // --- HANDLER(s) ---
 
     public loadSettings(name: string): void {
-        window.appSettings.setCurrentUserSettings(name);
+        window.appSettings.setCurrentSettings(name);
         location.reload();
     }
 
@@ -241,7 +268,7 @@ export class DemoAppSettingsElement extends HTMLElement {
     }
 
     public delete(): void {
-        window.appSettings.deleteCurrentUserSettings();
+        window.appSettings.deleteCurrentSettings();
         location.reload();
     }
 
@@ -250,28 +277,31 @@ export class DemoAppSettingsElement extends HTMLElement {
         this.formIsDirty = false;
         this.classList.remove('dirty');
         this.refreshSelect();
-        this.refreshFormContent(window.appSettings.getCurrentUserSettings());
+        this.refreshFormContent(window.appSettings.getCurrentSettings());
     }
 
     // --- HELPER(s) ---
 
     private setPathValue(settings: AuthSettings, path: string, value: unknown): void {
         const props = path.split('.');
-        props.reduce((obj, prop, index) => {
+        props.reduce((obj: any, prop, index) => {
             if (index === (props.length - 1)) {
-                (obj as any)[prop] = value;
-            } else if (!Object.prototype.hasOwnProperty.call(obj, prop)) {
-                (obj as any)[prop] = {};
+                if (typeof value === 'string' && value.trim() === '') {
+                    value = undefined;
+                }
+                obj[prop] = value;
+            } else if (!(prop in obj) || typeof obj[prop] !== 'object' || obj[prop] === null) {
+                obj[prop] = {};
             }
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-            return (obj as any)[prop];
+            return obj[prop];
         }, settings);
     }
 
     private getPathValue(settings: AuthSettings | undefined, path: string): unknown {
-        return path.split('.').reduce((obj, prop) =>
+        return path.split('.').reduce((obj: any, prop) =>
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-            (obj) ? (obj as any)[prop] : obj
+            obj && prop in obj ? obj[prop] : undefined
         , settings);
     }
 
@@ -282,19 +312,19 @@ export class DemoAppSettingsElement extends HTMLElement {
         }
 
         // Redraw it
-        const { userSettings, currentUserSettingsId } = window.appSettings.get();
-        userSettings
+        const { settings, currentSettingsId } = window.appSettings.get();
+        settings
             .sort((a, b) => a.name.localeCompare(b.name))
             .forEach(item => {
                 const optionEl = document.createElement('option');
-                optionEl.selected = (item.name === currentUserSettingsId);
+                optionEl.selected = (item.name === currentSettingsId);
                 optionEl.value = String(item.name);
                 optionEl.textContent = item.name;
                 this.selectEl?.appendChild(optionEl);
             });
     }
 
-    private refreshFormContent(userSettings: UserSettings): void {
+    private refreshFormContent(settings: Settings): void {
         // Clear the page
         if (this.formContentEl) {
             this.formContentEl.innerHTML = '';
@@ -302,8 +332,8 @@ export class DemoAppSettingsElement extends HTMLElement {
 
         // Draw the form
         if (this.settingsNameEl) {
-            const { librarySettingsDefinition } = window.appSettings.get();
-            const { name: settingName, librarySettings } = userSettings;
+            const librarySettingsDefinition = window.appSettings.getLibrarySettingsDefinition();
+            const { name: settingName, librarySettings } = settings;
 
             this.settingsNameEl.value = settingName;
             librarySettingsDefinition
@@ -348,6 +378,9 @@ export class DemoAppSettingsElement extends HTMLElement {
                             } else {
                                 formItemEl.value = value ?? '';
                             }
+                            if (item.placeholder) {
+                                (formItemEl as HTMLInputElement).placeholder = item.placeholder;
+                            }
                             formItemContainerEl.classList.add('input', 'column');
                             formItemContainerEl.appendChild(formItemLabelEl);
                             formItemContainerEl.appendChild(formItemEl);
@@ -355,18 +388,38 @@ export class DemoAppSettingsElement extends HTMLElement {
                         }
                     }
                 });
+
+            // Patch for automaticInjectToken to clear and disable inputs when deselected
+            const automaticInjectTokenEl = this.shadowRoot?.querySelector<HTMLInputElement>('#automaticInjectToken');
+            if (automaticInjectTokenEl) {
+                automaticInjectTokenEl.onclick = (): void => {
+                    if (!automaticInjectTokenEl.checked) {
+                        const automaticInjectTokenIncludeEl = this.shadowRoot?.querySelector<HTMLInputElement>('#automaticInjectTokeninclude');
+                        if (automaticInjectTokenIncludeEl) {
+                            automaticInjectTokenIncludeEl.disabled = true;
+                            automaticInjectTokenIncludeEl.value = '';
+                        }
+                        const automaticInjectTokenExcludeEl = this.shadowRoot?.querySelector<HTMLInputElement>('#automaticInjectTokenexclude');
+                        if (automaticInjectTokenExcludeEl) {
+                            automaticInjectTokenExcludeEl.disabled = true;
+                            automaticInjectTokenExcludeEl.value = '';
+                        }
+                    }
+                };
+            }
         }
     }
 
     private saveAndReload(): void {
         if (this.formEl?.reportValidity() && this.settingsNameEl) {
-            const { librarySettingsDefinition } = window.appSettings.get();
-            const currentUserSettings = (!this.formIsNew) ? window.appSettings.getCurrentUserSettings() : {
+            const librarySettingsDefinition = window.appSettings.getLibrarySettingsDefinition();
+            const currentSettings = (!this.formIsNew) ? window.appSettings.getCurrentSettings() : {
                 name: '',
-                librarySettings: {}
+                librarySettings: {} as OIDCAuthSettings
             };
-            currentUserSettings.name = this.settingsNameEl.value;
+            currentSettings.name = this.settingsNameEl.value;
             librarySettingsDefinition
+                .sort((a, b) => (a._sortIndex || 0) - (b._sortIndex || 0))
                 .forEach(item => {
                     const formItemEl = this.shadowRoot?.querySelector(`#${item.name.replace('.', '')}`);
                     let value;
@@ -391,12 +444,34 @@ export class DemoAppSettingsElement extends HTMLElement {
                             value = (formItemEl as HTMLInputElement).value;
                             break;
                     }
-                    this.setPathValue(currentUserSettings.librarySettings, item.name, value);
+                    this.setPathValue(currentSettings.librarySettings, item.name, value);
                 });
 
-            window.appSettings.addOrUpdateUserSettings(currentUserSettings);
+            // Transform inject token
+            const automaticInjectTokenEl = this.shadowRoot?.querySelector<HTMLInputElement>('#automaticInjectToken');
+            if (!automaticInjectTokenEl?.checked) {
+                currentSettings.librarySettings.automaticInjectToken = false;
+            } else {
+                let injectToken = currentSettings.librarySettings.automaticInjectToken;
+                if (typeof injectToken === 'object') {
+                    if ((!injectToken.include || ((injectToken.include as unknown as string).trim() === '')) &&
+                        (!injectToken.exclude || ((injectToken.exclude as unknown as string).trim() === ''))) {
+                            injectToken = true;
+                    } else {
+                        if (injectToken.include) {
+                            injectToken.include = (injectToken.include as unknown as string).split(',')
+                        }
+                        if (injectToken.exclude) {
+                            injectToken.exclude = (injectToken.exclude as unknown as string).split(',')
+                        }
+                    }
+                    currentSettings.librarySettings.automaticInjectToken = injectToken;
+                }
+            }
+
+            window.appSettings.addOrUpdateSettings(currentSettings);
             if (this.formIsNew) {
-                window.appSettings.setCurrentUserSettings(currentUserSettings.name);
+                window.appSettings.setCurrentSettings(currentSettings.name);
             }
             location.reload();
         }

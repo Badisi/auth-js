@@ -1,15 +1,64 @@
 import '@capacitor/core';
 
-import type { OIDCAuthManager } from '@badisi/auth-js/oidc';
+import type { AccessToken, AuthGuardValidator, OIDCAuthManager, OIDCAuthSettings, UserProfile } from '@badisi/auth-js/oidc';
 
 import type { DemoAppSettings } from '../settings/demo-app-settings.service';
 
 declare global {
     interface Window {
-        appSettings: DemoAppSettings;
+        appSettings: DemoAppSettings<OIDCAuthSettings>;
         authManager: OIDCAuthManager;
     }
 }
+
+export const prettyPrint = (value: unknown, dateAttrs: string[] = []): string => {
+    const jsonLine = /^( *)("[\w-]+": )?("[^"]*"|[\w.+-]*)?([,[{])?$/mg;
+    const replacer = (_match: string, pIndent: string, pKey: string, pVal: string, pEnd: string): string => {
+        let r = pIndent || '';
+        const key = (pKey) ? pKey.replace(/[": ]/g, '') : undefined;
+        if (key) {
+            r += `<span class="json-key">${key}</span>: `;
+        }
+        if (pVal) {
+            r += `<span class="${pVal.startsWith('"') ? 'json-string' : 'json-value'}">${pVal}</span>`;
+            if (key && dateAttrs.includes(key)) {
+                const date = new Date(Number(pVal) * 1000);
+                const pValAsDate = `${date.toDateString()}, ${date.toLocaleTimeString()}`;
+                if (pValAsDate) {
+                    r += ` <span class="json-date">(${pValAsDate})</span>`;
+                }
+            }
+        }
+        return r + (pEnd || '');
+    };
+    return (value) ? JSON.stringify(value, null, 2)
+        .replace(/&/g, '&amp;').replace(/\\"/g, '&quot;')
+        .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(jsonLine, replacer) : '';
+};
+
+export const rolesValidator = (): AuthGuardValidator =>
+    (_userProfile?: UserProfile, accessToken?: AccessToken): boolean | string => {
+        const { otherSettings, librarySettings } = window.appSettings.getCurrentSettings();
+        const requiredRoles = (otherSettings) ? (otherSettings.roles ?? '').split(',') : [];
+
+        let tokenRoles: string[] | undefined;
+        // auth0
+        if (librarySettings.authorityUrl.includes('auth0')) {
+            tokenRoles = (accessToken as Record<string, string[] | undefined>)['http://ngx-auth.com/roles'];
+        // zitadel
+        } else if (librarySettings.authorityUrl.includes('zitadel')) {
+            const roles = (accessToken as Record<string, string[] | undefined>)['urn:zitadel:iam:org:project:roles'];
+            tokenRoles = Object.keys(roles ?? {});
+        // keycloak
+        } else {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+            tokenRoles = (accessToken as any)?.resource_access?.account?.roles;
+        }
+
+        const isAllowed = requiredRoles.every(role => (tokenRoles ?? []).includes(role));
+        return isAllowed ? true : 'forbidden';
+    };
 
 export const globalStyle = `
     .flex {
@@ -146,29 +195,3 @@ export const globalStyle = `
         }
     }
 `;
-
-export const prettyPrint = (value: unknown, dateAttrs: string[] = []): string => {
-    const jsonLine = /^( *)("[\w-]+": )?("[^"]*"|[\w.+-]*)?([,[{])?$/mg;
-    const replacer = (_match: string, pIndent: string, pKey: string, pVal: string, pEnd: string): string => {
-        let r = pIndent || '';
-        const key = (pKey) ? pKey.replace(/[": ]/g, '') : undefined;
-        if (key) {
-            r += `<span class="json-key">${key}</span>: `;
-        }
-        if (pVal) {
-            r += `<span class="${pVal.startsWith('"') ? 'json-string' : 'json-value'}">${pVal}</span>`;
-            if (key && dateAttrs.includes(key)) {
-                const date = new Date(Number(pVal) * 1000);
-                const pValAsDate = `${date.toDateString()}, ${date.toLocaleTimeString()}`;
-                if (pValAsDate) {
-                    r += ` <span class="json-date">(${pValAsDate})</span>`;
-                }
-            }
-        }
-        return r + (pEnd || '');
-    };
-    return (value) ? JSON.stringify(value, null, 2)
-        .replace(/&/g, '&amp;').replace(/\\"/g, '&quot;')
-        .replace(/</g, '&lt;').replace(/>/g, '&gt;')
-        .replace(jsonLine, replacer) : '';
-};

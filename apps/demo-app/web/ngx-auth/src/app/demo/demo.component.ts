@@ -1,73 +1,40 @@
 import { AsyncPipe } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Params, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Params, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '@badisi/ngx-auth';
 import { DemoAppPlaygroundElement, globalStyle } from 'demo-app-common';
 
 @Component({
     selector: 'app-demo',
     templateUrl: './demo.component.html',
-    styleUrls: ['./demo.component.scss'],
     styles: [globalStyle],
     standalone: true,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [AsyncPipe, FormsModule, RouterOutlet, RouterLink],
+    imports: [AsyncPipe, FormsModule, RouterOutlet],
     encapsulation: ViewEncapsulation.ShadowDom
 })
-export class DemoComponent implements AfterViewInit {
+export class DemoComponent {
     @ViewChild('demoAppPlayground')
     private demoAppPlaygroundEl!: ElementRef<DemoAppPlaygroundElement>;
 
-    @ViewChild('queryParamsInput')
-    private queryParamsInputEl!: ElementRef<HTMLInputElement>;
-
-    public roles?: string;
-    public queryParams?: Params;
-
-    protected router = inject(Router);
     protected authService = inject(AuthService);
     private httpClient = inject(HttpClient);
-
-    public ngAfterViewInit(): void {
-        setTimeout(() => {
-            const settings = window.appSettings.getCurrentUserSettings().otherSettings;
-            this.roles = settings?.['roles'] as string;
-            this.queryParams = settings?.['queryParams'] as Params | undefined;
-            if (this.queryParams) {
-                let queryParamsString = '';
-                Object.entries(this.queryParams).forEach(([key, value], index) => {
-                    if (index > 0) {
-                        queryParamsString += '&';
-                    }
-                    queryParamsString += `${key}=${value as string}`;
-                });
-                this.queryParamsInputEl.nativeElement.value = queryParamsString;
-            }
-        });
-    }
+    private router = inject(Router);
 
     // --- HANDLER(s) ---
 
     public callPrivateApi(event: Event): void {
         const { url, headers } = (event as CustomEvent).detail as {
             url: string;
-            headers: string;
+            headers?: Record<string, string | number>;
         };
 
         if (url) {
-            let httpHeaders = new HttpHeaders();
-            headers.split(',').forEach(header => {
-                if (header) {
-                    const item = header.split(':');
-                    httpHeaders = httpHeaders.append(item[0]?.trim(), item[1]?.trim() ?? '');
-                }
-            });
-
             const demoPlayground = this.demoAppPlaygroundEl.nativeElement;
             this.httpClient
-                .get<unknown>(url, headers ? { headers: httpHeaders } : {})
+                .get<unknown>(url, headers ? { headers: new HttpHeaders(headers) } : {})
                 .subscribe({
                     next: data => { demoPlayground.setApiStatus(data, false); },
                     error: (error: unknown) => { demoPlayground.setApiStatus(error, true); }
@@ -75,20 +42,10 @@ export class DemoComponent implements AfterViewInit {
         }
     }
 
-    public saveSettings(): void {
-        const demoPlayground = this.demoAppPlaygroundEl.nativeElement;
-        demoPlayground.saveSettings({ roles: this.roles, queryParams: this.queryParams });
-    }
-
-    public onQueryParamsInputChange(value: string): void {
-        const params: Params = {};
-        value.split('&').forEach(attr => {
-            const vals = attr.split('=');
-            if (vals.length === 2) {
-                params[vals[0]] = vals[1];
-            }
-        });
-        this.queryParams = params;
-        this.saveSettings();
+    public async navigate(url: string, event: Event): Promise<void> {
+        const { queryParams } = (event as CustomEvent).detail as {
+            queryParams?: Params;
+        };
+        await this.router.navigate([url], { queryParams });
     }
 }

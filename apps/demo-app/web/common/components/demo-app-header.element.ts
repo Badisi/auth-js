@@ -171,7 +171,7 @@ template.innerHTML = `
         </a>
 
         <div class="title row">
-            <span class="icon">🛡️</span>Demo app &#123; <select id="implementation-select"></select> &#125;
+            <span class="icon">🛡️</span>Demo app &#123; <select id="implementation-select"></select> &nbsp;&#125;
             <div class="tip"><span class="hand">👈</span> choose an implementation</div>
         </div>
 
@@ -230,7 +230,7 @@ export class DemoAppHeaderElement extends HTMLElement {
             optionEl.textContent = 'localhost';
             this.implSelectEl?.appendChild(optionEl);
         } else {
-            window.appSettings.getImplementations().forEach(item => {
+            window.appSettings.getLibraryImplementations().forEach(item => {
                 const optionEl = document.createElement('option');
                 optionEl.value = String(item.label);
                 optionEl.textContent = item.label;
@@ -240,7 +240,7 @@ export class DemoAppHeaderElement extends HTMLElement {
             const changeCb = (): void => {
                 const index = this.implSelectEl?.selectedIndex;
                 if (index) {
-                    window.location.href = window.appSettings.getImplementations()[index].demoUrl;
+                    window.location.href = window.appSettings.getLibraryImplementations()[index].demoUrl;
                 }
             };
             this.implSelectEl?.addEventListener('change', changeCb);
@@ -286,7 +286,7 @@ export class DemoAppHeaderElement extends HTMLElement {
     }
 
     private refreshImplementation(): void {
-        const impls = window.appSettings.getImplementations();
+        const impls = window.appSettings.getLibraryImplementations();
         if (!window.location.href.includes(':4200')) {
             const implIndex = impls.findIndex(item => window.location.href.includes(item.demoUrl));
             const impl = (implIndex !== -1) ? impls[implIndex] : impls[0];

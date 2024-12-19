@@ -1,19 +1,24 @@
+
 import './app/app.element';
 
 import { initOidc } from '@badisi/auth-js/oidc';
+import { DEFAULT_SETTINGS, DemoAppSettings } from 'demo-app-common';
+import pkgJson from 'libs/auth-js/package.json';
 
-import { appSettings } from './app/app.settings';
+import { environment } from './environments/environment';
 
 ((): void => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    window.appSettings = appSettings;
+    window.appSettings = new DemoAppSettings(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+        `auth-js:${(pkgJson as any).version as string}:demo-app:settings`,
+        DEFAULT_SETTINGS(!environment.production)
+    );;
 
     const el = document.createElement('div');
     el.innerHTML = 'Loading...';
     document.body.appendChild(el);
 
-    initOidc(appSettings.getCurrentUserSettings().librarySettings)
+    initOidc(window.appSettings.getCurrentSettings().librarySettings)
         .then(manager => {
             window.authManager = manager;
             el.replaceWith(document.createElement('app-root'));
