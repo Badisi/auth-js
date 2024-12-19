@@ -25,8 +25,6 @@ import { OIDCAuthGuard } from './oidc-auth-guard';
 import { OIDCAuthInterceptor } from './oidc-auth-interceptor';
 import { OIDCUserManager } from './oidc-user-manager';
 
-AuthLogger.init('@badisi/auth-js');
-
 const logger = new AuthLogger('OIDCAuthManager');
 
 export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
