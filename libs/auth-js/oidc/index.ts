@@ -6,6 +6,9 @@
  * Copyright (C) 2018 Badisi
  */
 
+import { AuthLogger } from '../core';
+AuthLogger.init('@badisi/auth-js');
+
 export type {
     AuthGuardOptions, AuthGuardValidator, AuthSubscriber, AuthSubscriberOptions, AuthSubscription, Optional
 } from '../core';
