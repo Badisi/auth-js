@@ -24,6 +24,9 @@
             "@badisi/auth-js/oidc": [
                 "libs/auth-js/oidc"
             ],
+            "@badisi/auth-vue": [
+                "libs/auth-vue"
+            ],
             "@badisi/ngx-auth": [
                 "libs/ngx-auth"
             ],

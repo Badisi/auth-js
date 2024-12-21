@@ -88,9 +88,6 @@
         {
             "plugin": "@nx/js/typescript",
             "options": {
-                "typecheck": {
-                    "targetName": "typecheck"
-                },
                 "build": {
                     "targetName": "build",
                     "configName": "tsconfig.lib.json"
@@ -110,8 +107,14 @@
             "plugin": "@nx/webpack/plugin",
             "options": {
                 "buildTargetName": "build",
-                "serveTargetName": "serve",
-                "previewTargetName": "preview"
+                "serveTargetName": "serve"
+            }
+        },
+        {
+            "plugin": "@nx/vite/plugin",
+            "options": {
+                "buildTargetName": "build",
+                "serveTargetName": "serve"
             }
         }
     ]

@@ -1,0 +1,30 @@
+{
+    "name": "demo-app-auth-vue",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "application",
+    "sourceRoot": "apps/demo-app/web/auth-vue/src",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/vite:build",
+            "outputs": [
+                "{options.outputPath}"
+            ],
+            "options": {
+                "outputPath": "dist/demo-app/auth-vue",
+                "tsConfig": "apps/demo-app/web/auth-vue/tsconfig.app.json",
+                "configFile": "apps/demo-app/web/auth-vue/vite.config.mjs"
+            }
+        },
+        "serve": {
+            "executor": "@nx/vite:dev-server",
+            "options": {
+                "host": "0.0.0.0",
+                "buildTarget": "demo-app-auth-vue:build"
+            }
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint"
+        }
+    }
+}
