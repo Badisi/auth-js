@@ -1,0 +1,16 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../../dist/auth-vue",
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "declarationMap": false,
+        "sourceMap": false,
+        "types": []
+    },
+    "exclude": [],
+    "include": [
+        "../auth-js/@types/mobile.d.ts",
+        "**/*.ts"
+    ]
+}

@@ -12,8 +12,9 @@
 
 Package | Version | Downloads | License | Description
 --- | --- | --- | --- | ---
-[@badisi/auth-js](/projects/auth-js) | [![npm version](https://img.shields.io/npm/v/@badisi/auth-js.svg?color=blue&logo=npm)][npm-auth-js] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/auth-js.svg?color=7986CB&logo=npm&label=npm)][npm-dl-auth-js] | [![license](https://img.shields.io/npm/l/@badisi/auth-js.svg?color=ff69b4&label=)][license] | For VanillaJS, Ionic applications
-[@badisi/ngx-auth](/projects/ngx-auth) | [![npm version](https://img.shields.io/npm/v/@badisi/ngx-auth.svg?color=blue&logo=npm)][npm-ngx-auth] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/ngx-auth.svg?color=7986CB&logo=npm&label=npm)][npm-dl-ngx-auth] | [![license](https://img.shields.io/npm/l/@badisi/ngx-auth.svg?color=ff69b4&label=)][license] | For Angular, Ionic applications
+[@badisi/auth-js](/libs/auth-js) | [![npm version](https://img.shields.io/npm/v/@badisi/auth-js.svg?color=blue&logo=npm)][npm-auth-js] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/auth-js.svg?color=7986CB&logo=npm&label=npm)][npm-dl-auth-js] | [![license](https://img.shields.io/npm/l/@badisi/auth-js.svg?color=ff69b4&label=)][license] | For VanillaJS, Ionic applications
+[@badisi/ngx-auth](/libs/ngx-auth) | [![npm version](https://img.shields.io/npm/v/@badisi/ngx-auth.svg?color=blue&logo=npm)][npm-ngx-auth] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/ngx-auth.svg?color=7986CB&logo=npm&label=npm)][npm-dl-ngx-auth] | [![license](https://img.shields.io/npm/l/@badisi/ngx-auth.svg?color=ff69b4&label=)][license] | For Angular, Ionic applications
+[@badisi/auth-vue](/libs/auth-vue) | [![npm version](https://img.shields.io/npm/v/@badisi/auth-vue.svg?color=blue&logo=npm)][npm-auth-vue] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/auth-vue.svg?color=7986CB&logo=npm&label=npm)][npm-dl-auth-vue] | [![license](https://img.shields.io/npm/l/@badisi/auth-vue.svg?color=ff69b4&label=)][license] | For Vue.js, Ionic applications
 
 </div>
 
@@ -49,8 +50,10 @@ Please read and follow the [Code of Conduct][codeofconduct] and help me keep thi
 
 [npm-auth-js]: https://www.npmjs.com/package/@badisi/auth-js
 [npm-ngx-auth]: https://www.npmjs.com/package/@badisi/ngx-auth
+[npm-auth-vue]: https://www.npmjs.com/package/@badisi/auth-vue
 [npm-dl-auth-js]: https://npmcharts.com/compare/@badisi/auth-js?minimal=true
 [npm-dl-ngx-auth]: https://npmcharts.com/compare/@badisi/ngx-auth?minimal=true
+[npm-dl-auth-vue]: https://npmcharts.com/compare/@badisi/auth-vue?minimal=true
 [ci-tests]: https://github.com/badisi/auth-js/actions/workflows/ci_tests.yml
 [pullrequest]: https://github.com/badisi/auth-js/blob/main/CONTRIBUTING.md#-submitting-a-pull-request-pr
 [license]: https://github.com/badisi/auth-js/blob/main/LICENSE

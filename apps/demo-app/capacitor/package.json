@@ -5,9 +5,11 @@
     "scripts": {
         "start:ios:localhost": "npx cap run ios --serverUrl http://localhost:4200",
         "start:ios:demo-auth-js": "npx cap run ios --serverUrl https://badisi.github.io/auth-js/demo-app/auth-js",
+        "start:ios:demo-auth-vue": "npx cap run ios --serverUrl https://badisi.github.io/auth-js/demo-app/auth-vue",
         "start:ios:demo-ngx-auth": "npx cap run ios --serverUrl https://badisi.github.io/auth-js/demo-app/ngx-auth",
         "start:android:localhost": "npx cap run android --serverUrl http://10.0.2.2:4200",
         "start:android:demo-auth-js": "npx cap run android --serverUrl https://badisi.github.io/auth-js/demo-app/auth-js",
+        "start:android:demo-auth-vue": "npx cap run android --serverUrl https://badisi.github.io/auth-js/demo-app/auth-vue",
         "start:android:demo-ngx-auth": "npx cap run android --serverUrl https://badisi.github.io/auth-js/demo-app/ngx-auth"
     },
     "dependencies": {
