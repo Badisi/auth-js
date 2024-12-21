@@ -36,6 +36,9 @@
         },
         "build": {
             "executor": "@nx/angular:package",
+            "dependsOn": [
+                "^build"
+            ],
             "outputs": [
                 "{workspaceRoot}/dist/ngx-auth"
             ],

@@ -14,7 +14,7 @@
         "noEmitOnError": true,
         "skipDefaultLibCheck": true,
         "skipLibCheck": true,
-        "sourceMap": true,
+        "sourceMap": false,
         "types": [
             "jest",
             "node"

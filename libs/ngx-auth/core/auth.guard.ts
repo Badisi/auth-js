@@ -4,7 +4,8 @@ import {
     type RouterStateSnapshot, type UrlSegment
 } from '@angular/router';
 import type { AuthGuardOptions } from '@badisi/auth-js/oidc';
-import { AuthService } from '@badisi/ngx-auth';
+
+import { AuthService } from './auth.service';
 
 export const authGuard = (options?: AuthGuardOptions): CanMatchFn | CanActivateFn =>
     async (_route: Route | ActivatedRouteSnapshot, segmentsOrState: UrlSegment[] | RouterStateSnapshot): Promise<GuardResult> => {
