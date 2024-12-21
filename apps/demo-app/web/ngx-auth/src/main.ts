@@ -1,6 +1,6 @@
 import { isDevMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import {initAuth, provideAuth } from '@badisi/ngx-auth';
+import { initAuth, provideAuth } from '@badisi/ngx-auth';
 import { DEFAULT_SETTINGS, DemoAppSettings } from 'demo-app-common';
 import pkgJson from 'libs/ngx-auth/package.json';
 

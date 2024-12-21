@@ -2,6 +2,7 @@
     "name": "auth-js",
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "libs/auth-js",
+    "prefix": "badisi",
     "projectType": "library",
     "tags": [],
     "targets": {

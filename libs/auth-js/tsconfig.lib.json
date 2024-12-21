@@ -5,6 +5,8 @@
         "outDir": "../../dist/auth-js",
         "declaration": true,
         "emitDeclarationOnly": true,
+        "declarationMap": false,
+        "sourceMap": false,
         "types": []
     },
     "exclude": [
@@ -13,6 +15,7 @@
         "**/*.test.ts"
     ],
     "include": [
+        "./@types/mobile.d.ts",
         "**/*.ts"
     ]
 }
