@@ -5,11 +5,11 @@
 </template>
 
 <style scoped lang="scss">
-    .page {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        color: #bdbdbd;
-    }
+.page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #bdbdbd;
+}
 </style>

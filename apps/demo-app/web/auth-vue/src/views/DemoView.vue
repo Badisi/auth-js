@@ -5,7 +5,6 @@
         @login="$authService.login()"
         @logout="$authService.logout({ redirectUrl: '/' })"
         @silentRenew="$authService.renew()">
-
         <!-- playground -->
         <demo-app-playground
             ref="demoAppPlayground"
@@ -27,8 +26,7 @@
             :idToken="$authService.idTokenRef.value"
             :idTokenDecoded="$authService.idTokenDecodedRef.value"
             :accessToken="$authService.accessTokenRef.value"
-            :accessTokenDecoded="$authService.accessTokenDecodedRef.value">
-        </demo-app-debug>
+            :accessTokenDecoded="$authService.accessTokenDecodedRef.value"></demo-app-debug>
 
         <!-- settings -->
         <demo-app-settings tabLabel="Settings"></demo-app-settings>
@@ -36,31 +34,32 @@
 </template>
 
 <script setup lang="ts">
-    import { DemoAppPlaygroundElement } from 'demo-app-common';
-    import { LocationQueryRaw, useRouter } from 'vue-router';
-    import { useTemplateRef } from 'vue';
-    import axios from 'axios';
+import { DemoAppPlaygroundElement } from 'demo-app-common';
+import { LocationQueryRaw, useRouter } from 'vue-router';
+import { useTemplateRef } from 'vue';
+import axios from 'axios';
 
-    const demoAppPlaygroundEl = useTemplateRef<DemoAppPlaygroundElement>('demoAppPlayground');
-    const router = useRouter();
+const demoAppPlaygroundEl = useTemplateRef<DemoAppPlaygroundElement>('demoAppPlayground');
+const router = useRouter();
 
-    const callPrivateApi = async (event: Event): Promise<void> => {
-        const { url, headers } = (event as CustomEvent).detail as {
-            url: string;
-            headers?: Record<string, string | number>;
-        };
-
-        if (url) {
-            await axios.get(url, { headers })
-                .then(response => demoAppPlaygroundEl.value?.setApiStatus(response.data, false))
-                .catch(error => demoAppPlaygroundEl.value?.setApiStatus(error, true));
-        }
+const callPrivateApi = async (event: Event): Promise<void> => {
+    const { url, headers } = (event as CustomEvent).detail as {
+        url: string;
+        headers?: Record<string, string | number>;
     };
 
-    const navigate = async (url: string, event: Event): Promise<void> => {
-        const { queryParams } = (event as CustomEvent).detail as {
-            queryParams?: LocationQueryRaw;
-        };
-        await router.push({ path: url, query: queryParams, force: true });
+    if (url) {
+        await axios
+            .get(url, { headers })
+            .then(response => demoAppPlaygroundEl.value?.setApiStatus(response.data, false))
+            .catch(error => demoAppPlaygroundEl.value?.setApiStatus(error, true));
+    }
+};
+
+const navigate = async (url: string, event: Event): Promise<void> => {
+    const { queryParams } = (event as CustomEvent).detail as {
+        queryParams?: LocationQueryRaw;
     };
+    await router.push({ path: url, query: queryParams, force: true });
+};
 </script>
