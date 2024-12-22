@@ -12,6 +12,14 @@ export const routes: Routes = [
         component: DemoComponent,
         children: [
             {
+                path: 'forbidden',
+                loadComponent: () => import('./components/page/page.component').then(m => m.PageComponent),
+                runGuardsAndResolvers: 'always',
+                data: {
+                    title: 'ACCESS FORBIDDEN'
+                }
+            },
+            {
                 path: 'public',
                 loadComponent: () => import('./components/page/page.component').then(m => m.PageComponent),
                 runGuardsAndResolvers: 'always',
@@ -28,14 +36,6 @@ export const routes: Routes = [
                 canActivateChild: [authGuard()],
                 data: {
                     title: 'PRIVATE CONTENT'
-                }
-            },
-            {
-                path: 'forbidden',
-                loadComponent: () => import('./components/page/page.component').then(m => m.PageComponent),
-                runGuardsAndResolvers: 'always',
-                data: {
-                    title: 'ACCESS FORBIDDEN'
                 }
             },
             {

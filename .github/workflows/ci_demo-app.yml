@@ -7,7 +7,7 @@ on:
         tags-ignore:
             - '**'
         paths-ignore:
-            - 'projects/site/**'
+            - 'apps/website/**'
     workflow_dispatch:
 
 concurrency:
@@ -58,20 +58,26 @@ jobs:
               run: npm clean-install --engine-strict
 
             #   - name: Lint demo-app
-            #     working-directory: projects/demo-app
+            #     working-directory: apps/demo-app
             #     run: npm run lint
 
             - name: Build demo-app:auth-js
-              working-directory: projects/demo-app/web
+              working-directory: apps/demo-app/web
               env:
                   baseUrl: /${{ github.event.repository.name }}/demo-app/auth-js/
               run: npm run build:auth-js -- --base-href=${{ env.baseUrl }} --deploy-url=${{ env.baseUrl }}
 
             - name: Build demo-app:ngx-auth
-              working-directory: projects/demo-app/web
+              working-directory: apps/demo-app/web
               env:
                   baseUrl: /${{ github.event.repository.name }}/demo-app/ngx-auth/
               run: npm run build:ngx-auth -- --base-href=${{ env.baseUrl }} --deploy-url=${{ env.baseUrl }}
+
+            - name: Build demo-app:auth-vue
+              working-directory: apps/demo-app/web
+              env:
+                  baseUrl: /${{ github.event.repository.name }}/demo-app/auth-vue/
+              run: npm run build:auth-vue -- --base-href=${{ env.baseUrl }} --deploy-url=${{ env.baseUrl }}
 
             - name: Deploy to GitHub Pages
               uses: peaceiris/actions-gh-pages@v3

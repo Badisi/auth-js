@@ -45,7 +45,7 @@ const config = {
                     routeBasePath: '/',
                     breadcrumbs: false,
                     sidebarPath: require.resolve('./sidebars.js'),
-                    editUrl: 'https://github.com/Badisi/auth-js/edit/main/projects/site/'
+                    editUrl: 'https://github.com/Badisi/auth-js/edit/main/apps/website/'
                 },
                 theme: {
                     customCss: [

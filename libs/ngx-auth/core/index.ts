@@ -30,4 +30,4 @@ export { AuthUtils, DesktopNavigation, LogLevel, UserSession } from '@badisi/aut
 export { authGuard } from './auth.guard';
 export { AuthModule } from './auth.module';
 export { provideAuth } from './auth.provider';
-export { type AuthService } from './auth.service';
+export { AuthService } from './auth.service';

@@ -1,4 +1,3 @@
-
 import './app/app.element';
 
 import { initOidc } from '@badisi/auth-js/oidc';
@@ -12,7 +11,7 @@ import { environment } from './environments/environment';
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
         `auth-js:${(pkgJson as any).version as string}:demo-app:settings`,
         DEFAULT_SETTINGS(!environment.production)
-    );;
+    );
 
     const el = document.createElement('div');
     el.innerHTML = 'Loading...';

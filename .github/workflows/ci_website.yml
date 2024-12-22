@@ -8,7 +8,7 @@ on:
             - '**'
         paths:
             - '.github/workflows/ci_site.yml'
-            - 'projects/site/**'
+            - 'apps/website/**'
     workflow_dispatch:
 
 env:
@@ -37,7 +37,7 @@ jobs:
               run: npm install -g npm@latest
 
             - name: Build site
-              working-directory: projects/site
+              working-directory: apps/site
               run: |
                   npm clean-install --engine-strict
                   npm run build
@@ -46,6 +46,6 @@ jobs:
               uses: peaceiris/actions-gh-pages@v3
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: ./projects/site/build
-                  destination_dir: site
-                  commit_message: 'deploy(site):'
+                  publish_dir: ./apps/website/build
+                  destination_dir: website
+                  commit_message: 'deploy(website):'
