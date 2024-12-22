@@ -81,31 +81,8 @@
             },
             "defaultConfiguration": "development"
         },
-        "serve-static": {
-            "executor": "@nx/web:file-server",
-            "options": {
-                "buildTarget": "demo-app-ngx-auth:build",
-                "staticFilePath": "dist/demo-app/ngx-auth",
-                "spa": true
-            }
-        },
-        "extract-i18n": {
-            "executor": "@angular-devkit/build-angular:extract-i18n",
-            "options": {
-                "buildTarget": "demo-app-ngx-auth:build"
-            }
-        },
         "lint": {
             "executor": "@nx/eslint:lint"
-        },
-        "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": [
-                "{workspaceRoot}/coverage/{projectRoot}"
-            ],
-            "options": {
-                "jestConfig": "apps/demo-app/web/ngx-auth/jest.config.ts"
-            }
         }
     }
 }
