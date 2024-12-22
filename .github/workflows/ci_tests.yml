@@ -8,7 +8,7 @@ on:
         tags-ignore:
             - '**'
         paths-ignore:
-            - 'projects/site/**'
+            - 'apps/website/**'
     pull_request:
     workflow_call:
     workflow_dispatch:
@@ -80,9 +80,13 @@ jobs:
               run: npm run test
 
             - name: Build auth-js
-              working-directory: projects/auth-js
+              working-directory: libs/auth-js
               run: npm run build
 
             - name: Build ngx-auth
-              working-directory: projects/ngx-auth
+              working-directory: libs/ngx-auth
+              run: npm run build
+
+            - name: Build auth-vue
+              working-directory: libs/auth-vue
               run: npm run build

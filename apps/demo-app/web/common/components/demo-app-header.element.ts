@@ -78,7 +78,7 @@ template.innerHTML = `
             font-weight: 300;
             font-style: italic;
             text-decoration: none;
-            color: #bda9e1;
+            color: #c5bcd4;
         }
 
         :host header .version a:hover {
@@ -92,6 +92,16 @@ template.innerHTML = `
             font-size: 1.4em;
             font-weight: 400;
             color: #ede7f6;
+        }
+
+        :host header .title a {
+            font-weight: bold;
+            color: #ede7f6;
+            text-decoration: none;
+        }
+
+        :host header .title a:hover {
+            text-decoration: underline;
         }
 
         :host header .title .icon {
@@ -171,7 +181,7 @@ template.innerHTML = `
         </a>
 
         <div class="title row">
-            <span class="icon">🛡️</span>Demo app &#123; <select id="implementation-select"></select> &nbsp;&#125;
+            <span class="icon">🛡️</span><a href="https://github.com/Badisi/auth-js">Auth-js</a>&nbsp;demo&nbsp;&nbsp;&#123;<select id="implementation-select"></select> &nbsp;&#125;
             <div class="tip"><span class="hand">👈</span> choose an implementation</div>
         </div>
 
@@ -215,8 +225,8 @@ export class DemoAppHeaderElement extends HTMLElement {
         }
     }
 
-    public set isAuthenticated(value: boolean | null) {
-        if (this.statusEl && value !== null) {
+    public set isAuthenticated(value: boolean | null | undefined) {
+        if (this.statusEl && value !== null && value !== undefined) {
             this.statusEl.classList.remove('loading');
             this.statusEl.title = (value) ? 'Authenticated' : 'Not authenticated';
             this.statusEl.classList[(value) ? 'add' : 'remove']('authenticated');

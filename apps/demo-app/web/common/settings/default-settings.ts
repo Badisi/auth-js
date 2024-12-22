@@ -37,7 +37,7 @@ const AUTH0_SETTINGS: Settings<OIDCAuthSettings> = {
 const ZITADEL_SETTINGS: Settings<OIDCAuthSettings> = {
     name: 'Zitadel',
     otherSettings: {
-        apiUrl: '',
+        apiUrl: 'http://localhost:8080/api/my-api',
         apiHeaders: '',
         roles: 'view-profile'
     },
@@ -52,7 +52,7 @@ const ZITADEL_SETTINGS: Settings<OIDCAuthSettings> = {
 const KEYCLOAK_LOCAL_SETTINGS: Settings<OIDCAuthSettings> = {
     name: 'Keycloak (local)',
     otherSettings: {
-        apiUrl: '/api/my-api',
+        apiUrl: 'http://localhost:8080/api/my-api',
         apiHeaders: '',
         roles: 'view-profile'
     },
