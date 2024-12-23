@@ -179,7 +179,7 @@ describe('Auth code + PKCE (with redirect)', () => {
                     const mock = await browser.mock(url);
                     const [response] = await Promise.all([
                         mock.waitForResponse(),
-                        demoPage.api(url, 'my-custom-header: custom-value; my-other-custom-header: 12')
+                        demoPage.api(url, 'my-custom-header: custom-value, my-other-custom-header: 12')
                     ]);
                     await expect(response.request().headers()).toEqual(jasmine.objectContaining({
                         'my-custom-header': 'custom-value',
