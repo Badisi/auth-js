@@ -80,7 +80,7 @@
         "@nx/workspace": "20.3.0",
         "@types/jest": "^29.5.14",
         "@types/node": "22.10.2",
-        "@vitejs/plugin-vue": "^4.5.0",
+        "@vitejs/plugin-vue": "^5.2.1",
         "autoprefixer": "^10.4.20",
         "cpy-cli": "^5.0.0",
         "esbuild": "^0.24.2",
@@ -94,7 +94,7 @@
         "postcss": "^8.4.49",
         "postcss-url": "~10.1.3",
         "prettier": "^3.4.2",
-        "prettier-plugin-multiline-arrays": "^3.0.6",
+        "prettier-plugin-multiline-arrays": "^4.0.1",
         "ts-jest": "^29.2.5",
         "tslib": "^2.8.1",
         "typescript": "~5.5.4",
@@ -114,5 +114,5 @@
             "prettier --check"
         ]
     },
-    "packageManager": "npm@10.9.2"
+    "packageManager": "npm@11.0.0"
 }
