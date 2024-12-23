@@ -10,10 +10,10 @@
     },
     "devDependencies": {
         "@types/jasmine": "^5.1.5",
-        "@wdio/cli": "^9.4.1",
-        "@wdio/jasmine-framework": "^9.4.1",
-        "@wdio/local-runner": "^9.4.1",
-        "@wdio/spec-reporter": "^9.2.14",
-        "puppeteer-core": "^22.3.0"
+        "@wdio/cli": "^9.4.5",
+        "@wdio/jasmine-framework": "^9.4.5",
+        "@wdio/local-runner": "^9.4.5",
+        "@wdio/spec-reporter": "^9.4.4",
+        "puppeteer-core": "^23.11.1"
     }
 }
