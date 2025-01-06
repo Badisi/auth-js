@@ -8,7 +8,6 @@ import type { OIDCAuthSettings } from './models/oidc-auth-settings.model';
 import type { UserSession } from './models/user-session.model';
 import type { OIDCAuthManager } from './oidc-auth-manager';
 
-
 export abstract class OIDCAuthService<T extends OIDCAuthSettings = OIDCAuthSettings> {
     protected manager: OIDCAuthManager;
 
