@@ -47,9 +47,9 @@
     "exports": {
         ".": {
             "types": "./core/index.d.ts",
-            "browser": "./browser/core/index.min.js",
             "import": "./esm/core/index.js",
             "require": "./cjs/core/index.js",
+            "browser": "./browser/core/index.min.js",
             "default": "./esm/core/index.js"
         },
         "./package.json": "./package.json"

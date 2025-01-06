@@ -49,16 +49,16 @@
     "exports": {
         ".": {
             "types": "./core/index.d.ts",
-            "browser": "./browser/core/index.min.js",
             "import": "./esm/core/index.js",
             "require": "./cjs/core/index.js",
+            "browser": "./browser/core/index.min.js",
             "default": "./esm/core/index.js"
         },
         "./oidc": {
             "types": "./oidc/index.d.ts",
-            "browser": "./browser/oidc/index.min.js",
             "import": "./esm/oidc/index.js",
             "require": "./cjs/oidc/index.js",
+            "browser": "./browser/oidc/index.min.js",
             "default": "./esm/oidc/index.js"
         },
         "./package.json": "./package.json"
