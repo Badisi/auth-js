@@ -27,7 +27,7 @@
             "options": {
                 "cwd": "libs/ngx-auth",
                 "commands": [
-                    "tsc -p schematics/tsconfig.schematics.json",
+                    "tsc -p schematics/tsconfig.lib.json",
                     "cpy schematics/*/schema.json ../../dist/ngx-auth",
                     "cpy schematics/collection.json ../../dist/ngx-auth"
                 ],
