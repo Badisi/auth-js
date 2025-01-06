@@ -49,7 +49,10 @@ const build = async options => {
         // sourcemap: true,
         minify: options.minify,
         globalName: options.bundleExternals ? options.buildOptions.browser : undefined,
-        external: options.bundleExternals ? undefined : options.buildOptions.externals
+        external: options.bundleExternals ? undefined : options.buildOptions.externals,
+        logOverride: {
+            'package.json': 'silent'
+        }
     };
 
     mkdirSync(outdir, { recursive: true });
