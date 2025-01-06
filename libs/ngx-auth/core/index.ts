@@ -13,10 +13,9 @@ import { AuthLogger } from '@badisi/auth-js';
 AuthLogger.init('@badisi/ngx-auth');
 
 // @badisi/auth-js re-exports renamed
-import { initOidc, type OIDCAuthManager, type OIDCAuthSettings } from '@badisi/auth-js/oidc';
+import type { OIDCAuthManager, OIDCAuthSettings } from '@badisi/auth-js/oidc';
 export interface AuthManager extends OIDCAuthManager {};
 export interface AuthSettings extends OIDCAuthSettings {};
-export const initAuth = (settings: AuthSettings): Promise<AuthManager> => initOidc(settings);
 
 // @badisi/auth-js re-exports
 export type {
@@ -28,6 +27,5 @@ export { AuthUtils, DesktopNavigation, LogLevel, UserSession } from '@badisi/aut
 
 // Library exports
 export { authGuard } from './auth.guard';
-export { AuthModule } from './auth.module';
-export { provideAuth } from './auth.provider';
+export { initAuth, provideAuth } from './auth.provider';
 export { AuthService } from './auth.service';
