@@ -16,9 +16,6 @@
         },
         {
             "path": "./tsconfig.spec.json"
-        },
-        {
-            "path": "./schematics/tsconfig.schematics.json"
         }
     ],
     "angularCompilerOptions": {

@@ -1,9 +1,9 @@
 import { chain, noop, type Rule, type SchematicContext } from '@angular-devkit/schematics';
 import { blue, bold, red } from '@colors/colors/safe';
 import {
-    addImportToFile, addImportToNgModule, application, type ChainableApplicationContext,
+    addImportToFile, application, type ChainableApplicationContext,
     getSchematicSchemaDefaultOptions, isAngularVersion, logAction, logError,
-    modifyJsonFile, replaceInFile, schematic
+    modifyJsonFile, replaceInFile, runAtEnd, schematic
 } from '@hug/ngx-schematics-utilities';
 import { JSONFile } from '@schematics/angular/utility/json-file';
 
@@ -31,26 +31,25 @@ const sanitizeOptions = async (context: SchematicContext, userOptions: NgAddOpti
 };
 
 export const MODULE_CONTENT =
-    '  platformBrowserDynamic([\n' +
-    '    authProvider\n' +
-    '  ]).bootstrapModule(AppModule).catch(err => console.error(err));\n';
+    '  platformBrowserDynamic([authProvider])\n' +
+    '    .bootstrapModule(AppModule)\n' +
+    '    .catch((error: unknown) => console.error(error));\n';
 
 export const STANDALONE_CONTENT =
     '  appConfig.providers.push(provideAuth(authProvider));\n' +
     '  bootstrapApplication(AppComponent, appConfig)\n' +
-    '    .catch(err => console.error(err));\n';
+    '    .catch((error: unknown) => console.error(error));\n';
 
 export const INIT_CONTENT = (content: string, options = ''): string =>
-    // TODO: due to prettier check that it is still displayed properly
     `/**\n` +
     ` * Auth configuration\n` +
     ` * @see https://badisi.github.io/auth-js/site/documentation/configuration\n` +
     ` */\n` +
     `initAuth(${options}).then(authProvider => {\n${content
-    }}).catch(error => console.error(error));\n`;
+    }}).catch((error: unknown) => console.error(error));\n`;
 
 export default (options: NgAddOptions): Rule =>
-    schematic('ngx-auth', [
+    schematic('@badisi/ngx-auth', [
 
         isAngularVersion('< 16', () => {
             console.log(red(`This schematic only works with ${bold('Angular projects >= 16')}.`));
@@ -82,6 +81,12 @@ export default (options: NgAddOptions): Rule =>
                 const mainTsContent = tree.read(project.mainFilePath)?.toString('utf-8') ?? '';
                 const rules = [];
 
+                // Provide the library
+                rules.push(addImportToFile(project.mainFilePath, 'initAuth', '@badisi/ngx-auth'));
+                if (project.isStandalone) {
+                    rules.push(addImportToFile(project.mainFilePath, 'provideAuth', '@badisi/ngx-auth'));
+                }
+
                 // Initialize the library
                 if (!mainTsContent.includes('initAuth(')) {
                     let content;
@@ -110,7 +115,7 @@ export default (options: NgAddOptions): Rule =>
 
                         rules.push(
                             replaceInFile(project.mainFilePath, /$/g, conflictContent),
-                            logError(`There were some conflicts during the installation, please have a look at ${bold('main.ts')} file and resolve them.`)
+                            runAtEnd(logError(`There were some conflicts during the installation, please have a look at ${bold('main.ts')} file and resolve them.\n`))
                         );
                     } else {
                         rules.push(replaceInFile(project.mainFilePath, patternToReplace, content));
@@ -122,19 +127,8 @@ export default (options: NgAddOptions): Rule =>
                 const configContent = JSON.stringify(config, null, 2).replace(/"([^"]+)":/g, '$1:').replace(/"/g, '\'');
                 rules.push(
                     replaceInFile(project.mainFilePath, /initAuth\((.*?)\)/sm, `initAuth(${configContent})`),
-                    logAction(`Have a look at ${bold('main.ts')} file and update the ${bold('auth configuration')} according to your needs.`)
+                    runAtEnd(logAction(`Have a look at ${bold('main.ts')} file and update the ${bold('auth configuration')} according to your needs.`))
                 );
-
-                // Provide the library
-                rules.push(addImportToFile(project.mainFilePath, 'initAuth', '@badisi/ngx-auth'));
-                if (project.isStandalone) {
-                    rules.push(addImportToFile(project.mainFilePath, 'provideAuth', '@badisi/ngx-auth'));
-                } else {
-                    const appModulePath = project.pathFromSourceRoot('app/app.module.ts');
-                    if (tree.exists(appModulePath)) {
-                        rules.push(addImportToNgModule(appModulePath, 'AuthModule', '@badisi/ngx-auth'));
-                    }
-                }
 
                 return chain(rules);
             })

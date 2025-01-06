@@ -4,7 +4,7 @@ import { disable as disableColors } from '@colors/colors';
 import { type ApplicationDefinition, getProjectFromWorkspace } from '@hug/ngx-schematics-utilities';
 import { describe, expect, it } from '@jest/globals';
 
-import { appTest1, appTest2, getCleanAppTree, runner } from '../utils';
+import { appTest1, appTest2, getCleanAppTree, runner, runSchematic } from '../utils';
 import { MODULE_CONTENT, STANDALONE_CONTENT } from './index';
 import type { NgAddOptions } from './ng-add-options';
 
@@ -46,24 +46,24 @@ const eac = expect.arrayContaining.bind(this);
             });
 
             it('should failed without an angular app', async () => {
-                const tree$ = runner.runSchematic('ng-add', defaultOptions, Tree.empty());
+                const tree$ = runSchematic('ng-add', defaultOptions, Tree.empty());
                 await expect(tree$).rejects.toMatchObject({
                     message: 'Unable to locate a workspace file, are you missing an `angular.json` or `.angular.json` file ?.'
                 });
             });
 
             it('should run without errors', async () => {
-                const tree$ = runner.runSchematic('ng-add', defaultOptions, tree);
+                const tree$ = runSchematic('ng-add', defaultOptions, tree);
                 await expect(tree$).resolves.not.toThrow();
             });
 
             it('should not create any new files', async () => {
-                tree = await runner.runSchematic('ng-add', defaultOptions, tree);
+                tree = await runSchematic('ng-add', defaultOptions, tree);
                 expect(tree.files.length).toEqual(nbFiles);
             });
 
             it('should update angular.json', async () => {
-                await runner.runSchematic('ng-add', defaultOptions, tree);
+                await runSchematic('ng-add', defaultOptions, tree);
                 const angularJson = tree.readJson('angular.json');
                 const asset = {
                     glob: '**/*',
@@ -94,7 +94,7 @@ const eac = expect.arrayContaining.bind(this);
             });
 
             it('should update main.ts', async () => {
-                await runner.runSchematic('ng-add', defaultOptions, tree);
+                await runSchematic('ng-add', defaultOptions, tree);
                 const mainTsContent = tree.readContent(project.pathFromSourceRoot('main.ts'));
                 if (useStandalone) {
                     expect(mainTsContent).toContain('import { initAuth, provideAuth } from \'@badisi/ngx-auth\';');
@@ -108,21 +108,9 @@ const eac = expect.arrayContaining.bind(this);
                 }
             });
 
-            it('should update app.module.ts', async () => {
-                await runner.runSchematic('ng-add', defaultOptions, tree);
-                const appModuleContent = tree.readContent(project.pathFromSourceRoot('app/app.module.ts'));
-                if (useStandalone) {
-                    expect(appModuleContent).not.toContain('import { AuthModule } from \'@badisi/ngx-auth\'');
-                    expect(appModuleContent).not.toMatch(/@NgModule\({.*imports.*AuthModule/gms);
-                } else {
-                    expect(appModuleContent).toContain('import { AuthModule } from \'@badisi/ngx-auth\'');
-                    expect(appModuleContent).toMatch(/@NgModule\({.*imports.*AuthModule/gms);
-                }
-            });
-
             it('should not create duplicates when running twice', async () => {
-                tree = await runner.runSchematic('ng-add', defaultOptions, tree);
-                tree = await runner.runSchematic('ng-add', defaultOptions, tree);
+                tree = await runSchematic('ng-add', defaultOptions, tree);
+                tree = await runSchematic('ng-add', defaultOptions, tree);
 
                 const angularJsonPath = 'angular.json';
                 const angularJsonContent = tree.read(angularJsonPath)?.toString('utf-8') ?? '';
@@ -134,15 +122,10 @@ const eac = expect.arrayContaining.bind(this);
                 expect(occurrences(mainTsContent, '@badisi/ngx-auth')).toEqual(1);
                 expect(occurrences(mainTsContent, 'initAuth')).toEqual(2);
                 expect(occurrences(mainTsContent, 'provideAuth')).toEqual(useStandalone ? 2 : 0);
-
-                const appModuleTsPath = project.pathFromSourceRoot('app/app.module.ts');
-                const appModuleTsContent = tree.read(appModuleTsPath)?.toString('utf-8') ?? '';
-                expect(occurrences(appModuleTsContent, '@badisi/ngx-auth')).toEqual(useStandalone ? 0 : 1);
-                expect(occurrences(appModuleTsContent, 'AuthModule')).toEqual(useStandalone ? 0 : 2);
             });
 
             it('should display an action message', async () => {
-                tree = await runner.runSchematic('ng-add', defaultOptions, tree);
+                tree = await runSchematic('ng-add', defaultOptions, tree, true);
                 expect(logs).toContainEqual(expect.objectContaining({
                     name: 'ng-add',
                     level: 'info',
@@ -152,13 +135,14 @@ const eac = expect.arrayContaining.bind(this);
 
             it('should display an error message', async () => {
                 const originalMainTsContent = tree.read(project.mainFilePath)?.toString('utf-8') ?? '';
-
-                tree = await runner.runSchematic('ng-add', defaultOptions, tree);
-                expect(logs).not.toContainEqual(expect.objectContaining({
+                const error = {
                     name: 'ng-add',
                     level: 'info',
                     message: expect.stringMatching(/.*ERROR.*There were some conflicts during the installation, please have a look at main.ts file and resolve them\..*/)
-                }));
+                };
+
+                tree = await runSchematic('ng-add', defaultOptions, tree, true);
+                expect(logs).not.toContainEqual(expect.objectContaining(error));
 
                 if (useStandalone) {
                     tree.overwrite(project.mainFilePath, originalMainTsContent.replace('bootstrapApplication', 'bootstrapApplicationERROR'));
@@ -166,12 +150,8 @@ const eac = expect.arrayContaining.bind(this);
                     tree.overwrite(project.mainFilePath, originalMainTsContent.replace('bootstrapModule', 'bootstrapModuleERROR'));
                 }
 
-                tree = await runner.runSchematic('ng-add', defaultOptions, tree);
-                expect(logs).toContainEqual(expect.objectContaining({
-                    name: 'ng-add',
-                    level: 'info',
-                    message: expect.stringMatching(/.*ERROR.*There were some conflicts during the installation, please have a look at main.ts file and resolve them\..*/)
-                }));
+                tree = await runSchematic('ng-add', defaultOptions, tree, true);
+                expect(logs).toContainEqual(expect.objectContaining(error));
             });
         });
     });
