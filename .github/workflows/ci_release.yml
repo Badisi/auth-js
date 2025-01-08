@@ -1,0 +1,37 @@
+name: Release
+run-name: Release ${{ inputs.package }}${{ inputs.dry-run && ' (dry-run)' || '' }}
+
+on:
+    workflow_dispatch:
+        inputs:
+            package:
+                description: Package
+                required: true
+                type: choice
+                options:
+                    - -- all --
+                    - auth-js
+                    - ngx-auth
+                    - auth-vue
+            dry-run:
+                description: --dry-run
+                type: boolean
+                default: false
+
+env:
+    HUSKY: 0
+    FORCE_COLOR: 3
+
+jobs:
+    ci_release:
+        uses: badisi/actions/.github/workflows/action.yml@v1
+        secrets:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        with:
+            working-directory: ${{ (inputs.package == '-- all --') && '.' || format('libs/{0}', inputs.package) }}
+            dry-run: ${{ inputs.dry-run }}
+            lint: true
+            test: true
+            build: true
+            release: true
