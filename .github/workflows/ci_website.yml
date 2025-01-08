@@ -1,15 +1,15 @@
-name: Deploy site
+name: Deploy website
 
 on:
+    workflow_dispatch:
     push:
         branches:
             - main
         tags-ignore:
             - '**'
         paths:
-            - '.github/workflows/ci_site.yml'
+            - '.github/workflows/ci_website.yml'
             - 'apps/website/**'
-    workflow_dispatch:
 
 env:
     HUSKY: 0
@@ -22,28 +22,15 @@ jobs:
     ci_site:
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout sources
-              uses: actions/checkout@v4
+            - name: Setup
+              uses: badisi/actions/setup@v1
 
-            - name: Setup node
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 18
-                  registry-url: https://registry.npmjs.org/
-                  cache: npm
-                  cache-dependency-path: package-lock.json
-
-            - name: Install latest npm
-              run: npm install -g npm@latest
-
-            - name: Build site
-              working-directory: apps/site
-              run: |
-                  npm clean-install --engine-strict
-                  npm run build
+            - name: Build website
+              working-directory: apps/website
+              run: npm run build
 
             - name: Deploy to GitHub Pages
-              uses: peaceiris/actions-gh-pages@v3
+              uses: peaceiris/actions-gh-pages@v4
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   publish_dir: ./apps/website/build

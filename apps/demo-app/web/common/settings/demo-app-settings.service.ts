@@ -1,6 +1,7 @@
 import type { AuthSettings } from '@badisi/auth-js';
 import type { OIDCAuthSettings } from '@badisi/auth-js/oidc';
 import authJsPkgJson from 'libs/auth-js/package.json';
+import authVuePkgJson from 'libs/auth-vue/package.json';
 import ngxAuthPkgJson from 'libs/ngx-auth/package.json';
 
 import { LIBRARY_SETTINGS_DEFINITION } from './library-settings-definition';
@@ -47,6 +48,10 @@ const LIBRARY_IMPLEMENTATIONS: LibraryImplementation[] = [{
     label: 'Angular',
     demoUrl: 'https://badisi.github.io/auth-js/demo-app/ngx-auth',
     version: `<a href="${ngxAuthPkgJson.homepage}" target="_blank">${ngxAuthPkgJson.name}@main</a>`
+}, {
+    label: 'Vue.js',
+    demoUrl: 'https://badisi.github.io/auth-js/demo-app/auth-vue',
+    version: `<a href="${authVuePkgJson.homepage}" target="_blank">${authVuePkgJson.name}@main</a>`
 }];
 
 export class DemoAppSettings<S extends AuthSettings = AuthSettings> {

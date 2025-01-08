@@ -17,12 +17,14 @@
                 redirectTo('/auth-js/demo-app/auth-js');
             } else if (location.href.includes('/demo-app/ngx-auth')) {
                 redirectTo('/auth-js/demo-app/ngx-auth');
+            } else if (location.href.includes('/demo-app/auth-vue')) {
+                redirectTo('/auth-js/demo-app/auth-vue');
             } else if (location.href.includes('/demo-app')) {
                 // Redirect to default demo application
                 location.href = '/auth-js/demo-app/auth-js';
             } else {
                 // Redirect to the documentation
-                location.href = '/auth-js/site';
+                location.href = '/auth-js/website';
             }
         </script>
     </head>
