@@ -117,5 +117,74 @@
                 "serveTargetName": "serve"
             }
         }
-    ]
+    ],
+    "release": {
+        "projectsRelationship": "independent",
+        "releaseTagPattern": "@badisi/{projectName}@{version}",
+        "version": {
+            "conventionalCommits": true
+        },
+        "changelog": {
+            "projectChangelogs": {
+                "createRelease": "github"
+            }
+        },
+        "conventionalCommits": {
+            "types": {
+                "feat": {
+                    "semverBump": "minor",
+                    "changelog": {
+                        "title": "🚀 Features"
+                    }
+                },
+                "fix": {
+                    "semverBump": "patch",
+                    "changelog": {
+                        "title": "🐛 Fixes"
+                    }
+                },
+                "perf": {
+                    "semverBump": "patch",
+                    "changelog": {
+                        "title": "🔥 Performance"
+                    }
+                },
+                "docs": {
+                    "semverBump": "patch",
+                    "changelog": {
+                        "title": "📖 Documentation"
+                    }
+                },
+                "deps": {
+                    "semverBump": "patch",
+                    "changelog": {
+                        "title": "🌱 Dependencies"
+                    }
+                },
+                "refactor": {
+                    "semverBump": "patch",
+                    "changelog": false
+                },
+                "types": {
+                    "semverBump": "patch",
+                    "changelog": false
+                },
+                "style": {
+                    "semverBump": "patch",
+                    "changelog": false
+                },
+                "test": {
+                    "semverBump": "patch",
+                    "changelog": false
+                },
+                "revert": {
+                    "semverBump": "patch",
+                    "changelog": false
+                },
+                "chore": false,
+                "build": false,
+                "ci": false
+            }
+        }
+    }
 }

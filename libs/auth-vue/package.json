@@ -1,6 +1,6 @@
 {
     "name": "@badisi/auth-vue",
-    "version": "0.0.0-semantically-released",
+    "version": "1.0.0",
     "description": "Authentication and authorization support for Vue.js based desktop and mobile applications.",
     "homepage": "https://github.com/Badisi/auth-js/tree/main/libs/auth-vue",
     "license": "GPL-3.0-only",
@@ -32,10 +32,12 @@
     ],
     "scripts": {
         "lint": "nx run auth-vue:lint",
-        "build": "nx run auth-vue:build"
+        "build": "nx run auth-vue:build",
+        "release": "node ../../scripts/release.mjs --projects=auth-vue --verbose",
+        "release:dry-run": "npm run release -- --dry-run"
     },
     "dependencies": {
-        "@badisi/auth-js": "0.0.0-semantically-released"
+        "@badisi/auth-js": "1.0.0"
     },
     "peerDependencies": {
         "vue": ">= 3",

@@ -1,15 +1,17 @@
-import cpy from 'cpy';
-import { readFileSync } from 'fs';
-import { dirname, resolve as pathResolve } from 'path';
-import { fileURLToPath } from 'url';
+// @ts-check
 
-import esbuild from '../build.mjs';
+import cpy from 'cpy';
+import { readFileSync } from 'node:fs';
+import { dirname, resolve as pathResolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import buildLib from '../../scripts/build-lib.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const pkgJson = JSON.parse(readFileSync(pathResolve(__dirname, 'package.json')));
+const pkgJson = JSON.parse(readFileSync(pathResolve(__dirname, 'package.json'), { encoding: 'utf-8' }));
 const distPath = pathResolve(__dirname, '../../dist/auth-js');
 
-await esbuild({
+await buildLib({
     packageName: pkgJson.name,
     distPath,
     tsconfigPath: pathResolve(__dirname, 'tsconfig.lib.json'),
