@@ -7,7 +7,7 @@
     "singleQuote": true,
     "bracketSameLine": true,
     "tabWidth": 4,
-    "printWidth": 120,
+    "printWidth": 160,
     "endOfLine": "auto",
     "trailingComma": "none",
     "arrowParens": "avoid",
