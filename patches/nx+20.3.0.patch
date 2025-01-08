@@ -1,0 +1,238 @@
+diff --git a/node_modules/nx/release/changelog-renderer/index.js b/node_modules/nx/release/changelog-renderer/index.js
+index d73aa00..75fa551 100644
+--- a/node_modules/nx/release/changelog-renderer/index.js
++++ b/node_modules/nx/release/changelog-renderer/index.js
+@@ -50,13 +50,13 @@ class DefaultChangelogRenderer {
+             return this.renderEmptyEntry();
+         }
+         sections.push([this.renderVersionTitle()]);
++        if (this.hasBreakingChanges()) {
++            sections.push(this.renderBreakingChanges());
++        }
+         const changesByType = this.renderChangesByType();
+         if (changesByType.length > 0) {
+             sections.push(changesByType);
+         }
+-        if (this.hasBreakingChanges()) {
+-            sections.push(this.renderBreakingChanges());
+-        }
+         if (this.hasDependencyBumps()) {
+             sections.push(this.renderDependencyBumps());
+         }
+@@ -110,9 +110,9 @@ class DefaultChangelogRenderer {
+             for (const change of this.relevantChanges) {
+                 if (change.isBreaking) {
+                     const breakingChangeExplanation = this.extractBreakingChangeExplanation(change.body);
+-                    this.breakingChanges.push(breakingChangeExplanation
+-                        ? `- ${change.scope ? `**${change.scope.trim()}:** ` : ''}${breakingChangeExplanation}`
+-                        : this.formatChange(change));
++                    if (breakingChangeExplanation) {
++                        this.breakingChanges.push(breakingChangeExplanation);
++                    }
+                 }
+             }
+         }
+@@ -167,9 +167,9 @@ class DefaultChangelogRenderer {
+                         markdownLines.push(line);
+                         if (change.isBreaking && !this.isVersionPlans) {
+                             const breakingChangeExplanation = this.extractBreakingChangeExplanation(change.body);
+-                            this.breakingChanges.push(breakingChangeExplanation
+-                                ? `- ${change.scope ? `**${change.scope.trim()}:** ` : ''}${breakingChangeExplanation}`
+-                                : line);
++                            if (breakingChangeExplanation) {
++                                this.breakingChanges.push(breakingChangeExplanation);
++                            }
+                         }
+                     }
+                 }
+@@ -181,9 +181,9 @@ class DefaultChangelogRenderer {
+                     markdownLines.push(line);
+                     if (change.isBreaking && !this.isVersionPlans) {
+                         const breakingChangeExplanation = this.extractBreakingChangeExplanation(change.body);
+-                        this.breakingChanges.push(breakingChangeExplanation
+-                            ? `- ${change.scope ? `**${change.scope.trim()}:** ` : ''}${breakingChangeExplanation}`
+-                            : line);
++                        if (breakingChangeExplanation) {
++                            this.breakingChanges.push(breakingChangeExplanation);
++                        }
+                     }
+                 }
+             }
+@@ -201,9 +201,9 @@ class DefaultChangelogRenderer {
+         return this.dependencyBumps && this.dependencyBumps.length > 0;
+     }
+     renderDependencyBumps() {
+-        const markdownLines = ['', '### 🧱 Updated Dependencies', ''];
++        const markdownLines = ['', '### 🌱 Dependencies', ''];
+         this.dependencyBumps.forEach(({ dependencyName, newVersion }) => {
+-            markdownLines.push(`- Updated ${dependencyName} to ${newVersion}`);
++            markdownLines.push(`- **${dependencyName}**: upgraded to \`v${newVersion}\``);
+         });
+         return markdownLines;
+     }
+@@ -246,11 +246,18 @@ class DefaultChangelogRenderer {
+                             break;
+                         }
+                     }
+-                    const { data } = await axios
++                    const emailQuery = await axios
+                         .get(`https://ungh.cc/users/find/${email}`)
+                         .catch(() => ({ data: { user: null } }));
+-                    if (data?.user) {
+-                        meta.github = data.user.username;
++                    if (emailQuery.data?.user) {
++                        meta.github = emailQuery.data.user.username;
++                        break;
++                    }
++                    const authorQuery = await axios
++                        .get(`https://ungh.cc/users/find/${authorName}`)
++                        .catch((err) => ({ data: { user: null } }));
++                    if (authorQuery.data?.user) {
++                        meta.github = authorQuery.data.user.username;
+                         break;
+                     }
+                 }
+@@ -283,7 +290,7 @@ class DefaultChangelogRenderer {
+                 .join('\n');
+         }
+         let changeLine = '- ' +
+-            (!this.isVersionPlans && change.isBreaking ? '⚠️  ' : '') +
++            (!this.isVersionPlans && change.isBreaking ? '⚠️ ' : '') +
+             (!this.isVersionPlans && change.scope
+                 ? `**${change.scope.trim()}:** `
+                 : '') +
+@@ -323,7 +330,7 @@ class DefaultChangelogRenderer {
+             return null;
+         }
+         const startOfBreakingChange = startIndex + breakingChangeIdentifier.length;
+-        const endOfBreakingChange = message.indexOf('\n', startOfBreakingChange);
++        const endOfBreakingChange = message.indexOf('"\n', startOfBreakingChange);
+         if (endOfBreakingChange === -1) {
+             return message.substring(startOfBreakingChange).trim();
+         }
+diff --git a/node_modules/nx/src/command-line/migrate/migrate.js b/node_modules/nx/src/command-line/migrate/migrate.js
+index d9b2a35..459890f 100644
+--- a/node_modules/nx/src/command-line/migrate/migrate.js
++++ b/node_modules/nx/src/command-line/migrate/migrate.js
+@@ -882,7 +882,7 @@ function runInstall() {
+     const pmCommands = (0, package_manager_1.getPackageManagerCommand)();
+     // TODO: remove this
+     if ((0, package_manager_1.detectPackageManager)() === 'npm') {
+-        process.env.npm_config_legacy_peer_deps ??= 'true';
++        // process.env.npm_config_legacy_peer_deps ??= 'true';
+     }
+     output_1.output.log({
+         title: `Running '${pmCommands.install}' to make sure necessary packages are installed`,
+diff --git a/node_modules/nx/src/command-line/release/changelog.js b/node_modules/nx/src/command-line/release/changelog.js
+index 6b5e7c3..cfd5cda 100644
+--- a/node_modules/nx/src/command-line/release/changelog.js
++++ b/node_modules/nx/src/command-line/release/changelog.js
+@@ -351,6 +351,7 @@ function createAPI(overrideReleaseConfig) {
+                         }
+                         if (!commits) {
+                             commits = await getCommits(fromRef, toSHA);
++                            commits = commits.filter((c) => c.affectedFiles.find((f) => f.startsWith(project.data.root)));
+                         }
+                         const { fileMap } = await (0, file_map_utils_1.createFileMapUsingProjectGraph)(projectGraph);
+                         const fileToProjectMap = createFileToProjectMap(fileMap.projectFileMap);
+diff --git a/node_modules/nx/src/command-line/release/utils/git.js b/node_modules/nx/src/command-line/release/utils/git.js
+index 1ab6081..35d7735 100644
+--- a/node_modules/nx/src/command-line/release/utils/git.js
++++ b/node_modules/nx/src/command-line/release/utils/git.js
+@@ -28,6 +28,8 @@ async function getLatestGitTagForPattern(releaseTagPattern, additionalInterpolat
+     try {
+         let tags;
+         tags = await (0, exec_command_1.execCommand)('git', [
++            '-c',
++            'versionsort.suffix=-',
+             'tag',
+             '--sort',
+             '-v:refname',
+@@ -39,7 +41,7 @@ async function getLatestGitTagForPattern(releaseTagPattern, additionalInterpolat
+             .filter(Boolean));
+         if (!tags.length) {
+             // try again, but include all tags on the repo instead of just --merged ones
+-            tags = await (0, exec_command_1.execCommand)('git', ['tag', '--sort', '-v:refname']).then((r) => r
++            tags = await (0, exec_command_1.execCommand)('git', ['-c', 'versionsort.suffix=-', 'tag', '--sort', '-v:refname']).then((r) => r
+                 .trim()
+                 .split('\n')
+                 .map((t) => t.trim())
+@@ -327,7 +329,8 @@ function getAllAuthorsForCommit(commit) {
+ }
+ // https://www.conventionalcommits.org/en/v1.0.0/
+ // https://regex101.com/r/FSfNvA/1
+-const ConventionalCommitRegex = /(?<type>[a-z]+)(\((?<scope>.+)\))?(?<breaking>!)?: (?<description>.+)/i;
++// const ConventionalCommitRegex = /(?<type>[a-z]+)(\((?<scope>.+)\))?(?<breaking>!)?: (?<description>.+)/i;
++const ConventionalCommitRegex = /(?<type>[a-z]+)(\((?<scope>.*)\))?(?<breaking>!)?: (?<description>.+)/i;
+ const CoAuthoredByRegex = /co-authored-by:\s*(?<name>.+)(<(?<email>.+)>)/gim;
+ const PullRequestRE = /\([ a-z]*(#\d+)\s*\)/gm;
+ const IssueRE = /(#\d+)/gm;
+diff --git a/node_modules/nx/src/command-line/release/utils/shared.js b/node_modules/nx/src/command-line/release/utils/shared.js
+index 0cfae24..7ba3b15 100644
+--- a/node_modules/nx/src/command-line/release/utils/shared.js
++++ b/node_modules/nx/src/command-line/release/utils/shared.js
+@@ -213,7 +213,8 @@ async function getCommitsRelevantToProjects(projectGraph, commits, projects) {
+      * - touch project files which are contained within the list of projects directly
+      * - touch non-project files and the commit is not scoped
+      */
+-    return commits.filter((c) => c.affectedFiles.some((f) => filesInReleaseGroup.has(f) ||
+-        (!c.scope &&
+-            fileMap.nonProjectFiles.some((nonProjectFile) => nonProjectFile.file === f))));
++    // return commits.filter((c) => c.affectedFiles.some((f) => filesInReleaseGroup.has(f) ||
++    //     (!c.scope &&
++    //         fileMap.nonProjectFiles.some((nonProjectFile) => nonProjectFile.file === f))));
++    return commits.filter((c) => c.affectedFiles.some((f) => filesInReleaseGroup.has(f)));
+ }
+diff --git a/node_modules/nx/src/generators/utils/json.js b/node_modules/nx/src/generators/utils/json.js
+index a59bc2c..a8387f4 100644
+--- a/node_modules/nx/src/generators/utils/json.js
++++ b/node_modules/nx/src/generators/utils/json.js
+@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.readJson = readJson;
+ exports.writeJson = writeJson;
+ exports.updateJson = updateJson;
++let detectIndent_1;
++(async () => detectIndent_1 = ((await import('detect-indent')).default))();
+ const json_1 = require("../../utils/json");
+ /**
+  * Reads a json file, removes all comments and parses JSON.
+@@ -31,7 +33,9 @@ function readJson(tree, path, options) {
+  * @param options Optional JSON Serialize Options
+  */
+ function writeJson(tree, path, value, options) {
+-    const serialized = (0, json_1.serializeJson)(value, options);
++    // const serialized = (0, json_1.serializeJson)(value, options);
++    const indent = options?.indent ?? detectIndent_1(tree.read(path, 'utf-8')).indent;
++    const serialized = (0, json_1.serializeJson)(value, { ...options, indent });
+     tree.write(path, `${serialized}\n`);
+ }
+ /**
+diff --git a/node_modules/nx/src/utils/json.js b/node_modules/nx/src/utils/json.js
+index 2ace40e..c415390 100644
+--- a/node_modules/nx/src/utils/json.js
++++ b/node_modules/nx/src/utils/json.js
+@@ -58,5 +58,6 @@ function formatParseError(input, parseError) {
+  * @returns the formatted JSON representation of the object
+  */
+ function serializeJson(input, options) {
+-    return JSON.stringify(input, null, options?.spaces ?? 2);
++    // return JSON.stringify(input, null, options?.spaces ?? 2);
++    return JSON.stringify(input, null, options?.indent ?? 2);
+ }
+diff --git a/node_modules/nx/src/utils/package-manager.js b/node_modules/nx/src/utils/package-manager.js
+index bc8fd51..cce80b0 100644
+--- a/node_modules/nx/src/utils/package-manager.js
++++ b/node_modules/nx/src/utils/package-manager.js
+@@ -135,10 +135,10 @@ function getPackageManagerCommand(packageManager = detectPackageManager(), root
+         },
+         npm: () => {
+             // TODO: Remove this
+-            process.env.npm_config_legacy_peer_deps ??= 'true';
++            // process.env.npm_config_legacy_peer_deps ??= 'true';
+             return {
+                 install: 'npm install',
+-                ciInstall: 'npm ci --legacy-peer-deps',
++                ciInstall: 'npm ci', // --legacy-peer-deps',
+                 updateLockFile: 'npm install --package-lock-only',
+                 add: 'npm install',
+                 addDev: 'npm install -D',

@@ -1,18 +1,56 @@
+/* eslint-disable no-loops/no-loops */
+// @ts-check
+
 import chalk from 'chalk';
 import { build as esbuild } from 'esbuild';
-import { mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { dirname, resolve as pathResolve } from 'path';
-import {
-    createProgram,
-    flattenDiagnosticMessageText,
-    getPreEmitDiagnostics,
-    parseJsonConfigFileContent,
-    readConfigFile,
-    sys
-} from 'typescript';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, resolve as pathResolve } from 'node:path';
+import { createProgram, flattenDiagnosticMessageText, getPreEmitDiagnostics, parseJsonConfigFileContent, readConfigFile, sys } from 'typescript';
+
+/**
+ *  @typedef {{
+ *      name: string;
+ *      path: string;
+ *  }} EntryPoint
+ */
+
+/**
+ *  @typedef {{
+ *      distPath: string;
+ *      absWorkingDir: string;
+ *      tsconfigPath: string;
+ *      entryPoint: EntryPoint;
+ *      minify?: boolean;
+ *      bundleExternals?: boolean;
+ *      format: 'esm' | 'cjs' | 'browser';
+ *      platform: 'neutral' | 'node' | 'browser';
+ *      esm: boolean;
+ *      cjs: boolean;
+ *      browser: string;
+ *      externals: string[];
+ *  }} BuildOptions
+ */
+
+/**
+ *  @typedef {{
+ *      packageName: string;
+ *      tsconfigPath: string;
+ *      distPath: string;
+ *      absWorkingDir: string;
+ *      entryPoints: EntryPoint[];
+ *      buildOptions: {
+ *          esm: boolean;
+ *          cjs: boolean;
+ *          browser: string;
+ *          externals: string[];
+ *      };
+ *      copyAssets: () => Promise<void>;
+ *  }} ScriptOptions
+ */
 
 const { blue, green } = chalk;
 
+/** @type {(tsconfigPath: string) => void} */
 const emitDeclarationFiles = tsconfigPath => {
     const config = readConfigFile(tsconfigPath, sys.readFile).config;
     config.compilerOptions.rootDir = '.';
@@ -23,7 +61,7 @@ const emitDeclarationFiles = tsconfigPath => {
     getPreEmitDiagnostics(program)
         .concat(emitResult.diagnostics)
         .forEach(diagnostic => {
-            if (diagnostic.file) {
+            if (diagnostic.file && diagnostic.start) {
                 const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
                 const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
                 console.log(`${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`);
@@ -33,6 +71,7 @@ const emitDeclarationFiles = tsconfigPath => {
         });
 };
 
+/** @type {(options: BuildOptions) => Promise<void>} */
 const build = async options => {
     const outdir = pathResolve(options.distPath, options.format, options.entryPoint.name);
 
@@ -48,8 +87,8 @@ const build = async options => {
         bundle: true,
         // sourcemap: true,
         minify: options.minify,
-        globalName: options.bundleExternals ? options.buildOptions.browser : undefined,
-        external: options.bundleExternals ? undefined : options.buildOptions.externals,
+        globalName: options.bundleExternals ? options.browser : undefined,
+        external: options.bundleExternals ? undefined : options.externals,
         logOverride: {
             'package.json': 'silent'
         }
@@ -57,7 +96,7 @@ const build = async options => {
 
     mkdirSync(outdir, { recursive: true });
     if (options.platform === 'neutral') {
-        options.mainFields = [
+        esbuildOptions.mainFields = [
             'module',
             'main'
         ];
@@ -70,30 +109,32 @@ const build = async options => {
         });
     }
 
+    // @ts-expect-error logOverride type not properly recognized
     await esbuild(esbuildOptions);
 };
 
-export default async config => {
+/** @type {(options: ScriptOptions) => Promise<void>} */
+export default async options => {
     try {
         console.log(blue('Building Library\n'));
 
         // Build entry points
-        // eslint-disable-next-line no-loops/no-loops
-        for (const entryPoint of config.entryPoints) {
+        for (const entryPoint of options.entryPoints) {
             const entryPointName = entryPoint.name ? `/${entryPoint.name}` : '';
 
             console.log('-'.repeat(78));
-            console.log(`Building entry point '${config.packageName}${entryPointName}'`);
+            console.log(`Building entry point '${options.packageName}${entryPointName}'`);
             console.log('-'.repeat(78));
 
             const buildOptions = {
                 entryPoint: entryPoint,
-                distPath: config.distPath,
-                tsconfigPath: config.tsconfigPath,
-                buildOptions: config.buildOptions
+                distPath: options.distPath,
+                tsconfigPath: options.tsconfigPath,
+                absWorkingDir: options.absWorkingDir,
+                ...options.buildOptions
             };
 
-            if (config.buildOptions.esm) {
+            if (options.buildOptions.esm) {
                 console.log(`${green('✓')} Bundling to ESM`);
                 await build({
                     ...buildOptions,
@@ -101,7 +142,7 @@ export default async config => {
                     format: 'esm'
                 });
             }
-            if (config.buildOptions.cjs) {
+            if (options.buildOptions.cjs) {
                 console.log(`${green('✓')} Bundling to CJS`);
                 await build({
                     ...buildOptions,
@@ -109,7 +150,7 @@ export default async config => {
                     format: 'cjs'
                 });
             }
-            if (config.buildOptions.browser) {
+            if (options.buildOptions.browser) {
                 console.log(`${green('✓')} Bundling to BROWSER (self contained)`);
                 await build({
                     ...buildOptions,
@@ -128,63 +169,57 @@ export default async config => {
                 });
             }
 
-            console.log(`${green('✓')} Built ${config.packageName}${entryPointName}`, '\n');
+            console.log(`${green('✓')} Built ${options.packageName}${entryPointName}`, '\n');
         }
 
         // Build library
         console.log('-'.repeat(78));
-        console.log(`Building '${config.packageName}'`);
+        console.log(`Building '${options.packageName}'`);
         console.log('-'.repeat(78));
 
         //  -- types
         console.log(`${green('✓')} Generating types`);
-        emitDeclarationFiles(config.tsconfigPath);
+        emitDeclarationFiles(options.tsconfigPath);
 
         //  -- assets
         console.log(`${green('✓')} Copying assets`);
-        await config.copyAssets();
+        await options.copyAssets();
 
         //  -- package.json
         console.log(`${green('✓')} Writing package metadata`);
         //      -- entry points
-        config.entryPoints.forEach(entryPoint => {
+        options.entryPoints.forEach(entryPoint => {
             const entryPointName = entryPoint.name ? `/${entryPoint.name}` : '';
             const content = {
-                name: `${config.packageName}${entryPointName}`,
+                name: `${options.packageName}${entryPointName}`,
                 types: './index.d.ts'
             };
-            if (config.buildOptions.browser) {
+            if (options.buildOptions.browser) {
                 content.browser = `../browser${entryPointName}/index.min.js`;
             }
-            if (config.buildOptions.esm) {
+            if (options.buildOptions.esm) {
                 content.import = `../esm${entryPointName}/index.js`;
             }
-            if (config.buildOptions.cjs) {
+            if (options.buildOptions.cjs) {
                 content.require = `../cjs${entryPointName}/index.js`;
             }
-            writeFileSync(
-                pathResolve(config.distPath, entryPoint.name, 'package.json'),
-                JSON.stringify(content, null, 4),
-                { encoding: 'utf8' }
-            );
+            writeFileSync(pathResolve(options.distPath, entryPoint.name, 'package.json'), JSON.stringify(content, null, 4), { encoding: 'utf8' });
         });
         //      -- library
-        const distPkgJsonPath = pathResolve(config.distPath, 'package.json');
+        const distPkgJsonPath = pathResolve(options.distPath, 'package.json');
         const distPkgJson = JSON.parse(readFileSync(distPkgJsonPath, { encoding: 'utf8' }));
         delete distPkgJson.scripts;
         delete distPkgJson.devDependencies;
-        writeFileSync(distPkgJsonPath, JSON.stringify(distPkgJson, null, 4), {
-            encoding: 'utf8'
-        });
+        writeFileSync(distPkgJsonPath, JSON.stringify(distPkgJson, null, 4), { encoding: 'utf8' });
 
         //  -- end
-        console.log(`${green('✓')} Built ${config.packageName}\n`);
+        console.log(`${green('✓')} Built ${options.packageName}\n`);
 
         // Success
         console.log(green('-'.repeat(78)));
         console.log(green('Built Library'));
-        console.log(green(`- from: ${config.absWorkingDir}`));
-        console.log(green(`- to:   ${config.distPath}`));
+        console.log(green(`- from: ${options.absWorkingDir}`));
+        console.log(green(`- to:   ${options.distPath}`));
         console.log(green('-'.repeat(78)));
     } catch (err) {
         console.error(err);

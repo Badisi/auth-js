@@ -32,8 +32,9 @@
         "prettier": "prettier . --check",
         "lint": "eslint .",
         "test": "nx run-many --target=test --projects=auth-js,ngx-auth --output-style=static",
-        "publish": "multi-semantic-release --ignore-private-packages --yes",
-        "publish-dry-run": "GITHUB_TOKEN=XXX NPM_TOKEN=XXX npm run publish -- --dry-run --no-ci",
+        "release": "node ./scripts/release.mjs --verbose",
+        "release:dry-run": "npm run release -- --dry-run",
+        "postinstall": "patch-package",
         "prepare": "husky || true"
     },
     "workspaces": [
@@ -106,7 +107,27 @@
     "commitlint": {
         "extends": [
             "@commitlint/config-conventional"
-        ]
+        ],
+        "rules": {
+            "type-enum": [
+                2,
+                "always",
+                [
+                    "build",
+                    "chore",
+                    "ci",
+                    "docs",
+                    "feat",
+                    "fix",
+                    "perf",
+                    "refactor",
+                    "revert",
+                    "style",
+                    "test",
+                    "deps"
+                ]
+            ]
+        }
     },
     "lint-staged": {
         "**/*.{js,json,ts,html}": [
