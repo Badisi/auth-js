@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /**
  * Any CSS included here will be global. The classic template
  * bundles Infima by default. Infima is a CSS framework designed to
@@ -6,7 +10,8 @@
 
 /* You can override the default Infima variables here. */
 :root {
-    --ifm-color-primary: #7986cb;
+    /* --ifm-color-primary: #7986cb; */
+    --ifm-color-primary: #506db2;
     --ifm-color-primary-dark: rgb(33, 175, 144);
     --ifm-color-primary-darker: rgb(31, 165, 136);
     --ifm-color-primary-darkest: rgb(26, 136, 112);
@@ -118,7 +123,7 @@ code {
     background-color: rgb(251, 251, 251);
 }
 [data-theme='light'] .footer {
-    --ifm-footer-background-color: #7986cb;
+    --ifm-footer-background-color: var(--ifm-color-primary);
 }
 
 /**

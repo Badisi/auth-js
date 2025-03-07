@@ -1,0 +1,370 @@
+section:not(.intro) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+/* --- INTRO --- */
+
+section.intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    overflow: hidden;
+    height: auto;
+    min-height: 600px;
+
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+
+    background-color: #ffffff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2000 1500'%3E%3Cdefs%3E%3Crect stroke='%23FFFFFF' stroke-width='0.7' width='1' height='1' id='s'/%3E%3Cpattern id='a' width='3' height='3' patternUnits='userSpaceOnUse' patternTransform='scale(18.15) translate(-944.9 -708.68)'%3E%3Cuse fill='%23fcfcfc' href='%23s' y='2'/%3E%3Cuse fill='%23fcfcfc' href='%23s' x='1' y='2'/%3E%3Cuse fill='%23fafafa' href='%23s' x='2' y='2'/%3E%3Cuse fill='%23fafafa' href='%23s'/%3E%3Cuse fill='%23f7f7f7' href='%23s' x='2'/%3E%3Cuse fill='%23f7f7f7' href='%23s' x='1' y='1'/%3E%3C/pattern%3E%3Cpattern id='b' width='7' height='11' patternUnits='userSpaceOnUse' patternTransform='scale(18.15) translate(-944.9 -708.68)'%3E%3Cg fill='%23f5f5f5'%3E%3Cuse href='%23s'/%3E%3Cuse href='%23s' y='5' /%3E%3Cuse href='%23s' x='1' y='10'/%3E%3Cuse href='%23s' x='2' y='1'/%3E%3Cuse href='%23s' x='2' y='4'/%3E%3Cuse href='%23s' x='3' y='8'/%3E%3Cuse href='%23s' x='4' y='3'/%3E%3Cuse href='%23s' x='4' y='7'/%3E%3Cuse href='%23s' x='5' y='2'/%3E%3Cuse href='%23s' x='5' y='6'/%3E%3Cuse href='%23s' x='6' y='9'/%3E%3C/g%3E%3C/pattern%3E%3Cpattern id='h' width='5' height='13' patternUnits='userSpaceOnUse' patternTransform='scale(18.15) translate(-944.9 -708.68)'%3E%3Cg fill='%23f5f5f5'%3E%3Cuse href='%23s' y='5'/%3E%3Cuse href='%23s' y='8'/%3E%3Cuse href='%23s' x='1' y='1'/%3E%3Cuse href='%23s' x='1' y='9'/%3E%3Cuse href='%23s' x='1' y='12'/%3E%3Cuse href='%23s' x='2'/%3E%3Cuse href='%23s' x='2' y='4'/%3E%3Cuse href='%23s' x='3' y='2'/%3E%3Cuse href='%23s' x='3' y='6'/%3E%3Cuse href='%23s' x='3' y='11'/%3E%3Cuse href='%23s' x='4' y='3'/%3E%3Cuse href='%23s' x='4' y='7'/%3E%3Cuse href='%23s' x='4' y='10'/%3E%3C/g%3E%3C/pattern%3E%3Cpattern id='c' width='17' height='13' patternUnits='userSpaceOnUse' patternTransform='scale(18.15) translate(-944.9 -708.68)'%3E%3Cg fill='%23f2f2f2'%3E%3Cuse href='%23s' y='11'/%3E%3Cuse href='%23s' x='2' y='9'/%3E%3Cuse href='%23s' x='5' y='12'/%3E%3Cuse href='%23s' x='9' y='4'/%3E%3Cuse href='%23s' x='12' y='1'/%3E%3Cuse href='%23s' x='16' y='6'/%3E%3C/g%3E%3C/pattern%3E%3Cpattern id='d' width='19' height='17' patternUnits='userSpaceOnUse' patternTransform='scale(18.15) translate(-944.9 -708.68)'%3E%3Cg fill='%23FFFFFF'%3E%3Cuse href='%23s' y='9'/%3E%3Cuse href='%23s' x='16' y='5'/%3E%3Cuse href='%23s' x='14' y='2'/%3E%3Cuse href='%23s' x='11' y='11'/%3E%3Cuse href='%23s' x='6' y='14'/%3E%3C/g%3E%3Cg fill='%23efefef'%3E%3Cuse href='%23s' x='3' y='13'/%3E%3Cuse href='%23s' x='9' y='7'/%3E%3Cuse href='%23s' x='13' y='10'/%3E%3Cuse href='%23s' x='15' y='4'/%3E%3Cuse href='%23s' x='18' y='1'/%3E%3C/g%3E%3C/pattern%3E%3Cpattern id='e' width='47' height='53' patternUnits='userSpaceOnUse' patternTransform='scale(18.15) translate(-944.9 -708.68)'%3E%3Cg fill='%23FFFFFF'%3E%3Cuse href='%23s' x='2' y='5'/%3E%3Cuse href='%23s' x='16' y='38'/%3E%3Cuse href='%23s' x='46' y='42'/%3E%3Cuse href='%23s' x='29' y='20'/%3E%3C/g%3E%3C/pattern%3E%3Cpattern id='f' width='59' height='71' patternUnits='userSpaceOnUse' patternTransform='scale(18.15) translate(-944.9 -708.68)'%3E%3Cg fill='%23FFFFFF'%3E%3Cuse href='%23s' x='33' y='13'/%3E%3Cuse href='%23s' x='27' y='54'/%3E%3Cuse href='%23s' x='55' y='55'/%3E%3C/g%3E%3C/pattern%3E%3Cpattern id='g' width='139' height='97' patternUnits='userSpaceOnUse' patternTransform='scale(18.15) translate(-944.9 -708.68)'%3E%3Cg fill='%23FFFFFF'%3E%3Cuse href='%23s' x='11' y='8'/%3E%3Cuse href='%23s' x='51' y='13'/%3E%3Cuse href='%23s' x='17' y='73'/%3E%3Cuse href='%23s' x='99' y='57'/%3E%3C/g%3E%3C/pattern%3E%3C/defs%3E%3Crect fill='url(%23a)' width='100%25' height='100%25'/%3E%3Crect fill='url(%23b)' width='100%25' height='100%25'/%3E%3Crect fill='url(%23h)' width='100%25' height='100%25'/%3E%3Crect fill='url(%23c)' width='100%25' height='100%25'/%3E%3Crect fill='url(%23d)' width='100%25' height='100%25'/%3E%3Crect fill='url(%23e)' width='100%25' height='100%25'/%3E%3Crect fill='url(%23f)' width='100%25' height='100%25'/%3E%3Crect fill='url(%23g)' width='100%25' height='100%25'/%3E%3C/svg%3E");
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+section.intro .spot {
+    position: absolute;
+    width: 70vw;
+    height: 70vh;
+    filter: blur(64px);
+    border-radius: 9999px;
+    box-sizing: border-box;
+    z-index: -1;
+}
+section.intro .spot.blue {
+    bottom: -10vh;
+    left: -35vw;
+    opacity: 0.4;
+    background-color: rgb(221 214 254);
+}
+section.intro .spot.pink {
+    top: 0;
+    right: -40vw;
+    opacity: 0.3;
+    background-color: rgb(251 207 232);
+}
+
+section.intro .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    max-width: 40rem;
+    margin: 5.5rem auto 7.25rem;
+}
+
+section.intro .header .icon {
+    margin-bottom: 1rem;
+}
+
+@keyframes zoom-in {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+section.intro .header .icon .shield {
+    transform-origin: center;
+    animation: zoom-in 0.4s ease-in-out forwards;
+}
+
+@keyframes dash-check {
+    0% {
+        stroke-dashoffset: -300;
+    }
+    100% {
+        stroke-dashoffset: 1000;
+    }
+}
+section.intro .header .icon .check {
+    stroke-dasharray: 1300;
+    stroke-dashoffset: -300;
+    animation: dash-check 1.2s 0.1s ease-in-out forwards;
+}
+
+section.intro .header .title {
+    font-weight: 700;
+    line-height: 96%;
+    text-align: center;
+}
+
+section.intro .header .title .blue {
+    color: transparent;
+    background-clip: text;
+    background-image: linear-gradient(to right, #06b6d4, #3b82f6);
+}
+
+section.intro .header .title .pink {
+    color: transparent;
+    background-clip: text;
+    background-image: linear-gradient(to right, #ec4899, #d946ef);
+}
+
+section.intro .header .subtitle {
+    margin-bottom: 24px;
+    line-height: 1.6;
+    color: #2d4665;
+    font-feature-settings: normal;
+    font-variation-settings: normal;
+    text-align: center;
+    -webkit-font-smoothing: antialiased;
+    margin-top: 1.5rem;
+    margin-bottom: 1.8rem;
+    max-width: 48rem;
+}
+
+section.intro .header .buttons {
+    display: flex;
+}
+
+section.intro .header .buttons .button {
+    font-weight: 700;
+    line-height: 1.5;
+    padding: 0.75rem 2.4rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease-out;
+}
+
+section.intro .header .buttons .button.getstarted {
+    position: relative;
+    color: white;
+    border: none;
+    padding-right: 3rem;
+    background-color: #506db2;
+}
+section.intro .header .buttons .button.getstarted:hover {
+    background-color: #5c79c5;
+}
+
+section.intro .header .buttons .button.getstarted .arrow {
+    position: absolute;
+    right: 30px;
+    transition: right 0.1s ease-in-out;
+}
+section.intro .header .buttons .button.getstarted:hover .arrow {
+    right: 28px;
+}
+
+section.intro .header .buttons .button.playground {
+    color: #1f2937;
+    border: none;
+    background-color: #dadada;
+}
+section.intro .header .buttons .button.playground:hover {
+    background-color: #d3d2d2;
+}
+
+/* --- FEATURES --- */
+
+section.features {
+    background: linear-gradient(
+        315deg,
+        rgba(101, 0, 94, 1) 3%,
+        rgba(60, 132, 206, 1) 38%,
+        rgba(48, 238, 226, 1) 68%,
+        rgba(255, 25, 25, 1) 98%
+    );
+    background-size: 400% 400%;
+    background-attachment: fixed;
+    background-position: -34%;
+}
+
+section.features .title {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    font-weight: 700;
+    text-align: center;
+    color: white;
+    margin-bottom: 7rem;
+}
+
+section.features .items {
+    display: grid;
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+section.features .items .item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+}
+
+section.features .items .item .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+section.features .items .item .header .title {
+    font-weight: 600;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    color: #03060b;
+    margin-bottom: 0;
+}
+
+section.features .items .item .header .icon {
+    width: 1.7rem;
+    height: 1.7rem;
+    color: #3b82f6;
+    flex-shrink: 0;
+}
+
+section.features .items .item .description {
+    font-size: 1.05rem;
+    color: #2d4665;
+    line-height: 1.8;
+    letter-spacing: 0.01em;
+}
+
+section.features .items .item .description a {
+    color: #3b82f6;
+    text-decoration: none;
+    transition: opacity 0.2s ease-out;
+}
+
+section.features .items .item .description a:hover {
+    opacity: 0.8;
+}
+
+/* --- FRAMEWORKS --- */
+
+section.frameworks {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+}
+
+section.frameworks .left .container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    position: relative;
+    aspect-ratio: 1;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1.5rem;
+}
+
+section.frameworks .left .container .row {
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 0%;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 1.5rem;
+    z-index: 1;
+}
+
+section.frameworks .left .container .row .item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1.5rem;
+    width: auto;
+    height: 100%;
+    aspect-ratio: 1;
+}
+
+section.frameworks .left .container .row .item .icon {
+    width: 6rem;
+    height: 6rem;
+    object-fit: contain;
+}
+
+section.frameworks .left .container .background {
+    position: absolute;
+    inset: 0px;
+    opacity: 0.1;
+    width: 100%;
+    height: 100%;
+}
+
+section.frameworks .right .title {
+    font-weight: 700;
+    line-height: 1.12;
+    margin-bottom: 1.5rem;
+    color: #111827;
+}
+
+section.frameworks .right .description {
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+    color: #2d4665;
+    margin-bottom: 3rem;
+}
+
+section.frameworks .right .subtitle {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    font-size: 1.25rem;
+    line-height: 1.12;
+    color: #03060b;
+}
+
+section.frameworks .right .items {
+    display: flex;
+    gap: 1rem;
+}
+
+section.frameworks .right .items .item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    transition-duration: 300ms;
+}
+
+section.frameworks .right .items .item:hover {
+    border-color: #a855f7;
+}
+
+section.frameworks .right .items .item .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    object-fit: contain;
+
+    transition-property: transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+section.frameworks .right .items .item .label {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        'Liberation Mono', 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #374151;
+}
