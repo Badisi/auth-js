@@ -43,7 +43,7 @@ export const STANDALONE_CONTENT =
 export const INIT_CONTENT = (content: string, options = ''): string =>
     `/**\n` +
     ` * Auth configuration\n` +
-    ` * @see https://badisi.github.io/auth-js/site/documentation/configuration\n` +
+    ` * @see https://badisi.github.io/auth-js/getting-started/configuration\n` +
     ` */\n` +
     `initAuth(${options}).then(authProvider => {\n${content
     }}).catch((error: unknown) => console.error(error));\n`;
@@ -54,7 +54,7 @@ export default (options: NgAddOptions): Rule =>
         isAngularVersion('< 16', () => {
             console.log(red(`This schematic only works with ${bold('Angular projects >= 16')}.`));
             console.log(red('You will have to install the library manually:'));
-            console.log(blue(bold('https://badisi.github.io/auth-js/site/documentation/getting-started/angular\n')));
+            console.log(blue(bold('https://badisi.github.io/auth-js/getting-started/angular\n')));
             process.exit(-1);
         }),
 

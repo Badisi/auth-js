@@ -6,10 +6,10 @@ const darkCodeTheme = require('prism-react-renderer').themes.nightOwl;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-    title: 'auth-js',
+    title: 'Auth-js',
     url: 'https://badisi.github.io',
     tagline: 'Authentication and authorization support for web based applications.',
-    baseUrl: '/auth-js/site/',
+    baseUrl: '/auth-js/',
     organizationName: 'Badisi',
     projectName: 'auth-js',
     deploymentBranch: 'gh-pages',
@@ -34,7 +34,6 @@ const config = {
                 searchBarShortcut: false
             }
         ]
-
     ],
     presets: [
         [
@@ -49,14 +48,14 @@ const config = {
                 },
                 theme: {
                     customCss: [
+                        require.resolve('./src/css/index.css'),
                         require.resolve('./src/css/custom.css'),
-                        require.resolve('./src/css/search.css')]
+                        require.resolve('./src/css/search.css')
+                    ]
                 }
             })
         ]
-
     ],
-
     themeConfig:
         /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
         ({
@@ -70,15 +69,26 @@ const config = {
                 items: [
                     {
                         type: 'doc',
-                        label: 'Documentation',
+                        label: 'Docs',
                         position: 'left',
-                        docId: 'documentation/intro'
+                        docId: 'getting-started/intro'
                     },
                     {
                         type: 'doc',
-                        label: 'APIs',
+                        label: 'Guides',
                         position: 'left',
-                        docId: 'apis/vanilla-js/auth-manager'
+                        docId: 'guides/guides'
+                    },
+                    {
+                        type: 'doc',
+                        label: 'API',
+                        position: 'left',
+                        docId: 'api/vanilla-js/auth-manager'
+                    },
+                    {
+                        href: 'https://badisi.github.io/auth-js/demo-app',
+                        label: 'Playground',
+                        position: 'right'
                     },
                     {
                         href: 'https://github.com/Badisi/auth-js',
@@ -97,15 +107,15 @@ const config = {
                         items: [
                             {
                                 label: 'Getting started',
-                                to: '/documentation/intro'
+                                to: '/getting-started/intro'
                             },
                             {
                                 label: 'Configuration',
-                                to: '/documentation/configuration'
+                                to: '/getting-started/configuration'
                             },
                             {
                                 label: 'Usage',
-                                to: '/documentation/usage'
+                                to: '/getting-started/usage'
                             }
                         ]
                     },
@@ -139,7 +149,17 @@ const config = {
                     'json'
                 ]
             }
+        }),
+    plugins: [
+        async () => ({
+            name: 'docusaurus-tailwindcss',
+            configurePostCss: postcssOptions => {
+                postcssOptions.plugins.push(require('tailwindcss'));
+                postcssOptions.plugins.push(require('autoprefixer'));
+                return postcssOptions;
+            }
         })
+    ]
 };
 
 module.exports = config;

@@ -10,7 +10,7 @@ This guide explains how to set up your Angular project to begin using [`@badisi/
 
 🚀 The fastest, simplest and preferred way is the [schematic](#schematic) way but you can also install this library [manually](#manual-installation).
 
-:::info Before using it
+:::info Before using this library
 Make sure you properly configured your 👉 [Authentication Provider](providers).
 :::
 
@@ -128,28 +128,11 @@ If you wish to install this library manually, please follow the steps below:
     }).catch(error => console.error(error));
     ```
 
-    <br/>
-
-    > Modify your **app.module.ts** file
-
-    ```ts title="app.module.ts" {2,6}
-    import { NgModule } from '@angular/core';
-    import { AuthModule } from '@badisi/ngx-auth';
-
-    @NgModule({
-      imports: [
-        AuthModule
-      ]
-    })
-    export class AppModule {}
-    ```
-
     </TabItem>
     </Tabs>
 
     :::info
     - Initializing the library prior to your Angular application bootstrapping ensures that all the security checks are made upstream (if needed) and avoid the whole Angular application to be loaded twice when using redirects.
-    - By providing the library, an [`AuthService`](../../apis/angular/auth-service), [`AuthGuard`](../../apis/angular/auth-guard) and [`AuthInterceptor`](../../apis/angular/auth-interceptor) will be also provided to your application.
     :::
 
     :::tip

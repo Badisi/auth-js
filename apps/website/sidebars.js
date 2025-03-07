@@ -20,33 +20,42 @@ const sidebars = {
         {
             label: 'Introduction',
             type: 'doc',
-            id: 'documentation/intro'
+            id: 'getting-started/intro'
         },
         {
             label: 'Getting started',
             type: 'category',
             collapsed: false,
             items: [
-                'documentation/getting-started/vanilla-js',
-                'documentation/getting-started/angular',
-                'documentation/getting-started/mobile',
-                'documentation/getting-started/providers'
+                'getting-started/vanilla-js',
+                'getting-started/angular',
+                'getting-started/vue-js',
+                'getting-started/mobile',
+                'getting-started/providers'
             ]
         },
         {
             label: 'Configuration',
             type: 'doc',
-            id: 'documentation/configuration'
+            id: 'getting-started/configuration'
         },
         {
             label: 'Usage',
             type: 'doc',
-            id: 'documentation/usage'
+            id: 'getting-started/usage'
         },
         {
             label: 'Playground',
             type: 'doc',
-            id: 'documentation/playground'
+            id: 'getting-started/playground'
+        }
+    ],
+
+    guidesSidebar: [
+        {
+            label: 'Guide',
+            type: 'doc',
+            id: 'guides/guides'
         }
     ],
 
@@ -56,7 +65,7 @@ const sidebars = {
             type: 'category',
             collapsed: false,
             items: [
-                'apis/vanilla-js/auth-manager'
+                'api/vanilla-js/auth-manager'
             ]
         },
         {
@@ -64,15 +73,15 @@ const sidebars = {
             type: 'category',
             collapsed: false,
             items: [
-                'apis/angular/auth-service',
-                'apis/angular/auth-guard',
-                'apis/angular/auth-interceptor'
+                'api/angular/auth-service',
+                'api/angular/auth-guard',
+                'api/angular/auth-interceptor'
             ]
         },
         {
             label: 'Mobile',
             type: 'doc',
-            id: 'apis/mobile'
+            id: 'api/mobile'
         }
     ]
 };
