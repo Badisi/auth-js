@@ -24,7 +24,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Setup
-              uses: badisi/actions/setup@v1
+              uses: badisi/actions/setup@v2
 
             - name: Build demo-app:auth-js
               working-directory: apps/demo-app/web
