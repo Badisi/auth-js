@@ -24,7 +24,7 @@ env:
 
 jobs:
     ci_release:
-        uses: badisi/actions/.github/workflows/action.yml@v1
+        uses: badisi/actions/.github/workflows/action.yml@v2
         secrets:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
