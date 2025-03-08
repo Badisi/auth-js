@@ -29,12 +29,12 @@ const Intro = () => {
                 <div className="buttons flex-col sm:flex-row gap-5 sm:gap-6">
                     <Link
                         className="button getstarted text-lg sm:text-xl"
-                        to={useBaseUrl('getting-started')}>
+                        to={useBaseUrl('getting-started/intro')}>
                         Get Started&nbsp;&nbsp;<span className="arrow">→</span>
                     </Link>
                     <Link
                         className="button playground text-lg sm:text-xl"
-                        to={useBaseUrl('playground')}>
+                        to={useBaseUrl('getting-started/playground')}>
                         Playground
                     </Link>
                 </div>

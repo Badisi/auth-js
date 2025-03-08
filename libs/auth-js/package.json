@@ -32,6 +32,7 @@
     "scripts": {
         "lint": "nx run auth-js:lint",
         "test": "nx run auth-js:test",
+        "test:ci": "nx run auth-js:test",
         "build": "nx run auth-js:build",
         "release": "node ../../scripts/release.mjs --projects=auth-js --verbose",
         "release:dry-run": "npm run release -- --dry-run"
