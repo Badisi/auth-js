@@ -33,6 +33,7 @@
     "scripts": {
         "lint": "nx run auth-vue:lint",
         "build": "nx run auth-vue:build",
+        "test": "",
         "test:ci": "",
         "release": "node ../../scripts/release.mjs --projects=auth-vue --verbose",
         "release:dry-run": "npm run release -- --dry-run"
