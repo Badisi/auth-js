@@ -5,7 +5,7 @@ import { defineConfig } from 'vite';
 import { createHtmlPlugin } from 'vite-plugin-html';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
-const baseHref = process.env.BASE_HREF || '/';
+const baseHref = process.env.BASE_URL || '/';
 
 export default defineConfig({
     root: __dirname,
