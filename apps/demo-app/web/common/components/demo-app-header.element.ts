@@ -249,7 +249,7 @@ export class DemoAppHeaderElement extends HTMLElement {
 
             const changeCb = (): void => {
                 const index = this.implSelectEl?.selectedIndex;
-                if (index) {
+                if (index !== undefined) {
                     window.location.href = window.appSettings.getLibraryImplementations()[index].demoUrl;
                 }
             };
