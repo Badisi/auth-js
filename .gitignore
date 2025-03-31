@@ -1,0 +1,7 @@
+.angular
+.husky
+.nx
+dist
+apps
+libs
+node_modules
