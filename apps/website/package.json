@@ -4,9 +4,9 @@
     "license": "GPL-3.0-only",
     "scripts": {
         "start": "docusaurus start",
-        "serve": "docusaurus serve",
-        "build": "docusaurus build",
-        "swizzle": "docusaurus swizzle",
+        "serve": "docusaurus serve --dir=../../dist/website",
+        "build": "docusaurus build --out-dir=../../dist/website",
+        "swizzle": "docusaurus swizzle @docusaurus/theme-classic NotFound",
         "deploy": "docusaurus deploy",
         "clear": "docusaurus clear",
         "write-translations": "docusaurus write-translations",

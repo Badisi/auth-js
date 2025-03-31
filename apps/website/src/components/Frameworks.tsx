@@ -1,8 +1,10 @@
 import React from 'react';
-import JavascriptSvg from '@site/static/javascript.svg';
-import VueJsSvg from '@site/static/vue-js.svg';
-import AngularSvg from '@site/static/angular.svg';
-import HexagonsSvg from '@site/static/hexagons.svg';
+import Link from '@docusaurus/Link';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import JavascriptSvg from '@site/static/assets/svg/javascript.svg';
+import VueJsSvg from '@site/static/assets/svg/vue-js.svg';
+import AngularSvg from '@site/static/assets/svg/angular.svg';
+import HexagonsSvg from '@site/static/assets/svg/hexagons.svg';
 
 const Frameworks = () => {
     return (
@@ -47,15 +49,27 @@ const Frameworks = () => {
                 <div className="items flex-col sm:flex-row">
                     <button className="item">
                         <JavascriptSvg className="icon" />
-                        <span className="label">vanilla/js</span>
+                        <Link
+                            className="label"
+                            to={useBaseUrl('getting-started/vanilla-js')}>
+                            vanilla/js
+                        </Link>
                     </button>
                     <button className="item">
                         <VueJsSvg className="icon" />
-                        <span className="label">vue.js</span>
+                        <Link
+                            className="label"
+                            to={useBaseUrl('getting-started/vue-js')}>
+                            vue.js
+                        </Link>
                     </button>
                     <button className="item">
                         <AngularSvg className="icon" />
-                        <span className="label">angular</span>
+                        <Link
+                            className="label"
+                            to={useBaseUrl('getting-started/angular')}>
+                            angular
+                        </Link>
                     </button>
                 </div>
             </div>

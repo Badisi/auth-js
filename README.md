@@ -60,5 +60,5 @@ Please read and follow the [Code of Conduct][codeofconduct] and help me keep thi
 [developer]: https://github.com/badisi/auth-js/blob/main/DEVELOPER.md
 [contributing]: https://github.com/badisi/auth-js/blob/main/CONTRIBUTING.md
 [codeofconduct]: https://github.com/badisi/auth-js/blob/main/CODE_OF_CONDUCT.md
-[docs-site]: https://badisi.github.io/auth-js/getting-started/intro
+[docs-site]: https://badisi.github.io/auth-js
 [demo-site]: https://badisi.github.io/auth-js/demo-app

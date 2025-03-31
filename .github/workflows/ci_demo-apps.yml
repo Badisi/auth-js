@@ -1,4 +1,4 @@
-name: Deploy demo-app
+name: Deploy demo-apps
 
 on:
     workflow_dispatch:
@@ -8,7 +8,7 @@ on:
         tags-ignore:
             - '**'
         paths:
-            - '.github/workflows/ci_demo-app.yml'
+            - '.github/workflows/ci_demo-apps.yml'
             - 'apps/demo-app/**'
             - 'libs/**'
 
@@ -16,11 +16,11 @@ env:
     HUSKY: 0
 
 concurrency:
-    group: deploy-demo-app-group-${{ github.ref }}
+    group: deploy-demo-apps-group-${{ github.ref }}
     cancel-in-progress: true
 
 jobs:
-    ci_demo-app:
+    ci_demo-apps:
         runs-on: ubuntu-latest
         steps:
             - name: Setup
@@ -47,7 +47,7 @@ jobs:
             - name: Deploy to GitHub Pages
               uses: peaceiris/actions-gh-pages@v4
               with:
+                  commit_message: 'deploy(demo-apps):'
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   publish_dir: ./dist/demo-app
                   destination_dir: demo-app
-                  commit_message: 'deploy(demo-app):'

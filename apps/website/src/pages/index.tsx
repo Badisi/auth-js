@@ -1,16 +1,18 @@
 import React from 'react';
 import Layout from '@theme/Layout';
 
-import Intro from './Intro';
-import Features from './Features';
-import Frameworks from './Frameworks';
+import Intro from '../components/Intro';
+import Features from '../components/Features';
+import Frameworks from '../components/Frameworks';
 
 const Home = (): React.JSX.Element => {
     return (
         <Layout>
-            <Intro />
-            <Features />
-            <Frameworks />
+            <div className="home">
+                <Intro />
+                <Features />
+                <Frameworks />
+            </div>
         </Layout>
     );
 };

@@ -8,7 +8,8 @@ const darkCodeTheme = require('prism-react-renderer').themes.nightOwl;
 const config = {
     title: 'Auth-js',
     url: 'https://badisi.github.io',
-    tagline: 'Authentication and authorization support for web based applications.',
+    tagline:
+        'Authentication and authorization support for web based applications.',
     baseUrl: '/auth-js/',
     organizationName: 'Badisi',
     projectName: 'auth-js',
@@ -16,7 +17,7 @@ const config = {
     trailingSlash: false,
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
-    favicon: 'img/favicon.ico',
+    favicon: 'assets/favicon.ico',
     i18n: {
         defaultLocale: 'en-US',
         locales: [
@@ -44,13 +45,15 @@ const config = {
                     routeBasePath: '/',
                     breadcrumbs: false,
                     sidebarPath: require.resolve('./sidebars.js'),
-                    editUrl: 'https://github.com/Badisi/auth-js/edit/main/apps/website/'
+                    editUrl:
+                        'https://github.com/Badisi/auth-js/edit/main/apps/website/'
                 },
                 theme: {
                     customCss: [
-                        require.resolve('./src/css/index.css'),
+                        require.resolve('./src/css/home.css'),
                         require.resolve('./src/css/custom.css'),
-                        require.resolve('./src/css/search.css')
+                        require.resolve('./src/css/search.css'),
+                        require.resolve('./src/css/not-found.css')
                     ]
                 }
             })
@@ -64,7 +67,7 @@ const config = {
                 hideOnScroll: false,
                 logo: {
                     alt: 'logo',
-                    src: 'img/logo.svg'
+                    src: 'assets/svg/logo.svg'
                 },
                 items: [
                     {

@@ -1,11 +1,11 @@
-section:not(.intro) {
+.home section:not(.intro) {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
 }
 
 /* --- INTRO --- */
 
-section.intro {
+.home section.intro {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -25,7 +25,7 @@ section.intro {
     background-size: cover;
 }
 
-section.intro .spot {
+.home section.intro .spot {
     position: absolute;
     width: 70vw;
     height: 70vh;
@@ -34,20 +34,20 @@ section.intro .spot {
     box-sizing: border-box;
     z-index: -1;
 }
-section.intro .spot.blue {
+.home section.intro .spot.blue {
     bottom: -10vh;
     left: -35vw;
     opacity: 0.4;
     background-color: rgb(221 214 254);
 }
-section.intro .spot.pink {
+.home section.intro .spot.pink {
     top: 0;
     right: -40vw;
     opacity: 0.3;
     background-color: rgb(251 207 232);
 }
 
-section.intro .header {
+.home section.intro .header {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -57,7 +57,7 @@ section.intro .header {
     margin: 5.5rem auto 7.25rem;
 }
 
-section.intro .header .icon {
+.home section.intro .header .icon {
     margin-bottom: 1rem;
 }
 
@@ -71,9 +71,9 @@ section.intro .header .icon {
         transform: scale(1);
     }
 }
-section.intro .header .icon .shield {
+.home section.intro .header .icon .shield {
     transform-origin: center;
-    animation: zoom-in 0.4s ease-in-out forwards;
+    animation: zoom-in 300ms ease-in-out forwards;
 }
 
 @keyframes dash-check {
@@ -84,31 +84,40 @@ section.intro .header .icon .shield {
         stroke-dashoffset: 1000;
     }
 }
-section.intro .header .icon .check {
+.home section.intro .header .icon .check {
     stroke-dasharray: 1300;
     stroke-dashoffset: -300;
-    animation: dash-check 1.2s 0.1s ease-in-out forwards;
+    animation: dash-check 1.2s 100ms ease-in-out forwards;
 }
 
-section.intro .header .title {
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.home section.intro .header .title {
     font-weight: 700;
     line-height: 96%;
     text-align: center;
+    animation: fade-in 800ms ease-in-out forwards;
 }
 
-section.intro .header .title .blue {
+.home section.intro .header .title .blue {
     color: transparent;
     background-clip: text;
     background-image: linear-gradient(to right, #06b6d4, #3b82f6);
 }
 
-section.intro .header .title .pink {
+.home section.intro .header .title .pink {
     color: transparent;
     background-clip: text;
     background-image: linear-gradient(to right, #ec4899, #d946ef);
 }
 
-section.intro .header .subtitle {
+.home section.intro .header .subtitle {
     margin-bottom: 24px;
     line-height: 1.6;
     color: #2d4665;
@@ -121,11 +130,11 @@ section.intro .header .subtitle {
     max-width: 48rem;
 }
 
-section.intro .header .buttons {
+.home section.intro .header .buttons {
     display: flex;
 }
 
-section.intro .header .buttons .button {
+.home section.intro .header .buttons .button {
     font-weight: 700;
     line-height: 1.5;
     padding: 0.75rem 2.4rem;
@@ -134,38 +143,38 @@ section.intro .header .buttons .button {
     transition: background-color 0.2s ease-out;
 }
 
-section.intro .header .buttons .button.getstarted {
+.home section.intro .header .buttons .button.getstarted {
     position: relative;
     color: white;
     border: none;
     padding-right: 3rem;
     background-color: #506db2;
 }
-section.intro .header .buttons .button.getstarted:hover {
+.home section.intro .header .buttons .button.getstarted:hover {
     background-color: #5c79c5;
 }
 
-section.intro .header .buttons .button.getstarted .arrow {
+.home section.intro .header .buttons .button.getstarted .arrow {
     position: absolute;
     right: 30px;
     transition: right 0.1s ease-in-out;
 }
-section.intro .header .buttons .button.getstarted:hover .arrow {
+.home section.intro .header .buttons .button.getstarted:hover .arrow {
     right: 28px;
 }
 
-section.intro .header .buttons .button.playground {
+.home section.intro .header .buttons .button.playground {
     color: #1f2937;
     border: none;
     background-color: #dadada;
 }
-section.intro .header .buttons .button.playground:hover {
+.home section.intro .header .buttons .button.playground:hover {
     background-color: #d3d2d2;
 }
 
 /* --- FEATURES --- */
 
-section.features {
+.home section.features {
     background: linear-gradient(
         315deg,
         rgba(101, 0, 94, 1) 3%,
@@ -178,7 +187,7 @@ section.features {
     background-position: -34%;
 }
 
-section.features .title {
+.home section.features .title {
     font-size: 1.875rem;
     line-height: 2.25rem;
     font-weight: 700;
@@ -187,14 +196,14 @@ section.features .title {
     margin-bottom: 7rem;
 }
 
-section.features .items {
+.home section.features .items {
     display: grid;
     max-width: 80rem;
     margin-left: auto;
     margin-right: auto;
 }
 
-section.features .items .item {
+.home section.features .items .item {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -204,7 +213,7 @@ section.features .items .item {
     padding: 1.5rem;
 }
 
-section.features .items .item .header {
+.home section.features .items .item .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -212,7 +221,7 @@ section.features .items .item .header {
     width: 100%;
 }
 
-section.features .items .item .header .title {
+.home section.features .items .item .header .title {
     font-weight: 600;
     font-size: 1.25rem;
     line-height: 1.75rem;
@@ -220,33 +229,32 @@ section.features .items .item .header .title {
     margin-bottom: 0;
 }
 
-section.features .items .item .header .icon {
+.home section.features .items .item .header .icon {
     width: 1.7rem;
     height: 1.7rem;
     color: #3b82f6;
     flex-shrink: 0;
 }
 
-section.features .items .item .description {
+.home section.features .items .item .description {
     font-size: 1.05rem;
     color: #2d4665;
     line-height: 1.8;
     letter-spacing: 0.01em;
 }
 
-section.features .items .item .description a {
+.home section.features .items .item .description a {
     color: #3b82f6;
-    text-decoration: none;
     transition: opacity 0.2s ease-out;
 }
 
-section.features .items .item .description a:hover {
+.home section.features .items .item .description a:hover {
     opacity: 0.8;
 }
 
 /* --- FRAMEWORKS --- */
 
-section.frameworks {
+.home section.frameworks {
     display: flex;
     align-items: center;
     gap: 3rem;
@@ -256,7 +264,7 @@ section.frameworks {
     background-color: white;
 }
 
-section.frameworks .left .container {
+.home section.frameworks .left .container {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -269,7 +277,7 @@ section.frameworks .left .container {
     padding: 1.5rem;
 }
 
-section.frameworks .left .container .row {
+.home section.frameworks .left .container .row {
     display: flex;
     flex-direction: row;
     flex: 1 1 0%;
@@ -279,7 +287,7 @@ section.frameworks .left .container .row {
     z-index: 1;
 }
 
-section.frameworks .left .container .row .item {
+.home section.frameworks .left .container .row .item {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -289,13 +297,13 @@ section.frameworks .left .container .row .item {
     aspect-ratio: 1;
 }
 
-section.frameworks .left .container .row .item .icon {
+.home section.frameworks .left .container .row .item .icon {
     width: 6rem;
     height: 6rem;
     object-fit: contain;
 }
 
-section.frameworks .left .container .background {
+.home section.frameworks .left .container .background {
     position: absolute;
     inset: 0px;
     opacity: 0.1;
@@ -303,21 +311,21 @@ section.frameworks .left .container .background {
     height: 100%;
 }
 
-section.frameworks .right .title {
+.home section.frameworks .right .title {
     font-weight: 700;
     line-height: 1.12;
     margin-bottom: 1.5rem;
     color: #111827;
 }
 
-section.frameworks .right .description {
+.home section.frameworks .right .description {
     line-height: 1.6;
     letter-spacing: 0.01em;
     color: #2d4665;
     margin-bottom: 3rem;
 }
 
-section.frameworks .right .subtitle {
+.home section.frameworks .right .subtitle {
     font-weight: 600;
     letter-spacing: -0.01em;
     font-size: 1.25rem;
@@ -325,12 +333,12 @@ section.frameworks .right .subtitle {
     color: #03060b;
 }
 
-section.frameworks .right .items {
+.home section.frameworks .right .items {
     display: flex;
     gap: 1rem;
 }
 
-section.frameworks .right .items .item {
+.home section.frameworks .right .items .item {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -347,11 +355,11 @@ section.frameworks .right .items .item {
     transition-duration: 300ms;
 }
 
-section.frameworks .right .items .item:hover {
-    border-color: #a855f7;
+.home section.frameworks .right .items .item:hover {
+    border-color: #6055f7;
 }
 
-section.frameworks .right .items .item .icon {
+.home section.frameworks .right .items .item .icon {
     width: 1.5rem;
     height: 1.5rem;
     object-fit: contain;
@@ -361,7 +369,7 @@ section.frameworks .right .items .item .icon {
     transition-duration: 150ms;
 }
 
-section.frameworks .right .items .item .label {
+.home section.frameworks .right .items .item .label {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
         'Liberation Mono', 'Courier New', monospace;
     font-size: 0.875rem;
