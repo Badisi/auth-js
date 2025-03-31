@@ -38,6 +38,14 @@
     color: black;
 }
 
+.navbar__brand .navbar__logo {
+    height: 1.5rem;
+}
+
+.navbar__brand .navbar__title {
+    font-size: 18px;
+}
+
 .header-github-link:before {
     display: flex;
     content: '';

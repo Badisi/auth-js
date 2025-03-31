@@ -1,0 +1,16 @@
+.not-found {
+    text-align: center;
+}
+
+.not-found a {
+    cursor: pointer;
+    transition: 0.3s color;
+}
+
+.not-found a.github {
+    font-weight: bold;
+}
+
+.not-found a.home {
+    font-weight: 500;
+}

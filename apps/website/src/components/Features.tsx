@@ -1,10 +1,10 @@
 import React from 'react';
-import GlobeSvg from '@site/static/globe.svg';
-import ShieldCheckSvg from '@site/static/shield-check.svg';
-import CodeSvg from '@site/static/code.svg';
-import SmartphoneSvg from '@site/static/smartphone.svg';
-import PuzzleSvg from '@site/static/puzzle.svg';
-import ThumbsUpSvg from '@site/static/thumbs-up.svg';
+import GlobeSvg from '@site/static/assets/svg/globe.svg';
+import ShieldCheckSvg from '@site/static/assets/svg/shield-check.svg';
+import CodeSvg from '@site/static/assets/svg/code.svg';
+import SmartphoneSvg from '@site/static/assets/svg/smartphone.svg';
+import PuzzleSvg from '@site/static/assets/svg/puzzle.svg';
+import ThumbsUpSvg from '@site/static/assets/svg/thumbs-up.svg';
 
 const FeatureItem = ({ icon: Icon, title, content }) => {
     return (

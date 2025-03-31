@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
-import ShieldSvg from '@site/static/shield.svg';
+import ShieldSvg from '@site/static/assets/svg/shield.svg';
 
 const Intro = () => {
     return (

@@ -29,10 +29,21 @@ jobs:
               working-directory: apps/website
               run: npm run build
 
+            #
+            # We do not use "peaceiris/actions-gh-page" action here as it wipes out
+            # the whole repo and we don't want to lose the demo-app folder.
+            #
             - name: Deploy to GitHub Pages
-              uses: peaceiris/actions-gh-pages@v4
-              with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: ./apps/website/build
-                  destination_dir: website
-                  commit_message: 'deploy(website):'
+              run: |
+                  export TMP_WORKDIR="${{ runner.temp }}/gh-pages"
+                  rm -rf "$TMP_WORKDIR"
+                  mkdir -p "$TMP_WORKDIR"
+                  cd "$TMP_WORKDIR"
+                  git clone --depth=1 --single-branch --branch gh-pages "${{ github.server_url }}/${{ github.repository }}.git" .
+                  find . -mindepth 1 ! -path './demo-app*' ! -path './.gitignore' ! -path './.git*' -exec rm -rf {} +
+                  cp -r "${{ github.workspace }}/dist/website"/. "$TMP_WORKDIR/"
+                  git add .
+                  git config user.name "${{ github.actor }}"
+                  git config user.email "${{ github.actor }}@users.noreply.github.com"
+                  git commit -m "deploy(website): ${{ github.sha }}" || echo "No changes to commit"
+                  git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git gh-pages

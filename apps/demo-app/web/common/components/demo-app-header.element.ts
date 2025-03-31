@@ -167,7 +167,7 @@ template.innerHTML = `
             <span style="flex: 1"></span>
 
             <a class="doc"
-                href="https://github.com/Badisi/auth-js/getting-started/playground"
+                href="https://badisi.github.io/auth-js/getting-started/playground"
                 target="_blank"
                 rel="noopener noreferrer">
                 <span>
