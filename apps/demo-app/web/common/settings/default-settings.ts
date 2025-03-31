@@ -1,6 +1,24 @@
 import { LogLevel } from '@badisi/auth-js';
 import { DesktopNavigation, type OIDCAuthSettings } from '@badisi/auth-js/oidc';
-import type { Settings } from 'demo-app-common';
+import authJsPkgJson from 'libs/auth-js/package.json';
+import authVuePkgJson from 'libs/auth-vue/package.json';
+import ngxAuthPkgJson from 'libs/ngx-auth/package.json';
+
+import type { LibraryImplementation, Settings } from '.';
+
+export const LIBRARY_IMPLEMENTATIONS: LibraryImplementation[] = [{
+    label: 'VanillaJS',
+    demoUrl: 'https://badisi.github.io/auth-js/demo-app/auth-js',
+    version: authJsPkgJson.version
+}, {
+    label: 'Angular',
+    demoUrl: 'https://badisi.github.io/auth-js/demo-app/ngx-auth',
+    version: ngxAuthPkgJson.version
+}, {
+    label: 'Vue.js',
+    demoUrl: 'https://badisi.github.io/auth-js/demo-app/auth-vue',
+    version: authVuePkgJson.version
+}];
 
 const COMMON_LIBRARY_SETTINGS: Omit<Settings<OIDCAuthSettings>['librarySettings'], 'authorityUrl' | 'clientId'> = {
     mobileScheme: 'demo-app',
@@ -45,6 +63,12 @@ const ZITADEL_SETTINGS: Settings<OIDCAuthSettings> = {
         authorityUrl: 'https://auth-js-0pdipf.zitadel.cloud',
         clientId: '178200751804317953@demo-app',
         scope: 'openid profile email phone offline_access',
+        internal:{
+            extraQueryParams: {
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                'login_hint': 'demo'
+            }
+        },
         ...COMMON_LIBRARY_SETTINGS
     }
 };

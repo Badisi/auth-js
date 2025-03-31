@@ -1,5 +1,6 @@
 import { DesktopNavigation, LogLevel, type OIDCAuthSettings } from '@badisi/auth-js/oidc';
-import type { LibrarySettingsDefinitionItem } from 'demo-app-common';
+
+import type { LibrarySettingsDefinitionItem } from '.';
 
 export const LIBRARY_SETTINGS_DEFINITION: LibrarySettingsDefinitionItem<OIDCAuthSettings>[] = [{
     name: 'authorityUrl',

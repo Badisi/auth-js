@@ -2,7 +2,7 @@
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import vue from '@vitejs/plugin-vue';
 import { defineConfig } from 'vite';
-import { createHtmlPlugin } from 'vite-plugin-html';
+import simpleHtmlPlugin from 'vite-plugin-simple-html';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 const baseHref = process.env.BASE_URL || '/';
@@ -24,7 +24,7 @@ export default defineConfig({
             }
         }),
         nxViteTsPaths(),
-        createHtmlPlugin({
+        simpleHtmlPlugin({
             minify: false,
             inject: {
                 data: {
