@@ -8,7 +8,7 @@ import type { AuthSettings } from '@badisi/auth-js';
 import type { OIDCAuthSettings } from '@badisi/auth-js/oidc';
 
 import { globalStyle } from '../core';
-import type { Settings } from '../settings/demo-app-settings.service';
+import type { Settings } from '../settings';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -209,7 +209,7 @@ export class DemoAppSettingsElement extends HTMLElement {
 
         // Select
         this.refreshSelect();
-        const changeCb = (): void => { if (this.selectEl) { this.loadSettings(this.selectEl.value); }};
+        const changeCb = (): void => { if (this.selectEl) { this.loadSettings(this.selectEl.selectedIndex); }};
         this.selectEl?.addEventListener('change', changeCb);
         this.listeners.push(() => { this.selectEl?.removeEventListener('change', changeCb); });
 
@@ -247,8 +247,8 @@ export class DemoAppSettingsElement extends HTMLElement {
 
     // --- HANDLER(s) ---
 
-    public loadSettings(name: string): void {
-        window.appSettings.setCurrentSettings(name);
+    public loadSettings(index: number): void {
+        window.appSettings.setCurrentSettingsIndex(index);
         location.reload();
     }
 
@@ -269,6 +269,7 @@ export class DemoAppSettingsElement extends HTMLElement {
 
     public delete(): void {
         window.appSettings.deleteCurrentSettings();
+        window.appSettings.setCurrentSettingsIndex(0);
         location.reload();
     }
 
@@ -312,12 +313,11 @@ export class DemoAppSettingsElement extends HTMLElement {
         }
 
         // Redraw it
-        const { settings, currentSettingsId } = window.appSettings.get();
+        const { settings, currentSettingsIndex } = window.appSettings.get();
         settings
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .forEach(item => {
+            .forEach((item, index) => {
                 const optionEl = document.createElement('option');
-                optionEl.selected = (item.name === currentSettingsId);
+                optionEl.selected = (index === currentSettingsIndex);
                 optionEl.value = String(item.name);
                 optionEl.textContent = item.name;
                 this.selectEl?.appendChild(optionEl);
@@ -469,9 +469,9 @@ export class DemoAppSettingsElement extends HTMLElement {
                 }
             }
 
-            window.appSettings.addOrUpdateSettings(currentSettings);
-            if (this.formIsNew) {
-                window.appSettings.setCurrentSettings(currentSettings.name);
+            window.appSettings.addOrUpdateSettings(currentSettings, window.appSettings.get().currentSettingsIndex);
+            if (this.formIsNew && this.selectEl) {
+                window.appSettings.setCurrentSettingsIndex(this.selectEl.selectedIndex);
             }
             location.reload();
         }

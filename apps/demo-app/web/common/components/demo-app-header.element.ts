@@ -11,21 +11,52 @@ template.innerHTML = `
             top: 0;
             left: 0;
             right: 0;
-            padding-top: calc(0px + var(--safe-area-inset-top));
+            padding: calc(8px + var(--safe-area-inset-top)) 16px 30px 16px;
             align-items: center;
-            height: 130px;
+            justify-content: space-between;
+            height: 142px;
             color: white;
             background: rgb(103, 58, 183);
             background: linear-gradient(180deg, rgba(103, 58, 183, 1) 0%, rgba(94, 53, 177, 1) 100%);
         }
 
-        :host header .github-icon {
-            position: absolute;
-            top: calc(20px + var(--safe-area-inset-top));
+        :host header .row {
+            align-items: center;
+        }
+
+        :host header .row.top {
+            width: 100%;
+            gap: 14px;
+        }
+
+        :host header .row.select {
+            font-size: 1.4em;
+            color: #ede7f6;
+            padding-bottom: 4px;
+        }
+
+        :host header h1 {
+            font-size: 18px;
+            font-weight: 200;
+            letter-spacing: 1px;
+            color: #ede7f6;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        :host header a.doc {
+            padding: 4px 16px;
+            font-size: 16px;
+            color: white;
+            text-decoration: none;
+        }
+
+        :host header a.github-icon {
             right: 34px;
             width: 26px;
             height: 26px;
             color: white;
+            text-decoration: none;
         }
 
         @keyframes statusLoadingAnimation {
@@ -34,7 +65,7 @@ template.innerHTML = `
         }
 
         :host header .status.loading {
-            background: none;
+            background: none !important;
         }
 
         :host header .status.loading:after {
@@ -57,59 +88,29 @@ template.innerHTML = `
         }
 
         :host header .status {
-            position: absolute;
-            top: calc(25px + var(--safe-area-inset-top));
-            right: 70px;
             width: 15px;
             height: 15px;
-            z-index: 1;
             border-radius: 50%;
             margin-top: 1px;
             margin-right: 8px;
         }
 
-        :host header .version {
-            position: absolute;
-            bottom: 13px;
-        }
-
-        :host header .version a {
-            font-size: 13px;
-            font-weight: 300;
-            font-style: italic;
-            text-decoration: none;
-            color: #c5bcd4;
-        }
-
-        :host header .version a:hover {
-            text-decoration: underline;
-        }
-
         :host header .title {
-            position: relative;
+            display: flex;
             align-items: center;
-            margin: 8px 0;
-            font-size: 1.4em;
-            font-weight: 400;
-            color: #ede7f6;
-        }
-
-        :host header .title a {
+            cursor: pointer;
+            font-size: 18px;
             font-weight: bold;
-            color: #ede7f6;
+            color: white;
             text-decoration: none;
-        }
-
-        :host header .title a:hover {
-            text-decoration: underline;
         }
 
         :host header .title .icon {
-            margin-top: 3px;
-            margin-right: 4px;
+            font-size: 22px;
+            margin-right: 0.5rem;
         }
 
-        :host header .title select {
+        :host header select {
             cursor: pointer;
             text-align: center;
             font-size: 1.1em;
@@ -118,19 +119,8 @@ template.innerHTML = `
             background: none;
             border: none;
             outline: none;
-        }
-
-        :host header .title .tip {
-            position: absolute;
-            right: -204px;
-            font-size: 15px;
-            font-weight: 300;
-            font-style: italic;
-            color: #ffd341;
-        }
-
-        :host header .title .tip .hand {
-            font-size: 18px;
+            padding-top: 0;
+            padding-bottom: 0;
         }
 
         :host header button {
@@ -141,57 +131,85 @@ template.innerHTML = `
             margin-right: 10px;
         }
 
-        @media only screen and (max-width: 600px) {
-            :host header .title {
-                align-self: flex-start;
-                margin-left: 18px;
-            }
-
-            :host header .status {
-                right: 54px;
-            }
-
-            :host header .github-icon {
-                right: 24px;
-            }
+        :host header .content {
+            align-items: center;
+            gap: 10px;
         }
+
         @media only screen and (max-width: 1000px) {
-            :host header .title .tip {
-                display: none;
+            :host header {
+                padding-bottom: 24px;
+                height: 148px;
+            }
+
+            :host header .row.select {
+                font-size: 1.1em;
+            }
+
+            :host header a.doc {
+                padding-right: 6px;
+            }
+
+            :host header .content {
+                gap: 8px;
             }
         }
     </style>
 
     <header class="column">
-        <div class="status loading"></div>
+        <div class="row top" style="height: 44px;">
+            <a class="title" href="https://github.com/Badisi/auth-js">
+                <span class="icon">🛡️</span>Auth-js
+            </a>
 
-        <a class="github-icon"
-            href="https://github.com/Badisi/auth-js"
-            target="_blank"
-            title="View it on GitHub"
-            aria-label="GitHub repository">
-            <span>
-                <svg viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill="currentColor"
-                        d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12">
-                    </path>
-                </svg>
-            </span>
-        </a>
+            <div class="status loading"></div>
 
-        <div class="title row">
-            <span class="icon">🛡️</span><a href="https://github.com/Badisi/auth-js">Auth-js</a>&nbsp;demo&nbsp;&nbsp;&#123;<select id="implementation-select"></select> &nbsp;&#125;
-            <div class="tip"><span class="hand">👈</span> choose an implementation</div>
+            <span style="flex: 1"></span>
+
+            <a class="doc"
+                href="https://github.com/Badisi/auth-js/getting-started/playground"
+                target="_blank"
+                rel="noopener noreferrer">
+                <span>
+                    Documentation
+                    <svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path>
+                    </svg>
+                </span>
+            </a>
+
+            <a class="github-icon"
+                href="https://github.com/Badisi/auth-js"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="View it on GitHub"
+                aria-label="GitHub repository">
+                <span>
+                    <svg viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill="currentColor"
+                            d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12">
+                        </path>
+                    </svg>
+                </span>
+            </a>
         </div>
 
-        <div class="row">
-            <button id="login-button">LOGIN</button>
-            <button id="logout-button">LOGOUT</button>
-            <button id="silent-renew-button">SILENT RENEW</button>
-        </div>
+        <div class="column content">
+            <h1>Playground</h1>
 
-        <div class="version"></div>
+            <div class="row select">
+                <span>&#123;<select id="implementation-select"></select> &nbsp;&#125;</span>
+                &nbsp;&nbsp;
+                <span>&#123;<select id="setting-select"></select> &nbsp;&#125;</span>
+            </div>
+
+            <div class="row">
+                <button id="login-button">LOGIN</button>
+                <button id="logout-button">LOGOUT</button>
+                <button id="silent-renew-button">SILENT RENEW</button>
+            </div>
+        </div>
     </header>
 `;
 
@@ -199,8 +217,8 @@ export class DemoAppHeaderElement extends HTMLElement {
     private listeners: (() => void)[] = [];
 
     private implSelectEl?: HTMLSelectElement | null;
+    private settingsSelectEl?: HTMLSelectElement | null;
     private statusEl?: HTMLElement | null;
-    private versionEl?: HTMLElement | null;
     private loginButtonEl?: HTMLElement | null;
     private logoutButtonEl?: HTMLElement | null;
     private silentRenewButtonEl?: HTMLElement | null;
@@ -212,8 +230,8 @@ export class DemoAppHeaderElement extends HTMLElement {
         this.shadowRoot?.appendChild(document.importNode(template.content, true));
 
         this.implSelectEl = this.shadowRoot?.querySelector<HTMLSelectElement>('#implementation-select');
+        this.settingsSelectEl = this.shadowRoot?.querySelector<HTMLSelectElement>('#setting-select');
         this.statusEl = this.shadowRoot?.querySelector<HTMLElement>('.status');
-        this.versionEl = this.shadowRoot?.querySelector<HTMLElement>('.version');
         this.loginButtonEl = this.shadowRoot?.querySelector<HTMLElement>('#login-button');
         this.logoutButtonEl = this.shadowRoot?.querySelector<HTMLElement>('#logout-button');
         this.silentRenewButtonEl = this.shadowRoot?.querySelector<HTMLElement>('#silent-renew-button');
@@ -247,29 +265,50 @@ export class DemoAppHeaderElement extends HTMLElement {
                 this.implSelectEl?.appendChild(optionEl);
             });
 
-            const changeCb = (): void => {
+            const implChangeCb = (): void => {
                 const index = this.implSelectEl?.selectedIndex;
                 if (index !== undefined) {
                     window.location.href = window.appSettings.getLibraryImplementations()[index].demoUrl;
                 }
             };
-            this.implSelectEl?.addEventListener('change', changeCb);
-            this.listeners.push(() => { this.implSelectEl?.removeEventListener('change', changeCb); });
+            this.implSelectEl?.addEventListener('change', implChangeCb);
+            this.listeners.push(() => { this.implSelectEl?.removeEventListener('change', implChangeCb); });
         }
 
-        const clickCb = (): void => {
-            this.shadowRoot?.querySelector('header .title .tip')?.remove();
-            window.appSettings.setShowTip(false);
-        };
-        if (window.appSettings.get().showTip) {
-            this.implSelectEl?.addEventListener('click', clickCb, { once: true });
-            this.listeners.push(() => { this.implSelectEl?.removeEventListener('click', clickCb); });
-        } else {
-            clickCb();
-        }
+        window.appSettings.getSettings().forEach(item => {
+            const optionEl = document.createElement('option');
+            optionEl.value = String(item.name);
+            optionEl.textContent = item.name;
+            this.settingsSelectEl?.appendChild(optionEl);
+        });
 
         this.refreshImplementation();
+        this.refreshSettings();
         this.addEventListeners();
+
+        // --
+
+        const resizeSelect = (selectEl: HTMLSelectElement): void => {
+            const tmpOptionEl = document.createElement('option');
+            tmpOptionEl.innerHTML = selectEl.options[selectEl.selectedIndex].innerHTML;
+
+            const tmpSelectEl = document.createElement('select');
+            tmpSelectEl.style.visibility = 'hidden';
+            tmpSelectEl.style.position = 'absolute';
+            tmpSelectEl.style.font = window.getComputedStyle(selectEl).font;
+            tmpSelectEl.style.padding = window.getComputedStyle(selectEl).padding;
+            tmpSelectEl.appendChild(tmpOptionEl);
+            document.body.appendChild(tmpSelectEl);
+
+            selectEl.style.width = `${String(tmpSelectEl.getBoundingClientRect().width)}px`;
+            tmpSelectEl.remove();
+        };
+        if (this.implSelectEl) {
+            resizeSelect(this.implSelectEl);
+        }
+        if (this.settingsSelectEl) {
+            resizeSelect(this.settingsSelectEl);
+        }
     }
 
     public disconnectedCallback(): void {
@@ -279,19 +318,28 @@ export class DemoAppHeaderElement extends HTMLElement {
     // --- HELPER(s) ---
 
     private addEventListeners(): void {
-        const login = (): boolean => this.dispatchEvent(new Event('login', { bubbles: true, composed: true }));
-        this.loginButtonEl?.addEventListener('click', login);
+        const settingsCb = (): void => {
+            if (this.settingsSelectEl) {
+                window.appSettings.setCurrentSettingsIndex(this.settingsSelectEl.selectedIndex);
+                location.reload();
+            }
+        };
+        this.settingsSelectEl?.addEventListener('change', settingsCb);
 
-        const logout = (): boolean => this.dispatchEvent(new Event('logout', { bubbles: true, composed: true }));
-        this.logoutButtonEl?.addEventListener('click', logout);
+        const loginCb = (): boolean => this.dispatchEvent(new Event('login', { bubbles: true, composed: true }));
+        this.loginButtonEl?.addEventListener('click', loginCb);
 
-        const silentRenew = (): boolean => this.dispatchEvent(new Event('silentRenew', { bubbles: true, composed: true }));
-        this.silentRenewButtonEl?.addEventListener('click', silentRenew);
+        const logoutCb = (): boolean => this.dispatchEvent(new Event('logout', { bubbles: true, composed: true }));
+        this.logoutButtonEl?.addEventListener('click', logoutCb);
+
+        const silentRenewCb = (): boolean => this.dispatchEvent(new Event('silentRenew', { bubbles: true, composed: true }));
+        this.silentRenewButtonEl?.addEventListener('click', silentRenewCb);
 
         this.listeners.push(
-            () => { this.loginButtonEl?.removeEventListener('click', login); },
-            () => { this.logoutButtonEl?.removeEventListener('click', logout); },
-            () => { this.silentRenewButtonEl?.removeEventListener('click', silentRenew); }
+            () => { this.settingsSelectEl?.removeEventListener('change', settingsCb); },
+            () => { this.loginButtonEl?.removeEventListener('click', loginCb); },
+            () => { this.logoutButtonEl?.removeEventListener('click', logoutCb); },
+            () => { this.silentRenewButtonEl?.removeEventListener('click', silentRenewCb); }
         );
     }
 
@@ -299,20 +347,17 @@ export class DemoAppHeaderElement extends HTMLElement {
         const impls = window.appSettings.getLibraryImplementations();
         if (!window.location.href.includes(':4200')) {
             const implIndex = impls.findIndex(item => window.location.href.includes(item.demoUrl));
-            const impl = (implIndex !== -1) ? impls[implIndex] : impls[0];
             if (this.implSelectEl) {
                 this.implSelectEl.selectedIndex = (implIndex !== -1) ? implIndex : 0;
             }
-            if(this.versionEl) {
-                this.versionEl.innerHTML = impl.version;
-            }
-        } else {
-            if (this.implSelectEl) {
-                this.implSelectEl.selectedIndex = 0;
-            }
-            if (this.versionEl) {
-                this.versionEl.innerHTML = '<a>@localhost</a>';
-            }
+        } else if (this.implSelectEl) {
+            this.implSelectEl.selectedIndex = 0;
+        }
+    }
+
+    private refreshSettings(): void {
+        if (this.settingsSelectEl) {
+            this.settingsSelectEl.selectedIndex = window.appSettings.get().currentSettingsIndex;
         }
     }
 }

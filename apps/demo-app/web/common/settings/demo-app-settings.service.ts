@@ -1,72 +1,21 @@
 import type { AuthSettings } from '@badisi/auth-js';
 import type { OIDCAuthSettings } from '@badisi/auth-js/oidc';
-import authJsPkgJson from 'libs/auth-js/package.json';
-import authVuePkgJson from 'libs/auth-vue/package.json';
-import ngxAuthPkgJson from 'libs/ngx-auth/package.json';
 
+import type { DemoAppSettings, LibraryImplementation, LibrarySettingsDefinitionItem, Settings } from '.';
+import { DEFAULT_SETTINGS, LIBRARY_IMPLEMENTATIONS } from './default-settings';
 import { LIBRARY_SETTINGS_DEFINITION } from './library-settings-definition';
 
-export interface LibraryImplementation {
-    label: string;
-    demoUrl: string;
-    version: string;
-}
-
-export interface LibrarySettingsDefinitionItem<LS extends AuthSettings = AuthSettings> {
-    _sortIndex?: number;
-    name: keyof LS;
-    label: string;
-    type: 'string' | 'boolean' | 'list' | 'json';
-    placeholder?: string;
-    required?: boolean;
-    values?: { label: string; value: unknown; }[];
-}
-
-export interface Settings<LS extends AuthSettings = AuthSettings> {
-    name: string;
-    otherSettings?: {
-        apiUrl?: string;
-        apiHeaders?: string;
-        queryParams?: string;
-        roles?: string;
-    };
-    librarySettings: LS;
-}
-
-export interface AppSettings<LS extends AuthSettings = AuthSettings> {
-    showTip: boolean;
-    currentTabIndex: number;
-    currentSettingsId?: string;
-    settings: Settings<LS>[];
-}
-
-const LIBRARY_IMPLEMENTATIONS: LibraryImplementation[] = [{
-    label: 'VanillaJS',
-    demoUrl: 'https://badisi.github.io/auth-js/demo-app/auth-js',
-    version: `<a href="${authJsPkgJson.homepage}" target="_blank">${authJsPkgJson.name}@main</a>`
-}, {
-    label: 'Angular',
-    demoUrl: 'https://badisi.github.io/auth-js/demo-app/ngx-auth',
-    version: `<a href="${ngxAuthPkgJson.homepage}" target="_blank">${ngxAuthPkgJson.name}@main</a>`
-}, {
-    label: 'Vue.js',
-    demoUrl: 'https://badisi.github.io/auth-js/demo-app/auth-vue',
-    version: `<a href="${authVuePkgJson.homepage}" target="_blank">${authVuePkgJson.name}@main</a>`
-}];
-
-export class DemoAppSettings<S extends AuthSettings = AuthSettings> {
+export class DemoAppSettingsService<S extends AuthSettings = AuthSettings> {
+    #storageKey = `auth-js:playground:settings`;
     #librarySettingsDefinition = LIBRARY_SETTINGS_DEFINITION;
-    #defaultAppSettings: AppSettings<S>;
+    #defaultDemoAppSettings: DemoAppSettings<S>;
 
-    constructor(
-        private storageKey: string,
-        defaultSettings: Settings<S>[]
-    ) {
+    constructor(isDevMode: boolean) {
         this.#librarySettingsDefinition.forEach((item, index) => item._sortIndex = index);
-        this.#defaultAppSettings = {
-            showTip: true,
+        this.#defaultDemoAppSettings = {
             currentTabIndex: 0,
-            settings: defaultSettings
+            currentSettingsIndex: 0,
+            settings: DEFAULT_SETTINGS(isDevMode) as unknown as Settings<S>[]
         };
     }
 
@@ -78,80 +27,73 @@ export class DemoAppSettings<S extends AuthSettings = AuthSettings> {
         return LIBRARY_IMPLEMENTATIONS;
     }
 
-    public setShowTip(value: boolean): void {
+    public getSettings(): Settings<S>[] {
+        return this.get().settings;
+    }
+
+    public addOrUpdateSettings(settings: Settings<S>, index: number | undefined = undefined): void {
         const appSettings = this.get();
-        appSettings.showTip = value;
-        this.saveAppSettings(appSettings);
+        if (index !== undefined) {
+            appSettings.settings[index] = settings;
+        } else {
+            appSettings.settings.push(settings);
+        }
+        this.saveDemoAppSettings(appSettings);
+    }
+
+    public deleteCurrentSettings(): void {
+        const appSettings = this.get();
+        const index = appSettings.currentSettingsIndex;
+        if (index >= 0 && index < appSettings.settings.length) {
+            appSettings.settings.splice(index, 1);
+            this.saveDemoAppSettings(appSettings);
+        }
     }
 
     public setCurrentTabIndex(index: number): void {
         const appSettings = this.get();
         appSettings.currentTabIndex = index;
-        this.saveAppSettings(appSettings);
+        this.saveDemoAppSettings(appSettings);
     }
 
-    public addOrUpdateSettings(settings: Settings<S>): void {
+    public setCurrentSettingsIndex(index: number): void {
         const appSettings = this.get();
-        const findIndex = appSettings.settings.findIndex(s => s.name === settings.name);
-        if (findIndex !== -1) {
-            appSettings.settings[findIndex] = settings;
-        } else {
-            appSettings.settings.push(settings);
-        }
-        this.saveAppSettings(appSettings);
-    }
-
-    public setCurrentSettings(name: string): void {
-        const appSettings = this.get();
-        const findIndex = appSettings.settings.findIndex(s => s.name === name);
-        if (findIndex !== -1) {
-            appSettings.currentSettingsId = name;
-            this.saveAppSettings(appSettings);
-        }
+        appSettings.currentSettingsIndex = index;
+        this.saveDemoAppSettings(appSettings);
     }
 
     public getCurrentSettings(): Settings<S> {
         const appSettings = this.get();
-        const findIndex = appSettings.settings.findIndex(s => s.name === appSettings.currentSettingsId);
-        if (findIndex !== -1) {
-            return appSettings.settings[findIndex];
+        const index = appSettings.currentSettingsIndex;
+        if (index >= 0 && index < appSettings.settings.length) {
+            return appSettings.settings[index]
         }
-        return appSettings.settings.sort((a, b) => a.name.localeCompare(b.name))[0];
+        return appSettings.settings[0];
     }
 
-    public deleteCurrentSettings(): void {
-        const appSettings = this.get();
-        const { name } = this.getCurrentSettings();
-        const findIndex = appSettings.settings.findIndex(s => s.name === name);
-        if (findIndex !== -1) {
-            appSettings.settings.splice(findIndex, 1);
-            delete appSettings.currentSettingsId;
-            this.saveAppSettings(appSettings);
-        }
-    }
-
-    public get(): AppSettings<S> {
-        const data = sessionStorage.getItem(this.storageKey);
+    public get(): DemoAppSettings<S> {
+        const data = sessionStorage.getItem(this.#storageKey);
         if (data) {
             const appSettings = {
-                ...this.#defaultAppSettings,
-                ...JSON.parse(data) as AppSettings<S>
+                ...this.#defaultDemoAppSettings,
+                ...JSON.parse(data) as DemoAppSettings<S>
             };
-            this.#defaultAppSettings.settings.forEach(defaultSettings => {
+            this.#defaultDemoAppSettings.settings.forEach(defaultSettings => {
                 if (!appSettings.settings.find(s => s.name === defaultSettings.name)) {
                     appSettings.settings.push(defaultSettings);
                 }
             });
+            appSettings.settings = appSettings.settings.sort((a, b) => a.name.localeCompare(b.name));
             return appSettings;
         }
-        return { ...this.#defaultAppSettings };
+        return { ...this.#defaultDemoAppSettings };
     }
 
     // --- HELPER(s) ---
 
-    private saveAppSettings(settings: AppSettings<S>): void {
+    private saveDemoAppSettings(settings: DemoAppSettings<S>): void {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
         delete (settings as any).librarySettingsDefinition;
-        sessionStorage.setItem(this.storageKey, JSON.stringify(settings));
+        sessionStorage.setItem(this.#storageKey, JSON.stringify(settings));
     }
 }

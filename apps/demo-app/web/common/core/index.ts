@@ -2,11 +2,11 @@ import '@capacitor/core';
 
 import type { AccessToken, AuthGuardValidator, OIDCAuthManager, OIDCAuthSettings, UserProfile } from '@badisi/auth-js/oidc';
 
-import type { DemoAppSettings } from '../settings/demo-app-settings.service';
+import type { DemoAppSettingsService } from '../settings';
 
 declare global {
     interface Window {
-        appSettings: DemoAppSettings<OIDCAuthSettings>;
+        appSettings: DemoAppSettingsService<OIDCAuthSettings>;
         authManager: OIDCAuthManager;
     }
 }
@@ -178,6 +178,10 @@ export const globalStyle = `
         padding: 8px 6px;
         border: 1px solid #0000001f;
         border-radius: 4px;
+    }
+
+    button {
+        cursor: pointer;
     }
 
     @media only screen and (max-width: 600px) {
