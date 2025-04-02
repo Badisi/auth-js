@@ -18,7 +18,7 @@ const CAPACITOR_SECURE_STORAGE = window.Capacitor?.Plugins.SecureStoragePlugin;
  * @internal
  */
 export class MobileStorage implements AsyncStorage {
-    constructor() {
+    public constructor() {
         if (!CAPACITOR_SECURE_STORAGE) {
             let message = '[@badisi/auth-js] This application is currently using an unsafe storage.\n\n';
             message += 'ⓘ Please follow the recommended guide and use `capacitor-secure-storage-plugin` instead.';

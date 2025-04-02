@@ -184,7 +184,7 @@ export class DemoAppSettingsElement extends HTMLElement {
     private formIsDirty = false;
     private formIsNew = false;
 
-    constructor() {
+    public constructor() {
         super();
 
         this.attachShadow({ mode: 'open' });

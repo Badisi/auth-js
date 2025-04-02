@@ -223,7 +223,7 @@ export class DemoAppHeaderElement extends HTMLElement {
     private logoutButtonEl?: HTMLElement | null;
     private silentRenewButtonEl?: HTMLElement | null;
 
-    constructor() {
+    public constructor() {
         super();
 
         this.attachShadow({ mode: 'open' });

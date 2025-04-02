@@ -72,7 +72,7 @@ template.innerHTML = `
 `;
 
 export class DemoAppDebugElement extends HTMLElement {
-    constructor() {
+    public constructor() {
         super();
 
         this.attachShadow({ mode: 'open' });

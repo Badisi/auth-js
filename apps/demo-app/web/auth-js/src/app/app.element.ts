@@ -31,7 +31,7 @@ export class AppElement extends HTMLElement {
     private authManagerSubs: AuthSubscription[] = [];
     private listeners: (() => void)[] = [];
 
-    constructor() {
+    public constructor() {
         super();
 
         this.attachShadow({ mode: 'open' });

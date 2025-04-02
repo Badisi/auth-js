@@ -10,7 +10,7 @@ export class DemoAppSettingsService<S extends AuthSettings = AuthSettings> {
     #librarySettingsDefinition = LIBRARY_SETTINGS_DEFINITION;
     #defaultDemoAppSettings: DemoAppSettings<S>;
 
-    constructor(isDevMode: boolean) {
+    public constructor(isDevMode: boolean) {
         this.#librarySettingsDefinition.forEach((item, index) => item._sortIndex = index);
         this.#defaultDemoAppSettings = {
             currentTabIndex: 0,

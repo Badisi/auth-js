@@ -11,7 +11,7 @@ import type { OIDCAuthManager } from './oidc-auth-manager';
 export abstract class OIDCAuthService<T extends OIDCAuthSettings = OIDCAuthSettings> {
     protected manager: OIDCAuthManager;
 
-    constructor(manager: OIDCAuthManager) {
+    public constructor(manager: OIDCAuthManager) {
         this.manager = manager;
     }
 

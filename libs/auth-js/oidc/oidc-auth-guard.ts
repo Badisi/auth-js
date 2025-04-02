@@ -6,7 +6,7 @@ const logger = new AuthLogger('OIDCAuthGuard');
 export class OIDCAuthGuard {
     #manager: OIDCAuthManager;
 
-    constructor(manager: OIDCAuthManager) {
+    public constructor(manager: OIDCAuthManager) {
         this.#manager = manager;
     }
 

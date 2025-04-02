@@ -29,7 +29,7 @@ export class MobileWindow implements IWindow {
     #isClosed = true;
     #receivedResult = false;
 
-    constructor(
+    public constructor(
         public redirectUrl: string,
         public params: MobileWindowParams
     ) {
