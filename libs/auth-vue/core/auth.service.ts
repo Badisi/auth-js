@@ -17,7 +17,7 @@ export class AuthService extends OIDCAuthService {
     #authManagerSubs: AuthSubscription[] = [];
     #router: Router;
 
-    constructor(manager: OIDCAuthManager, router: Router) {
+    public constructor(manager: OIDCAuthManager, router: Router) {
         super(manager);
         this.#router = router;
         this.#listenForManagerChanges();

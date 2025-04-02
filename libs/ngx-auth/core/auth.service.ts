@@ -24,7 +24,7 @@ export class AuthService extends OIDCAuthService implements OnDestroy {
     #ngZone = inject(NgZone);
     #router = inject(Router);
 
-    constructor(@Inject(AUTH_MANAGER) manager: OIDCAuthManager) {
+    public constructor(@Inject(AUTH_MANAGER) manager: OIDCAuthManager) {
         super(manager);
         this.#listenForManagerChanges();
     }

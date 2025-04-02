@@ -20,7 +20,7 @@ export class OIDCAuthInterceptor {
     #originalXmlHttpRequestOpen = XMLHttpRequest.prototype.open;
     #originalXmlHttpRequestSend = XMLHttpRequest.prototype.send;
 
-    constructor(manager: OIDCAuthManager) {
+    public constructor(manager: OIDCAuthManager) {
         logger.debug('init');
         this.#manager = manager;
         this.#monkeyPathFetch();

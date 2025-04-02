@@ -205,7 +205,7 @@ export class DemoAppPlaygroundElement extends HTMLElement {
     private guardsQueryParamsEl?: HTMLInputElement | null;
     private guardsRolesEl?: HTMLInputElement | null;
 
-    constructor() {
+    public constructor() {
         super();
 
         this.attachShadow({ mode: 'open' });

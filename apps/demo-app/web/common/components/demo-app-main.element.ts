@@ -73,7 +73,7 @@ export class DemoAppMainElement extends HTMLElement {
     private views: HTMLElement[] = [];
     private currentTabIndex = -1;
 
-    constructor() {
+    public constructor() {
         super();
 
         this.attachShadow({ mode: 'open' });

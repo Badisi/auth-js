@@ -15,7 +15,7 @@ import type { OIDCAuthSettings } from './models/oidc-auth-settings.model';
 export class OIDCUserManager extends UserManager {
     #mobileNavigator!: MobileNavigator;
 
-    constructor(
+    public constructor(
         public libSettings: OIDCAuthSettings
     ) {
         super({
