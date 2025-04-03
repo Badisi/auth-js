@@ -16,7 +16,7 @@ export class AuthLogger {
 
     #prefixes: string[] = [];
 
-    constructor(prefix?: string) {
+    public constructor(prefix?: string) {
         if (prefix) {
             this.#prefixes.push(prefix);
         }

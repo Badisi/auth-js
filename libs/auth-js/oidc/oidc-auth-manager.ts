@@ -54,7 +54,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
             this.#idToken = (value) ? value.id_token : undefined;
             this.#accessToken = (value) ? value.access_token : undefined;
-            this.#userProfile = (value?.profile) ? value.profile : undefined;
+            this.#userProfile = value?.profile ?? undefined;
             this.#userSession = (value) ? UserSession.deserialize(value) : undefined;
             this.#isAuthenticated = !!(value && !value.expired);
 
