@@ -111,10 +111,10 @@ index d73aa00..75fa551 100644
              return message.substring(startOfBreakingChange).trim();
          }
 diff --git a/node_modules/nx/src/command-line/migrate/migrate.js b/node_modules/nx/src/command-line/migrate/migrate.js
-index d9b2a35..459890f 100644
+index f2b9340..9fcfe7f 100644
 --- a/node_modules/nx/src/command-line/migrate/migrate.js
 +++ b/node_modules/nx/src/command-line/migrate/migrate.js
-@@ -882,7 +882,7 @@ function runInstall() {
+@@ -885,7 +885,7 @@ function runInstall() {
      const pmCommands = (0, package_manager_1.getPackageManagerCommand)();
      // TODO: remove this
      if ((0, package_manager_1.detectPackageManager)() === 'npm') {
@@ -124,10 +124,10 @@ index d9b2a35..459890f 100644
      output_1.output.log({
          title: `Running '${pmCommands.install}' to make sure necessary packages are installed`,
 diff --git a/node_modules/nx/src/command-line/release/changelog.js b/node_modules/nx/src/command-line/release/changelog.js
-index 6b5e7c3..cfd5cda 100644
+index 5a23b02..66bcca6 100644
 --- a/node_modules/nx/src/command-line/release/changelog.js
 +++ b/node_modules/nx/src/command-line/release/changelog.js
-@@ -351,6 +351,7 @@ function createAPI(overrideReleaseConfig) {
+@@ -350,6 +350,7 @@ function createAPI(overrideReleaseConfig) {
                          }
                          if (!commits) {
                              commits = await getCommits(fromRef, toSHA);
@@ -136,28 +136,10 @@ index 6b5e7c3..cfd5cda 100644
                          const { fileMap } = await (0, file_map_utils_1.createFileMapUsingProjectGraph)(projectGraph);
                          const fileToProjectMap = createFileToProjectMap(fileMap.projectFileMap);
 diff --git a/node_modules/nx/src/command-line/release/utils/git.js b/node_modules/nx/src/command-line/release/utils/git.js
-index 1ab6081..35d7735 100644
+index 17dcf63..21231fd 100644
 --- a/node_modules/nx/src/command-line/release/utils/git.js
 +++ b/node_modules/nx/src/command-line/release/utils/git.js
-@@ -28,6 +28,8 @@ async function getLatestGitTagForPattern(releaseTagPattern, additionalInterpolat
-     try {
-         let tags;
-         tags = await (0, exec_command_1.execCommand)('git', [
-+            '-c',
-+            'versionsort.suffix=-',
-             'tag',
-             '--sort',
-             '-v:refname',
-@@ -39,7 +41,7 @@ async function getLatestGitTagForPattern(releaseTagPattern, additionalInterpolat
-             .filter(Boolean));
-         if (!tags.length) {
-             // try again, but include all tags on the repo instead of just --merged ones
--            tags = await (0, exec_command_1.execCommand)('git', ['tag', '--sort', '-v:refname']).then((r) => r
-+            tags = await (0, exec_command_1.execCommand)('git', ['-c', 'versionsort.suffix=-', 'tag', '--sort', '-v:refname']).then((r) => r
-                 .trim()
-                 .split('\n')
-                 .map((t) => t.trim())
-@@ -327,7 +329,8 @@ function getAllAuthorsForCommit(commit) {
+@@ -380,7 +380,8 @@ function getAllAuthorsForCommit(commit) {
  }
  // https://www.conventionalcommits.org/en/v1.0.0/
  // https://regex101.com/r/FSfNvA/1
@@ -220,7 +202,7 @@ index 2ace40e..c415390 100644
 +    return JSON.stringify(input, null, options?.indent ?? 2);
  }
 diff --git a/node_modules/nx/src/utils/package-manager.js b/node_modules/nx/src/utils/package-manager.js
-index bc8fd51..cce80b0 100644
+index b3fe96a..8051654 100644
 --- a/node_modules/nx/src/utils/package-manager.js
 +++ b/node_modules/nx/src/utils/package-manager.js
 @@ -135,10 +135,10 @@ function getPackageManagerCommand(packageManager = detectPackageManager(), root
