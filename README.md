@@ -23,9 +23,9 @@ Package | Version | Downloads | License | Description
 
 ## Getting started
 
-👉 Learn about it on the 📚 [docs site][docs-site].
+👉 Learn about it on the 📚 <a href="https://badisi.github.io/auth-js" target="_self">doc site</a>.
 
-🎈 Play with it on the [demo site][demo-site].
+🎈 Play with it on the <a href="https://badisi.github.io/auth-js/demo-app/auth-js" target="_self">playground site</a>.
 
 
 ## Development
@@ -60,5 +60,3 @@ Please read and follow the [Code of Conduct][codeofconduct] and help me keep thi
 [developer]: https://github.com/badisi/auth-js/blob/main/DEVELOPER.md
 [contributing]: https://github.com/badisi/auth-js/blob/main/CONTRIBUTING.md
 [codeofconduct]: https://github.com/badisi/auth-js/blob/main/CODE_OF_CONDUCT.md
-[docs-site]: https://badisi.github.io/auth-js
-[demo-site]: https://badisi.github.io/auth-js/demo-app

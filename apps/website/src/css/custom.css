@@ -18,6 +18,9 @@
     --ifm-color-primary-light: rgb(70, 203, 174);
     --ifm-color-primary-lighter: rgb(102, 212, 189);
     --ifm-color-primary-lightest: rgb(146, 224, 208);
+    --ifm-font-family-base: system-ui, -apple-system, 'Inter', sans-serif;
+    --ifm-heading-font-family: system-ui, -apple-system, 'Inter', sans-serif;
+    --ifm-code-font-family: 'Inconsolata', monospace;
     --ifm-code-font-size: 95%;
     --ifm-background-color: white;
     --ifm-navbar-item-padding-horizontal: 1rem;

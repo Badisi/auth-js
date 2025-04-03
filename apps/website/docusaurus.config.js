@@ -36,6 +36,15 @@ const config = {
             }
         ]
     ],
+    headTags: [
+        {
+            tagName: 'link',
+            attributes: {
+                rel: 'stylesheet',
+                href: 'https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Inconsolata:wght@400;700&display=swap'
+            }
+        }
+    ],
     presets: [
         [
             'classic',
@@ -89,12 +98,14 @@ const config = {
                         docId: 'api/vanilla-js/auth-manager'
                     },
                     {
-                        href: 'https://badisi.github.io/auth-js/demo-app',
+                        href: 'https://badisi.github.io/auth-js/demo-app/auth-js',
+                        target: '_self',
                         label: 'Playground',
                         position: 'right'
                     },
                     {
                         href: 'https://github.com/Badisi/auth-js',
+                        target: '_self',
                         label: ' ',
                         position: 'right',
                         className: 'header-github-link',

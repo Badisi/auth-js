@@ -370,9 +370,9 @@
 }
 
 .home section.frameworks .right .items .item .label {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-        'Liberation Mono', 'Courier New', monospace;
-    font-size: 0.875rem;
+    font-family: 'Inconsolata', monospace;
+    font-size: 1rem;
     line-height: 1.25rem;
     color: #374151;
+    text-decoration: none;
 }

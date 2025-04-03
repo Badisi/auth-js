@@ -158,7 +158,9 @@ template.innerHTML = `
 
     <header class="column">
         <div class="row top" style="height: 44px;">
-            <a class="title" href="https://github.com/Badisi/auth-js">
+            <a class="title"
+                href="https://badisi.github.io/auth-js/"
+                target="_self">
                 <span class="icon">🛡️</span>Auth-js
             </a>
 
@@ -168,8 +170,7 @@ template.innerHTML = `
 
             <a class="doc"
                 href="https://badisi.github.io/auth-js/getting-started/playground"
-                target="_blank"
-                rel="noopener noreferrer">
+                target="_self">
                 <span>
                     Documentation
                     <svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24">
@@ -180,8 +181,7 @@ template.innerHTML = `
 
             <a class="github-icon"
                 href="https://github.com/Badisi/auth-js"
-                target="_blank"
-                rel="noopener noreferrer"
+                target="_self"
                 title="View it on GitHub"
                 aria-label="GitHub repository">
                 <span>

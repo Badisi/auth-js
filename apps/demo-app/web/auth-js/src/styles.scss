@@ -7,7 +7,11 @@ body {
 
 body {
     margin: var(--safe-area-inset-top) 0 var(--safe-area-inset-bottom) 0;
-    font-family: Roboto, 'Helvetica Neue', sans-serif;
+    font-family:
+        system-ui,
+        -apple-system,
+        'Inter',
+        sans-serif;
     background-color: #fafafa;
 }
 
