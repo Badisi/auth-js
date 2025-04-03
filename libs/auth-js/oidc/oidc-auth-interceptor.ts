@@ -100,11 +100,17 @@ export class OIDCAuthInterceptor {
                         const accessToken = await this.#manager.getAccessToken();
                         if (init && accessToken) {
                             logger.debug('adding bearer to url:', url);
-                            init.headers = {
-                                // eslint-disable-next-line @typescript-eslint/naming-convention
-                                'Authorization': `Bearer ${accessToken}`,
-                                ...init.headers
-                            };
+                            if (Array.isArray(init.headers)) {
+                                init.headers.push(['Authorization', `Bearer ${accessToken}`]);
+                            } else if (init.headers instanceof Headers) {
+                                init.headers.append('Authorization', `Bearer ${accessToken}`);
+                            } else {
+                                init.headers = {
+                                    ...init.headers,
+                                    // eslint-disable-next-line @typescript-eslint/naming-convention
+                                    'Authorization': `Bearer ${accessToken}`
+                                };
+                            }
                         }
                     }
 
