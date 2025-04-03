@@ -365,8 +365,7 @@ import{A as gr,B as mr,C as _r,D as Ct,E as ki,F as Et,G as Ai,H as Ii,I as Ti,L
         <div class="row top" style="height: 44px;">
             <a class="title"
                 href="https://badisi.github.io/auth-js/"
-                target="_blank"
-                rel="noopener noreferrer">
+                target="_self">
                 <span class="icon">\u{1F6E1}\uFE0F</span>Auth-js
             </a>
 
@@ -376,8 +375,7 @@ import{A as gr,B as mr,C as _r,D as Ct,E as ki,F as Et,G as Ai,H as Ii,I as Ti,L
 
             <a class="doc"
                 href="https://badisi.github.io/auth-js/getting-started/playground"
-                target="_blank"
-                rel="noopener noreferrer">
+                target="_self">
                 <span>
                     Documentation
                     <svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24">
@@ -388,8 +386,7 @@ import{A as gr,B as mr,C as _r,D as Ct,E as ki,F as Et,G as Ai,H as Ii,I as Ti,L
 
             <a class="github-icon"
                 href="https://github.com/Badisi/auth-js"
-                target="_blank"
-                rel="noopener noreferrer"
+                target="_self"
                 title="View it on GitHub"
                 aria-label="GitHub repository">
                 <span>
