@@ -363,7 +363,7 @@ import{A as gr,B as mr,C as _r,D as Ct,E as ki,F as Et,G as Ai,H as Ii,I as Ti,L
 
     <header class="column">
         <div class="row top" style="height: 44px;">
-            <a class="title" href="https://github.com/Badisi/auth-js">
+            <a class="title" href="https://badisi.github.io/auth-js/">
                 <span class="icon">\u{1F6E1}\uFE0F</span>Auth-js
             </a>
 
