@@ -31,7 +31,7 @@
         "migrate:cap": "cap migrate",
         "prettier": "prettier . --check",
         "lint": "eslint .",
-        "test": "nx run-many --target=test --projects=auth-js,ngx-auth --output-style=static",
+        "test:ci": "nx run-many --target=test:ci --projects=auth-js,auth-vue,ngx-auth --output-style=static",
         "release": "node ./scripts/release.mjs --verbose",
         "release:dry-run": "npm run release -- --dry-run",
         "postinstall": "patch-package",
