@@ -6,7 +6,7 @@
         "start": "docusaurus start",
         "serve": "docusaurus serve --dir=../../dist/website",
         "build": "docusaurus build --out-dir=../../dist/website",
-        "swizzle": "docusaurus swizzle @docusaurus/theme-classic NotFound",
+        "swizzle": "docusaurus swizzle",
         "deploy": "docusaurus deploy",
         "clear": "docusaurus clear",
         "write-translations": "docusaurus write-translations",
