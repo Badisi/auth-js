@@ -8,14 +8,9 @@ Draft document..
 
 <br/>
 
-Url: [demo site][demo-site]
+Url: <a href="https://badisi.github.io/auth-js/demo-app/auth-js" target="_self">demo site</a>
 
 ```js title="Auth0/Zitadel - demo account"
 Username: demo
 Password: Pa55w0rd!
 ```
-
-
-
-
-[demo-site]: https://badisi.github.io/auth-js/demo-app
