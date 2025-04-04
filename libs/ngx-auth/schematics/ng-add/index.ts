@@ -30,9 +30,9 @@ const sanitizeOptions = async (context: SchematicContext, userOptions: NgAddOpti
     return options;
 };
 
-export const MODULE_CONTENT =
-    '  platformBrowserDynamic([authProvider])\n' +
-    '    .bootstrapModule(AppModule)\n' +
+export const MODULE_CONTENT = (useDynamic: boolean): string =>
+    `  ${useDynamic ? 'platformBrowserDynamic' : 'platformBrowser'}([authProvider])\n` +
+    `    .bootstrapModule(AppModule${useDynamic ? '' : ', { ngZoneEventCoalescing: true }'})\n` +
     '    .catch((error: unknown) => console.error(error));\n';
 
 export const STANDALONE_CONTENT =
@@ -89,16 +89,18 @@ export default (options: NgAddOptions): Rule =>
 
                 // Initialize the library
                 if (!mainTsContent.includes('initAuth(')) {
-                    let content;
-                    if (project.isStandalone) {
-                        content = INIT_CONTENT(STANDALONE_CONTENT);
-                    } else {
-                        content = INIT_CONTENT(MODULE_CONTENT);
+                    const useDynamic = mainTsContent.includes('platformBrowserDynamic');
+                    const content = INIT_CONTENT(project.isStandalone ? STANDALONE_CONTENT : MODULE_CONTENT(useDynamic));
+
+                    let patternToReplace = /bootstrapApplication\(.*\).*\.catch\(\(err\) => console\.error\(err\)\);/sm; // for standalone
+                    if (!project.isStandalone) {
+                        if (useDynamic) {
+                            patternToReplace = /platformBrowserDynamic\(.*\).*\.bootstrapModule\(.*AppModule.*\).*\.catch\(err => console\.error\(err\)\);/sm;
+                        } else {
+                            patternToReplace = /platformBrowser\(.*\).*\.bootstrapModule\(.*AppModule.*\).*\.catch\(err => console\.error\(err\)\);/sm;
+                        }
                     }
 
-                    const patternToReplace = (project.isStandalone) ?
-                        /bootstrapApplication\(.*\).*\.catch\(\(err\) => console\.error\(err\)\);/sm :
-                        /platformBrowserDynamic\(.*\).*\.bootstrapModule\(.*AppModule.*\).*\.catch\(err => console\.error\(err\)\);/sm;
                     if (!mainTsContent.match(patternToReplace)) {
                         const conflictContent =
                             '\n' +
