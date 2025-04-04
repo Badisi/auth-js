@@ -96,13 +96,14 @@ const eac = expect.arrayContaining.bind(this);
             it('should update main.ts', async () => {
                 await runSchematic('ng-add', defaultOptions, tree);
                 const mainTsContent = tree.readContent(project.pathFromSourceRoot('main.ts'));
+                const useDynamic = mainTsContent.includes('platformBrowserDynamic');
                 if (useStandalone) {
                     expect(mainTsContent).toContain('import { initAuth, provideAuth } from \'@badisi/ngx-auth\';');
                     expect(mainTsContent).toContain(STANDALONE_CONTENT);
-                    expect(mainTsContent).not.toContain(MODULE_CONTENT);
+                    expect(mainTsContent).not.toContain(MODULE_CONTENT(useDynamic));
                 } else {
                     expect(mainTsContent).toContain('import { initAuth } from \'@badisi/ngx-auth\';');
-                    expect(mainTsContent).toContain(MODULE_CONTENT);
+                    expect(mainTsContent).toContain(MODULE_CONTENT(useDynamic));
                     expect(mainTsContent).not.toContain(STANDALONE_CONTENT);
                     expect(mainTsContent).not.toContain('provideAuth');
                 }
