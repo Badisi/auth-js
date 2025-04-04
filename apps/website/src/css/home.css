@@ -261,7 +261,6 @@
     max-width: 80rem;
     margin-left: auto;
     margin-right: auto;
-    background-color: white;
 }
 
 .home section.frameworks .left .container {
@@ -344,7 +343,7 @@
     justify-content: center;
     gap: 0.75rem;
     padding: 0.75rem 1.5rem;
-    background-color: white;
+    background: none;
     border-radius: 0.5rem;
     border: 1px solid #e5e7eb;
     cursor: pointer;
@@ -375,4 +374,45 @@
     line-height: 1.25rem;
     color: #374151;
     text-decoration: none;
+}
+
+/**
+ * DARK THEME
+ */
+
+[data-theme='dark'] .home section.intro {
+    background: none;
+}
+
+[data-theme='dark'] .home section.intro .spot {
+    display: none;
+}
+
+[data-theme='dark'] .home section.intro .header .title,
+[data-theme='dark'] .home section.intro .header .subtitle {
+    color: rgb(227, 227, 227);
+}
+
+[data-theme='dark'] .home section.features {
+    background: #1c1e21;
+}
+
+[data-theme='dark'] .home section.features .items .item {
+    border: 1px solid rgb(227, 227, 227);
+    background: none;
+}
+
+[data-theme='dark'] .home section.features .items .item .title,
+[data-theme='dark'] .home section.features .items .item .icon {
+    color: white;
+}
+[data-theme='dark'] .home section.features .items .item .description {
+    color: rgb(227, 227, 227);
+}
+[data-theme='dark'] .home section.features .items .item .description a {
+    color: var(--ifm-menu-color-active);
+}
+
+[data-theme='dark'] .home section.frameworks * {
+    color: rgb(227, 227, 227) !important;
 }
