@@ -5,17 +5,19 @@
 <i>Authentication and authorization support for web based desktop and mobile applications.</i>
 
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)][pullrequest]
-[![License](https://img.shields.io/npm/l/@badisi/auth-js.svg?color=ff69b4)][license]
-[![playground site](https://img.shields.io/badge/site-playground-7d5abb)][playground-site]
 [![docs site](https://img.shields.io/badge/site-docs-4c8bea)][docs-site]
+[![playground site](https://img.shields.io/badge/site-playground-7d5abb)][playground-site]
+[![License](https://img.shields.io/npm/l/@badisi/auth-js.svg?color=ff69b4)][license]
 
-<br/>
+<hr/>
 
 Package | Version | Downloads | Status | Description
 --- | --- | --- | --- | ---
-[@badisi/auth-js](/libs/auth-js) | [![npm version](https://img.shields.io/npm/v/@badisi/auth-js.svg?color=blue&logo=npm)][npm-auth-js] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/auth-js.svg?color=7986CB&logo=npm&label=npm)][npm-dl-auth-js] | [![build status](https://img.shields.io/github/actions/workflow/status/badisi/auth-js/ci_test_auth-js.yml?logo=github)][build-auth-js] | For { VanillaJS, Ionic } applications
-[@badisi/ngx-auth](/libs/ngx-auth) | [![npm version](https://img.shields.io/npm/v/@badisi/ngx-auth.svg?color=blue&logo=npm)][npm-ngx-auth] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/ngx-auth.svg?color=7986CB&logo=npm&label=npm)][npm-dl-ngx-auth] | [![build status](https://img.shields.io/github/actions/workflow/status/badisi/auth-js/ci_test_ngx-auth.yml?logo=github)][build-ngx-auth] | For { Angular, Ionic } applications
-[@badisi/auth-vue](/libs/auth-vue) | [![npm version](https://img.shields.io/npm/v/@badisi/auth-vue.svg?color=blue&logo=npm)][npm-auth-vue] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/auth-vue.svg?color=7986CB&logo=npm&label=npm)][npm-dl-auth-vue] | [![build status](https://img.shields.io/github/actions/workflow/status/badisi/auth-js/ci_test_auth-vue.yml?logo=github)][build-auth-vue] | For { Vue.js, Ionic } applications
+[@badisi/auth-js](/libs/auth-js) | [![npm version](https://img.shields.io/npm/v/@badisi/auth-js.svg?color=blue&logo=npm)][npm-auth-js] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/auth-js.svg?color=7986CB&logo=npm&label=npm)][npm-dl-auth-js] | [![build status](https://img.shields.io/github/actions/workflow/status/badisi/auth-js/ci_test_auth-js.yml?logo=github)][build-auth-js] | For { VanillaJS, \* } applications
+[@badisi/ngx-auth](/libs/ngx-auth) | [![npm version](https://img.shields.io/npm/v/@badisi/ngx-auth.svg?color=blue&logo=npm)][npm-ngx-auth] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/ngx-auth.svg?color=7986CB&logo=npm&label=npm)][npm-dl-ngx-auth] | [![build status](https://img.shields.io/github/actions/workflow/status/badisi/auth-js/ci_test_ngx-auth.yml?logo=github)][build-ngx-auth] | For { Angular, \* } applications
+[@badisi/auth-vue](/libs/auth-vue) | [![npm version](https://img.shields.io/npm/v/@badisi/auth-vue.svg?color=blue&logo=npm)][npm-auth-vue] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/auth-vue.svg?color=7986CB&logo=npm&label=npm)][npm-dl-auth-vue] | [![build status](https://img.shields.io/github/actions/workflow/status/badisi/auth-js/ci_test_auth-vue.yml?logo=github)][build-auth-vue] | For { Vue.js, \* } applications
+
+*\* also supports { Capacitor, Cordova } mobile applications.*
 
 </div>
 
