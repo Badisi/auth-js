@@ -112,15 +112,14 @@ template.innerHTML = `
 
         :host header select {
             cursor: pointer;
-            text-align: center;
             font-size: 1.1em;
             font-weight: bold;
             color: #ede7f6;
-            background: none;
+            background: rgba(0, 0, 0, 0.01);  /** fix for Safari Mobile so that select's icon is visible */
             border: none;
             outline: none;
-            padding-top: 0;
-            padding-bottom: 0;
+            padding: 0;
+            margin: 0;
         }
 
         :host header button {
@@ -151,7 +150,7 @@ template.innerHTML = `
             }
 
             :host header .content {
-                gap: 8px;
+                gap: 2px;
             }
         }
     </style>
@@ -199,9 +198,9 @@ template.innerHTML = `
             <h1>Playground</h1>
 
             <div class="row select">
-                <span>&#123;<select id="implementation-select"></select> &nbsp;&#125;</span>
+                <span>&#123;&nbsp;<select id="implementation-select"></select>&nbsp;&#125;</span>
                 &nbsp;&nbsp;
-                <span>&#123;<select id="setting-select"></select> &nbsp;&#125;</span>
+                <span>&#123;&nbsp;<select id="setting-select"></select>&nbsp;&#125;</span>
             </div>
 
             <div class="row">
@@ -289,26 +288,52 @@ export class DemoAppHeaderElement extends HTMLElement {
         // --
 
         const resizeSelect = (selectEl: HTMLSelectElement): void => {
-            const tmpOptionEl = document.createElement('option');
-            tmpOptionEl.innerHTML = selectEl.options[selectEl.selectedIndex].innerHTML;
+            const selectedText = selectEl.options[selectEl.selectedIndex].text || '';
 
-            const tmpSelectEl = document.createElement('select');
-            tmpSelectEl.style.visibility = 'hidden';
-            tmpSelectEl.style.position = 'absolute';
-            tmpSelectEl.style.font = window.getComputedStyle(selectEl).font;
-            tmpSelectEl.style.padding = window.getComputedStyle(selectEl).padding;
-            tmpSelectEl.appendChild(tmpOptionEl);
-            document.body.appendChild(tmpSelectEl);
+            const tmpSpan = document.createElement('span');
+            tmpSpan.textContent = selectedText;
 
-            selectEl.style.width = `${String(tmpSelectEl.getBoundingClientRect().width)}px`;
-            tmpSelectEl.remove();
+            const style = window.getComputedStyle(selectEl);
+
+            // Apply font styles for accurate measurement
+            tmpSpan.style.font = style.font;
+            tmpSpan.style.fontSize = style.fontSize;
+            tmpSpan.style.fontFamily = style.fontFamily;
+            tmpSpan.style.fontWeight = style.fontWeight;
+            tmpSpan.style.letterSpacing = style.letterSpacing;
+            tmpSpan.style.whiteSpace = 'nowrap';
+
+            // Invisible but rendered
+            tmpSpan.style.position = 'absolute';
+            tmpSpan.style.visibility = 'hidden';
+            tmpSpan.style.top = '-9999px';
+            document.body.appendChild(tmpSpan);
+
+            const textWidth = tmpSpan.offsetWidth;
+            tmpSpan.remove();
+
+            // 🔍 Add only what’s needed for dropdown arrow
+            const arrowBuffer = ((): number => {
+                const isSafariMobile =
+                    /iP(hone|ad|od)/.test(navigator.userAgent) &&
+                    !!(/WebKit/.exec(navigator.userAgent)) &&
+                    !(/CriOS|FxiOS/.exec(navigator.userAgent));
+                if (isSafariMobile) return 40;
+                if (navigator.userAgent.includes('Chrome')) return 25;
+                return 35;
+            })();
+
+            const totalWidth = Math.ceil(textWidth + arrowBuffer);
+            selectEl.style.width = `${totalWidth}px`;
         };
-        if (this.implSelectEl) {
-            resizeSelect(this.implSelectEl);
-        }
-        if (this.settingsSelectEl) {
-            resizeSelect(this.settingsSelectEl);
-        }
+        window.requestAnimationFrame(() => {
+            if (this.implSelectEl) {
+                resizeSelect(this.implSelectEl);
+            }
+            if (this.settingsSelectEl) {
+                resizeSelect(this.settingsSelectEl);
+            }
+        });
     }
 
     public disconnectedCallback(): void {

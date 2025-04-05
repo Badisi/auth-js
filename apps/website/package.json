@@ -3,7 +3,7 @@
     "private": true,
     "license": "GPL-3.0-only",
     "scripts": {
-        "start": "docusaurus start",
+        "start": "docusaurus start --host 0.0.0.0",
         "serve": "docusaurus serve --dir=../../dist/website",
         "build": "docusaurus build --out-dir=../../dist/website",
         "swizzle": "docusaurus swizzle",

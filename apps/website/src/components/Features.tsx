@@ -62,7 +62,7 @@ const Features = () => {
 
     return (
         <section className="features py-16 sm:py-[8rem]">
-            <h2 className="title">
+            <h2 className="title text-2xl lg:text-3xl mb-[3rem] lg:mb-[7rem]">
                 The only unified framework that works on both desktop and hybrid
                 mobile
             </h2>
