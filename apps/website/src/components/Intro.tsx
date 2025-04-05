@@ -5,9 +5,9 @@ import ShieldSvg from '@site/static/assets/svg/shield.svg';
 
 const Intro = () => {
     return (
-        <section className="intro">
+        <section className="intro lg:py-20">
             <header className="header">
-                <ShieldSvg className="icon h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 lg:h-32 lg:w-32" />
+                <ShieldSvg className="icon h-24 w-24 sm:h-24 sm:w-24 md:h-28 md:w-28 lg:h-32 lg:w-32" />
 
                 <div style={{ position: 'relative' }}>
                     <h1 className="title text-5xl md:text-6xl xl:text-8xl">
