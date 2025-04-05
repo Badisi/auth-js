@@ -11,13 +11,11 @@
 
 <hr/>
 
-Package | Version | Downloads | Status | Description
+Package | Version | Downloads | Status | Platform(s)
 --- | --- | --- | --- | ---
-[@badisi/auth-js](/libs/auth-js) | [![npm version](https://img.shields.io/npm/v/@badisi/auth-js.svg?color=blue&logo=npm)][npm-auth-js] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/auth-js.svg?color=7986CB&logo=npm&label=npm)][npm-dl-auth-js] | [![build status](https://img.shields.io/github/actions/workflow/status/badisi/auth-js/ci_test_auth-js.yml?logo=github)][build-auth-js] | For { VanillaJS, \* } applications
-[@badisi/ngx-auth](/libs/ngx-auth) | [![npm version](https://img.shields.io/npm/v/@badisi/ngx-auth.svg?color=blue&logo=npm)][npm-ngx-auth] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/ngx-auth.svg?color=7986CB&logo=npm&label=npm)][npm-dl-ngx-auth] | [![build status](https://img.shields.io/github/actions/workflow/status/badisi/auth-js/ci_test_ngx-auth.yml?logo=github)][build-ngx-auth] | For { Angular, \* } applications
-[@badisi/auth-vue](/libs/auth-vue) | [![npm version](https://img.shields.io/npm/v/@badisi/auth-vue.svg?color=blue&logo=npm)][npm-auth-vue] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/auth-vue.svg?color=7986CB&logo=npm&label=npm)][npm-dl-auth-vue] | [![build status](https://img.shields.io/github/actions/workflow/status/badisi/auth-js/ci_test_auth-vue.yml?logo=github)][build-auth-vue] | For { Vue.js, \* } applications
-
-*\* also supports { Capacitor, Cordova } mobile applications.*
+[@badisi/auth-js](/libs/auth-js) | [![npm version](https://img.shields.io/npm/v/@badisi/auth-js.svg?color=blue&logo=npm)][npm-auth-js] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/auth-js.svg?color=7986CB&logo=npm&label=npm)][npm-dl-auth-js] | [![build status](https://img.shields.io/github/actions/workflow/status/badisi/auth-js/ci_test_auth-js.yml?logo=github)][build-auth-js] | VanillaJS, Capacitor/Cordova
+[@badisi/ngx-auth](/libs/ngx-auth) | [![npm version](https://img.shields.io/npm/v/@badisi/ngx-auth.svg?color=blue&logo=npm)][npm-ngx-auth] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/ngx-auth.svg?color=7986CB&logo=npm&label=npm)][npm-dl-ngx-auth] | [![build status](https://img.shields.io/github/actions/workflow/status/badisi/auth-js/ci_test_ngx-auth.yml?logo=github)][build-ngx-auth] | Angular, Capacitor/Cordova
+[@badisi/auth-vue](/libs/auth-vue) | [![npm version](https://img.shields.io/npm/v/@badisi/auth-vue.svg?color=blue&logo=npm)][npm-auth-vue] | [![npm downloads](https://img.shields.io/npm/dw/@badisi/auth-vue.svg?color=7986CB&logo=npm&label=npm)][npm-dl-auth-vue] | [![build status](https://img.shields.io/github/actions/workflow/status/badisi/auth-js/ci_test_auth-vue.yml?logo=github)][build-auth-vue] | Vue.js, Capacitor/Cordova
 
 </div>
 
