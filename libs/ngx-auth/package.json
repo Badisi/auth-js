@@ -34,6 +34,7 @@
         "test": "nx run ngx-auth:test",
         "test:ci": "nx run ngx-auth:test",
         "build": "nx run ngx-auth:build-lib",
+        "build:nx": "npm run build",
         "release": "node ../../scripts/release.mjs --projects=ngx-auth --verbose",
         "release:dry-run": "npm run release -- --dry-run"
     },
