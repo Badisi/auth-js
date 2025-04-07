@@ -32,6 +32,7 @@ await buildLib({
     copyAssets: async () => {
         await cpy('libs/auth-js/oidc/assets', pathResolve(distPath, 'oidc', 'assets'), { flat: true });
         await cpy('libs/auth-js/package.json', distPath, { flat: true });
+        await cpy('libs/auth-js/CHANGELOG.md', distPath, { flat: true });
         await cpy('libs/auth-js/README.md', distPath, { flat: true });
         await cpy('LICENSE', distPath, { flat: true });
         await cpy('node_modules/oidc-client-ts/LICENSE', pathResolve(distPath, 'browser', 'oidc'), {

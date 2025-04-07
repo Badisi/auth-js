@@ -30,6 +30,7 @@ await buildLib({
     copyAssets: async () => {
         await cpy('libs/auth-js/oidc/assets', pathResolve(distPath, 'oidc', 'assets'), { flat: true });
         await cpy('libs/auth-vue/package.json', distPath, { flat: true });
+        await cpy('libs/auth-vue/CHANGELOG.md', distPath, { flat: true });
         await cpy('libs/auth-vue/README.md', distPath, { flat: true });
         await cpy('LICENSE', distPath, { flat: true });
     }

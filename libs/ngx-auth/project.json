@@ -14,6 +14,7 @@
             "options": {
                 "commands": [
                     "cpy libs/auth-js/oidc/assets dist/ngx-auth/oidc/assets --flat",
+                    "cpy CHANGELOG.md dist/ngx-auth --flat",
                     "cpy LICENSE dist/ngx-auth --flat"
                 ],
                 "color": true
