@@ -40,7 +40,7 @@
         "release:dry-run": "npm run release -- --dry-run"
     },
     "dependencies": {
-        "@badisi/auth-js": "1.0.0"
+        "@badisi/auth-js": "1.1.0"
     },
     "peerDependencies": {
         "vue": ">= 3",
