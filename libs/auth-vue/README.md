@@ -2,7 +2,7 @@
 
 # @badisi/auth-vue
 
-�️ Authentication and authorization support for Vue.js based desktop and mobile applications.
+🛡️ Authentication and authorization support for Vue.js based desktop and mobile applications.
 
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)][pullrequest]
 [![docs site](https://img.shields.io/badge/site-docs-4c8bea)][docs-site]
