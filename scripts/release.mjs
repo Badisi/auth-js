@@ -59,7 +59,7 @@ const exec = (message, cmd, args, options, newLine = false) => {
  *
  *  `nx.json#targetDefaults.nx-release-publish.options.packageRoot` could be used but can only interpolate:
  *  - {projectName}: which resolved to '@badisi/abc' (ie. package.json#name)
- *  - {projectRoot}: which resolved to 'projects/abc'
+ *  - {projectRoot}: which resolved to 'libs/abc'
  *  And what we need is actually `abc` because Angular generates projects in `dist/abc`.
  *  So to make it work, we use the hidden option (__overrides_unparsed__) and publish each project individually.
  *  @type {(projectsToRelease: string[], projects: ProjectsConfigurations['projects'], options: ScriptOptions) => Promise<number>}
@@ -68,7 +68,7 @@ const publishProjects = async (projectsToRelease, projects, options) => {
     let processStatus = 0;
     if (!options.dryRun) {
         for (const project of projectsToRelease) {
-            const projectName = projects[project].root.substring('projects/'.length);
+            const projectName = projects[project].root.substring('libs/'.length);
             /** @type {PublishOptions & {__overrides_unparsed__: string}} */
             const args = {
                 __overrides_unparsed__: `--packageRoot=./dist/${projectName}`,
