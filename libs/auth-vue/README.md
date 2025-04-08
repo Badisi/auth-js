@@ -5,8 +5,8 @@
 🛡️ Authentication and authorization support for Vue.js based desktop and mobile applications.
 
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)][pullrequest]
-[![docs site](https://img.shields.io/badge/site-docs-4c8bea)][docs-site]
-[![playground site](https://img.shields.io/badge/site-playground-7d5abb)][playground-site]
+[![docs site](https://img.shields.io/badge/site-docs-ed6e55)][docs-site]
+[![playground site](https://img.shields.io/badge/site-playground-ed6e55)][playground-site]
 [![license](https://img.shields.io/npm/l/@badisi/auth-vue.svg?color=ff69b4)][license]
 
 [![npm version](https://img.shields.io/npm/v/@badisi/auth-vue.svg?color=blue&logo=npm)][npm]
