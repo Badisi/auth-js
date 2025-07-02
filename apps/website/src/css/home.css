@@ -367,42 +367,58 @@
 }
 
 /**
+ * LIGHT THEME
+ */
+
+@layer utilities {
+    html[data-theme='light']:not(.docs-doc-page) .home section.intro {
+        margin-top: -60px;
+        padding-block-start: calc(var(--spacing) * 15) !important;
+    }
+    @media (width >= 64rem) {
+        html[data-theme='light']:not(.docs-doc-page) .home section.intro {
+            padding-block-start: calc(var(--spacing) * 35) !important;
+        }
+    }
+}
+
+/**
  * DARK THEME
  */
 
-[data-theme='dark'] .home section.intro {
+html[data-theme='dark'] .home section.intro {
     background: none;
 }
 
-[data-theme='dark'] .home section.intro .spot {
+html[data-theme='dark'] .home section.intro .spot {
     display: none;
 }
 
-[data-theme='dark'] .home section.intro .header .title,
-[data-theme='dark'] .home section.intro .header .subtitle {
+html[data-theme='dark'] .home section.intro .header .title,
+html[data-theme='dark'] .home section.intro .header .subtitle {
     color: rgb(227, 227, 227);
 }
 
-[data-theme='dark'] .home section.features {
-    background: #1c1e21;
+html[data-theme='dark'] .home section.features {
+    background: none;
 }
 
-[data-theme='dark'] .home section.features .items .item {
+html[data-theme='dark'] .home section.features .items .item {
     border: 1px solid rgb(227, 227, 227);
     background: none;
 }
 
-[data-theme='dark'] .home section.features .items .item .title,
-[data-theme='dark'] .home section.features .items .item .icon {
+html[data-theme='dark'] .home section.features .items .item .title,
+html[data-theme='dark'] .home section.features .items .item .icon {
     color: white;
 }
-[data-theme='dark'] .home section.features .items .item .description {
+html[data-theme='dark'] .home section.features .items .item .description {
     color: rgb(227, 227, 227);
 }
-[data-theme='dark'] .home section.features .items .item .description a {
+html[data-theme='dark'] .home section.features .items .item .description a {
     color: var(--ifm-menu-color-active);
 }
 
-[data-theme='dark'] .home section.frameworks * {
+html[data-theme='dark'] .home section.frameworks * {
     color: rgb(227, 227, 227) !important;
 }

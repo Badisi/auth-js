@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * Creating a sidebar enables you to:
  - create an ordered group of docs
@@ -8,8 +10,6 @@
  
  Create as many sidebars as you want.
  */
-
-// @ts-check
 
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
@@ -86,4 +86,4 @@ const sidebars = {
     ]
 };
 
-module.exports = sidebars;
+export default sidebars;

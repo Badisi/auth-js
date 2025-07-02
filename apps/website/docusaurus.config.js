@@ -1,5 +1,4 @@
 // @ts-check
-// Note: type annotations allow type checking and IDEs autocompletion
 
 const lightCodeTheme = require('prism-react-renderer').themes.nightOwlLight;
 const darkCodeTheme = require('prism-react-renderer').themes.nightOwl;
@@ -23,6 +22,11 @@ const config = {
         locales: [
             'en-US'
         ]
+    },
+    future: {
+        v4: true, // opt-in for Docusaurus v4 planned changes
+        // eslint-disable-next-line camelcase
+        experimental_faster: true // turns Docusaurus Faster on globally
     },
     themes: [
         [
@@ -60,9 +64,9 @@ const config = {
                 theme: {
                     customCss: [
                         require.resolve('./src/css/home.css'),
-                        require.resolve('./src/css/custom.css'),
                         require.resolve('./src/css/search.css'),
-                        require.resolve('./src/css/not-found.css')
+                        require.resolve('./src/css/not-found.css'),
+                        require.resolve('./src/css/custom.css')
                     ]
                 }
             })
@@ -166,14 +170,13 @@ const config = {
         }),
     plugins: [
         async () => ({
-            name: 'docusaurus-tailwindcss',
+            name: 'tailwindcss-plugin',
             configurePostCss: postcssOptions => {
-                postcssOptions.plugins.push(require('tailwindcss'));
-                postcssOptions.plugins.push(require('autoprefixer'));
+                postcssOptions.plugins.push(require('@tailwindcss/postcss'));
                 return postcssOptions;
             }
         })
     ]
 };
 
-module.exports = config;
+export default config;

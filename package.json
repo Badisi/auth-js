@@ -24,7 +24,6 @@
         "mobile"
     ],
     "private": true,
-    "type": "module",
     "scripts": {
         "ncu": "npx npm-check-updates -i --format=group --packageFile='{,apps/**/,libs/**/}package.json'",
         "migrate:nx": "nx migrate latest",

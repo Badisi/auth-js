@@ -8,7 +8,7 @@ import HexagonsSvg from '@site/static/assets/svg/hexagons.svg';
 
 const Frameworks = () => {
     return (
-        <section className="frameworks flex-col lg:flex-row py-16 sm:py-[8rem]">
+        <section className="frameworks flex-col lg:flex-row py-16 sm:py-32">
             <div className="left w-full lg:w-1/2">
                 <div className="container">
                     <div className="row">
