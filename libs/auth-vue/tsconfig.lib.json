@@ -10,7 +10,7 @@
     },
     "exclude": [],
     "include": [
-        "../auth-js/@types/mobile.d.ts",
+        "../auth-js/@types/mobile/index.d.ts",
         "**/*.ts"
     ]
 }

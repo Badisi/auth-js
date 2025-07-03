@@ -2,10 +2,10 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
+    standalone: true,
     selector: 'app-page',
     templateUrl: './page.component.html',
-    styleUrls: ['./page.component.scss'],
-    standalone: true
+    styleUrls: ['./page.component.scss']
 })
 export class PageComponent implements OnInit {
     public title = '';

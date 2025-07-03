@@ -52,7 +52,7 @@
                 "^production"
             ]
         },
-        "@angular-devkit/build-angular:application": {
+        "@nx/angular:application": {
             "cache": true,
             "dependsOn": [
                 "^build"

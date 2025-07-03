@@ -15,7 +15,7 @@
         "**/*.test.ts"
     ],
     "include": [
-        "./@types/mobile.d.ts",
+        "./@types/mobile/index.d.ts",
         "**/*.ts"
     ]
 }
