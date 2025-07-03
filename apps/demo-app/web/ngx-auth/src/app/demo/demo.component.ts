@@ -10,7 +10,6 @@ import { DemoAppPlaygroundElement, globalStyle } from 'demo-app-common';
     selector: 'app-demo',
     templateUrl: './demo.component.html',
     styles: [globalStyle],
-    standalone: true,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [AsyncPipe, FormsModule, RouterOutlet],
     encapsulation: ViewEncapsulation.ShadowDom
