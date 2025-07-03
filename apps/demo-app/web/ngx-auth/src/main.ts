@@ -1,6 +1,5 @@
 import { isDevMode } from '@angular/core';
-import { bootstrapApplication } from '@angular/platform-browser';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { bootstrapApplication, platformBrowser } from '@angular/platform-browser';
 import { initAuth, provideAuth } from '@badisi/ngx-auth';
 import { DemoAppSettingsService } from 'demo-app-common';
 
@@ -28,7 +27,7 @@ void (async (): Promise<void> => {
             bootstrapApplication(AppComponent, appConfig)
                 .catch((err: unknown) => { console.error(err); });
         } else {
-            platformBrowserDynamic([authProvider])
+            platformBrowser([authProvider])
                 .bootstrapModule(AppModule)
                 .catch((err: unknown) => { console.error(err); });
         }

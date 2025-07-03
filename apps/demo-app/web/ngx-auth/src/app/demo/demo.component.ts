@@ -7,6 +7,7 @@ import { AuthService } from '@badisi/ngx-auth';
 import { DemoAppPlaygroundElement, globalStyle } from 'demo-app-common';
 
 @Component({
+    standalone: true,
     selector: 'app-demo',
     templateUrl: './demo.component.html',
     styles: [globalStyle],
