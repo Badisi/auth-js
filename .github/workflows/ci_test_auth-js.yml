@@ -22,7 +22,7 @@ concurrency:
 
 jobs:
     ci_test_auth-js:
-        uses: badisi/actions/.github/workflows/action.yml@v2
+        uses: badisi/actions/.github/workflows/action.yml@v3
         with:
             working-directory: libs/auth-js
             runs-on: '["ubuntu-latest", "macos-latest", "windows-latest"]'
