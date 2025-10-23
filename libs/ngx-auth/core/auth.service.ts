@@ -96,7 +96,10 @@ export class AuthService extends OIDCAuthService implements OnDestroy {
                          * => we need to substract the base url from the received url.
                          * ex: transform 'http://domain/base/private?param' to '/private?param'
                          */
-                        const relativeUrl = value.href.replace(AuthUtils.getBaseUrl(), '');
+                        let relativeUrl = value.href.replace(AuthUtils.getBaseUrl(), '');
+                        if (relativeUrl.startsWith("#")) {
+                            relativeUrl = relativeUrl.slice(1); // in case of hash mode, remove the leading '#'
+                        }
                         void this.#router.navigateByUrl(relativeUrl);
                     });
                 }
