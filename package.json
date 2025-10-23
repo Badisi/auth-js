@@ -133,7 +133,7 @@
     },
     "lint-staged": {
         "**/*.{js,json,ts,html}": [
-            "eslint ."
+            "eslint --fix"
         ],
         "**/*.{scss,html,vue,json}": [
             "prettier --check"
