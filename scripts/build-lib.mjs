@@ -8,6 +8,12 @@ import { dirname, resolve as pathResolve } from 'node:path';
 import { createProgram, flattenDiagnosticMessageText, getPreEmitDiagnostics, parseJsonConfigFileContent, readConfigFile, sys } from 'typescript';
 
 /**
+ *  @typedef {import("esbuild").BuildOptions} EsbuildOptions
+ *  @typedef {import("esbuild").Platform} EsbuildPlatform
+ *  @typedef {import("esbuild").Format} EsbuildFormat
+ */
+
+/**
  *  @typedef {{
  *      name: string;
  *      path: string;
@@ -22,8 +28,8 @@ import { createProgram, flattenDiagnosticMessageText, getPreEmitDiagnostics, par
  *      entryPoint: EntryPoint;
  *      minify?: boolean;
  *      bundleExternals?: boolean;
- *      format: 'esm' | 'cjs' | 'browser';
- *      platform: 'neutral' | 'node' | 'browser';
+ *      format: EsbuildFormat;
+ *      platform: EsbuildPlatform;
  *      esm: boolean;
  *      cjs: boolean;
  *      browser: string;
@@ -75,9 +81,10 @@ const emitDeclarationFiles = tsconfigPath => {
 const build = async options => {
     const outdir = pathResolve(options.distPath, options.format, options.entryPoint.name);
 
+    /** @type {EsbuildOptions} */
     const esbuildOptions = {
         platform: options.platform,
-        format: options.platform === 'browser' ? 'iife' : options.format,
+        format: options.format,
         absWorkingDir: options.absWorkingDir,
         outfile: pathResolve(outdir, options.minify ? 'index.min.js' : 'index.js'),
         entryPoints: [
@@ -109,7 +116,6 @@ const build = async options => {
         });
     }
 
-    // @ts-expect-error logOverride type not properly recognized
     await esbuild(esbuildOptions);
 };
 
@@ -155,7 +161,7 @@ export default async options => {
                 await build({
                     ...buildOptions,
                     platform: 'browser',
-                    format: 'browser',
+                    format: 'iife',
                     bundleExternals: true
                 });
 
@@ -163,7 +169,7 @@ export default async options => {
                 await build({
                     ...buildOptions,
                     platform: 'browser',
-                    format: 'browser',
+                    format: 'iife',
                     bundleExternals: true,
                     minify: true
                 });
@@ -190,6 +196,7 @@ export default async options => {
         //      -- entry points
         options.entryPoints.forEach(entryPoint => {
             const entryPointName = entryPoint.name ? `/${entryPoint.name}` : '';
+            /** @type {Record<string, string>} */
             const content = {
                 name: `${options.packageName}${entryPointName}`,
                 types: './index.d.ts'

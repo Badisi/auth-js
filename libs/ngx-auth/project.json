@@ -44,15 +44,14 @@
                 "{workspaceRoot}/dist/ngx-auth"
             ],
             "options": {
-                "project": "libs/ngx-auth/ng-package.json"
+                "project": "libs/ngx-auth/ng-package.json",
+                "tsConfig": "libs/ngx-auth/tsconfig.lib.json"
             },
             "configurations": {
                 "production": {
                     "tsConfig": "libs/ngx-auth/tsconfig.lib.prod.json"
                 },
-                "development": {
-                    "tsConfig": "libs/ngx-auth/tsconfig.lib.json"
-                }
+                "development": {}
             },
             "defaultConfiguration": "production"
         },
@@ -80,7 +79,8 @@
                 "{workspaceRoot}/coverage/{projectRoot}"
             ],
             "options": {
-                "jestConfig": "libs/ngx-auth/jest.config.ts"
+                "jestConfig": "libs/ngx-auth/jest.config.ts",
+                "tsConfig": "libs/ngx-auth/tsconfig.spec.json"
             }
         }
     }

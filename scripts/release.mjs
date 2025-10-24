@@ -13,7 +13,7 @@ import yargs from 'yargs';
 /**
  *  @typedef {import("nx/src/config/workspace-json-project-json").ProjectsConfigurations} ProjectsConfigurations
  *  @typedef {import("nx/src/command-line/release/command-object").PublishOptions} PublishOptions
- *  @typedef {import("nx/src/command-line/release/version").VersionData} VersionData
+ *  @typedef {import("nx/src/command-line/release/utils/shared").VersionData} VersionData
  *  @typedef {import("nx/src/utils/package-json").PackageJson} PackageJson
  */
 
@@ -153,7 +153,7 @@ const updateProjectsPeerDeps = (projectsToRelease, projects, projectsVersionData
                 const packageJson = JSON.parse(readFileSync(join(workspaceRoot, packageJsonPath), 'utf8'));
                 const peerDependencies = packageJson.peerDependencies ?? {};
 
-                if (Object.prototype.hasOwnProperty.call(peerDependencies, projectToRelease)) {
+                if (Object.hasOwn(peerDependencies, projectToRelease)) {
                     const version = peerDependencies[projectToRelease];
                     if (!version.includes(projectToReleaseNewVersion)) {
                         changesDetected = true;
@@ -251,7 +251,7 @@ const updateProjectsVersions = async (gitCommitMessage, options) => {
         stageChanges: true,
         gitCommit: true,
         gitCommitMessage,
-        generatorOptionsOverrides: {
+        versionActionsOptionsOverrides: {
             installIgnoreScripts: true
         },
         dryRun: options.dryRun,
