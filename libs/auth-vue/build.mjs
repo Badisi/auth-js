@@ -17,7 +17,8 @@ await buildLib({
     tsconfigPath: pathResolve(__dirname, 'tsconfig.lib.json'),
     absWorkingDir: __dirname,
     entryPoints: [
-        { name: 'core', path: pathResolve(__dirname, 'core', 'index.ts') }],
+        { name: 'core', path: pathResolve(__dirname, 'core', 'index.ts') }
+    ],
     buildOptions: {
         esm: true,
         cjs: true,

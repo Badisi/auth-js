@@ -259,7 +259,7 @@ export class DemoAppHeaderElement extends HTMLElement {
         } else {
             window.appSettings.getLibraryImplementations().forEach(item => {
                 const optionEl = document.createElement('option');
-                optionEl.value = String(item.label);
+                optionEl.value = item.label;
                 optionEl.textContent = item.label;
                 this.implSelectEl?.appendChild(optionEl);
             });
@@ -271,12 +271,14 @@ export class DemoAppHeaderElement extends HTMLElement {
                 }
             };
             this.implSelectEl?.addEventListener('change', implChangeCb);
-            this.listeners.push(() => { this.implSelectEl?.removeEventListener('change', implChangeCb); });
+            this.listeners.push(() => {
+                this.implSelectEl?.removeEventListener('change', implChangeCb);
+            });
         }
 
         window.appSettings.getSettings().forEach(item => {
             const optionEl = document.createElement('option');
-            optionEl.value = String(item.name);
+            optionEl.value = item.name;
             optionEl.textContent = item.name;
             this.settingsSelectEl?.appendChild(optionEl);
         });
@@ -337,7 +339,9 @@ export class DemoAppHeaderElement extends HTMLElement {
     }
 
     public disconnectedCallback(): void {
-        this.listeners.forEach(rm => { rm(); });
+        this.listeners.forEach(rm => {
+            rm();
+        });
     }
 
     // --- HELPER(s) ---
@@ -361,10 +365,18 @@ export class DemoAppHeaderElement extends HTMLElement {
         this.silentRenewButtonEl?.addEventListener('click', silentRenewCb);
 
         this.listeners.push(
-            () => { this.settingsSelectEl?.removeEventListener('change', settingsCb); },
-            () => { this.loginButtonEl?.removeEventListener('click', loginCb); },
-            () => { this.logoutButtonEl?.removeEventListener('click', logoutCb); },
-            () => { this.silentRenewButtonEl?.removeEventListener('click', silentRenewCb); }
+            () => {
+                this.settingsSelectEl?.removeEventListener('change', settingsCb);
+            },
+            () => {
+                this.loginButtonEl?.removeEventListener('click', loginCb);
+            },
+            () => {
+                this.logoutButtonEl?.removeEventListener('click', logoutCb);
+            },
+            () => {
+                this.silentRenewButtonEl?.removeEventListener('click', silentRenewCb);
+            }
         );
     }
 

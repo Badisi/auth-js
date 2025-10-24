@@ -205,35 +205,51 @@ export class DemoAppSettingsElement extends HTMLElement {
             }
         };
         this.formEl?.addEventListener('input', inputCb);
-        this.listeners.push(() => { this.formEl?.removeEventListener('input', inputCb); });
+        this.listeners.push(() => {
+            this.formEl?.removeEventListener('input', inputCb);
+        });
 
         // Select
         this.refreshSelect();
-        const changeCb = (): void => { if (this.selectEl) { this.loadSettings(this.selectEl.selectedIndex); }};
+        const changeCb = (): void => {
+            if (this.selectEl) {
+                this.loadSettings(this.selectEl.selectedIndex);
+            }
+        };
         this.selectEl?.addEventListener('change', changeCb);
-        this.listeners.push(() => { this.selectEl?.removeEventListener('change', changeCb); });
+        this.listeners.push(() => {
+            this.selectEl?.removeEventListener('change', changeCb);
+        });
 
         // Add
         const addEl = this.shadowRoot?.querySelector('#add-settings-button');
-        const addCb = (): void => { this.add(); };
+        const addCb = (): void => {
+            this.add();
+        };
         addEl?.addEventListener('click', addCb);
         this.listeners.push(() => addEl?.removeEventListener('click', addCb));
 
         // Delete
         const deleteEl = this.shadowRoot?.querySelector('#delete-settings-button');
-        const deleteCb = (): void => { this.delete(); };
+        const deleteCb = (): void => {
+            this.delete();
+        };
         deleteEl?.addEventListener('click', deleteCb);
         this.listeners.push(() => deleteEl?.removeEventListener('click', deleteCb));
 
         // Save
         const saveEl = this.shadowRoot?.querySelector('#save-settings-button');
-        const saveCb = (): void => { this.saveAndReload(); };
+        const saveCb = (): void => {
+            this.saveAndReload();
+        };
         saveEl?.addEventListener('click', saveCb);
         this.listeners.push(() => saveEl?.removeEventListener('click', saveCb));
 
         // Cancel
         const cancelEl = this.shadowRoot?.querySelector('#cancel-settings-button');
-        const cancelCb = (): void => { this.cancel(); };
+        const cancelCb = (): void => {
+            this.cancel();
+        };
         cancelEl?.addEventListener('click', cancelCb);
         this.listeners.push(() => cancelEl?.removeEventListener('click', cancelCb));
 
@@ -242,7 +258,9 @@ export class DemoAppSettingsElement extends HTMLElement {
     }
 
     public disconnectedCallback(): void {
-        this.listeners.forEach(rm => { rm(); });
+        this.listeners.forEach(rm => {
+            rm();
+        });
     }
 
     // --- HANDLER(s) ---
@@ -283,7 +301,7 @@ export class DemoAppSettingsElement extends HTMLElement {
 
     // --- HELPER(s) ---
 
-    private setPathValue(settings: AuthSettings, path: string, value: unknown): void {
+    private setPathValue(settings: AuthSettings, path: string, value: boolean | string | Record<string, unknown> | undefined): void {
         const props = path.split('.');
         props.reduce((obj: any, prop, index) => {
             if (index === (props.length - 1)) {
@@ -302,8 +320,8 @@ export class DemoAppSettingsElement extends HTMLElement {
     private getPathValue(settings: AuthSettings | undefined, path: string): unknown {
         return path.split('.').reduce((obj: any, prop) =>
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-            obj && prop in obj ? obj[prop] : undefined
-        , settings);
+            obj && prop in obj ? obj[prop] : undefined,
+        settings);
     }
 
     private refreshSelect(): void {
@@ -318,7 +336,7 @@ export class DemoAppSettingsElement extends HTMLElement {
             .forEach((item, index) => {
                 const optionEl = document.createElement('option');
                 optionEl.selected = (index === currentSettingsIndex);
-                optionEl.value = String(item.name);
+                optionEl.value = item.name;
                 optionEl.textContent = item.name;
                 this.selectEl?.appendChild(optionEl);
             });
@@ -422,7 +440,7 @@ export class DemoAppSettingsElement extends HTMLElement {
                 .sort((a, b) => (a._sortIndex || 0) - (b._sortIndex || 0))
                 .forEach(item => {
                     const formItemEl = this.shadowRoot?.querySelector(`#${item.name.replace('.', '')}`);
-                    let value;
+                    let value: boolean | string | Record<string, unknown> | undefined;
                     switch (item.type) {
                         case 'boolean':
                             value = (formItemEl as HTMLInputElement).checked;
@@ -456,13 +474,13 @@ export class DemoAppSettingsElement extends HTMLElement {
                 if (typeof injectToken === 'object') {
                     if ((!injectToken.include || ((injectToken.include as unknown as string).trim() === '')) &&
                         (!injectToken.exclude || ((injectToken.exclude as unknown as string).trim() === ''))) {
-                            injectToken = true;
+                        injectToken = true;
                     } else {
                         if (injectToken.include) {
-                            injectToken.include = (injectToken.include as unknown as string).split(',')
+                            injectToken.include = (injectToken.include as unknown as string).split(',');
                         }
                         if (injectToken.exclude) {
-                            injectToken.exclude = (injectToken.exclude as unknown as string).split(',')
+                            injectToken.exclude = (injectToken.exclude as unknown as string).split(',');
                         }
                     }
                     currentSettings.librarySettings.automaticInjectToken = injectToken;

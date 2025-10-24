@@ -59,7 +59,7 @@ export const runSchematic = async (schematicName: string, options: object, tree:
         await lastValueFrom(runner.engine.executePostTasks());
     }
     return newTree;
-}
+};
 
 export const getCleanAppTree = async (useWorkspace = false, standalone = false): Promise<UnitTestTree> => {
     appTest1.projectRoot = (useWorkspace) ? join(workspaceOptions.newProjectRoot!, appTest1.name) : '';

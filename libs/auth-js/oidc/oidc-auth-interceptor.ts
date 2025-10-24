@@ -145,13 +145,13 @@ export class OIDCAuthInterceptor {
                 // eslint-disable-next-line @typescript-eslint/no-this-alias
                 const interceptor = this;
 
-                XMLHttpRequest.prototype.open = function (method: string, url: string | URL, ...rest: unknown[]): void {
+                XMLHttpRequest.prototype.open = function(method: string, url: string | URL, ...rest: unknown[]): void {
                     this.url = url;
                     // @ts-expect-error Rest should not be of type unknown
                     interceptor.#originalXmlHttpRequestOpen.apply(this, [method, url, ...rest]);
                 };
 
-                XMLHttpRequest.prototype.send = function (body?: Document | XMLHttpRequestBodyInit | null): void {
+                XMLHttpRequest.prototype.send = function(body?: Document | XMLHttpRequestBodyInit | null): void {
                     const url = (typeof this.url === 'string') ? this.url : this.url?.href;
                     logger.debug('received xhr url:', url);
 
@@ -168,7 +168,7 @@ export class OIDCAuthInterceptor {
                                 }
                             }
                         }
-                    }
+                    };
 
                     // Add token to request headers
                     const shouldInjectToken = url ? interceptor.#shouldInjectAuthToken(url) : false;
@@ -181,11 +181,11 @@ export class OIDCAuthInterceptor {
                                 }
                             })
                             .catch((error: unknown) => {
-                                logger.error(error)
+                                logger.error(error);
                             })
                             .finally(() => {
                                 interceptor.#originalXmlHttpRequestSend.apply(this, [body]);
-                            })
+                            });
                     } else {
                         interceptor.#originalXmlHttpRequestSend.apply(this, [body]);
                     }

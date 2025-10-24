@@ -1,4 +1,4 @@
-import type { OIDCAuthSettings, Optional } from "..";
+import type { OIDCAuthSettings, Optional } from '..';
 
 export type DefaultSettings =
     Optional<OIDCAuthSettings,
@@ -25,5 +25,5 @@ export type DefaultSettings =
                 'popup_post_logout_redirect_uri' |
                 'silent_redirect_uri' |
                 'mobileWindowPresentationStyle'
-            >>
+            >>;
     };

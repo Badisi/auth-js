@@ -11,7 +11,7 @@ declare global {
     }
 }
 
-export const prettyPrint = (value: unknown, dateAttrs: string[] = []): string => {
+export const prettyPrint = (value: string | Record<string, unknown> | undefined, dateAttrs: string[] = []): string => {
     const jsonLine = /^( *)("[\w-]+": )?("[^"]*"|[\w.+-]*)?([,[{])?$/mg;
     const replacer = (_match: string, pIndent: string, pKey: string, pVal: string, pEnd: string): string => {
         let r = pIndent || '';

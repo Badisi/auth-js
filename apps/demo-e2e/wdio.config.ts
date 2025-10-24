@@ -21,7 +21,7 @@ const headless = getArgValue('headless') === 'true';
  * Configuration file documentation
  * https://webdriver.io/docs/configurationfile/
  */
-export const config: Options.Testrunner & { capabilities: unknown; } = {
+export const config: Options.Testrunner & { capabilities: unknown } = {
     // ====================
     // Runner Configuration
     // ====================

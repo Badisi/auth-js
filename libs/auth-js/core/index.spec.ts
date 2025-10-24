@@ -83,7 +83,9 @@ describe('AuthUtils', () => {
             ['http://localhost:4200/oidc/callback/silent_redirect.html?test=hello', '/silent_redirect.html?test=hello&hello=test', false]
         ])(
             '("%s", "%s")',
-            (url1: string, url2: string | undefined, expected: boolean) => { expect(AuthUtils.isUrlMatching(url1, url2)).toBe(expected); }
+            (url1: string, url2: string | undefined, expected: boolean) => {
+                expect(AuthUtils.isUrlMatching(url1, url2)).toBe(expected);
+            }
         );
     });
 });

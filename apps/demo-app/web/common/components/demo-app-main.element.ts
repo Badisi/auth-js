@@ -101,7 +101,9 @@ export class DemoAppMainElement extends HTMLElement {
     }
 
     public disconnectedCallback(): void {
-        this.listeners.forEach(rm => { rm(); });
+        this.listeners.forEach(rm => {
+            rm();
+        });
     }
 
     // --- HELPER(s) ---
@@ -119,9 +121,13 @@ export class DemoAppMainElement extends HTMLElement {
                 const tab = document.createElement('a');
                 tab.id = `${(view.getAttribute('tabLabel') ?? '?').toLowerCase()}-button`;
                 tab.textContent = view.getAttribute('tabLabel') ?? '?';
-                const cb = (): void => { this.showView(index); };
+                const cb = (): void => {
+                    this.showView(index);
+                };
                 tab.addEventListener('click', cb);
-                this.listeners.push(() => { tab.removeEventListener('click', cb); });
+                this.listeners.push(() => {
+                    tab.removeEventListener('click', cb);
+                });
                 tabsEl.appendChild(tab);
 
                 // Add it to collection

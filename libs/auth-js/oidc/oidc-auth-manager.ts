@@ -155,7 +155,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                             if (this.#settings.loginRequired && (error?.includes('_required') || message.includes('_required'))) {
                                 await this.login();
                             } else {
-                                logger.warn("User's session cannot be retrieved:", message);
+                                logger.warn('User\'s session cannot be retrieved:', message);
                                 this.#authenticatedSubs.notify(false);
                                 if (this.#settings.loginRequired) {
                                     throw signinSilentError;
@@ -215,7 +215,9 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     }
 
     public async renew(args?: RenewArgs): Promise<void> {
-        return this.#signinSilent(args).catch((error: unknown) => { logger.error(error); });
+        return this.#signinSilent(args).catch((error: unknown) => {
+            logger.error(error);
+        });
     }
 
     public getSettings(): OIDCAuthSettings {
@@ -276,7 +278,9 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         this.#authenticatedSubs.unsubscribe();
         this.#renewingSubs.unsubscribe();
         this.#redirectSubs.unsubscribe();
-        this.#userManagerSubs.forEach(unsub => { unsub(); });
+        this.#userManagerSubs.forEach(unsub => {
+            unsub();
+        });
     }
 
     // --- HANDLER(s) ---
@@ -384,7 +388,11 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
     }
 
     async #runSyncOrAsync(job: () => Promise<unknown>): Promise<void> {
-        if (this.#settings.loginRequired) { await job(); } else { void job(); }
+        if (this.#settings.loginRequired) {
+            await job();
+        } else {
+            void job();
+        }
     }
 
     async #redirect(url: string | null, error?: unknown): Promise<void> {

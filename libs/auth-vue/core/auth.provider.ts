@@ -14,14 +14,14 @@ export const initAuth = async (settings: AuthSettings): Promise<Plugin> => {
      */
     const authManager = await initOidc(settings);
     return {
-        install: (app: App, { router }: { router: Router; }): void => {
+        install: (app: App, { router }: { router: Router }): void => {
             // Effectively adding authService to every component instance
             const authService = new AuthService(authManager, router);
             app.provide('$authService', authService);
             app.config.globalProperties.$authService = authService;
 
             // Add global router guard
-            router.beforeEach(async (to) => {
+            router.beforeEach(async to => {
                 if (to.meta.authGuard) {
                     return await useAuthGuard(
                         to.fullPath,
@@ -30,6 +30,6 @@ export const initAuth = async (settings: AuthSettings): Promise<Plugin> => {
                 }
                 return true;
             });
-        },
+        }
     };
 };

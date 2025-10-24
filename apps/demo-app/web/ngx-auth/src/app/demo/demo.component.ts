@@ -1,10 +1,17 @@
 import { AsyncPipe } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    Component,
+    CUSTOM_ELEMENTS_SCHEMA,
+    type ElementRef,
+    inject,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Params, Router, RouterOutlet } from '@angular/router';
+import { type Params, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '@badisi/ngx-auth';
-import { DemoAppPlaygroundElement, globalStyle } from 'demo-app-common';
+import { type DemoAppPlaygroundElement, globalStyle } from 'demo-app-common';
 
 @Component({
     standalone: true,
@@ -34,10 +41,14 @@ export class DemoComponent {
         if (url) {
             const demoPlayground = this.demoAppPlaygroundEl.nativeElement;
             this.httpClient
-                .get<unknown>(url, headers ? { headers: new HttpHeaders(headers) } : {})
+                .get<string | Record<string, unknown>>(url, headers ? { headers: new HttpHeaders(headers) } : {})
                 .subscribe({
-                    next: data => { demoPlayground.setApiStatus(data, false); },
-                    error: (error: unknown) => { demoPlayground.setApiStatus(error, true); }
+                    next: data => {
+                        demoPlayground.setApiStatus(data, false);
+                    },
+                    error: (error: unknown) => {
+                        demoPlayground.setApiStatus(error as string | Record<string, unknown>, true);
+                    }
                 });
         }
     }

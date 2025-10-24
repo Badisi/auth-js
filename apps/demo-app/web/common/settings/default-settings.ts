@@ -63,7 +63,7 @@ const ZITADEL_SETTINGS: Settings<OIDCAuthSettings> = {
         authorityUrl: 'https://auth-js-0pdipf.zitadel.cloud',
         clientId: '178200751804317953@demo-app',
         scope: 'openid profile email phone offline_access',
-        internal:{
+        internal: {
             extraQueryParams: {
                 // eslint-disable-next-line @typescript-eslint/naming-convention
                 'login_hint': 'demo'

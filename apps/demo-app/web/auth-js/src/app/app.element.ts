@@ -1,5 +1,5 @@
 import { type AuthSubscription, AuthUtils } from '@badisi/auth-js';
-import { type DemoAppDebugElement, type DemoAppMainElement, type DemoAppPlaygroundElement,rolesValidator } from 'demo-app-common';
+import { type DemoAppDebugElement, type DemoAppMainElement, type DemoAppPlaygroundElement, rolesValidator } from 'demo-app-common';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -50,8 +50,12 @@ export class AppElement extends HTMLElement {
     }
 
     public disconnectedCallback(): void {
-        this.authManagerSubs.forEach(sub => { sub.unsubscribe(); });
-        this.listeners.forEach(rm => { rm(); });
+        this.authManagerSubs.forEach(sub => {
+            sub.unsubscribe();
+        });
+        this.listeners.forEach(rm => {
+            rm();
+        });
     }
 
     // --- HELPER(s) ---
@@ -61,7 +65,7 @@ export class AppElement extends HTMLElement {
             const req = new XMLHttpRequest();
             req.onreadystatechange = (): void => {
                 if (req.readyState === XMLHttpRequest.DONE) {
-                    let resp;
+                    let resp: string | Record<string, unknown>;
                     try {
                         resp = JSON.parse(req.responseText) as string;
                     } catch {
@@ -118,7 +122,7 @@ export class AppElement extends HTMLElement {
         };
     }
 
-    private refreshInfo(key: string, value?: unknown): void {
+    private refreshInfo(key: string, value?: boolean | string | Record<string, unknown>): void {
         if (this.demoAppMainEl && this.demoAppDebugEl) {
             switch (key) {
                 case 'renewing':
@@ -129,18 +133,18 @@ export class AppElement extends HTMLElement {
                     this.demoAppDebugEl.isAuthenticated = value as boolean;
                     break;
                 case 'userSession':
-                    this.demoAppDebugEl.userSession = value;
+                    this.demoAppDebugEl.userSession = value as Record<string, unknown>;
                     break;
                 case 'accessToken':
                     this.demoAppDebugEl.accessToken = value as string;
-                    this.demoAppDebugEl.accessTokenDecoded = AuthUtils.decodeJwt(value as string);
+                    this.demoAppDebugEl.accessTokenDecoded = AuthUtils.decodeJwt(value as string) as Record<string, unknown>;
                     break;
                 case 'idToken':
                     this.demoAppDebugEl.idToken = value as string;
-                    this.demoAppDebugEl.idTokenDecoded = AuthUtils.decodeJwt(value as string);
+                    this.demoAppDebugEl.idTokenDecoded = AuthUtils.decodeJwt(value as string) as Record<string, unknown>;
                     break;
                 case 'userProfile':
-                    this.demoAppDebugEl.userProfile = value;
+                    this.demoAppDebugEl.userProfile = value as Record<string, unknown>;
                     break;
                 default: break;
             }
@@ -150,19 +154,33 @@ export class AppElement extends HTMLElement {
     private listenForAuthChanges(): void {
         const manager = window.authManager;
         this.authManagerSubs.push(
-            manager.onRenewingChanged(value => { this.refreshInfo('renewing', value); }),
-            manager.onAuthenticatedChanged(value => { this.refreshInfo('authenticated', value); }),
-            manager.onUserSessionChanged(value => { this.refreshInfo('userSession', value); }),
-            manager.onAccessTokenChanged(value => { this.refreshInfo('accessToken', value); }),
-            manager.onIdTokenChanged(value => { this.refreshInfo('idToken', value); }),
-            manager.onUserProfileChanged(value => { this.refreshInfo('userProfile', value); })
+            manager.onRenewingChanged(value => {
+                this.refreshInfo('renewing', value);
+            }),
+            manager.onAuthenticatedChanged(value => {
+                this.refreshInfo('authenticated', value);
+            }),
+            manager.onUserSessionChanged(value => {
+                this.refreshInfo('userSession', value as Record<string, unknown> | undefined);
+            }),
+            manager.onAccessTokenChanged(value => {
+                this.refreshInfo('accessToken', value);
+            }),
+            manager.onIdTokenChanged(value => {
+                this.refreshInfo('idToken', value);
+            }),
+            manager.onUserProfileChanged(value => {
+                this.refreshInfo('userProfile', value);
+            })
         );
     }
 
     private listenForPlaygroundEvents(): void {
         /* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access */
         if (this.demoAppPlaygroundEl) {
-            const callApi = ((event: CustomEvent): void => { this.callPrivateApi(event.detail?.url, event.detail?.headers); }) as EventListener;
+            const callApi = ((event: CustomEvent): void => {
+                this.callPrivateApi(event.detail?.url, event.detail?.headers);
+            }) as EventListener;
             this.demoAppPlaygroundEl.addEventListener('api', callApi);
             this.listeners.push(() => this.demoAppPlaygroundEl?.removeEventListener('api', callApi));
 
@@ -170,7 +188,7 @@ export class AppElement extends HTMLElement {
                 const url = new URL(event.type, location.origin);
                 Object.entries(event.detail?.queryParams as Record<string, string>).forEach(([key, value]) => {
                     url.searchParams.set(key, value);
-                })
+                });
                 history.pushState({}, '', url);
             }) as EventListener;
             this.demoAppPlaygroundEl.addEventListener('home', callNavigate);

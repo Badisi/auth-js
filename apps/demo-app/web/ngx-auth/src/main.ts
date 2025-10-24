@@ -25,17 +25,23 @@ void (async (): Promise<void> => {
             const { appConfig } = await import('./app/app.config');
             appConfig.providers.push(provideAuth(authProvider));
             bootstrapApplication(AppComponent, appConfig)
-                .catch((err: unknown) => { console.error(err); });
+                .catch((err: unknown) => {
+                    console.error(err);
+                });
         } else {
             platformBrowser([authProvider])
                 .bootstrapModule(AppModule)
-                .catch((err: unknown) => { console.error(err); });
+                .catch((err: unknown) => {
+                    console.error(err);
+                });
         }
     } catch (err: unknown) {
         const message = (err instanceof Error) ? err.message : String(err);
         el.innerHTML = `${message}<br/><button id="loginButton">Login</button>`;
         document.body.querySelector('#loginButton')?.addEventListener(
-            'click', () => { location.reload(); }, { once: true }
+            'click', () => {
+                location.reload();
+            }, { once: true }
         );
         console.error(err);
     }

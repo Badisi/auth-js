@@ -30,7 +30,9 @@ export class AuthService extends OIDCAuthService implements OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        this.#authManagerSubs.forEach(sub => { sub.unsubscribe(); });
+        this.#authManagerSubs.forEach(sub => {
+            sub.unsubscribe();
+        });
     }
 
     /* eslint-disable @typescript-eslint/member-ordering */
@@ -81,12 +83,36 @@ export class AuthService extends OIDCAuthService implements OnDestroy {
 
     #listenForManagerChanges(): void {
         this.#authManagerSubs.push(
-            this.manager.onIdTokenChanged(value => { this.#ngZone.run(() => { this.#idToken$.next(value); }); }),
-            this.manager.onAccessTokenChanged(value => { this.#ngZone.run(() => { this.#accessToken$.next(value); }); }),
-            this.manager.onUserProfileChanged(value => { this.#ngZone.run(() => { this.#userProfile$.next(value); }); }),
-            this.manager.onUserSessionChanged(value => { this.#ngZone.run(() => { this.#userSession$.next(value); }); }),
-            this.manager.onAuthenticatedChanged(value => { this.#ngZone.run(() => { this.#isAuthenticated$.next(value); }); }),
-            this.manager.onRenewingChanged(value => { this.#ngZone.run(() => { this.#isRenewing$.next(value); }); }),
+            this.manager.onIdTokenChanged(value => {
+                this.#ngZone.run(() => {
+                    this.#idToken$.next(value);
+                });
+            }),
+            this.manager.onAccessTokenChanged(value => {
+                this.#ngZone.run(() => {
+                    this.#accessToken$.next(value);
+                });
+            }),
+            this.manager.onUserProfileChanged(value => {
+                this.#ngZone.run(() => {
+                    this.#userProfile$.next(value);
+                });
+            }),
+            this.manager.onUserSessionChanged(value => {
+                this.#ngZone.run(() => {
+                    this.#userSession$.next(value);
+                });
+            }),
+            this.manager.onAuthenticatedChanged(value => {
+                this.#ngZone.run(() => {
+                    this.#isAuthenticated$.next(value);
+                });
+            }),
+            this.manager.onRenewingChanged(value => {
+                this.#ngZone.run(() => {
+                    this.#isRenewing$.next(value);
+                });
+            }),
             this.manager.onRedirect(value => {
                 // Avoid cancelling any current navigation
                 if (!this.#router.getCurrentNavigation()) {
@@ -97,7 +123,7 @@ export class AuthService extends OIDCAuthService implements OnDestroy {
                          * ex: transform 'http://domain/base/private?param' to '/private?param'
                          */
                         let relativeUrl = value.href.replace(AuthUtils.getBaseUrl(), '');
-                        if (relativeUrl.startsWith("#")) {
+                        if (relativeUrl.startsWith('#')) {
                             relativeUrl = relativeUrl.slice(1); // in case of hash mode, remove the leading '#'
                         }
                         void this.#router.navigateByUrl(relativeUrl);

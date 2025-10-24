@@ -6,7 +6,10 @@ import { spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { releaseChangelog, releasePublish, releaseVersion } from 'nx/release/index.js';
-import { createProjectGraphAsync, readProjectsConfigurationFromProjectGraph } from 'nx/src/project-graph/project-graph.js';
+import {
+    createProjectGraphAsync,
+    readProjectsConfigurationFromProjectGraph
+} from 'nx/src/project-graph/project-graph.js';
 import { workspaceRoot } from 'nx/src/utils/workspace-root.js';
 import yargs from 'yargs';
 
@@ -97,7 +100,9 @@ const publishProjects = async (projectsToRelease, projects, options) => {
  *  @see https://github.com/nrwl/nx/issues/21855#issuecomment-1977360480
  */
 const updateProjectsDists = (projectsToRelease, projects, projectsVersionData, options) => {
-    console.log(`\n${bgBlue(' EXTRA ')}  ${blue('Synchronizing dist packages')}${options.dryRun ? yellow(' [dry-run]') : ''}`);
+    console.log(
+        `\n${bgBlue(' EXTRA ')}  ${blue('Synchronizing dist packages')}${options.dryRun ? yellow(' [dry-run]') : ''}`
+    );
     projectsToRelease.forEach(project => {
         const projectRoot = projects[project].root;
         const projectName = projects[project].name ?? '';
@@ -108,7 +113,9 @@ const updateProjectsDists = (projectsToRelease, projects, projectsVersionData, o
         /** @type {PackageJson} */
         const workspacePackageJson = JSON.parse(readFileSync(join(workspaceRoot, workspacePackageJsonPath), 'utf8'));
 
-        console.log(`\n${cyan(projects[project].name ?? '')} New version ${projectNewVersion} written to ${distPackageJsonPath}`);
+        console.log(
+            `\n${cyan(projects[project].name ?? '')} New version ${projectNewVersion} written to ${distPackageJsonPath}`
+        );
         if (!options.dryRun) {
             /** @type {PackageJson} */
             const distPackageJson = JSON.parse(readFileSync(join(workspaceRoot, distPackageJsonPath), 'utf8'));
@@ -142,7 +149,9 @@ const updateProjectsPeerDeps = (projectsToRelease, projects, projectsVersionData
     let packageJsonFiles = [];
     let changesDetected = false;
 
-    console.log(`\n${bgBlue(' EXTRA ')}  ${blue('Synchronizing inter peer dependencies')}${options.dryRun ? yellow(' [dry-run]') : ''}`);
+    console.log(
+        `\n${bgBlue(' EXTRA ')}  ${blue('Synchronizing inter peer dependencies')}${options.dryRun ? yellow(' [dry-run]') : ''}`
+    );
     projectsToRelease.forEach(projectToRelease => {
         const projectToReleaseNewVersion = projectsVersionData[projectToRelease].newVersion ?? '';
 
@@ -166,7 +175,9 @@ const updateProjectsPeerDeps = (projectsToRelease, projects, projectsVersionData
                             console.log(blue(`\n- ${projectToRelease}`));
                         }
 
-                        console.log(`\n${white('UPDATE')} ${packageJsonPath}${options.dryRun ? yellow(' [dry-run]') : ''}\n`);
+                        console.log(
+                            `\n${white('UPDATE')} ${packageJsonPath}${options.dryRun ? yellow(' [dry-run]') : ''}\n`
+                        );
                         console.log(gray('  "peerDependencies": {'));
                         console.log(red(`-    "${projectToRelease}": "${version}"`));
                         console.log(green(`+    "${projectToRelease}": "${newVersion}"`));
@@ -186,24 +197,11 @@ const updateProjectsPeerDeps = (projectsToRelease, projects, projectsVersionData
         });
 
         if (packageJsonFiles.length) {
-            exec(
-                '\nUpdating npm lock file:',
-                'npm',
-                [
-                    'install',
-                    '--package-lock-only',
-                    '--ignore-scripts'
-                ],
-                options
-            );
+            exec('\nUpdating npm lock file:', 'npm', ['install', '--package-lock-only', '--ignore-scripts'], options);
             exec(
                 '\nStaging changed files with git:',
                 'git',
-                [
-                    'add',
-                    'package-lock.json',
-                    ...packageJsonFiles
-                ],
+                ['add', 'package-lock.json', ...packageJsonFiles],
                 options
             );
             exec(
@@ -226,12 +224,7 @@ const updateProjectsPeerDeps = (projectsToRelease, projects, projectsVersionData
         exec(
             `\n${bgBlue(' EXTRA ')}  ${blue('Pushing to git remote')}`,
             'git',
-            [
-                'push',
-                '--follow-tags',
-                '--no-verify',
-                '--atomic'
-            ],
+            ['push', '--follow-tags', '--no-verify', '--atomic'],
             options,
             true
         );
@@ -301,8 +294,8 @@ void (async () => {
      *   4. Stage changed files with git
      *   5. Commit all previously staged files in git
      *        chore(release): update projects versions [skip ci]
-     *        - project: @badisi/abc 1.2.3
-     *        - project: @badisi/xyz 4.5.6
+     *        - project: \@badisi/abc 1.2.3
+     *        - project: \@badisi/xyz 4.5.6
      */
     let updates = await updateProjectsVersions('chore(release): update projects versions [skip ci]', options);
 
@@ -317,7 +310,12 @@ void (async () => {
      *          [skip ci]
      *   7. Push to git remote
      */
-    const needReUpdate = updateProjectsPeerDeps(updates.projectsToRelease, projects, updates.projectsVersionData, options);
+    const needReUpdate = updateProjectsPeerDeps(
+        updates.projectsToRelease,
+        projects,
+        updates.projectsVersionData,
+        options
+    );
 
     /**
      *  If multiple projects were to be released, synchronizing inter peer dependencies might have affected some of them.
@@ -329,8 +327,8 @@ void (async () => {
      *  11. Stage changed files with git
      *  12. Commit all previously staged files in git
      *        chore(release): re-update projects versions [skip ci]
-     *        - project: @badisi/abc 1.2.3
-     *        - project: @badisi/xyz 4.5.6
+     *        - project: \@badisi/abc 1.2.3
+     *        - project: \@badisi/xyz 4.5.6
      */
     if (needReUpdate && options.projects?.length !== 1) {
         updates = await updateProjectsVersions('chore(release): re-update projects versions [skip ci]', options);
@@ -341,11 +339,11 @@ void (async () => {
      *  14. Stage changed files with git
      *  15. Commit all previously staged files in git
      *        chore(release): update projects changelogs [skip ci]
-     *        - project: @badisi/abc 1.2.3
-     *        - project: @badisi/xyz 4.5.6
+     *        - project: \@badisi/abc 1.2.3
+     *        - project: \@badisi/xyz 4.5.6
      *  16. Tag commit with git
-     *        + @badisi/abc@1.2.3
-     *        + @badisi/xyz@5.6.7
+     *        + \@badisi/abc@1.2.3
+     *        + \@badisi/xyz@5.6.7
      *  17. Push to git remote
      *  18. Create GitHub releases
      */

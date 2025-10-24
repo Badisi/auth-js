@@ -41,10 +41,10 @@ export const STANDALONE_CONTENT =
     '    .catch((error: unknown) => console.error(error));\n';
 
 export const INIT_CONTENT = (content: string, options = ''): string =>
-    `/**\n` +
-    ` * Auth configuration\n` +
-    ` * @see https://badisi.github.io/auth-js/getting-started/configuration\n` +
-    ` */\n` +
+    '/**\n' +
+    ' * Auth configuration\n' +
+    ' * @see https://badisi.github.io/auth-js/getting-started/configuration\n' +
+    ' */\n' +
     `initAuth(${options}).then(authProvider => {\n${content
     }}).catch((error: unknown) => console.error(error));\n`;
 

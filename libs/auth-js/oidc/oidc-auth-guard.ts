@@ -1,4 +1,4 @@
-import { type AuthGuardOptions, type AuthGuardValidator,AuthLogger } from '../core';
+import { type AuthGuardOptions, type AuthGuardValidator, AuthLogger } from '../core';
 import type { OIDCAuthManager } from './oidc-auth-manager';
 
 const logger = new AuthLogger('OIDCAuthGuard');

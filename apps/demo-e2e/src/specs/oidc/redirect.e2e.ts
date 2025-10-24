@@ -27,7 +27,7 @@ describe('Auth code + PKCE (with redirect)', () => {
                 await demoPage.navigate();
                 await demoPage.openSettings();
 
-                let selectIdpAction;
+                let selectIdpAction: () => Promise<void>;
                 switch (idpPage.name) {
                     default:
                         selectIdpAction = (): Promise<void> => demoPage.selectKeycloak();
@@ -108,7 +108,7 @@ describe('Auth code + PKCE (with redirect)', () => {
                     await expect(response.request().method()).toEqual('POST');
                     await expect(response.status()).toEqual(200);
 
-                    const requestBody = response.request().postData();
+                    const requestBody = await response.request().fetchPostData();
                     await expect(requestBody).toContain('code=');
                     await expect(requestBody).toContain(`client_id=${CONFIG.CLIENT_ID}`);
                     await expect(requestBody).toContain(`grant_type=${CONFIG.GRANT_TYPE}`);

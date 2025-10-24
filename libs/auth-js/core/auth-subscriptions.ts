@@ -27,7 +27,9 @@ export class AuthSubscriptions<T extends unknown[]> {
             }
         }
         return {
-            unsubscribe: (): void => { this.unsubscribe(subscription); }
+            unsubscribe: (): void => {
+                this.unsubscribe(subscription);
+            }
         };
     }
 

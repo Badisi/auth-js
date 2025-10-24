@@ -13,7 +13,7 @@ export interface LibrarySettingsDefinitionItem<LS extends AuthSettings = AuthSet
     type: 'string' | 'boolean' | 'list' | 'json';
     placeholder?: string;
     required?: boolean;
-    values?: { label: string; value: unknown; }[];
+    values?: { label: string; value: unknown }[];
 }
 
 export interface Settings<LS extends AuthSettings = AuthSettings> {

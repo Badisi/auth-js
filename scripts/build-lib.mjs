@@ -5,7 +5,14 @@ import chalk from 'chalk';
 import { build as esbuild } from 'esbuild';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve as pathResolve } from 'node:path';
-import { createProgram, flattenDiagnosticMessageText, getPreEmitDiagnostics, parseJsonConfigFileContent, readConfigFile, sys } from 'typescript';
+import {
+    createProgram,
+    flattenDiagnosticMessageText,
+    getPreEmitDiagnostics,
+    parseJsonConfigFileContent,
+    readConfigFile,
+    sys
+} from 'typescript';
 
 /**
  *  @typedef {import("esbuild").BuildOptions} EsbuildOptions
@@ -79,7 +86,11 @@ const emitDeclarationFiles = tsconfigPath => {
 
 /** @type {(options: BuildOptions) => Promise<void>} */
 const build = async options => {
-    const outdir = pathResolve(options.distPath, options.format, options.entryPoint.name);
+    const outdir = pathResolve(
+        options.distPath,
+        options.format === 'iife' ? 'browser' : options.format,
+        options.entryPoint.name
+    );
 
     /** @type {EsbuildOptions} */
     const esbuildOptions = {
@@ -87,9 +98,7 @@ const build = async options => {
         format: options.format,
         absWorkingDir: options.absWorkingDir,
         outfile: pathResolve(outdir, options.minify ? 'index.min.js' : 'index.js'),
-        entryPoints: [
-            options.entryPoint.path
-        ],
+        entryPoints: [options.entryPoint.path],
         tsconfig: options.tsconfigPath,
         bundle: true,
         // sourcemap: true,
@@ -103,10 +112,7 @@ const build = async options => {
 
     mkdirSync(outdir, { recursive: true });
     if (options.platform === 'neutral') {
-        esbuildOptions.mainFields = [
-            'module',
-            'main'
-        ];
+        esbuildOptions.mainFields = ['module', 'main'];
         writeFileSync(pathResolve(outdir, 'package.json'), JSON.stringify({ type: 'module' }, null, 4), {
             encoding: 'utf8'
         });
@@ -210,7 +216,11 @@ export default async options => {
             if (options.buildOptions.cjs) {
                 content.require = `../cjs${entryPointName}/index.js`;
             }
-            writeFileSync(pathResolve(options.distPath, entryPoint.name, 'package.json'), JSON.stringify(content, null, 4), { encoding: 'utf8' });
+            writeFileSync(
+                pathResolve(options.distPath, entryPoint.name, 'package.json'),
+                JSON.stringify(content, null, 4),
+                { encoding: 'utf8' }
+            );
         });
         //      -- library
         const distPkgJsonPath = pathResolve(options.distPath, 'package.json');

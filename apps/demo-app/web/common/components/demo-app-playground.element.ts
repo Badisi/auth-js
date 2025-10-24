@@ -259,16 +259,24 @@ export class DemoAppPlaygroundElement extends HTMLElement {
         this.apiUrlEl?.addEventListener('keydown', apiCb);
         this.apiHeadersEl?.addEventListener('keydown', apiCb);
 
-        const apiUrlCb = (): void => { this.saveSettings({ apiUrl: this.apiUrlEl?.value }); };
+        const apiUrlCb = (): void => {
+            this.saveSettings({ apiUrl: this.apiUrlEl?.value });
+        };
         this.apiUrlEl?.addEventListener('input', apiUrlCb);
 
-        const apiHeadersCb = (): void => { this.saveSettings({ apiHeaders: this.apiHeadersEl?.value }); };
+        const apiHeadersCb = (): void => {
+            this.saveSettings({ apiHeaders: this.apiHeadersEl?.value });
+        };
         this.apiHeadersEl?.addEventListener('input', apiHeadersCb);
 
-        const guardsQueryParamsCb = (): void => { this.saveSettings({ queryParams: this.guardsQueryParamsEl?.value }); };
+        const guardsQueryParamsCb = (): void => {
+            this.saveSettings({ queryParams: this.guardsQueryParamsEl?.value });
+        };
         this.guardsQueryParamsEl?.addEventListener('input', guardsQueryParamsCb);
 
-        const guardsRolesCb = (): void => { this.saveSettings({ roles: this.guardsRolesEl?.value }); };
+        const guardsRolesCb = (): void => {
+            this.saveSettings({ roles: this.guardsRolesEl?.value });
+        };
         this.guardsRolesEl?.addEventListener('input', guardsRolesCb);
 
         const guardsCb = (eventName: string): boolean => {
@@ -286,7 +294,7 @@ export class DemoAppPlaygroundElement extends HTMLElement {
                     queryParams
                 }
             }));
-        }
+        };
 
         const guardsHomeCb = (): boolean => guardsCb('home');
         this.guardsHomeBtnEl?.addEventListener('click', guardsHomeCb);
@@ -338,12 +346,14 @@ export class DemoAppPlaygroundElement extends HTMLElement {
     }
 
     public disconnectedCallback(): void {
-        this.listeners.forEach(rm => { rm(); });
+        this.listeners.forEach(rm => {
+            rm();
+        });
     }
 
     // --- API(s) ---
 
-    public setApiStatus(data: unknown, isError: boolean): void {
+    public setApiStatus(data: string | Record<string, unknown>, isError: boolean): void {
         this.apiStatusEl?.classList.remove(isError ? 'success' : 'error');
         this.apiStatusEl?.classList.add(isError ? 'error' : 'success');
         if (this.apiResponseEl) {

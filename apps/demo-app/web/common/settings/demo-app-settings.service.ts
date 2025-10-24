@@ -6,7 +6,7 @@ import { DEFAULT_SETTINGS, LIBRARY_IMPLEMENTATIONS } from './default-settings';
 import { LIBRARY_SETTINGS_DEFINITION } from './library-settings-definition';
 
 export class DemoAppSettingsService<S extends AuthSettings = AuthSettings> {
-    #storageKey = `auth-js:playground:settings`;
+    #storageKey = 'auth-js:playground:settings';
     #librarySettingsDefinition = LIBRARY_SETTINGS_DEFINITION;
     #defaultDemoAppSettings: DemoAppSettings<S>;
 
@@ -66,7 +66,7 @@ export class DemoAppSettingsService<S extends AuthSettings = AuthSettings> {
         const appSettings = this.get();
         const index = appSettings.currentSettingsIndex;
         if (index >= 0 && index < appSettings.settings.length) {
-            return appSettings.settings[index]
+            return appSettings.settings[index];
         }
         return appSettings.settings[0];
     }

@@ -29,7 +29,7 @@ const router = createRouter({
                     component: (): Promise<RouteComponent> => import('../views/PageView.vue'),
                     meta: {
                         title: 'PRIVATE CONTENT',
-                        authGuard: true,
+                        authGuard: true
                         // authGuard: { fallbackUrl: 'forbidden' },
                         // authGuard: { validator: () => false },
                         // authGuard: { validator: hasRole('view-profile') }

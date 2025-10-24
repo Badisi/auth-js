@@ -21,7 +21,9 @@ import { environment } from './environments/environment';
             const message = (err instanceof Error) ? err.message : String(err);
             el.innerHTML = `${message}<br/><button id="loginButton">Login</button>`;
             document.body.querySelector('#loginButton')?.addEventListener(
-                'click', () => { location.reload(); }, { once: true }
+                'click', () => {
+                    location.reload();
+                }, { once: true }
             );
             console.error(err);
         });

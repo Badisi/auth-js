@@ -1,16 +1,22 @@
 /**
  * @license GPL-3.0-only
- * Package @badisi/auth-js <https://github.com/Badisi/auth-js/tree/main/libs/auth-js>
+ * Package `@badisi/auth-js` <https://github.com/Badisi/auth-js/tree/main/libs/auth-js>
  * Released under GNU General Public License v3.0 only <https://github.com/Badisi/auth-js/blob/main/LICENSE>
  * SPDX-License-Identifier: GPL-3.0-only
  * Copyright (C) 2018 Badisi
  */
 
 import { AuthLogger } from '../core';
+
 AuthLogger.init('@badisi/auth-js');
 
 export type {
-    AuthGuardOptions, AuthGuardValidator, AuthSubscriber, AuthSubscriberOptions, AuthSubscription, Optional
+    AuthGuardOptions,
+    AuthGuardValidator,
+    AuthSubscriber,
+    AuthSubscriberOptions,
+    AuthSubscription,
+    Optional
 } from '../core';
 export { AuthManager, AuthSubscriptions, AuthUtils, LogLevel } from '../core';
 export { initOidc } from './main';

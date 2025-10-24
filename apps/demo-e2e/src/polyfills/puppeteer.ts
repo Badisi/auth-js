@@ -17,8 +17,7 @@ declare global {
 
 type MockFunction = (url: string, filterOptions?: MockFilterOptions) => Promise<WebdriverIO.Mock>;
 
-// @ts-expect-error Webdriverio wrongly typed the origCommand and expect it to be `() => MockFunction` instead of `MockFunction`
-browser.overwriteCommand('mock', async (origCommand: MockFunction, url: string, _filterOptions?: MockFilterOptions): Promise<WebdriverIO.Mock> => {
+browser.overwriteCommand('mock', async (_origCommand: MockFunction, url: string, _filterOptions?: MockFilterOptions): Promise<WebdriverIO.Mock> => {
     const currentPage = await browser.getPage();
     /**
      * BiDi seems very unstable if many mocks are used and it slowed everything down.
@@ -30,7 +29,7 @@ browser.overwriteCommand('mock', async (origCommand: MockFunction, url: string, 
         // eslint-disable-next-line no-nested-ternary
         const pattern = (typeof url === 'object') ? url : (url.startsWith('http') ? new URLPattern(url) : new URLPattern({ pathname: url }));
         return await currentPage.waitForResponse(resp => pattern.test(resp.url()), { timeout: options?.timeout });
-    }
+    };
     return mock;
 });
 

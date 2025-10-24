@@ -90,7 +90,9 @@ export class MobileWindow implements IWindow {
          * @see https://github.com/ionic-team/capacitor-plugins/issues/2045
          */
         if (!this.#isClosed) {
-            await CAPACITOR_BROWSER?.close().catch((err: unknown) => { _logger.error(err); });
+            await CAPACITOR_BROWSER?.close().catch((err: unknown) => {
+                _logger.error(err);
+            });
             // TODO: BROWSER_TAB?.close();
         }
         _logger.debug('success');
