@@ -1,3 +1,13 @@
+## 1.1.1 (2025-10-26)
+
+### 🐛 Fixes
+
+- base url regression ([c6c1826](https://github.com/Badisi/auth-js/commit/c6c1826))
+
+### ❤️ Thank You
+
+- Badisi @Badisi
+
 ## 1.1.0 (2025-04-07)
 
 ### 🚀 Features
