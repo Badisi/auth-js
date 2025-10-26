@@ -27,7 +27,7 @@ export class AuthUtils {
      * Search parameters will be matched no matter their order.
      * @param url1 Reference url
      * @param url2 Url to match against the reference url
-     * @returns
+     * @returns Returns true if both urls matches pathname, origin and search parameters, or false otherwise.
      */
     public static isUrlMatching = (url1: string, url2?: string): boolean => {
         if (url2 !== undefined) {
@@ -63,7 +63,10 @@ export class AuthUtils {
 
     public static getBaseUrl = (): string => {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        const baseUrl = document.baseURI ?? document.querySelector('base')?.href;
+        let baseUrl = document.baseURI ?? document.querySelector('base')?.href;
+        // Remove any query params as baseURI can contain them
+        const url = new URL(baseUrl);
+        baseUrl = `${url.origin}${url.pathname}`;
         return (baseUrl.endsWith('/')) ? baseUrl : `${baseUrl}/`;
     };
 
