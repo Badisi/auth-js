@@ -33,12 +33,18 @@ browser.overwriteCommand('mock', async (_origCommand: MockFunction, url: string,
     return mock;
 });
 
+// eslint-disable-next-line @typescript-eslint/no-deprecated
 browser.addCommand('waitForNavigation', async (): Promise<string> => {
+    let newUrl = '';
     const currentUrl = await browser.getUrl();
-    await browser.waitUntil(async () => (await browser.getUrl()) !== currentUrl);
-    return await browser.getUrl();
+    await browser.waitUntil(async () => {
+        newUrl = await browser.getUrl();
+        return newUrl !== currentUrl;
+    });
+    return newUrl;
 });
 
+// eslint-disable-next-line @typescript-eslint/no-deprecated
 browser.addCommand('getPage', async (): Promise<Page> => {
     if (!('page' in browser.__propertiesObject__)) {
         const puppeteerBrowser = await browser.getPuppeteer();

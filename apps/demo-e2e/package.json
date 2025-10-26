@@ -6,7 +6,7 @@
     "scripts": {
         "start": "NODE_TLS_REJECT_UNAUTHORIZED=0 wdio run wdio.config.ts --watch=false --debug=true --headless=false",
         "watch": "NODE_TLS_REJECT_UNAUTHORIZED=0 wdio run wdio.config.ts --watch=true --debug=true --headless=false",
-        "ci": "wdio run wdio.config.ts --watch=false --debug=false --headless=true"
+        "ci": "NODE_TLS_REJECT_UNAUTHORIZED=0 wdio run wdio.config.ts --watch=false --debug=false --headless=true"
     },
     "devDependencies": {
         "@types/jasmine": "^5.1.12",

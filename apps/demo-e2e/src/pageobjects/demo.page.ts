@@ -2,115 +2,157 @@
 import { $, browser } from '@wdio/globals';
 import type { ChainablePromiseElement } from 'webdriverio';
 
-const CONFIG = {
+const SETTING = {
     AUTH0: 0,
     KEYCLOAK: 1,
     ZITADEL: 2
 };
 
+class DemoPageSettings {
+
+    // --- ELEMENT(s) ---
+
+    public getElement(selector: string): ChainablePromiseElement {
+        return $('app-demo').shadow$('demo-app-settings').shadow$(selector);
+    }
+
+    public get $settingSelect(): ChainablePromiseElement {
+        return this.getElement('select#settings-select');
+    }
+
+    // --- API(s) ---
+
+    public async selectAuth0(): Promise<void> {
+        await this.$settingSelect.selectByIndex(SETTING.AUTH0);
+    }
+
+    public async selectKeycloak(): Promise<void> {
+        await this.$settingSelect.selectByIndex(SETTING.KEYCLOAK);
+    }
+
+    public async selectZitadel(): Promise<void> {
+        await this.$settingSelect.selectByIndex(SETTING.ZITADEL);
+    }
+}
+
+class DemoPagePlayground {
+
+    // --- ELEMENT(s) ---
+
+    public getElement(selector: string): ChainablePromiseElement {
+        return $('app-demo').shadow$('demo-app-playground').shadow$(selector);
+    }
+
+    public get $apiUrlInput(): ChainablePromiseElement {
+        return this.getElement('input#api-url-input');
+    }
+
+    public get $apiHeadersInput(): ChainablePromiseElement {
+        return this.getElement('input#api-headers-input');
+    }
+
+    public get $apiGetButton(): ChainablePromiseElement {
+        return this.getElement('button#api-get-button');
+    }
+
+    // --- API(s) ---
+
+    public async submitApi(url: string, headers = ''): Promise<void> {
+        await this.$apiUrlInput.setValue(url);
+        await this.$apiHeadersInput.setValue(headers);
+        await this.$apiGetButton.click();
+    }
+};
+
 class DemoPage {
     public readonly url = 'http://localhost:4200';
+    public readonly playground = new DemoPagePlayground();
+    public readonly settings = new DemoPageSettings();
 
-    public appMain(selector: string): ChainablePromiseElement {
-        return $('//app-demo').shadow$('demo-app-main').shadow$(selector);
+    // --- MAIN ELEMENT(s) ---
+
+    public getMainElement(selector: string): ChainablePromiseElement {
+        return $('app-demo').shadow$('demo-app-main').shadow$(selector);
     }
 
-    public appHeader(selector: string): ChainablePromiseElement {
-        return this.appMain('demo-app-header').shadow$(selector);
+    public get $playgroundButton(): ChainablePromiseElement {
+        return this.getMainElement('#tabs a#playground-button');
     }
 
-    public appPlayground(selector: string): ChainablePromiseElement {
-        return $('//app-demo').shadow$('demo-app-playground').shadow$(selector);
+    public get $debugButton(): ChainablePromiseElement {
+        return this.getMainElement('#tabs a#debug-button');
     }
 
-    public appSettings(selector: string): ChainablePromiseElement {
-        return $('//app-demo').shadow$('demo-app-settings').shadow$(selector);
+    public get $settingsButton(): ChainablePromiseElement {
+        return this.getMainElement('#tabs a#settings-button');
     }
 
-    public get loginButton(): ChainablePromiseElement {
-        return this.appHeader('button#login-button');
+    // --- HEADER ELEMENT(s) ---
+
+    public getHeaderElement(selector: string): ChainablePromiseElement {
+        return this.getMainElement('demo-app-header').shadow$(selector);
     }
 
-    public get logoutButton(): ChainablePromiseElement {
-        return this.appHeader('button#logout-button');
+    public get $implementationSelect(): ChainablePromiseElement {
+        return this.getHeaderElement('select#implementation-select');
     }
 
-    public get silentRenewButton(): ChainablePromiseElement {
-        return this.appHeader('button#silent-renew-button');
+    public get $settingSelect(): ChainablePromiseElement {
+        return this.getHeaderElement('select#setting-select');
     }
 
-    public get playgroundButton(): ChainablePromiseElement {
-        return this.appMain('#tabs a#playground-button');
+    public get $loginButton(): ChainablePromiseElement {
+        return this.getHeaderElement('button#login-button');
     }
 
-    public get debugButton(): ChainablePromiseElement {
-        return this.appMain('#tabs a#debug-button');
+    public get $logoutButton(): ChainablePromiseElement {
+        return this.getHeaderElement('button#logout-button');
     }
 
-    public get settingsButton(): ChainablePromiseElement {
-        return this.appMain('#tabs a#settings-button');
+    public get $silentRenewButton(): ChainablePromiseElement {
+        return this.getHeaderElement('button#silent-renew-button');
     }
 
-    public get apiUrlInput(): ChainablePromiseElement {
-        return this.appPlayground('input#api-url-input');
-    }
-
-    public get apiHeadersInput(): ChainablePromiseElement {
-        return this.appPlayground('input#api-headers-input');
-    }
-
-    public get apiGetButton(): ChainablePromiseElement {
-        return this.appPlayground('button#api-get-button');
-    }
-
-    public get settingsSelect(): ChainablePromiseElement {
-        return this.appSettings('select#settings-select');
-    }
+    // --- API(s) ---
 
     public async navigate(route = ''): Promise<void> {
         await browser.url(`${this.url}${route}`);
     }
 
     public async login(): Promise<void> {
-        await this.loginButton.click();
-    }
-
-    public async logout(): Promise<void> {
-        await this.logoutButton.click();
-    }
-
-    public async silentRenew(): Promise<void> {
-        await this.silentRenewButton.click();
-    }
-
-    public async openPlayground(): Promise<void> {
-        await this.playgroundButton.click();
-    }
-
-    public async openDebug(): Promise<void> {
-        await this.debugButton.click();
-    }
-
-    public async openSettings(): Promise<void> {
-        await this.settingsButton.click();
+        await this.$loginButton.click();
     }
 
     public async selectAuth0(): Promise<void> {
-        await this.settingsSelect.selectByIndex(CONFIG.AUTH0);
+        await this.$settingSelect.selectByIndex(SETTING.AUTH0);
     }
 
     public async selectKeycloak(): Promise<void> {
-        await this.settingsSelect.selectByIndex(CONFIG.KEYCLOAK);
+        await this.$settingSelect.selectByIndex(SETTING.KEYCLOAK);
     }
 
     public async selectZitadel(): Promise<void> {
-        await this.settingsSelect.selectByIndex(CONFIG.ZITADEL);
+        await this.$settingSelect.selectByIndex(SETTING.ZITADEL);
     }
 
-    public async api(url: string, headers = ''): Promise<void> {
-        await this.apiUrlInput.setValue(url);
-        await this.apiHeadersInput.setValue(headers);
-        await this.apiGetButton.click();
+    public async logout(): Promise<void> {
+        await this.$logoutButton.click();
+    }
+
+    public async silentRenew(): Promise<void> {
+        await this.$silentRenewButton.click();
+    }
+
+    public async openPlayground(): Promise<void> {
+        await this.$playgroundButton.click();
+    }
+
+    public async openDebug(): Promise<void> {
+        await this.$debugButton.click();
+    }
+
+    public async openSettings(): Promise<void> {
+        await this.$settingsButton.click();
     }
 }
 

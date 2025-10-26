@@ -88,7 +88,7 @@ template.innerHTML = `
             cursor: pointer;
         }
 
-        :host #settings-select {
+        :host #setting-select {
             margin-left: 6px;
             color: black;
         }
@@ -144,14 +144,14 @@ template.innerHTML = `
         }
 
         @media only screen and (max-width: 600px) {
-            :host .settings-select {
+            :host .setting-select {
                 margin: 12px 8px;
             }
         }
     </style>
 
-    <div class="settings-select row">
-        <select id="settings-select"></select>
+    <div class="setting-select row">
+        <select id="setting-select"></select>
         <div id="add-settings-button" title="Create new settings">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
         </div>
@@ -194,12 +194,12 @@ export class DemoAppSettingsElement extends HTMLElement {
     public connectedCallback(): void {
         this.formEl = this.shadowRoot?.querySelector<HTMLFormElement>('form');
         this.formContentEl = this.shadowRoot?.querySelector<HTMLElement>('.form-content');
-        this.selectEl = this.shadowRoot?.querySelector<HTMLSelectElement>('#settings-select');
+        this.selectEl = this.shadowRoot?.querySelector<HTMLSelectElement>('#setting-select');
         this.settingsNameEl = this.shadowRoot?.querySelector<HTMLInputElement>('#settingsName');
 
         // Form events
         const inputCb = (e: Event): void => {
-            if (!this.formIsDirty && ((e.target as HTMLElement).id !== 'settings-select')) {
+            if (!this.formIsDirty && ((e.target as HTMLElement).id !== 'setting-select')) {
                 this.formIsDirty = true;
                 this.classList.add('dirty');
             }
