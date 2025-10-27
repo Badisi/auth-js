@@ -1,3 +1,13 @@
+## 1.0.1 (2025-10-27)
+
+### 🚀 Features
+
+- **router:** add support for hash navigation ([3a30733](https://github.com/Badisi/auth-js/commit/3a30733))
+
+### ❤️ Thank You
+
+- Badisi @Badisi
+
 ## 1.0.0 (2025-04-07)
 
 ### 🚀 Features
