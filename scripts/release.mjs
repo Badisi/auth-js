@@ -120,6 +120,7 @@ const updateProjectsDists = (projectsToRelease, projects, projectsVersionData, o
             /** @type {PackageJson} */
             const distPackageJson = JSON.parse(readFileSync(join(workspaceRoot, distPackageJsonPath), 'utf8'));
             distPackageJson.version = projectNewVersion;
+            distPackageJson.dependencies = workspacePackageJson.dependencies;
             distPackageJson.peerDependencies = workspacePackageJson.peerDependencies;
             writeFileSync(join(workspaceRoot, distPackageJsonPath), JSON.stringify(distPackageJson, null, 4), {
                 encoding: 'utf8'

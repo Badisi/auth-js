@@ -43,8 +43,33 @@ index d349e5f..f16eee6 100644
              (!this.isVersionPlans && change.scope
                  ? `**${change.scope.trim()}:** `
                  : '') +
+diff --git a/node_modules/nx/src/command-line/release/changelog.js b/node_modules/nx/src/command-line/release/changelog.js
+index 6bd7995..44dd4e4 100644
+--- a/node_modules/nx/src/command-line/release/changelog.js
++++ b/node_modules/nx/src/command-line/release/changelog.js
+@@ -303,6 +303,7 @@ function createAPI(overrideReleaseConfig, ignoreNxJsonConfig) {
+             if (config === false) {
+                 continue;
+             }
++            const seen = new Set();
+             const projects = args.projects?.length
+                 ? // If the user has passed a list of projects, we need to use the filtered list of projects within the release group, plus any dependents
+                     Array.from(releaseGraph.releaseGroupToFilteredProjects.get(releaseGroup)).flatMap((project) => {
+@@ -310,6 +311,12 @@ function createAPI(overrideReleaseConfig, ignoreNxJsonConfig) {
+                             project,
+                             ...(projectsVersionData[project]?.dependentProjects.map((dep) => dep.source) || []),
+                         ];
++                    // TODO: to be removed when https://github.com/nrwl/nx/issues/33268 is resolved
++                    // Avoid duplicates
++                    }).filter((project) => {
++                        if (seen.has(project)) return false;
++                        seen.add(project);
++                        return true;
+                     })
+                 : // Otherwise, we use the full list of projects within the release group
+                     releaseGroup.projects;
 diff --git a/node_modules/nx/src/command-line/release/utils/git.js b/node_modules/nx/src/command-line/release/utils/git.js
-index fbb58b6..64d8fa1 100644
+index fbb58b6..557face 100644
 --- a/node_modules/nx/src/command-line/release/utils/git.js
 +++ b/node_modules/nx/src/command-line/release/utils/git.js
 @@ -475,7 +475,8 @@ function getAllAuthorsForCommit(commit) {
