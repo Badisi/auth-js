@@ -8,14 +8,21 @@ import TabItem from '@theme/TabItem';
 
 This guide explains how to set up your Angular project to begin using [`@badisi/ngx-auth`][ngx-auth].
 
-🚀 The fastest, simplest and preferred way is the [schematic](#schematic) way but you can also install this library [manually](#manual-installation).
+🚀 The fastest, simplest and preferred way is the [schematic](#-schematic-recommended) way but you can also install this library [manually](#-manual).
 
 :::info Before using this library
 Make sure you properly configured your 👉 [Authentication Provider](providers).
 :::
 
 
-### Schematic
+### Prerequisite
+
+An existing [Angular][angular] application.
+
+
+### Installation
+
+#### • Schematic (recommended)
 
 Use the Angular CLI's installation [schematic][schematics] to automagically set up your Angular project with this library:
 
@@ -25,10 +32,10 @@ ng add @badisi/ngx-auth
 
 Questions will be asked during the process, so please refer to the [configuration](./configuration) page for more information.
 
-You can also read on with the **Manual installation** guide to have a better understanding of what the schematics is actually doing to your project.
+You can also read on with the manual installation guide to have a better understanding of what the schematics is actually doing to your project.
 
 
-### Manual installation
+#### • Manual
 
 If you wish to install this library manually, please follow the steps below:
 
@@ -51,7 +58,7 @@ If you wish to install this library manually, please follow the steps below:
     </TabItem>
     </Tabs>
 
-2. Modify your **angular.json** file
+2. Modify your **angular configuration** file
 
     ```js title="angular.json" {5-7,9-11}
     {
@@ -84,7 +91,7 @@ If you wish to install this library manually, please follow the steps below:
 
     > Modify your **main.ts** file
 
-    ```ts title="main.ts" {2,7-11,14}
+    ```ts {2,7-11,14}
     import { bootstrapApplication } from '@angular/platform-browser';
     import { initAuth, provideAuth } from '@badisi/ngx-auth';
 
@@ -106,7 +113,7 @@ If you wish to install this library manually, please follow the steps below:
 
     > Modify your **main.ts** file
 
-    ```ts title="main.ts" {3,12-15,17,19}
+    ```ts {3,12-15,17,19}
     import { enableProdMode } from '@angular/core';
     import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
     import { initAuth } from '@badisi/ngx-auth';
@@ -132,7 +139,7 @@ If you wish to install this library manually, please follow the steps below:
     </Tabs>
 
     :::info
-    - Initializing the library prior to your Angular application bootstrapping ensures that all the security checks are made upstream (if needed) and avoid the whole Angular application to be loaded twice when using redirects.
+    Initializing the library prior to your Angular application bootstrapping ensures that all the security checks are made upstream (if needed) and avoid the whole application to be loaded twice when using redirects.
     :::
 
     :::tip
@@ -144,6 +151,7 @@ If you wish to install this library manually, please follow the steps below:
 
 
 
+[angular]: https://angular.dev/installation
 [schematics]: https://material.angular.io/guide/schematics
 [oidc-client]: https://github.com/authts/oidc-client-ts/issues/275
 [crypto-js]: https://github.com/brix/crypto-js

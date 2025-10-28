@@ -19,6 +19,7 @@ const sidebars = {
                 'getting-started/vanilla-js',
                 'getting-started/angular',
                 'getting-started/vue-js',
+                'getting-started/quasar',
                 'getting-started/mobile',
                 'getting-started/providers'
             ]

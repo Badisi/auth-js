@@ -34,13 +34,46 @@ Make sure you properly configured your 👉 [Authentication Provider](providers)
     </TabItem>
     </Tabs>
 
-2. ...
+2. Copy required files to your application assets folder
 
-    :::note
-    Coming soon..
+    ```js
+    {
+      "glob": "**/*",
+      "input": "node_modules/@badisi/auth-js/oidc/assets",
+      "output": "oidc/callback"
+    }
+    ```
+
+    :::info
+    **Assets** needs to be copy over to your application because some html web pages are used and required when navigating back from the Authentication Provider.
     :::
 
+3. Provide the library in your main entrypoint
 
+    ```ts title="main.ts"
+    import { initOidc } from '@badisi/auth-js/oidc';
+
+    initOidc({
+      authorityUrl: 'https://dev-fijd1e9x.us.auth0.com',
+      clientId: 'kRVVEnAWKMpxxpcodl0TqLXfIHgQvmmt'
+    }).then(manager => {
+      // Expose the manager for later use (if needed)
+      window.authManager = manager;
+
+      // Bootstrap your application
+      document.body.appendChild(document.createElement('app-root'));
+    }).catch(error => console.error(error));
+    ```
+
+    :::info
+    Initializing the library prior to your application bootstrapping ensures that all the security checks are made upstream (if needed) and avoid the whole application to be loaded twice when using redirects.
+    :::
+
+    :::tip
+    For more info on how to **configure** the library please have a look at the [`configuration`](./configuration) page.
+    :::
+
+5. You're done! 🚀
 
 
 [auth-js]: https://github.com/badisi/auth-js/tree/main/libs/auth-js

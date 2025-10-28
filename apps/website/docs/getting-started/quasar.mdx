@@ -1,12 +1,12 @@
 ---
-title: Vue.js
+title: Quasar
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 
-This guide explains how to set up your Vue.js project to begin using [`@badisi/auth-vue`][auth-vue].
+This guide explains how to set up your Quasar project to begin using [`@badisi/auth-vue`][auth-vue].
 
 :::info Before using this library
 Make sure you properly configured your 👉 [Authentication Provider](providers).
@@ -15,7 +15,7 @@ Make sure you properly configured your 👉 [Authentication Provider](providers)
 
 ### Prerequisite
 
-An existing [Vue.js][vue-js] application.
+An existing [Quasar][quasar] application set up with **TypeScript** and **Vite**.
 
 
 ### Installation
@@ -58,20 +58,25 @@ An existing [Vue.js][vue-js] application.
     </TabItem>
     </Tabs>
 
-3. Modify your **Vite configuration** file
+3. Modify your **quasar configuration** file
 
-    ```js title="vite.config.ts" {1,5-10}
+    ```js title="quasar.config.ts" {1,8-13}
     import { viteStaticCopy } from 'vite-plugin-static-copy';
+    import { defineConfig } from '#q-app/wrappers';
 
-    export default defineConfig({
-      plugins: [
-        viteStaticCopy({
-          targets: [{
-            src: 'node_modules/@badisi/auth-vue/oidc/assets/*',
-            dest: 'oidc/callback/'
-          }]
-        })
-      ]
+    export default defineConfig((/* ctx */) => {
+      return {
+        build: {
+          vitePlugins: [
+            ...viteStaticCopy({
+              targets: [{
+                src: 'node_modules/@badisi/auth-vue/oidc/assets/*',
+                dest: 'oidc/callback/'
+              }]
+            })
+          ]
+        }
+      };
     });
     ```
 
@@ -81,27 +86,35 @@ An existing [Vue.js][vue-js] application.
 
 4. Provide the library
 
-    ```ts title="main.ts" {3,8-11,13,16}
-    import './assets/main.css'
+    > Create an **src/boot/auth.ts** file
 
+    ```ts {1,5-9}
     import { initAuth } from '@badisi/auth-vue';
-    import { createApp } from 'vue'
-    import app from './App.vue'
-    import router from './router'
+    import { boot } from 'quasar/wrappers';
 
-    initAuth({
-      authorityUrl: 'https://dev-fijd1e9x.us.auth0.com',
-      clientId: 'kRVVEnAWKMpxxpcodl0TqLXfIHgQvmmt'
-    }).then(authPlugin => {
-      const vueApp = createApp(app);
-      vueApp.use(authPlugin, { router });
-      vueApp.use(router);
-      vueApp.mount('#app');
-    }).catch(error => console.error(error));
+    export default boot(async ({ app, router }) => {
+      const AuthPlugin = await initAuth({
+        authorityUrl: 'https://dev-fijd1e9x.us.auth0.com',
+        clientId: 'kRVVEnAWKMpxxpcodl0TqLXfIHgQvmmt'
+      });
+      app.use(AuthPlugin, { router });
+    });
+    ```
+
+    > Import it in your **quasar.config.ts** file
+
+    ```ts {5}
+    import { defineConfig } from '#q-app/wrappers';
+
+    export default defineConfig((/* ctx */) => {
+      return {
+        boot: ['auth']
+      };
+    });
     ```
 
     :::info
-    Initializing the library prior to your Vue.js application bootstrapping ensures that all the security checks are made upstream (if needed) and avoid the whole application to be loaded twice when using redirects.
+    Initializing the library during your Quasar application bootstrapping ensures that all the security checks are made upstream (if needed).
     :::
 
     :::tip
@@ -136,4 +149,4 @@ An existing [Vue.js][vue-js] application.
 
 
 [auth-vue]: https://github.com/badisi/auth-js/tree/main/libs/auth-vue
-[vue-js]: https://vuejs.org/guide/quick-start
+[quasar]: https://quasar.dev/start/quick-start
