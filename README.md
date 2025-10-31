@@ -5,9 +5,9 @@
 <i>Authentication and authorization support for web based desktop and mobile applications.</i>
 
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)][pullrequest]
-[![docs site](https://img.shields.io/badge/site-docs-ed6e55)][docs-site]
-[![playground site](https://img.shields.io/badge/site-playground-ed6e55)][playground-site]
 [![License](https://img.shields.io/npm/l/@badisi/auth-js.svg?color=ff69b4)][license]
+[![docs site](https://img.shields.io/badge/documentation-ed6e55?logo=readthedocs&logoColor=f5f5f5)][docs-site]
+[![playground site](https://img.shields.io/badge/playground-ed6e55?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjRweCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiIHdpZHRoPSIyNHB4IiBmaWxsPSIjZjVmNWY1Ij48cGF0aCBkPSJNMzIwLTIwMHYtNTYwbDQ0MCAyODAtNDQwIDI4MFoiLz48L3N2Zz4=)][playground-site]
 
 <hr/>
 
@@ -55,9 +55,9 @@ Please read and follow the [Code of Conduct][codeofconduct] and help me keep thi
 [npm-dl-auth-js]: https://npmcharts.com/compare/@badisi/auth-js?minimal=true
 [npm-dl-ngx-auth]: https://npmcharts.com/compare/@badisi/ngx-auth?minimal=true
 [npm-dl-auth-vue]: https://npmcharts.com/compare/@badisi/auth-vue?minimal=true
-[build-auth-js]: https://img.shields.io/github/actions/workflow/status/badisi/auth-js/ci_test_auth-js.yml
-[build-ngx-auth]: https://img.shields.io/github/actions/workflow/status/badisi/auth-js/ci_test_ngx-auth.yml
-[build-auth-vue]: https://img.shields.io/github/actions/workflow/status/badisi/auth-js/ci_test_auth-vue.yml
+[build-auth-js]: https://github.com/badisi/auth-js/actions/workflows/ci_test_auth-js.yml
+[build-ngx-auth]: https://github.com/badisi/auth-js/actions/workflows/ci_test_ngx-auth.yml
+[build-auth-vue]: https://github.com/badisi/auth-js/actions/workflows/ci_test_auth-vue.yml
 [pullrequest]: https://github.com/badisi/auth-js/blob/main/CONTRIBUTING.md#-submitting-a-pull-request-pr
 [license]: https://github.com/badisi/auth-js/blob/main/LICENSE
 [developer]: https://github.com/badisi/auth-js/blob/main/DEVELOPER.md
