@@ -6,8 +6,8 @@
 
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)][pullrequest]
 [![License](https://img.shields.io/npm/l/@badisi/auth-js.svg?color=ff69b4)][license]
-[![docs site](https://img.shields.io/badge/documentation-ed6e55?logo=readthedocs&logoColor=f5f5f5)][docs-site]
-[![playground site](https://img.shields.io/badge/playground-ed6e55?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjRweCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiIHdpZHRoPSIyNHB4IiBmaWxsPSIjZjVmNWY1Ij48cGF0aCBkPSJNMzIwLTIwMHYtNTYwbDQ0MCAyODAtNDQwIDI4MFoiLz48L3N2Zz4=)][playground-site]
+[![docs site](https://img.shields.io/badge/docs-view-ed6e55?logo=readthedocs&logoColor=f5f5f5)][docs-site]
+[![playground site](https://img.shields.io/badge/playground-open-ed6e55?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjRweCIgdmlld0JveD0iMCAtOTYwIDk2MCA5NjAiIHdpZHRoPSIyNHB4IiBmaWxsPSIjZjVmNWY1Ij48cGF0aCBkPSJNMzIwLTIwMHYtNTYwbDQ0MCAyODAtNDQwIDI4MFoiLz48L3N2Zz4=)][playground-site]
 
 <hr/>
 
