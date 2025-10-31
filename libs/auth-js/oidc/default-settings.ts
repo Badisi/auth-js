@@ -8,19 +8,20 @@ export const REDIRECT_URL_KEY = 'auth-js:oidc_manager:redirect_url';
 
 export const DEFAULT_SETTINGS: DefaultSettings = {
     loginRequired: false,
-    retrieveUserSession: true,
     loadUserInfo: false,
+    retrieveUserSession: true,
     automaticSilentRenew: true,
-    desktopNavigationType: DesktopNavigation.REDIRECT,
-    scope: 'openid profile email phone',
-    logLevel: LogLevel.NONE,
     automaticLoginOn401: true,
     automaticInjectToken: {
+        headerName: 'Authorization',
         include: (url: string): boolean => {
             const res = new URL(url, 'http://default-base');
             return res.hostname.startsWith('api') || res.pathname.startsWith('/api') || false;
         }
     },
+    scope: 'openid profile email phone',
+    desktopNavigationType: DesktopNavigation.REDIRECT,
+    logLevel: LogLevel.NONE,
     internal: {
         response_type: 'code',
         redirect_uri: '?oidc-callback=login',

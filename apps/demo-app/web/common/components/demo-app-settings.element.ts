@@ -34,6 +34,7 @@ template.innerHTML = `
             margin-bottom: 24px;
         }
 
+        :host form div:has(#automaticInjectToken:not(:checked)) > div:has(#automaticInjectTokenheaderName),
         :host form div:has(#automaticInjectToken:not(:checked)) > div:has(#automaticInjectTokeninclude),
         :host form div:has(#automaticInjectToken:not(:checked)) > div:has(#automaticInjectTokenexclude) {
             label {
@@ -44,6 +45,7 @@ template.innerHTML = `
             }
         }
 
+        :host form div.input:has(#automaticInjectTokenheaderName),
         :host form div.input:has(#automaticInjectTokeninclude),
         :host form div.input:has(#automaticInjectTokenexclude) {
             flex-direction: row;
@@ -412,6 +414,11 @@ export class DemoAppSettingsElement extends HTMLElement {
             if (automaticInjectTokenEl) {
                 automaticInjectTokenEl.onclick = (): void => {
                     if (!automaticInjectTokenEl.checked) {
+                        const automaticInjectTokenHeaderNameEl = this.shadowRoot?.querySelector<HTMLInputElement>('#automaticInjectTokenheaderName');
+                        if (automaticInjectTokenHeaderNameEl) {
+                            automaticInjectTokenHeaderNameEl.disabled = true;
+                            automaticInjectTokenHeaderNameEl.value = '';
+                        }
                         const automaticInjectTokenIncludeEl = this.shadowRoot?.querySelector<HTMLInputElement>('#automaticInjectTokeninclude');
                         if (automaticInjectTokenIncludeEl) {
                             automaticInjectTokenIncludeEl.disabled = true;

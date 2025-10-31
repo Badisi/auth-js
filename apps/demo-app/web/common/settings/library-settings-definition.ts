@@ -85,6 +85,11 @@ export const LIBRARY_SETTINGS_DEFINITION: LibrarySettingsDefinitionItem<OIDCAuth
     type: 'boolean'
 }, {
     // @ts-expect-error Not a key of OIDCAuthSettings
+    name: 'automaticInjectToken.headerName',
+    label: 'Header name',
+    type: 'string'
+}, {
+    // @ts-expect-error Not a key of OIDCAuthSettings
     name: 'automaticInjectToken.include',
     label: 'Include url(s)',
     type: 'string',

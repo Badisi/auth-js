@@ -84,6 +84,14 @@ export class OIDCAuthInterceptor {
         return (injectToken !== false) && this.#isAllowedRequest(url, injectToken);
     }
 
+    #getAuthorizationHeaderName(): string {
+        const injectToken = this.#manager.getSettings().automaticInjectToken;
+        if (typeof injectToken !== 'boolean' && injectToken?.headerName) {
+            return injectToken.headerName;
+        }
+        return 'Authorization';
+    }
+
     #monkeyPathFetch(enable = true): void {
         const _logger = logger.createChild('monkeyPathFetch');
         _logger.debug(enable ? 'enabling..' : 'disabling..');
@@ -99,16 +107,16 @@ export class OIDCAuthInterceptor {
                     if (this.#shouldInjectAuthToken(url)) {
                         const accessToken = await this.#manager.getAccessToken();
                         if (init && accessToken) {
-                            logger.debug('adding bearer to url:', url);
+                            const headerName = this.#getAuthorizationHeaderName();
+                            logger.debug(`adding "${headerName}" bearer to url:`, url);
                             if (Array.isArray(init.headers)) {
-                                init.headers.push(['Authorization', `Bearer ${accessToken}`]);
+                                init.headers.push([headerName, `Bearer ${accessToken}`]);
                             } else if (init.headers instanceof Headers) {
-                                init.headers.append('Authorization', `Bearer ${accessToken}`);
+                                init.headers.append(headerName, `Bearer ${accessToken}`);
                             } else {
                                 init.headers = {
                                     ...init.headers,
-                                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                                    'Authorization': `Bearer ${accessToken}`
+                                    [headerName]: `Bearer ${accessToken}`
                                 };
                             }
                         }
@@ -176,8 +184,9 @@ export class OIDCAuthInterceptor {
                         interceptor.#manager.getAccessToken()
                             .then(accessToken => {
                                 if (accessToken) {
-                                    logger.debug('adding bearer to url:', url);
-                                    this.setRequestHeader('Authorization', `Bearer ${accessToken}`);
+                                    const headerName = interceptor.#getAuthorizationHeaderName();
+                                    logger.debug(`adding "${headerName}" bearer to url:`, url);
+                                    this.setRequestHeader(headerName, `Bearer ${accessToken}`);
                                 }
                             })
                             .catch((error: unknown) => {

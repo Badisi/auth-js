@@ -13,9 +13,9 @@ export interface OIDCAuthSettings extends CoreAuthSettings, Partial<Pick<UserMan
     clientId: string;
     mobileScheme?: string;
     retrieveUserSession?: boolean;
-    desktopNavigationType?: DesktopNavigation;
-    logLevel?: LogLevel;
     automaticLoginOn401?: boolean;
     automaticInjectToken?: InjectToken;
+    desktopNavigationType?: DesktopNavigation;
+    logLevel?: LogLevel;
     internal?: Partial<Omit<UserManagerSettings, UsefulSettings | 'authority' | 'client_id'>> & MobileWindowParams;
 }

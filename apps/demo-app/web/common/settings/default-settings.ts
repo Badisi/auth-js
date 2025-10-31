@@ -29,7 +29,7 @@ const COMMON_LIBRARY_SETTINGS: Omit<Settings<OIDCAuthSettings>['librarySettings'
     loadUserInfo: true,
     automaticSilentRenew: true,
     automaticLoginOn401: true,
-    automaticInjectToken: { include: ['/api'] }
+    automaticInjectToken: { headerName: 'Authorization', include: ['/api'] }
 };
 
 const AUTH0_SETTINGS: Settings<OIDCAuthSettings> = {
