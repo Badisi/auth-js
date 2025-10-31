@@ -6,7 +6,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 
-This guide explains how to set up your Quasar project to begin using [`@badisi/auth-vue`][auth-vue].
+This guide explains how to set up your [Quasar][quasar] project to begin using [@badisi/auth-vue][auth-vue].
 
 :::info Before using this library
 Make sure you properly configured your 👉 [Authentication Provider](providers).
@@ -15,7 +15,7 @@ Make sure you properly configured your 👉 [Authentication Provider](providers)
 
 ### Prerequisite
 
-An existing [Quasar][quasar] application set up with **TypeScript** and **Vite**.
+An existing [Quasar][quasar-start] application set up with **TypeScript** and **Vite**.
 
 
 ### Installation
@@ -88,7 +88,7 @@ An existing [Quasar][quasar] application set up with **TypeScript** and **Vite**
 
     > Create an **src/boot/auth.ts** file
 
-    ```ts {1,5-9}
+    ```ts
     import { initAuth } from '@badisi/auth-vue';
     import { boot } from 'quasar/wrappers';
 
@@ -118,35 +118,15 @@ An existing [Quasar][quasar] application set up with **TypeScript** and **Vite**
     :::
 
     :::tip
-    For more info on how to **configure** the library please have a look at the [`configuration`](./configuration) page.
+    - For more info on how to **configure** the library please have a look at the [`configuration`](./configuration) page.<br/>
+    - For more info on how to **use** the library please have a look at the [`usage`](./usage) page.
     :::
 
 5. You're done! 🚀
 
 
-### Basic example
-
-```html title="AuthComponent.vue"
-<template>
-  <div style="display:flex; flex-direction:column; align-items:start; gap:16px">
-    <button @click="$authService.login()">Login</button>
-    <button @click="$authService.logout()">Logout</button>
-    <button @click="$authService.renew()">Silent renew</button>
-    (Authenticated: {{ $authService.isRenewingRef.value ? 'renewing..' : $authService.isAuthenticatedRef }})
-  </div>
-</template>
-
-<script setup lang="ts">
-  import { useAuthService } from '@badisi/auth-vue';
-  import { toRaw, watch } from 'vue';
-
-  const authService = useAuthService();
-  watch(authService.userProfileRef, value => {
-    console.log('user profile:', toRaw(value));
-  });
-</script>
-```
 
 
 [auth-vue]: https://github.com/badisi/auth-js/tree/main/libs/auth-vue
-[quasar]: https://quasar.dev/start/quick-start
+[quasar]: https://quasar.dev
+[quasar-start]: https://quasar.dev/start/quick-start

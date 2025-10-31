@@ -15,13 +15,17 @@ const config = {
     deploymentBranch: 'gh-pages',
     trailingSlash: false,
     onBrokenLinks: 'throw',
-    onBrokenMarkdownLinks: 'warn',
     favicon: 'assets/favicon.ico',
     i18n: {
         defaultLocale: 'en-US',
         locales: [
             'en-US'
         ]
+    },
+    markdown: {
+        hooks: {
+            onBrokenMarkdownLinks: 'warn'
+        }
     },
     future: {
         v4: true, // opt-in for Docusaurus v4 planned changes

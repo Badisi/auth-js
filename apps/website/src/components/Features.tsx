@@ -56,7 +56,7 @@ const Features = () => {
             title: 'Flexible Framework Support',
             icon: PuzzleSvg,
             content:
-                'Works with <a href="https://angular.dev" target=”_blank”>Angular</a>, <a href="https://vuejs.org" target=”_blank”>Vue</a>, or any JavaScript environment, with or without a framework.'
+                'Works with <a href="https://angular.dev" target=”_blank”>Angular</a>, <a href="https://vuejs.org" target=”_blank”>Vue</a>, <a href="https://quasar.dev" target=”_blank”>Quasar</a>, or any JavaScript environment with or without a framework.'
         }
     ];
 

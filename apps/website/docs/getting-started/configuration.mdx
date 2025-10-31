@@ -9,80 +9,48 @@ import TabItem from '@theme/TabItem';
 :::note
 Draft document..
 :::
-<br/>
 
-<Tabs>
-<TabItem value="auth-js" label="VanillaJS" default>
+## AuthSettings
 
-```js
-import { initAuth } from '@badisi/auth-js';
-
-await initAuth(settings: AuthSettings);
-```
-
-</TabItem>
-<TabItem value="ngx-auth" label="Angular">
-
-```ts
-import { initAuth } from '@badisi/ngx-auth';
-
-await initAuth(settings: AuthSettings);
-```
-
-</TabItem>
-</Tabs>
-
-
-## Global
-
-#### `authorityUrl*`
+### `authorityUrl*`
 > **type**: string<br/>
 > **required**
 
-#### `clientId*`
+### `clientId*`
 > **type**: string<br/>
 > **required**
 
-#### `loginRequired`
-> **type**: boolean<br/>
-> **default**: true
+### `mobileScheme*`
+> **type**: string<br/>
+> **required**
 
-#### `retrieveUserSession`
-> **type**: boolean<br/>
-> **default**: true
-
-#### `loadUserInfo`
+### `loginRequired`
 > **type**: boolean<br/>
 > **default**: false
 
-#### `automaticSilentRenew`
+### `loadUserInfo`
+> **type**: boolean<br/>
+> **default**: false
+
+### `retrieveUserSession`
 > **type**: boolean<br/>
 > **default**: true
 
-#### `desktopNavigationType`
-> **type**: enum - *DesktopNavigation.(REDIRECT, POPUP)*<br/>
-> **default**: REDIRECT
+### `automaticSilentRenew`
+> **type**: boolean<br/>
+> **default**: true
 
-#### `scope`
-> **type**: string<br/>
-> **default**: "openid profile email phone"
+### `automaticLoginOn401`
+> **type**: boolean<br/>
+> **default**: true
 
-#### `logLevel`
-> **type**: enum - *Log.(NONE, ERROR, WARN, INFO, DEBUG)*<br/>
-> **default**: NONE
-
-#### `internal`
-> **type**: UserManagerSettings<br/>
-
-
-## Angular
-
-#### `automaticInjectToken`
+### `automaticInjectToken`
 > **type**: boolean or custom object<br/>
 > **default**: any hostname or pathname that starts with 'api'
 
 ```ts title="Custom object example"
 automaticInjectToken: {
+  headerName: 'Authorization',
   include: (url: string): boolean => url?.includes('user'),
   exclude: [
     '/public-api',
@@ -91,15 +59,21 @@ automaticInjectToken: {
 }
 ```
 
-#### `automaticLoginOn401`
-> **type**: boolean<br/>
-> **default**: true
-
-#### `authGuardRedirectUrl`
+### `authGuardFallbackUrl`
 > **type**: string<br/>
+> **default**: undefined
 
-
-## Mobile
-
-#### `mobileScheme`
+### `scope`
 > **type**: string<br/>
+> **default**: "openid profile email phone"
+
+### `desktopNavigationType`
+> **type**: enum - *DesktopNavigation.(REDIRECT, POPUP)*<br/>
+> **default**: REDIRECT
+
+### `logLevel`
+> **type**: enum - *Log.(NONE, ERROR, WARN, INFO, DEBUG)*<br/>
+> **default**: NONE
+
+### `internal`
+> **type**: [UserManagerSettings](https://authts.github.io/oidc-client-ts/interfaces/UserManagerSettings.html)<br/>

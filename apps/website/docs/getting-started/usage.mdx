@@ -1,0 +1,58 @@
+---
+title: Usage
+---
+
+:::note
+Draft document..
+:::
+
+## Vue.js
+
+### `Basic example`
+
+```html title="AuthComponent.vue"
+<template>
+  <div style="display:flex; flex-direction:column; align-items:start; gap:16px">
+    <button @click="$authService.login()">Login</button>
+    <button @click="$authService.logout()">Logout</button>
+    <button @click="$authService.renew()">Silent renew</button>
+    (Authenticated: {{ $authService.isRenewingRef.value ? 'renewing..' : $authService.isAuthenticatedRef }})
+  </div>
+</template>
+
+<script setup lang="ts">
+  import { useAuthService } from '@badisi/auth-vue';
+  import { toRaw, watch } from 'vue';
+
+  const authService = useAuthService();
+  watch(authService.userProfileRef, value => {
+    console.log('user profile:', toRaw(value));
+  });
+</script>
+```
+
+
+## Quasar
+
+### `Basic example`
+
+```html title="AuthComponent.vue"
+<template>
+  <div style="display:flex; flex-direction:column; align-items:start; gap:16px">
+    <q-btn outline color="primary" label="Login" @click="$authService.login()" />
+    <q-btn outline color="primary" label="Logout" @click="$authService.logout()" />
+    <q-btn outline color="primary" label="Silent renew" @click="$authService.renew()" />
+    (Authenticated: {{ $authService.isRenewingRef.value ? 'renewing..' : $authService.isAuthenticatedRef }})
+  </div>
+</template>
+
+<script setup lang="ts">
+  import { useAuthService } from '@badisi/auth-vue';
+  import { toRaw, watch } from 'vue';
+
+  const authService = useAuthService();
+  watch(authService.userProfileRef, value => {
+    console.log('user profile:', toRaw(value));
+  });
+</script>
+```

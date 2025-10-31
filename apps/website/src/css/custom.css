@@ -94,14 +94,19 @@
     }
 
     code {
-        color: #404040;
         border: none;
+    }
+    .anchor code,
+    .table-of-contents code {
+        --ifm-code-background: rgba(80, 101, 178, 0.3);
+        color: #404040;
+        padding: 5px 8px;
+    }
+    .theme-admonition code {
+        padding: 5px 8px;
     }
     .table-of-contents ul {
         --ifm-toc-padding-horizontal: 0;
-    }
-    .table-of-contents code {
-        background-color: rgba(180, 147, 207, 0.2);
     }
     .table-of-contents__link:hover code {
         color: #7986cb;

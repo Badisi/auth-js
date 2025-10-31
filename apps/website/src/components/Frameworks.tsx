@@ -2,8 +2,9 @@ import React from 'react';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import JavascriptSvg from '@site/static/assets/svg/javascript.svg';
-import VueJsSvg from '@site/static/assets/svg/vue-js.svg';
 import AngularSvg from '@site/static/assets/svg/angular.svg';
+import VueJsSvg from '@site/static/assets/svg/vue-js.svg';
+import QuasarSvg from '@site/static/assets/svg/quasar.svg';
 import HexagonsSvg from '@site/static/assets/svg/hexagons.svg';
 
 const Frameworks = () => {
@@ -21,13 +22,13 @@ const Frameworks = () => {
                     <div className="row">
                         <div
                             className="item"
-                            style={{ backgroundColor: '#dcfce7' }}>
-                            <VueJsSvg className="icon" />
+                            style={{ backgroundColor: '#fee2e2' }}>
+                            <AngularSvg className="icon" />
                         </div>
                         <div
                             className="item"
-                            style={{ backgroundColor: '#fee2e2' }}>
-                            <AngularSvg className="icon" />
+                            style={{ backgroundColor: '#dcfce7' }}>
+                            <VueJsSvg className="icon" />
                         </div>
                     </div>
                     <HexagonsSvg className="background" />
@@ -40,14 +41,14 @@ const Frameworks = () => {
                 </h3>
                 <p className="description text-lg sm:text-[1.25rem]">
                     Develop with the JavaScript framework you love. Our platform
-                    offers seamless integration with Vanilla JS, Vue.js, and
-                    Angular, allowing you to leverage your existing skills and
+                    offers seamless integration with Vanilla JS, Angular, Vue.js,
+                    and Quasar. Allowing you to leverage your existing skills and
                     build exceptional web experiences.
                 </p>
 
                 <p className="subtitle">Get started:</p>
                 <div className="items flex-col sm:flex-row">
-                    <button className="item">
+                    <button type="button" className="item">
                         <JavascriptSvg className="icon" />
                         <Link
                             className="label"
@@ -55,7 +56,15 @@ const Frameworks = () => {
                             vanilla/js
                         </Link>
                     </button>
-                    <button className="item">
+                    <button type="button" className="item">
+                        <AngularSvg className="icon" />
+                        <Link
+                            className="label"
+                            to={useBaseUrl('getting-started/angular')}>
+                            angular
+                        </Link>
+                    </button>
+                    <button type="button" className="item">
                         <VueJsSvg className="icon" />
                         <Link
                             className="label"
@@ -63,12 +72,12 @@ const Frameworks = () => {
                             vue.js
                         </Link>
                     </button>
-                    <button className="item">
-                        <AngularSvg className="icon" />
+                    <button type="button" className="item">
+                        <QuasarSvg className="icon" />
                         <Link
                             className="label"
-                            to={useBaseUrl('getting-started/angular')}>
-                            angular
+                            to={useBaseUrl('getting-started/quasar')}>
+                            quasar
                         </Link>
                     </button>
                 </div>
