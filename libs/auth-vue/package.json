@@ -1,6 +1,6 @@
 {
     "name": "@badisi/auth-vue",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Authentication and authorization support for Vue.js based desktop and mobile applications.",
     "homepage": "https://github.com/Badisi/auth-js/tree/main/libs/auth-vue",
     "license": "GPL-3.0-only",
@@ -40,7 +40,7 @@
         "release:dry-run": "npm run release -- --dry-run"
     },
     "dependencies": {
-        "@badisi/auth-js": "1.1.1"
+        "@badisi/auth-js": "1.1.2"
     },
     "peerDependencies": {
         "vue": ">= 3",
