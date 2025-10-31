@@ -2,7 +2,7 @@
 
 ### 🚀 Features
 
-- **#49:** support for custom auth header ([#49](https://github.com/Badisi/auth-js/pull/49))
+- **interceptor:** support for custom auth header ([#49](https://github.com/Badisi/auth-js/pull/49))
 
 ### ❤️ Thank You
 
