@@ -44,7 +44,7 @@ index d349e5f..f16eee6 100644
                  ? `**${change.scope.trim()}:** `
                  : '') +
 diff --git a/node_modules/nx/src/command-line/release/changelog.js b/node_modules/nx/src/command-line/release/changelog.js
-index 6bd7995..44dd4e4 100644
+index 6bd7995..000f8c5 100644
 --- a/node_modules/nx/src/command-line/release/changelog.js
 +++ b/node_modules/nx/src/command-line/release/changelog.js
 @@ -303,6 +303,7 @@ function createAPI(overrideReleaseConfig, ignoreNxJsonConfig) {
