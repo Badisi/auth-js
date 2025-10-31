@@ -1,3 +1,13 @@
+## 1.1.2 (2025-10-31)
+
+### 🚀 Features
+
+- **#49:** support for custom auth header ([#49](https://github.com/Badisi/auth-js/pull/49))
+
+### ❤️ Thank You
+
+- Badisi @Badisi
+
 ## 1.1.1 (2025-10-26)
 
 ### 🐛 Fixes
