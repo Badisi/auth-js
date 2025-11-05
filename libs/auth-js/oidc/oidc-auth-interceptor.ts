@@ -57,7 +57,9 @@ export class OIDCAuthInterceptor {
 
     #isAllowedRequest(url: string, injectToken: InjectToken): boolean {
         let isAllowed = false;
-        if (typeof injectToken === 'boolean') {
+        if (url.includes(this.#manager.getSettings().authorityUrl)) {
+            isAllowed = false;
+        } else if (typeof injectToken === 'boolean') {
             isAllowed = injectToken;
         } else {
             const { include, exclude } = injectToken;
@@ -76,6 +78,7 @@ export class OIDCAuthInterceptor {
                 isAllowed = false;
             }
         }
+        logger.debug('url is allowed:', url, isAllowed);
         return isAllowed;
     }
 
