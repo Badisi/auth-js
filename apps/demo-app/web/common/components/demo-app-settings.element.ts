@@ -322,7 +322,7 @@ export class DemoAppSettingsElement extends HTMLElement {
     private getPathValue(settings: AuthSettings | undefined, path: string): unknown {
         return path.split('.').reduce((obj: any, prop) =>
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-            obj && prop in obj ? obj[prop] : undefined,
+            (obj && typeof obj === 'object' && prop in obj) ? obj[prop] : undefined,
         settings);
     }
 
@@ -479,7 +479,8 @@ export class DemoAppSettingsElement extends HTMLElement {
             } else {
                 let injectToken = currentSettings.librarySettings.automaticInjectToken;
                 if (typeof injectToken === 'object') {
-                    if ((!injectToken.include || ((injectToken.include as unknown as string).trim() === '')) &&
+                    if ((!injectToken.headerName || ((injectToken.headerName as unknown as string).trim() === '')) &&
+                        (!injectToken.include || ((injectToken.include as unknown as string).trim() === '')) &&
                         (!injectToken.exclude || ((injectToken.exclude as unknown as string).trim() === ''))) {
                         injectToken = true;
                     } else {
@@ -494,9 +495,13 @@ export class DemoAppSettingsElement extends HTMLElement {
                 }
             }
 
-            window.appSettings.addOrUpdateSettings(currentSettings, window.appSettings.get().currentSettingsIndex);
-            if (this.formIsNew && this.selectEl) {
-                window.appSettings.setCurrentSettingsIndex(this.selectEl.selectedIndex);
+            if (this.formIsNew) {
+                const index = window.appSettings.addOrUpdateSettings(currentSettings);
+                if (this.selectEl && index) {
+                    window.appSettings.setCurrentSettingsIndex(index);
+                }
+            } else {
+                window.appSettings.addOrUpdateSettings(currentSettings, window.appSettings.get().currentSettingsIndex);
             }
             location.reload();
         }

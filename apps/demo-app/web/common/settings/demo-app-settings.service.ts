@@ -11,7 +11,9 @@ export class DemoAppSettingsService<S extends AuthSettings = AuthSettings> {
     #defaultDemoAppSettings: DemoAppSettings<S>;
 
     public constructor(isDevMode: boolean) {
-        this.#librarySettingsDefinition.forEach((item, index) => item._sortIndex = index);
+        this.#librarySettingsDefinition.forEach((item, index) => {
+            item._sortIndex = index;
+        });
         this.#defaultDemoAppSettings = {
             currentTabIndex: 0,
             currentSettingsIndex: 0,
@@ -31,14 +33,18 @@ export class DemoAppSettingsService<S extends AuthSettings = AuthSettings> {
         return this.get().settings;
     }
 
-    public addOrUpdateSettings(settings: Settings<S>, index: number | undefined = undefined): void {
+    public addOrUpdateSettings(settings: Settings<S>, index: number | undefined = undefined): undefined | number {
         const appSettings = this.get();
+        let settingsIndex = index;
         if (index !== undefined) {
             appSettings.settings[index] = settings;
         } else {
             appSettings.settings.push(settings);
+            const sortedSettings = appSettings.settings.sort((a, b) => a.name.localeCompare(b.name));
+            settingsIndex = sortedSettings.indexOf(settings);
         }
         this.saveDemoAppSettings(appSettings);
+        return settingsIndex;
     }
 
     public deleteCurrentSettings(): void {
