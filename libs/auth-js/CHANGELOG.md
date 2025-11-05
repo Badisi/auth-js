@@ -1,3 +1,13 @@
+## 1.1.3 (2025-11-05)
+
+### 🐛 Fixes
+
+- **interceptor:** avoid injecting token in authority urls ([e745192](https://github.com/Badisi/auth-js/commit/e745192))
+
+### ❤️ Thank You
+
+- Badisi @Badisi
+
 ## 1.1.2 (2025-10-31)
 
 ### 🚀 Features
