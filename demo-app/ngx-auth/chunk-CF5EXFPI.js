@@ -1,0 +1,1 @@
+import{f as i,g as n}from"./chunk-SNTCVIPB.js";import{Y as o,_ as p,da as r,e,ea as t,ga as m}from"./chunk-4CUBOEQ4.js";var g,a=e(()=>{p();m();n();g={providers:[o(),r(i,t({onSameUrlNavigation:"reload"}))]}});a();export{g as appConfig};
