@@ -140,7 +140,7 @@ export class OIDCAuthInterceptor {
             if (enable) {
                 window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
                     const url = (input instanceof Request) ? input.url : input.toString();
-                    logger.debug('received fetch url:', url);
+                    logger.debug('received FETCH url:', url);
 
                     // Add token to request headers
                     if (this.#shouldInjectAuthToken(url)) {
@@ -200,7 +200,7 @@ export class OIDCAuthInterceptor {
 
                 XMLHttpRequest.prototype.send = function(body?: Document | XMLHttpRequestBodyInit | null): void {
                     const url = (typeof this.url === 'string') ? this.url : this.url?.href;
-                    logger.debug('received xhr url:', url);
+                    logger.debug('received XHR url:', url);
 
                     // Do a login on 401
                     const originalReadyStateChange = this.onreadystatechange;
