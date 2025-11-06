@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 
 import { AuthLogger } from '@badisi/auth-js';
+import type { OidcMetadata } from 'oidc-client-ts';
 
 import type { InjectToken } from './models/inject-token.model';
 import type { OIDCAuthManager } from './oidc-auth-manager';
+import type { OIDCUserManager } from './oidc-user-manager';
 
 declare global {
     interface XMLHttpRequest {
@@ -15,14 +17,16 @@ const logger = new AuthLogger('OIDCAuthInterceptor');
 
 export class OIDCAuthInterceptor {
     #manager: OIDCAuthManager;
+    #userManager: OIDCUserManager;
 
     #originalFetch = window.fetch;
     #originalXmlHttpRequestOpen = XMLHttpRequest.prototype.open;
     #originalXmlHttpRequestSend = XMLHttpRequest.prototype.send;
 
-    public constructor(manager: OIDCAuthManager) {
+    public constructor(manager: OIDCAuthManager, userManager: OIDCUserManager) {
         logger.debug('init');
         this.#manager = manager;
+        this.#userManager = userManager;
         this.#monkeyPathFetch();
         this.#monkeyPatchXmlHttpRequest();
     }
@@ -56,29 +60,61 @@ export class OIDCAuthInterceptor {
     }
 
     #isAllowedRequest(url: string, injectToken: InjectToken): boolean {
-        let isAllowed = false;
-        if (url.includes(this.#manager.getSettings().authorityUrl)) {
-            isAllowed = false;
-        } else if (typeof injectToken === 'boolean') {
-            isAllowed = injectToken;
-        } else {
+        let isAllowed = (typeof injectToken === 'boolean') ? injectToken : false;
+
+        // 1: filter the url based on authority urls
+        //    (to avoid getting stuck, especially with those that return the actual tokens..)
+        if (isAllowed) {
+            // @ts-expect-error _metadata is accessible because not truly private
+            const metadata = this.#userManager.metadataService._metadata as Partial<OidcMetadata> | undefined;
+            if (!metadata && url.includes(this.#manager.getSettings().authorityUrl)) {
+                logger.debug('matching authority domain but no metadata available yet');
+                isAllowed = false;
+            } else if (metadata && this.#manager.isRenewing()) {
+                logger.debug('matching authority domain but no token available yet');
+                isAllowed = false;
+            } else if (metadata) {
+                const blacklistedUrl = [
+                    metadata.authorization_endpoint,
+                    metadata.token_endpoint
+                ].find(value => value && url.includes(value));
+                if (blacklistedUrl) {
+                    logger.debug('matching blacklisted authority url:', blacklistedUrl);
+                    isAllowed = false;
+                }
+            }
+        }
+
+        // 2: filter the url based on include and/or exclude filters
+        if ((typeof injectToken === 'object')) {
             const { include, exclude } = injectToken;
 
             if (Array.isArray(include)) {
-                isAllowed = include.some((pattern: string | RegExp) => this.#isMatching(url, pattern));
+                const matchedPattern = include.find((pattern: string | RegExp) => this.#isMatching(url, pattern));
+                if (matchedPattern) {
+                    logger.debug('matching include pattern:', matchedPattern);
+                    isAllowed = true;
+                }
             } else if (include) {
                 isAllowed = this.#isMatching(url, include);
+                if (isAllowed) {
+                    logger.debug('matching include pattern:', include);
+                }
             }
 
             if (Array.isArray(exclude)) {
-                if (exclude.some((item: string | RegExp) => this.#isMatching(url, item))) {
+                const matchedPattern = exclude.some((item: string | RegExp) => this.#isMatching(url, item));
+                if (matchedPattern) {
+                    logger.debug('matching exclude pattern:', matchedPattern);
                     isAllowed = false;
                 }
             } else if (exclude && this.#isMatching(url, exclude)) {
+                logger.debug('matching exclude pattern:', exclude);
                 isAllowed = false;
             }
         }
-        logger.debug('url is allowed:', url, isAllowed);
+
+        logger.debug(isAllowed ? 'allowed' : 'not allowed');
         return isAllowed;
     }
 
@@ -111,7 +147,7 @@ export class OIDCAuthInterceptor {
                         const accessToken = await this.#manager.getAccessToken();
                         if (init && accessToken) {
                             const headerName = this.#getAuthorizationHeaderName();
-                            logger.debug(`adding "${headerName}" bearer to url:`, url);
+                            logger.debug(`adding "${headerName}" bearer to header request`);
                             if (Array.isArray(init.headers)) {
                                 init.headers.push([headerName, `Bearer ${accessToken}`]);
                             } else if (init.headers instanceof Headers) {
@@ -188,7 +224,7 @@ export class OIDCAuthInterceptor {
                             .then(accessToken => {
                                 if (accessToken) {
                                     const headerName = interceptor.#getAuthorizationHeaderName();
-                                    logger.debug(`adding "${headerName}" bearer to url:`, url);
+                                    logger.debug(`adding "${headerName}" bearer to header request`);
                                     this.setRequestHeader(headerName, `Bearer ${accessToken}`);
                                 }
                             })

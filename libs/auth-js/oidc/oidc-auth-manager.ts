@@ -105,7 +105,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
         // Configure the interceptor
         if (this.#settings.automaticLoginOn401 || this.#settings.automaticInjectToken) {
-            new OIDCAuthInterceptor(this);
+            new OIDCAuthInterceptor(this, this.#userManager);
         }
 
         // Listen for events
