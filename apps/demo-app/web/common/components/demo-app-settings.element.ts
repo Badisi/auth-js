@@ -9,6 +9,7 @@ import type { OIDCAuthSettings } from '@badisi/auth-js/oidc';
 
 import { globalStyle } from '../core';
 import type { Settings } from '../settings';
+import { DEFAULT_LIBRARY_SETTINGS } from '../settings/default-settings';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -284,7 +285,7 @@ export class DemoAppSettingsElement extends HTMLElement {
         this.formIsNew = true;
         this.formIsDirty = true;
         this.classList.add('dirty');
-        this.refreshFormContent({ name, librarySettings: {} });
+        this.refreshFormContent({ name, librarySettings: DEFAULT_LIBRARY_SETTINGS });
     }
 
     public delete(): void {

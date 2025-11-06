@@ -1,9 +1,9 @@
-import { LogLevel } from '@badisi/auth-js';
-import { DesktopNavigation, type OIDCAuthSettings } from '@badisi/auth-js/oidc';
+import type { OIDCAuthSettings } from '@badisi/auth-js/oidc';
 import authJsPkgJson from 'libs/auth-js/package.json';
 import authVuePkgJson from 'libs/auth-vue/package.json';
 import ngxAuthPkgJson from 'libs/ngx-auth/package.json';
 
+import { DEFAULT_SETTINGS as DEFAULT_AUTH_JS_SETTINGS } from '../../../../../libs/auth-js/oidc/default-settings';
 import type { LibraryImplementation, Settings } from '.';
 
 export const LIBRARY_IMPLEMENTATIONS: LibraryImplementation[] = [{
@@ -20,15 +20,8 @@ export const LIBRARY_IMPLEMENTATIONS: LibraryImplementation[] = [{
     version: authVuePkgJson.version
 }];
 
-const COMMON_LIBRARY_SETTINGS: Omit<Settings<OIDCAuthSettings>['librarySettings'], 'authorityUrl' | 'clientId'> = {
-    mobileScheme: 'demo-app',
-    desktopNavigationType: DesktopNavigation.REDIRECT,
-    logLevel: LogLevel.NONE,
-    loginRequired: false,
-    retrieveUserSession: true,
-    loadUserInfo: true,
-    automaticSilentRenew: true,
-    automaticLoginOn401: true,
+export const DEFAULT_LIBRARY_SETTINGS = {
+    ...DEFAULT_AUTH_JS_SETTINGS,
     automaticInjectToken: { headerName: 'Authorization', include: ['/api'] }
 };
 
@@ -40,15 +33,17 @@ const AUTH0_SETTINGS: Settings<OIDCAuthSettings> = {
         roles: 'view-profile'
     },
     librarySettings: {
+        ...DEFAULT_LIBRARY_SETTINGS,
         authorityUrl: 'https://dev-fijd1e9x.us.auth0.com',
         clientId: 'kRVVEnAWKMpxxpcodl0TqLXfIHgQvmmt',
+        mobileScheme: 'demo-app',
+        loadUserInfo: true,
         scope: 'openid profile email phone offline_access read:current_user',
         internal: {
             extraQueryParams: {
                 audience: 'https://dev-fijd1e9x.us.auth0.com/api/v2/'
             }
-        },
-        ...COMMON_LIBRARY_SETTINGS
+        }
     }
 };
 
@@ -60,16 +55,18 @@ const ZITADEL_SETTINGS: Settings<OIDCAuthSettings> = {
         roles: 'view-profile'
     },
     librarySettings: {
+        ...DEFAULT_LIBRARY_SETTINGS,
         authorityUrl: 'https://auth-js-0pdipf.zitadel.cloud',
         clientId: '178200751804317953@demo-app',
+        mobileScheme: 'demo-app',
+        loadUserInfo: true,
         scope: 'openid profile email phone offline_access',
         internal: {
             extraQueryParams: {
                 // eslint-disable-next-line @typescript-eslint/naming-convention
                 'login_hint': 'demo'
             }
-        },
-        ...COMMON_LIBRARY_SETTINGS
+        }
     }
 };
 
@@ -81,10 +78,11 @@ const KEYCLOAK_LOCAL_SETTINGS: Settings<OIDCAuthSettings> = {
         roles: 'view-profile'
     },
     librarySettings: {
+        ...DEFAULT_LIBRARY_SETTINGS,
         authorityUrl: 'http://localhost:8080/auth/realms/demo',
         clientId: 'demo-app',
-        scope: 'openid profile email phone',
-        ...COMMON_LIBRARY_SETTINGS
+        mobileScheme: 'demo-app',
+        loadUserInfo: true
     }
 };
 
