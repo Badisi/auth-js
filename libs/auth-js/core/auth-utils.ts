@@ -62,11 +62,9 @@ export class AuthUtils {
     };
 
     public static getBaseUrl = (): string => {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        let baseUrl = document.baseURI ?? document.querySelector('base')?.href;
-        // Remove any query params as baseURI can contain them
+        let baseUrl = document.querySelector('base')?.href ?? window.location.origin;
         const url = new URL(baseUrl);
-        baseUrl = `${url.origin}${url.pathname}`;
+        baseUrl = `${url.origin}${url.pathname}`; // remove any query params (just in case)
         return (baseUrl.endsWith('/')) ? baseUrl : `${baseUrl}/`;
     };
 
