@@ -1,3 +1,14 @@
+## 1.1.4 (2025-11-07)
+
+### 🐛 Fixes
+
+- **interceptor:** avoid blacklisting the entire authority domain ([7ef265b](https://github.com/Badisi/auth-js/commit/7ef265b))
+- **baseUrl:** should now be fixed for good ([d28600b](https://github.com/Badisi/auth-js/commit/d28600b))
+
+### ❤️ Thank You
+
+- Badisi @Badisi
+
 ## 1.1.3 (2025-11-05)
 
 ### 🐛 Fixes
