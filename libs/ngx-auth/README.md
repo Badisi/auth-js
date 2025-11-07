@@ -47,11 +47,11 @@ Please read and follow the [Code of Conduct][codeofconduct] and help me keep thi
 
 [npm]: https://www.npmjs.com/package/@badisi/ngx-auth
 [npm-dl]: https://npmcharts.com/compare/@badisi/ngx-auth?minimal=true
-[ci-tests]: https://github.com/badisi/auth-js/actions/workflows/ci_test_ngx-auth.yml
-[pullrequest]: https://github.com/badisi/auth-js/blob/main/CONTRIBUTING.md#-submitting-a-pull-request-pr
-[license]: https://github.com/badisi/auth-js/blob/main/LICENSE
-[developer]: https://github.com/badisi/auth-js/blob/main/DEVELOPER.md
-[contributing]: https://github.com/badisi/auth-js/blob/main/CONTRIBUTING.md
-[codeofconduct]: https://github.com/badisi/auth-js/blob/main/CODE_OF_CONDUCT.md
+[ci-tests]: https://github.com/Badisi/auth-js/actions/workflows/ci_test_ngx-auth.yml
+[pullrequest]: https://github.com/Badisi/auth-js/blob/main/CONTRIBUTING.md#-submitting-a-pull-request-pr
+[license]: https://github.com/Badisi/auth-js/blob/main/LICENSE
+[developer]: https://github.com/Badisi/auth-js/blob/main/DEVELOPER.md
+[contributing]: https://github.com/Badisi/auth-js/blob/main/CONTRIBUTING.md
+[codeofconduct]: https://github.com/Badisi/auth-js/blob/main/CODE_OF_CONDUCT.md
 [docs-site]: https://badisi.github.io/auth-js/getting-started/angular
 [playground-site]: https://badisi.github.io/auth-js/demo-app/ngx-auth

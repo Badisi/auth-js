@@ -22,7 +22,7 @@ concurrency:
 
 jobs:
     ci_test_auth-vue:
-        uses: badisi/actions/.github/workflows/action.yml@v3
+        uses: badisi/actions/.github/workflows/action.yml@v4
         with:
             working-directory: libs/auth-vue
             runs-on: '["ubuntu-latest", "macos-latest", "windows-latest"]'

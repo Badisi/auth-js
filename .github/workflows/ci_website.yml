@@ -23,7 +23,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Setup
-              uses: badisi/actions/setup@v3
+              uses: badisi/actions/setup@v4
 
             - name: Build website
               working-directory: apps/website
