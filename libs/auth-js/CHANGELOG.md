@@ -1,3 +1,13 @@
+## 1.1.5 (2025-11-14)
+
+### 🚀 Features
+
+- **session:** enrich user session object ([1198168](https://github.com/Badisi/auth-js/commit/1198168))
+
+### ❤️ Thank You
+
+- Badisi @Badisi
+
 ## 1.1.4 (2025-11-07)
 
 ### 🐛 Fixes
