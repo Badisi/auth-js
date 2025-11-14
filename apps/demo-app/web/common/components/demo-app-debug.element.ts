@@ -47,6 +47,13 @@ template.innerHTML = `
         </div>
 
         <div class="info column">
+            <div class="title">User profile</div>
+            <code>
+                <pre id="userProfile" class="value"></pre>
+            </code>
+        </div>
+
+        <div class="info column">
             <div class="title">Access token</div>
             <code>
                 <pre id="accessToken" class="value json-value"></pre>
@@ -59,13 +66,6 @@ template.innerHTML = `
             <code>
                 <pre id="idToken" class="value json-value"></pre>
                 <pre id="idTokenDecoded" class="value"></pre>
-            </code>
-        </div>
-
-        <div class="info column">
-            <div class="title">User profile</div>
-            <code>
-                <pre id="userProfile" class="value"></pre>
             </code>
         </div>
     </div>

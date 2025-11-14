@@ -20,7 +20,7 @@ import type { LoginArgs, LogoutArgs, RenewArgs } from './models/args.model';
 import { DesktopNavigation } from './models/desktop-navigation.enum';
 import type { IdToken } from './models/id-token.model';
 import type { OIDCAuthSettings } from './models/oidc-auth-settings.model';
-import { UserSession } from './models/user-session.model';
+import type { UserSession } from './models/user-session.model';
 import { OIDCAuthGuard } from './oidc-auth-guard';
 import { OIDCAuthInterceptor } from './oidc-auth-interceptor';
 import { OIDCUserManager } from './oidc-user-manager';
@@ -55,7 +55,15 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             this.#idToken = (value) ? value.id_token : undefined;
             this.#accessToken = (value) ? value.access_token : undefined;
             this.#userProfile = value?.profile ?? undefined;
-            this.#userSession = (value) ? UserSession.deserialize(value) : undefined;
+            this.#userSession = (value) ? {
+                expired: value.expired,
+                expires_in: value.expires_in,
+                expires_at: value.expires_at,
+                token_type: value.token_type,
+                scope: value.scope,
+                scopes: value.scopes,
+                session_state: value.session_state
+            } : undefined;
             this.#isAuthenticated = !!(value && !value.expired);
 
             this.#idTokenSubs.notify(this.#idToken);
