@@ -1,9 +1,16 @@
-import { Inject, inject, Injectable, NgZone, OnDestroy } from '@angular/core';
+import { Inject, inject, Injectable, NgZone, type OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-    AccessToken, AuthSubscription, AuthUtils, IdToken, OIDCAuthManager, OIDCAuthService, UserProfile, UserSession
+    type AccessToken,
+    type AuthSubscription,
+    AuthUtils,
+    type IdToken,
+    type OIDCAuthManager,
+    OIDCAuthService,
+    type UserProfile,
+    type UserSession
 } from '@badisi/auth-js/oidc';
-import { Observable, ReplaySubject } from 'rxjs';
+import { type Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
 import { AUTH_MANAGER } from './auth.provider';
