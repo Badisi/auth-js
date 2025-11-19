@@ -1,3 +1,9 @@
+## 1.0.6 (2025-11-14)
+
+### 🌱 Dependencies
+
+- **auth-js**: upgraded to `v1.1.5`
+
 ## 1.0.5 (2025-11-07)
 
 ### 🌱 Dependencies
