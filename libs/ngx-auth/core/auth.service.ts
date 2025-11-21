@@ -1,11 +1,10 @@
-import { Inject, inject, Injectable, NgZone, type OnDestroy } from '@angular/core';
+import { inject, Injectable, NgZone, type OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
     type AccessToken,
     type AuthSubscription,
     AuthUtils,
     type IdToken,
-    type OIDCAuthManager,
     OIDCAuthService,
     type UserProfile,
     type UserSession
@@ -31,8 +30,8 @@ export class AuthService extends OIDCAuthService implements OnDestroy {
     #ngZone = inject(NgZone);
     #router = inject(Router);
 
-    public constructor(@Inject(AUTH_MANAGER) manager: OIDCAuthManager) {
-        super(manager);
+    public constructor() {
+        super(inject(AUTH_MANAGER));
         this.#listenForManagerChanges();
     }
 
