@@ -1,3 +1,13 @@
+## 1.1.6 (2025-11-19)
+
+### 🐛 Fixes
+
+- import type issue ([bfee533](https://github.com/Badisi/auth-js/commit/bfee533))
+
+### ❤️ Thank You
+
+- Badisi @Badisi
+
 ## 1.1.5 (2025-11-14)
 
 ### 🚀 Features

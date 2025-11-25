@@ -1,3 +1,17 @@
+## 1.0.7 (2025-11-19)
+
+### 🐛 Fixes
+
+- import type issue ([bfee533](https://github.com/Badisi/auth-js/commit/bfee533))
+
+### 🌱 Dependencies
+
+- **auth-js**: upgraded to `v1.1.6`
+
+### ❤️ Thank You
+
+- Badisi @Badisi
+
 ## 1.0.6 (2025-11-14)
 
 ### 🌱 Dependencies
