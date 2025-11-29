@@ -1,4 +1,4 @@
 /**
  * TODO:
  */
-export type AuthSubscriber<T extends unknown[]> = (...args: T) => (Promise<void> | void);
+export type AuthSubscriber<T> = (value: T) => (Promise<void> | void);

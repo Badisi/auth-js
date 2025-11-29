@@ -28,13 +28,13 @@ import { OIDCUserManager } from './oidc-user-manager';
 const logger = new AuthLogger('OIDCAuthManager');
 
 export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
-    #idTokenSubs = new AuthSubscriptions<[string | undefined]>();
-    #accessTokenSubs = new AuthSubscriptions<[string | undefined]>();
-    #userProfileSubs = new AuthSubscriptions<[UserProfile | undefined]>();
-    #userSessionSubs = new AuthSubscriptions<[UserSession | undefined]>();
-    #authenticatedSubs = new AuthSubscriptions<[boolean]>();
-    #renewingSubs = new AuthSubscriptions<[boolean]>();
-    #redirectSubs = new AuthSubscriptions<[URL]>();
+    #idTokenSubs = new AuthSubscriptions<string | undefined>();
+    #accessTokenSubs = new AuthSubscriptions<string | undefined>();
+    #userProfileSubs = new AuthSubscriptions<UserProfile | undefined>();
+    #userSessionSubs = new AuthSubscriptions<UserSession | undefined>();
+    #authenticatedSubs = new AuthSubscriptions<boolean>();
+    #renewingSubs = new AuthSubscriptions<boolean>();
+    #redirectSubs = new AuthSubscriptions<URL>();
     #userManagerSubs: (() => void)[] = [];
 
     #idToken?: string;
@@ -293,31 +293,31 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     // --- HANDLER(s) ---
 
-    public onIdTokenChanged(handler: AuthSubscriber<[string | undefined]>, options?: AuthSubscriberOptions): AuthSubscription {
+    public onIdTokenChanged(handler: AuthSubscriber<string | undefined>, options?: AuthSubscriberOptions): AuthSubscription {
         return this.#idTokenSubs.add(handler, options);
     }
 
-    public onAccessTokenChanged(handler: AuthSubscriber<[string | undefined]>, options?: AuthSubscriberOptions): AuthSubscription {
+    public onAccessTokenChanged(handler: AuthSubscriber<string | undefined>, options?: AuthSubscriberOptions): AuthSubscription {
         return this.#accessTokenSubs.add(handler, options);
     }
 
-    public onUserProfileChanged(handler: AuthSubscriber<[UserProfile | undefined]>, options?: AuthSubscriberOptions): AuthSubscription {
+    public onUserProfileChanged(handler: AuthSubscriber<UserProfile | undefined>, options?: AuthSubscriberOptions): AuthSubscription {
         return this.#userProfileSubs.add(handler, options);
     }
 
-    public onUserSessionChanged(handler: AuthSubscriber<[UserSession | undefined]>, options?: AuthSubscriberOptions): AuthSubscription {
+    public onUserSessionChanged(handler: AuthSubscriber<UserSession | undefined>, options?: AuthSubscriberOptions): AuthSubscription {
         return this.#userSessionSubs.add(handler, options);
     }
 
-    public onAuthenticatedChanged(handler: AuthSubscriber<[boolean]>, options?: AuthSubscriberOptions): AuthSubscription {
+    public onAuthenticatedChanged(handler: AuthSubscriber<boolean>, options?: AuthSubscriberOptions): AuthSubscription {
         return this.#authenticatedSubs.add(handler, options);
     }
 
-    public onRenewingChanged(handler: AuthSubscriber<[boolean]>, options?: AuthSubscriberOptions): AuthSubscription {
+    public onRenewingChanged(handler: AuthSubscriber<boolean>, options?: AuthSubscriberOptions): AuthSubscription {
         return this.#renewingSubs.add(handler, options);
     }
 
-    public onRedirect(handler: AuthSubscriber<[URL]>, options?: AuthSubscriberOptions): AuthSubscription {
+    public onRedirect(handler: AuthSubscriber<URL>, options?: AuthSubscriberOptions): AuthSubscription {
         return this.#redirectSubs.add(handler, options);
     }
 

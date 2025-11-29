@@ -5,7 +5,7 @@ import type { AuthSubscription } from './models/auth-subscription.model';
 /**
  * @internal
  */
-interface InternalAuthSubscription<T extends unknown[]> {
+interface InternalAuthSubscription<T> {
     subscriber: AuthSubscriber<T>;
     options?: AuthSubscriberOptions;
 }
@@ -13,7 +13,7 @@ interface InternalAuthSubscription<T extends unknown[]> {
 /**
  * TODO:
  */
-export class AuthSubscriptions<T extends unknown[]> {
+export class AuthSubscriptions<T> {
     #subscriptions: InternalAuthSubscription<T>[] = [];
     #lastNotifiedValue?: T;
 
@@ -21,7 +21,7 @@ export class AuthSubscriptions<T extends unknown[]> {
         const subscription = { subscriber, options };
         this.#subscriptions.push(subscription);
         if (this.#lastNotifiedValue) {
-            void subscriber(...this.#lastNotifiedValue);
+            void subscriber(this.#lastNotifiedValue);
             if (options?.once) {
                 this.unsubscribe(subscription);
             }
@@ -33,10 +33,10 @@ export class AuthSubscriptions<T extends unknown[]> {
         };
     }
 
-    public notify(...args: T): void {
-        this.#lastNotifiedValue = args;
+    public notify(value: T): void {
+        this.#lastNotifiedValue = value;
         this.#subscriptions.forEach(subscription => {
-            void subscription.subscriber(...args);
+            void subscription.subscriber(value);
             if (subscription.options?.once) {
                 this.unsubscribe(subscription);
             }
