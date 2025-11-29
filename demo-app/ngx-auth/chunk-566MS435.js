@@ -1,1 +1,0 @@
-import{f as i,g as n}from"./chunk-RMCE6HJM.js";import{X as o,Z as p,ca as r,da as t,e,fa as m}from"./chunk-MTS7OCN2.js";var g,a=e(()=>{p();m();n();g={providers:[o(),r(i,t({onSameUrlNavigation:"reload"}))]}});a();export{g as appConfig};
