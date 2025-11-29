@@ -168,7 +168,10 @@ export class OIDCAuthInterceptor {
                     if (response.status === 401) {
                         const shouldLoginOn401 = this.#manager.getSettings().automaticLoginOn401 ?? false;
                         if (shouldLoginOn401) {
-                            await this.#manager.login();
+                            const isAuthenticated = await this.#manager.isAuthenticated();
+                            if (!isAuthenticated) {
+                                await this.#manager.login();
+                            }
                         }
                     }
 
@@ -211,7 +214,11 @@ export class OIDCAuthInterceptor {
                             if (this.status === 401) {
                                 const shouldLoginOn401 = interceptor.#manager.getSettings().automaticLoginOn401 ?? false;
                                 if (shouldLoginOn401) {
-                                    void interceptor.#manager.login();
+                                    void interceptor.#manager.isAuthenticated().then(isAuthenticated => {
+                                        if (!isAuthenticated) {
+                                            void interceptor.#manager.login();
+                                        }
+                                    });
                                 }
                             }
                         }
