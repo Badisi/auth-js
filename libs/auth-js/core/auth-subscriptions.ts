@@ -23,12 +23,12 @@ export class AuthSubscriptions<T> {
         if (this.#lastNotifiedValue) {
             void subscriber(this.#lastNotifiedValue);
             if (options?.once) {
-                this.unsubscribe(subscription);
+                this.unsubscribe(subscriber);
             }
         }
         return {
             unsubscribe: (): void => {
-                this.unsubscribe(subscription);
+                this.unsubscribe(subscriber);
             }
         };
     }
@@ -38,14 +38,14 @@ export class AuthSubscriptions<T> {
         this.#subscriptions.forEach(subscription => {
             void subscription.subscriber(value);
             if (subscription.options?.once) {
-                this.unsubscribe(subscription);
+                this.unsubscribe(subscription.subscriber);
             }
         });
     }
 
-    public unsubscribe(subscription?: InternalAuthSubscription<T>): void {
-        if (subscription) {
-            const index = this.#subscriptions.indexOf(subscription);
+    public unsubscribe(subscriber?: AuthSubscriber<T>): void {
+        if (subscriber) {
+            const index = this.#subscriptions.findIndex(item => item.subscriber === subscriber);
             if (index !== -1) {
                 this.#subscriptions.splice(index, 1);
             }
