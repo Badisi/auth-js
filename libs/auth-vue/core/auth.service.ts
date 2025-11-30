@@ -1,6 +1,6 @@
-import type { AuthSubscription } from '@badisi/auth-js';
+import { type AuthSubscription, decodeJwt, getBaseUrl } from '@badisi/auth-js';
 import {
-    type AccessToken, AuthUtils, type IdToken, type OIDCAuthManager, OIDCAuthService, type UserProfile, type UserSession
+    type AccessToken, type IdToken, type OIDCAuthManager, OIDCAuthService, type UserProfile, type UserSession
 } from '@badisi/auth-js/oidc';
 import { computed, inject, ref } from 'vue';
 import type { Router } from 'vue-router';
@@ -37,12 +37,12 @@ export class AuthService extends OIDCAuthService {
 
     public readonly idTokenRef = ref<string | undefined>();
     public readonly idTokenDecodedRef = computed(() =>
-        this.idTokenRef.value ? AuthUtils.decodeJwt(this.idTokenRef.value) as IdToken | string | undefined : undefined
+        this.idTokenRef.value ? decodeJwt(this.idTokenRef.value) as IdToken | string | undefined : undefined
     );
 
     public readonly accessTokenRef = ref<string | undefined>();
     public readonly accessTokenDecodedRef = computed(() =>
-        this.accessTokenRef.value ? AuthUtils.decodeJwt(this.accessTokenRef.value) as AccessToken | string | undefined : undefined
+        this.accessTokenRef.value ? decodeJwt(this.accessTokenRef.value) as AccessToken | string | undefined : undefined
     );
     /* eslint-enable @typescript-eslint/member-ordering */
 
@@ -74,7 +74,7 @@ export class AuthService extends OIDCAuthService {
                  * => we need to substract the base url from the received url.
                  * ex: transform 'http://domain/base/private?param' to '/private?param'
                  */
-                let relativeUrl = value.href.replace(AuthUtils.getBaseUrl(), '');
+                let relativeUrl = value.href.replace(getBaseUrl(), '');
                 if (relativeUrl.startsWith('#')) {
                     relativeUrl = relativeUrl.slice(1); // in case of hash mode, remove the leading '#'
                 }

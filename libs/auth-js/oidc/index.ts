@@ -18,7 +18,16 @@ export type {
     AuthSubscription,
     Optional
 } from '../core';
-export { AuthManager, AuthSubscriptions, AuthUtils, LogLevel } from '../core';
+export {
+    AuthManager,
+    AuthSubscriptions,
+    decodeJwt,
+    getBaseUrl,
+    isCapacitor,
+    isCordova,
+    isNativeMobile,
+    LogLevel
+} from '../core';
 export { initOidc } from './main';
 export type { AccessToken } from './models/access-token.model';
 export type { LoginArgs, LogoutArgs, RenewArgs, SigninMobileArgs, SignoutMobileArgs } from './models/args.model';

@@ -2,7 +2,7 @@
 import type { PluginListenerHandle } from '@capacitor/core';
 import type { IWindow, NavigateParams, NavigateResponse } from 'oidc-client-ts';
 
-import { AuthLogger, AuthUtils } from '../../core';
+import { AuthLogger, isCapacitor, isCordova, isUrlMatching } from '../../core';
 import type { MobileWindowParams } from '../models/mobile-window-params.model';
 
 const CUSTOM_URL_SCHEME_HANDLER_TIMEOUT = 10 * 1000; // 10s
@@ -33,7 +33,7 @@ export class MobileWindow implements IWindow {
         public redirectUrl: string,
         public params: MobileWindowParams
     ) {
-        if (!AuthUtils.isCapacitor() && !AuthUtils.isCordova()) {
+        if (!isCapacitor() && !isCordova()) {
             logger.notif('ⓘ Please follow the installation guide and install either `Capacitor` or `Cordova` dependency.');
             throw logger.getError('Required core dependency `Capacitor` or `Cordova` not found');
         }
@@ -176,23 +176,23 @@ export class MobileWindow implements IWindow {
         await this.#cleanup();
 
         // Install handler
-        if (AuthUtils.isCapacitor()) {
+        if (isCapacitor()) {
             _logger.debug('listening to Capacitor `appUrlOpen` event');
 
             this.#capacitorAppUrlOpenHandle = await CAPACITOR_APP?.addListener?.(
                 'appUrlOpen',
                 ({ url }): void => {
-                    if (AuthUtils.isUrlMatching(url, this.redirectUrl)) {
+                    if (isUrlMatching(url, this.redirectUrl)) {
                         void this.#onSuccess(url);
                     }
                 }
             );
-        } else if (AuthUtils.isCordova()) {
+        } else if (isCordova()) {
             _logger.debug('waiting for Cordova `handleOpenURL` callback');
 
             window.handleOpenURL = (url: string): void => {
                 this.#originalHandleOpenURL?.(url);
-                if (AuthUtils.isUrlMatching(url, this.redirectUrl)) {
+                if (isUrlMatching(url, this.redirectUrl)) {
                     void this.#onSuccess(url);
                 }
             };

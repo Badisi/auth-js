@@ -35,7 +35,15 @@ export type {
     UserProfile,
     UserSession
 } from '@badisi/auth-js/oidc';
-export { AuthUtils, DesktopNavigation, LogLevel } from '@badisi/auth-js/oidc';
+export {
+    decodeJwt,
+    DesktopNavigation,
+    getBaseUrl,
+    isCapacitor,
+    isCordova,
+    isNativeMobile,
+    LogLevel
+} from '@badisi/auth-js/oidc';
 
 // Library exports
 export { authGuard } from './auth.guard';
