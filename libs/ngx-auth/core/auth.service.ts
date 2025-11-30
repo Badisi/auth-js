@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import {
     type AccessToken,
     type AuthSubscription,
-    AuthUtils,
+    decodeJwt,
+    getBaseUrl,
     type IdToken,
     OIDCAuthService,
     type UserProfile,
@@ -42,46 +43,42 @@ export class AuthService extends OIDCAuthService implements OnDestroy {
     }
 
     /* eslint-disable @typescript-eslint/member-ordering */
-    public readonly isRenewing$: Observable<boolean> =
-        this.#isRenewing$.asObservable().pipe(
-            distinctUntilChanged()
-        );
+    public readonly isRenewing$: Observable<boolean> = this.#isRenewing$
+        .asObservable()
+        .pipe(distinctUntilChanged());
 
-    public readonly isAuthenticated$: Observable<boolean> =
-        this.#isAuthenticated$.asObservable().pipe(
-            distinctUntilChanged()
-        );
+    public readonly isAuthenticated$: Observable<boolean> = this.#isAuthenticated$
+        .asObservable()
+        .pipe(distinctUntilChanged());
 
-    public readonly userProfile$: Observable<UserProfile | undefined> =
-        this.#userProfile$.asObservable().pipe(
-            distinctUntilChanged()
-        );
+    public readonly userProfile$: Observable<UserProfile | undefined> = this.#userProfile$
+        .asObservable()
+        .pipe(distinctUntilChanged());
 
-    public readonly userSession$: Observable<UserSession | undefined> =
-        this.#userSession$.asObservable().pipe(
-            distinctUntilChanged()
-        );
+    public readonly userSession$: Observable<UserSession | undefined> = this.#userSession$
+        .asObservable()
+        .pipe(distinctUntilChanged());
 
-    public readonly idToken$: Observable<string | undefined> =
-        this.#idToken$.asObservable().pipe(
-            distinctUntilChanged()
-        );
+    public readonly idToken$: Observable<string | undefined> = this.#idToken$
+        .asObservable()
+        .pipe(distinctUntilChanged());
 
-    public readonly idTokenDecoded$: Observable<IdToken | undefined> =
-        this.#idToken$.asObservable().pipe(
+    public readonly idTokenDecoded$: Observable<IdToken | undefined> = this.#idToken$
+        .asObservable()
+        .pipe(
             distinctUntilChanged(),
-            map(token => AuthUtils.decodeJwt(token) as IdToken | string | undefined)
+            map(token => decodeJwt(token) as IdToken | string | undefined)
         );
 
-    public readonly accessToken$: Observable<string | undefined> =
-        this.#accessToken$.asObservable().pipe(
-            distinctUntilChanged()
-        );
+    public readonly accessToken$: Observable<string | undefined> = this.#accessToken$
+        .asObservable()
+        .pipe(distinctUntilChanged());
 
-    public readonly accessTokenDecoded$: Observable<AccessToken | undefined> =
-        this.#accessToken$.asObservable().pipe(
+    public readonly accessTokenDecoded$: Observable<AccessToken | undefined> = this.#accessToken$
+        .asObservable()
+        .pipe(
             distinctUntilChanged(),
-            map(token => AuthUtils.decodeJwt(token) as AccessToken | string | undefined)
+            map(token => decodeJwt(token) as AccessToken | string | undefined)
         );
     /* eslint-enable @typescript-eslint/member-ordering */
 
@@ -128,7 +125,7 @@ export class AuthService extends OIDCAuthService implements OnDestroy {
                          * => we need to substract the base url from the received url.
                          * ex: transform 'http://domain/base/private?param' to '/private?param'
                          */
-                        let relativeUrl = value.href.replace(AuthUtils.getBaseUrl(), '');
+                        let relativeUrl = value.href.replace(getBaseUrl(), '');
                         if (relativeUrl.startsWith('#')) {
                             relativeUrl = relativeUrl.slice(1); // in case of hash mode, remove the leading '#'
                         }

@@ -11,7 +11,8 @@ import {
 
 import {
     type AuthGuardOptions, AuthLogger, AuthManager, type AuthSubscriber, type AuthSubscriberOptions,
-    type AuthSubscription, AuthSubscriptions, AuthUtils
+    type AuthSubscription, AuthSubscriptions, decodeJwt, getBaseUrl, isNativeMobile, isUrlMatching,
+    stringToURL
 } from '../core';
 import { DEFAULT_SETTINGS, REDIRECT_URL_KEY } from './default-settings';
 import { MobileStorage } from './mobile/mobile-storage';
@@ -80,8 +81,8 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         AuthLogger.setLogLevel(userSettings.logLevel ?? DEFAULT_SETTINGS.logLevel);
 
         // Sanity checks
-        const isNativeMobile = AuthUtils.isNativeMobile();
-        if (isNativeMobile && !userSettings.mobileScheme) {
+        const isNativeMobilePlatform = isNativeMobile();
+        if (isNativeMobilePlatform && !userSettings.mobileScheme) {
             throw logger.getError('Parameter `mobileScheme` is required for mobile platform');
         }
 
@@ -89,13 +90,13 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
          * Providers like Keycloak does not handle custom redirect urls like `demo-app://?oidc-callback=login`,
          * because they lack a host name. To fix this, `demo-app://localhost/?oidc-callback=login` is used instead.
          */
-        const baseUrl = (isNativeMobile) ? `${userSettings.mobileScheme!}://localhost/` : AuthUtils.getBaseUrl();
+        const baseUrl = (isNativeMobilePlatform) ? `${userSettings.mobileScheme!}://localhost/` : getBaseUrl();
 
         // Initialize settings
         this.#settings = merge({}, DEFAULT_SETTINGS, {
             internal: {
                 userStore: new WebStorageStateStore({
-                    store: (isNativeMobile) ? new MobileStorage() : new InMemoryWebStorage()
+                    store: (isNativeMobilePlatform) ? new MobileStorage() : new InMemoryWebStorage()
                 }),
                 redirect_uri: `${baseUrl}${DEFAULT_SETTINGS.internal.redirect_uri}`,
                 post_logout_redirect_uri: `${baseUrl}${DEFAULT_SETTINGS.internal.post_logout_redirect_uri}`,
@@ -136,14 +137,14 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         );
 
         // Decide what to do..
-        if (AuthUtils.isUrlMatching(location.href, this.#settings.internal?.redirect_uri)) {
+        if (isUrlMatching(location.href, this.#settings.internal?.redirect_uri)) {
             // Back from signin redirect
             await this.#runSyncOrAsync(async () => {
                 const redirectUrl = sessionStorage.getItem(REDIRECT_URL_KEY);
                 await this.#callSignin(() => this.#userManager!.signinRedirectCallback(location.href), redirectUrl);
                 sessionStorage.removeItem(REDIRECT_URL_KEY);
             });
-        } else if (AuthUtils.isUrlMatching(location.href, this.#settings.internal?.post_logout_redirect_uri)) {
+        } else if (isUrlMatching(location.href, this.#settings.internal?.post_logout_redirect_uri)) {
             // Back from signout redirect
             await this.#runSyncOrAsync(async () => {
                 const redirectUrl = sessionStorage.getItem(REDIRECT_URL_KEY);
@@ -155,7 +156,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             const user = await this.#userManager.getUser();
             if (!user || user.expired) {
                 // on desktop -> try a silent renew with iframe
-                if (!isNativeMobile && this.#settings.retrieveUserSession) {
+                if (!isNativeMobilePlatform && this.#settings.retrieveUserSession) {
                     await this.#runSyncOrAsync(() => this.#signinSilent()
                         .catch(async (signinSilentError: unknown) => {
                             const { error, message } = signinSilentError as ErrorResponse;
@@ -187,7 +188,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     public async logout(args?: LogoutArgs): Promise<void> {
         const redirectUrl = args?.redirectUrl ?? location.href;
-        if (AuthUtils.isNativeMobile()) {
+        if (isNativeMobile()) {
             await this.#callSignout(() => this.#userManager!.signoutMobile(args), redirectUrl);
         } else {
             switch (args?.desktopNavigationType ?? this.#settings.desktopNavigationType) {
@@ -205,7 +206,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     public async login(args?: LoginArgs): Promise<boolean> {
         const redirectUrl = args?.redirectUrl ?? location.href;
-        if (AuthUtils.isNativeMobile()) {
+        if (isNativeMobile()) {
             await this.#callSignin(() => this.#userManager!.signinMobile(args), redirectUrl);
         } else {
             switch (args?.desktopNavigationType ?? this.#settings.desktopNavigationType) {
@@ -263,7 +264,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     public async getIdTokenDecoded(): Promise<IdToken | string | undefined> {
         await this.#waitForRenew('getIdTokenDecoded()');
-        return AuthUtils.decodeJwt(this.#idToken) as IdToken | string | undefined;
+        return decodeJwt(this.#idToken) as IdToken | string | undefined;
     }
 
     public async getAccessToken(): Promise<string | undefined> {
@@ -273,7 +274,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
 
     public async getAccessTokenDecoded(): Promise<AccessToken | string | undefined> {
         await this.#waitForRenew('getAccessTokenDecoded()');
-        return AuthUtils.decodeJwt(this.#accessToken) as AccessToken | string | undefined;
+        return decodeJwt(this.#accessToken) as AccessToken | string | undefined;
     }
 
     // --- DESTROY ---
@@ -340,7 +341,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
                 const error = new Error(`${uri ?? 'redirect uri'} was not found.`);
                 error.stack = undefined;
 
-                if (AuthUtils.isUrlMatching(location.href, uri)) {
+                if (isUrlMatching(location.href, uri)) {
                     logger.notif('ⓘ Encountered an error that usually means you forgot to include the redirect html files in your application assets.');
                     throw error;
                 } else if (htmlFileName && location.href.includes(`/${htmlFileName}.html`)) {
@@ -384,7 +385,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
      * 4) at this point, user is logged-out but still inside the app and able to see it
      */
     #postLogoutVerification(redirectUrlAskedAfterLogout: string | null): void {
-        const postLogoutUrl = AuthUtils.stringToURL(redirectUrlAskedAfterLogout ?? '/');
+        const postLogoutUrl = stringToURL(redirectUrlAskedAfterLogout ?? '/');
         if (this.#settings.loginRequired && (location.origin === postLogoutUrl.origin)) {
             location.reload();
         }
@@ -409,7 +410,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
             await this.#removeUser();
         }
 
-        const redirectUrl = AuthUtils.stringToURL(url ?? '/');
+        const redirectUrl = stringToURL(url ?? '/');
         // History cannot be rewritten when origin is different
         if (location.origin === redirectUrl.origin) {
             history.replaceState(history.state, '', redirectUrl.href);

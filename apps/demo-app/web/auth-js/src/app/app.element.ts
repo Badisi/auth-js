@@ -1,4 +1,4 @@
-import { type AuthSubscription, AuthUtils } from '@badisi/auth-js';
+import { type AuthSubscription, decodeJwt } from '@badisi/auth-js';
 import { type DemoAppDebugElement, type DemoAppMainElement, type DemoAppPlaygroundElement, rolesValidator } from 'demo-app-common';
 
 const template = document.createElement('template');
@@ -137,11 +137,11 @@ export class AppElement extends HTMLElement {
                     break;
                 case 'accessToken':
                     this.demoAppDebugEl.accessToken = value as string;
-                    this.demoAppDebugEl.accessTokenDecoded = AuthUtils.decodeJwt(value as string) as Record<string, unknown>;
+                    this.demoAppDebugEl.accessTokenDecoded = decodeJwt(value as string) as Record<string, unknown>;
                     break;
                 case 'idToken':
                     this.demoAppDebugEl.idToken = value as string;
-                    this.demoAppDebugEl.idTokenDecoded = AuthUtils.decodeJwt(value as string) as Record<string, unknown>;
+                    this.demoAppDebugEl.idTokenDecoded = decodeJwt(value as string) as Record<string, unknown>;
                     break;
                 case 'userProfile':
                     this.demoAppDebugEl.userProfile = value as Record<string, unknown>;

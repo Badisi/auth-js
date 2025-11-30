@@ -1,7 +1,7 @@
 import { describe, expect } from '@jest/globals';
 
 import { AuthSubscriptions } from './auth-subscriptions';
-import { AuthUtils } from './auth-utils';
+import { isUrlMatching } from './auth-utils';
 
 describe('AuthSubscriptions', () => {
     describe('add and notify', () => {
@@ -230,7 +230,7 @@ describe('AuthUtils', () => {
         ])(
             '("%s", "%s")',
             (url1: string, url2: string | undefined, expected: boolean) => {
-                expect(AuthUtils.isUrlMatching(url1, url2)).toBe(expected);
+                expect(isUrlMatching(url1, url2)).toBe(expected);
             }
         );
     });
