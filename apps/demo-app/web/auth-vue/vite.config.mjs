@@ -36,7 +36,8 @@ export default defineConfig({
             targets: [
                 {
                     src: '../../../../libs/auth-js/oidc/assets/*',
-                    dest: 'oidc/callback/'
+                    dest: 'oidc/callback/',
+                    rename: { stripBase: true } // flat copy
                 }
             ]
         })

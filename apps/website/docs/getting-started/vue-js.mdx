@@ -60,7 +60,7 @@ An existing [Vue.js][vue-js-start] application.
 
 3. Modify your **Vite configuration** file
 
-    ```js title="vite.config.ts" {1,5-10}
+    ```js title="vite.config.ts" {1,5-11}
     import { viteStaticCopy } from 'vite-plugin-static-copy';
 
     export default defineConfig({
@@ -68,7 +68,8 @@ An existing [Vue.js][vue-js-start] application.
         viteStaticCopy({
           targets: [{
             src: 'node_modules/@badisi/auth-vue/oidc/assets/*',
-            dest: 'oidc/callback/'
+            dest: 'oidc/callback/',
+            rename: { stripBase: true } // flat copy
           }]
         })
       ]

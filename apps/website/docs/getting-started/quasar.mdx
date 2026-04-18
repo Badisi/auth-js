@@ -60,7 +60,7 @@ An existing [Quasar][quasar-start] application set up with **TypeScript** and **
 
 3. Modify your **quasar configuration** file
 
-    ```js title="quasar.config.ts" {1,8-13}
+    ```js title="quasar.config.ts" {1,8-14}
     import { viteStaticCopy } from 'vite-plugin-static-copy';
     import { defineConfig } from '#q-app/wrappers';
 
@@ -71,7 +71,8 @@ An existing [Quasar][quasar-start] application set up with **TypeScript** and **
             ...viteStaticCopy({
               targets: [{
                 src: 'node_modules/@badisi/auth-vue/oidc/assets/*',
-                dest: 'oidc/callback/'
+                dest: 'oidc/callback/',
+                rename: { stripBase: true } // flat copy
               }]
             })
           ]
