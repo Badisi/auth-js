@@ -1,4 +1,4 @@
-import { isDevMode } from '@angular/core';
+import { isDevMode, provideZoneChangeDetection } from '@angular/core';
 import { bootstrapApplication, platformBrowser } from '@angular/platform-browser';
 import { initAuth, provideAuth } from '@badisi/ngx-auth';
 import { DemoAppSettingsService } from 'demo-app-common';
@@ -24,13 +24,14 @@ void (async (): Promise<void> => {
         if (USE_STANDALONE) {
             const { appConfig } = await import('./app/app.config');
             appConfig.providers.push(provideAuth(authProvider));
+            appConfig.providers.push((provideZoneChangeDetection()));
             bootstrapApplication(AppComponent, appConfig)
                 .catch((err: unknown) => {
                     console.error(err);
                 });
         } else {
             platformBrowser([authProvider])
-                .bootstrapModule(AppModule)
+                .bootstrapModule(AppModule, { applicationProviders: [provideZoneChangeDetection()] })
                 .catch((err: unknown) => {
                     console.error(err);
                 });

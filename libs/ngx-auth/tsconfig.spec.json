@@ -1,8 +1,10 @@
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
+        "moduleResolution": "bundler",
+        "module": "preserve",
+        "isolatedModules": true,
         "outDir": "../../dist/out-tsc",
-        "module": "commonjs",
         "target": "es2018",
         "types": [
             "jest",
