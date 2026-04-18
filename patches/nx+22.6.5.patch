@@ -1,5 +1,5 @@
 diff --git a/node_modules/nx/release/changelog-renderer/index.js b/node_modules/nx/release/changelog-renderer/index.js
-index 9e0fac6..c178a43 100644
+index 1ef1fac..e529fbf 100644
 --- a/node_modules/nx/release/changelog-renderer/index.js
 +++ b/node_modules/nx/release/changelog-renderer/index.js
 @@ -45,13 +45,13 @@ class DefaultChangelogRenderer {
@@ -43,38 +43,11 @@ index 9e0fac6..c178a43 100644
              (!this.isVersionPlans && change.scope
                  ? `**${change.scope.trim()}:** `
                  : '') +
-diff --git a/node_modules/nx/src/command-line/release/changelog.js b/node_modules/nx/src/command-line/release/changelog.js
-index 0c89dc7..1b227b5 100644
---- a/node_modules/nx/src/command-line/release/changelog.js
-+++ b/node_modules/nx/src/command-line/release/changelog.js
-@@ -271,6 +271,7 @@ function createAPI(overrideReleaseConfig, ignoreNxJsonConfig) {
-             if (config === false) {
-                 continue;
-             }
-+            const seen = new Set();
-             const projects = args.projects?.length
-                 ? // If the user has passed a list of projects, we need to use the filtered list of projects within the release group, plus any dependents
-                     Array.from(releaseGraph.releaseGroupToFilteredProjects.get(releaseGroup)).flatMap((project) => {
-@@ -278,7 +279,13 @@ function createAPI(overrideReleaseConfig, ignoreNxJsonConfig) {
-                             project,
-                             ...(projectsVersionData[project]?.dependentProjects.map((dep) => dep.source) || []),
-                         ];
--                    })
-+                    // TODO: to be removed when https://github.com/nrwl/nx/issues/33268 is resolved
-+                    // Avoid duplicates
-+                    }).filter((project) => {
-+                        if (seen.has(project)) return false;
-+                        seen.add(project);
-+                        return true;
-+                     })
-                 : // Otherwise, we use the full list of projects within the release group
-                     releaseGroup.projects;
-             const projectNodes = projects.map((name) => projectGraph.nodes[name]);
 diff --git a/node_modules/nx/src/command-line/release/utils/git.js b/node_modules/nx/src/command-line/release/utils/git.js
-index fbb58b6..557face 100644
+index 9621ffe..5adc72d 100644
 --- a/node_modules/nx/src/command-line/release/utils/git.js
 +++ b/node_modules/nx/src/command-line/release/utils/git.js
-@@ -475,7 +475,8 @@ function getAllAuthorsForCommit(commit) {
+@@ -465,7 +465,8 @@ function getAllAuthorsForCommit(commit) {
  }
  // https://www.conventionalcommits.org/en/v1.0.0/
  // https://regex101.com/r/FSfNvA/1
@@ -85,10 +58,10 @@ index fbb58b6..557face 100644
  // GitHub style PR references
  const PullRequestRE = /\([ a-z]*(#\d+)\s*\)/gm;
 diff --git a/node_modules/nx/src/command-line/release/utils/remote-release-clients/github.js b/node_modules/nx/src/command-line/release/utils/remote-release-clients/github.js
-index f58fa46..680fab7 100644
+index 9d03169..d738270 100644
 --- a/node_modules/nx/src/command-line/release/utils/remote-release-clients/github.js
 +++ b/node_modules/nx/src/command-line/release/utils/remote-release-clients/github.js
-@@ -115,11 +115,18 @@ class GithubRemoteReleaseClient extends remote_release_client_1.RemoteReleaseCli
+@@ -111,11 +111,18 @@ class GithubRemoteReleaseClient extends remote_release_client_1.RemoteReleaseCli
                          break;
                      }
                  }
@@ -96,7 +69,7 @@ index f58fa46..680fab7 100644
 +                const emailQuery = await axios
                      .get(`https://ungh.cc/users/find/${email}`)
                      .catch(() => ({ data: { user: null } }));
--                if (data?.user) {
+-                if (data?.user?.username) {
 -                    meta.username = data.user.username;
 +                if (emailQuery.data?.user) {
 +                    meta.username = emailQuery.data.user.username;
@@ -109,7 +82,7 @@ index f58fa46..680fab7 100644
 +                    meta.username = authorQuery.data.user.username;
                      break;
                  }
-             }
+                 const usernameFromGhCli = this.resolveUsernameFromGhCli(email);
 diff --git a/node_modules/nx/src/generators/utils/json.js b/node_modules/nx/src/generators/utils/json.js
 index a59bc2c..a8387f4 100644
 --- a/node_modules/nx/src/generators/utils/json.js
