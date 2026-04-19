@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, inject, Input } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { map } from 'rxjs';
 
 @Component({
     standalone: true,
@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
     template: '',
     styles: [':host { background-position: center center; background-repeat: no-repeat; background-size: cover; }']
 })
-// eslint-disable-next-line @angular-eslint/component-class-suffix
+
 export class AuthImage {
     #elementRef = inject<ElementRef<HTMLImageElement>>(ElementRef);
     #httpClient = inject(HttpClient);

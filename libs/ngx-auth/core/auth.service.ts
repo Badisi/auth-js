@@ -10,8 +10,7 @@ import {
     type UserProfile,
     type UserSession
 } from '@badisi/auth-js/oidc';
-import { type Observable, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { distinctUntilChanged, map, type Observable, ReplaySubject } from 'rxjs';
 
 import { AUTH_MANAGER } from './auth.provider';
 

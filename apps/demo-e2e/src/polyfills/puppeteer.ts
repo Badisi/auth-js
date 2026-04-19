@@ -10,6 +10,7 @@ declare global {
             waitForNavigation: () => Promise<string>;
         }
         interface Mock {
+            // eslint-disable-next-line @stylistic/object-curly-spacing
             waitForResponse: ({ timeout }?: WaitForOptions) => Promise<HTTPResponse>;
         }
     }
@@ -33,7 +34,6 @@ browser.overwriteCommand('mock', async (_origCommand: MockFunction, url: string,
     return mock;
 });
 
-// eslint-disable-next-line @typescript-eslint/no-deprecated
 browser.addCommand('waitForNavigation', async (): Promise<string> => {
     let newUrl = '';
     const currentUrl = await browser.getUrl();
@@ -44,7 +44,6 @@ browser.addCommand('waitForNavigation', async (): Promise<string> => {
     return newUrl;
 });
 
-// eslint-disable-next-line @typescript-eslint/no-deprecated
 browser.addCommand('getPage', async (): Promise<Page> => {
     if (!('page' in browser.__propertiesObject__)) {
         const puppeteerBrowser = await browser.getPuppeteer();

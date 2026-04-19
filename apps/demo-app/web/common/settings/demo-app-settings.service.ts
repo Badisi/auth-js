@@ -33,7 +33,7 @@ export class DemoAppSettingsService<S extends AuthSettings = AuthSettings> {
         return this.get().settings;
     }
 
-    public addOrUpdateSettings(settings: Settings<S>, index: number | undefined = undefined): undefined | number {
+    public addOrUpdateSettings(settings: Settings<S>, index?: number): undefined | number {
         const appSettings = this.get();
         let settingsIndex = index;
         if (index !== undefined) {

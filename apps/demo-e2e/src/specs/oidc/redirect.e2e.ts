@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression, @typescript-eslint/await-thenable */
 /* eslint-disable camelcase, @typescript-eslint/naming-convention */
 
 import '../../polyfills/puppeteer';
