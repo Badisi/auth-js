@@ -1,9 +1,10 @@
-import { type AuthGuardOptions, type AuthGuardValidator, AuthLogger } from '../core';
+import { type AuthGuardOptions, type AuthGuardValidator, AuthLogger } from '@badisi/auth-js';
+
 import type { OIDCAuthManager } from './oidc-auth-manager';
 
-const logger = new AuthLogger('OIDCAuthGuard');
-
 export class OIDCAuthGuard {
+    #logger = new AuthLogger('OIDCAuthGuard');
+
     #manager: OIDCAuthManager;
 
     public constructor(manager: OIDCAuthManager) {
@@ -32,7 +33,7 @@ export class OIDCAuthGuard {
             return await Promise.resolve(validator(userProfile, decodedAccessToken));
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         } else if (validator) {
-            logger.error('`authGuardValidator` must be a function');
+            this.#logger.error('`authGuardValidator` must be a function');
             return false;
         }
         return true;

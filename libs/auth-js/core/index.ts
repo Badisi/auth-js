@@ -6,9 +6,12 @@
  * Copyright (C) 2018 Badisi
  */
 
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../@types/mobile/index.d.ts" />
+
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
-export { AuthLogger, LogLevel } from './auth-logger';
+export { AuthLogger, type ILogger, LogLevel } from './auth-logger';
 export { AuthManager } from './auth-manager';
 export { AuthSubscriptions } from './auth-subscriptions';
 export { decodeJwt, getBaseUrl, isCapacitor, isCordova, isNativeMobile, isUrlMatching, stringToURL } from './auth-utils';

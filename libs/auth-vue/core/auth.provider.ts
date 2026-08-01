@@ -12,7 +12,7 @@ export const initAuth = async (settings: AuthSettings): Promise<Plugin> => {
      *  So we have to get the authManager prior of the plugin installation phase,
      *  to make sur any code that will use it later on, will actually get it.
      */
-    const authManager = await initOidc(settings);
+    const authManager = await initOidc(settings, '@badisi/auth-vue');
     return {
         install: (app: App, { router }: { router: Router }): void => {
             // Effectively adding authService to every component instance

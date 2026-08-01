@@ -13,9 +13,9 @@ declare global {
     }
 }
 
-const logger = new AuthLogger('OIDCAuthInterceptor');
-
 export class OIDCAuthInterceptor {
+    #logger = new AuthLogger('OIDCAuthInterceptor');
+
     #manager: OIDCAuthManager;
     #userManager: OIDCUserManager;
 
@@ -24,7 +24,7 @@ export class OIDCAuthInterceptor {
     #originalXmlHttpRequestSend = XMLHttpRequest.prototype.send;
 
     public constructor(manager: OIDCAuthManager, userManager: OIDCUserManager) {
-        logger.debug('init');
+        this.#logger.debug('init');
         this.#manager = manager;
         this.#userManager = userManager;
         this.#monkeyPathFetch();
@@ -68,10 +68,10 @@ export class OIDCAuthInterceptor {
             // @ts-expect-error _metadata is accessible because not truly private
             const metadata = this.#userManager.metadataService._metadata as Partial<OidcMetadata> | undefined;
             if (!metadata && url.includes(this.#manager.getSettings().authorityUrl)) {
-                logger.debug('matching authority domain but no metadata available yet');
+                this.#logger.debug('matching authority domain but no metadata available yet');
                 isAllowed = false;
             } else if (metadata && this.#manager.isRenewing()) {
-                logger.debug('matching authority domain but no token available yet');
+                this.#logger.debug('matching authority domain but no token available yet');
                 isAllowed = false;
             } else if (metadata) {
                 const blacklistedUrl = [
@@ -79,7 +79,7 @@ export class OIDCAuthInterceptor {
                     metadata.token_endpoint
                 ].find(value => value && url.includes(value));
                 if (blacklistedUrl) {
-                    logger.debug('matching blacklisted authority url:', blacklistedUrl);
+                    this.#logger.debug('matching blacklisted authority url:', blacklistedUrl);
                     isAllowed = false;
                 }
             }
@@ -92,29 +92,28 @@ export class OIDCAuthInterceptor {
             if (Array.isArray(include)) {
                 const matchedPattern = include.find((pattern: string | RegExp) => this.#isMatching(url, pattern));
                 if (matchedPattern) {
-                    logger.debug('matching include pattern:', matchedPattern);
+                    this.#logger.debug('matching include pattern:', matchedPattern);
                     isAllowed = true;
                 }
             } else if (include) {
                 isAllowed = this.#isMatching(url, include);
                 if (isAllowed) {
-                    logger.debug('matching include pattern:', include);
+                    this.#logger.debug('matching include pattern:', include);
                 }
             }
 
             if (Array.isArray(exclude)) {
                 const matchedPattern = exclude.some((item: string | RegExp) => this.#isMatching(url, item));
                 if (matchedPattern) {
-                    logger.debug('matching exclude pattern:', matchedPattern);
+                    this.#logger.debug('matching exclude pattern:', matchedPattern);
                     isAllowed = false;
                 }
             } else if (exclude && this.#isMatching(url, exclude)) {
-                logger.debug('matching exclude pattern:', exclude);
+                this.#logger.debug('matching exclude pattern:', exclude);
                 isAllowed = false;
             }
         }
 
-        logger.debug(isAllowed ? 'allowed' : 'not allowed');
         return isAllowed;
     }
 
@@ -132,7 +131,7 @@ export class OIDCAuthInterceptor {
     }
 
     #monkeyPathFetch(enable = true): void {
-        const _logger = logger.createChild('monkeyPathFetch');
+        const _logger = this.#logger.createChild('monkeyPathFetch');
         _logger.debug(enable ? 'enabling..' : 'disabling..');
 
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -140,14 +139,14 @@ export class OIDCAuthInterceptor {
             if (enable) {
                 window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
                     const url = (input instanceof Request) ? input.url : input.toString();
-                    logger.debug('received FETCH url:', url);
+                    this.#logger.debug('received FETCH url:', url);
 
                     // Add token to request headers
                     if (this.#shouldInjectAuthToken(url)) {
                         const accessToken = await this.#manager.getAccessToken();
                         if (init && accessToken) {
                             const headerName = this.#getAuthorizationHeaderName();
-                            logger.debug(`adding "${headerName}" bearer to header request`);
+                            this.#logger.debug(`adding "${headerName}" bearer to header request`);
                             if (Array.isArray(init.headers)) {
                                 init.headers.push([headerName, `Bearer ${accessToken}`]);
                             } else if (init.headers instanceof Headers) {
@@ -186,7 +185,7 @@ export class OIDCAuthInterceptor {
     }
 
     #monkeyPatchXmlHttpRequest(enable = true): void {
-        const _logger = logger.createChild('monkeyPatchXmlHttpRequest');
+        const _logger = this.#logger.createChild('monkeyPatchXmlHttpRequest');
         _logger.debug(enable ? 'enabling..' : 'disabling..');
 
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -203,7 +202,7 @@ export class OIDCAuthInterceptor {
 
                 XMLHttpRequest.prototype.send = function(body?: Document | XMLHttpRequestBodyInit | null): void {
                     const url = (typeof this.url === 'string') ? this.url : this.url?.href;
-                    logger.debug('received XHR url:', url);
+                    interceptor.#logger.debug('received XHR url:', url);
 
                     // Do a login on 401
                     const originalReadyStateChange = this.onreadystatechange;
@@ -231,12 +230,12 @@ export class OIDCAuthInterceptor {
                             .then(accessToken => {
                                 if (accessToken) {
                                     const headerName = interceptor.#getAuthorizationHeaderName();
-                                    logger.debug(`adding "${headerName}" bearer to header request`);
+                                    interceptor.#logger.debug(`adding "${headerName}" bearer to header request`);
                                     this.setRequestHeader(headerName, `Bearer ${accessToken}`);
                                 }
                             })
                             .catch((error: unknown) => {
-                                logger.error(error);
+                                interceptor.#logger.error(error);
                             })
                             .finally(() => {
                                 interceptor.#originalXmlHttpRequestSend.apply(this, [body]);

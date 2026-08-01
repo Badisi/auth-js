@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { type ILogger, Log as OidcClientLogger } from 'oidc-client-ts';
 
 export enum LogLevel {
     NONE = 0,
@@ -9,10 +8,17 @@ export enum LogLevel {
     DEBUG = 4
 }
 
+export interface ILogger {
+    debug: (...args: unknown[]) => void;
+    info: (...args: unknown[]) => void;
+    warn: (...args: unknown[]) => void;
+    error: (...args: unknown[]) => void;
+}
+
 export class AuthLogger {
-    static #libName: string;
-    static #level: LogLevel;
-    static #logger: ILogger;
+    static #logger: ILogger = console;
+    static #level: LogLevel = LogLevel.ERROR;
+    static #libName = '???';
 
     #prefixes: string[] = [];
 
@@ -22,24 +28,16 @@ export class AuthLogger {
         }
     }
 
-    public static init(libName: string, level: LogLevel = LogLevel.ERROR, logger: ILogger = console): void {
-        this.setLibName(libName);
-        this.setLogLevel(level);
-        this.setLogger(logger);
-    }
-
     public static setLibName(value: string): void {
         this.#libName = value;
     }
 
     public static setLogLevel(value: LogLevel): void {
         this.#level = value;
-        OidcClientLogger.setLevel(value as unknown as OidcClientLogger);
     }
 
     public static setLogger(value: ILogger): void {
         this.#logger = value;
-        OidcClientLogger.setLogger(value);
     }
 
     public createChild(childName: string): AuthLogger {

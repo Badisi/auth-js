@@ -8,11 +8,6 @@
  * Copyright (C) 2018 Badisi
  */
 
-// Initialize the logger
-import { AuthLogger } from '@badisi/auth-js';
-
-AuthLogger.init('@badisi/auth-vue');
-
 // @badisi/auth-js re-exports renamed
 import type { OIDCAuthManager, OIDCAuthSettings } from '@badisi/auth-js/oidc';
 export interface AuthManager extends OIDCAuthManager {}

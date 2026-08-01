@@ -1,23 +1,23 @@
-/* eslint-disable @typescript-eslint/no-deprecated */
+import { AuthLogger, isCapacitor, isCordova, isUrlMatching } from '@badisi/auth-js';
+import type { AppPlugin } from '@capacitor/app';
+import type { BrowserPlugin } from '@capacitor/browser';
 import type { PluginListenerHandle } from '@capacitor/core';
 import type { IWindow, NavigateParams, NavigateResponse } from 'oidc-client-ts';
 
-import { AuthLogger, isCapacitor, isCordova, isUrlMatching } from '../../core';
 import type { MobileWindowParams } from '../models/mobile-window-params.model';
 
 const CUSTOM_URL_SCHEME_HANDLER_TIMEOUT = 10 * 1000; // 10s
-const CAPACITOR_APP = window.Capacitor?.Plugins.App;
-const CAPACITOR_BROWSER = window.Capacitor?.Plugins.Browser;
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
-const BROWSER_TAB = undefined; // cordova?.plugins?.browsertab;
-
-const logger = new AuthLogger('MobileWindow');
-const navigateLogger = logger.createChild('navigate');
+const getCapacitorApp = (): AppPlugin | undefined => window.Capacitor?.Plugins.App;
+const getCapacitorBrowser = (): BrowserPlugin | undefined => window.Capacitor?.Plugins.Browser;
+const getBrowserTab = (): BrowserPlugin | undefined => undefined; // cordova?.plugins?.browsertab;
 
 /**
  * @internal
  */
 export class MobileWindow implements IWindow {
+    #logger = new AuthLogger('MobileWindow');
+    #navigateLogger = this.#logger.createChild('navigate');
+
     #capacitorAppUrlOpenHandle?: PluginListenerHandle;
     #capacitorBrowserFinishedHandle?: PluginListenerHandle;
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -34,32 +34,32 @@ export class MobileWindow implements IWindow {
         public params: MobileWindowParams
     ) {
         if (!isCapacitor() && !isCordova()) {
-            logger.notif('ⓘ Please follow the installation guide and install either `Capacitor` or `Cordova` dependency.');
-            throw logger.getError('Required core dependency `Capacitor` or `Cordova` not found');
+            this.#logger.notif('ⓘ Please follow the installation guide and install either `Capacitor` or `Cordova` dependency.');
+            throw this.#logger.getError('Required core dependency `Capacitor` or `Cordova` not found');
         }
 
-        if (!BROWSER_TAB && !CAPACITOR_BROWSER) {
+        if (!getBrowserTab() && !getCapacitorBrowser()) {
             // TODO:
-            // logger.notif('ⓘ Please follow the installation guide and install either `@badisi/capacitor-browsertab` or `@capacitor/browser` plugin.');
-            logger.notif('ⓘ Please follow the installation guide and install `@capacitor/browser` plugin.');
-            throw logger.getError('Required browser plugin not found');
+            // this.#logger.notif('ⓘ Please follow the installation guide and install either `@badisi/capacitor-browsertab` or `@capacitor/browser` plugin.');
+            this.#logger.notif('ⓘ Please follow the installation guide and install `@capacitor/browser` plugin.');
+            throw this.#logger.getError('Required browser plugin not found');
         }
 
-        /* TODO: if (!BROWSER_TAB && CAPACITOR_BROWSER) {
+        /* TODO: if (!BROWSER_TAB && getCapacitorBrowser()) {
             let message = '[@badisi/auth-js] This application is currently using a non recommended browser plugin.\n\n';
             message += 'ⓘ Please follow the recommended guide and use `@badisi/capacitor-browsertab` instead.';
             console.warn(message);
         }*/
 
-        if (BROWSER_TAB) {
-            logger.debug('Using `@badisi/capacitor-browsertab` implementation');
-        } else if (CAPACITOR_BROWSER) {
-            logger.debug('Using `@capacitor/browser` implementation');
+        if (getBrowserTab()) {
+            this.#logger.debug('Using `@badisi/capacitor-browsertab` implementation');
+        } else if (getCapacitorBrowser()) {
+            this.#logger.debug('Using `@capacitor/browser` implementation');
         }
     }
 
     public async navigate(params: NavigateParams): Promise<NavigateResponse> {
-        navigateLogger.debug(params.url);
+        this.#navigateLogger.debug(params.url);
 
         this.#isClosed = false;
         this.#receivedResult = false;
@@ -70,9 +70,9 @@ export class MobileWindow implements IWindow {
 
             void this.#installCustomUrlSchemeHandler()
                 .then(() => {
-                    if (BROWSER_TAB) {
+                    if (getBrowserTab()) {
                         void this.#useBrowserTab(params);
-                    } else if (CAPACITOR_BROWSER) {
+                    } else if (getCapacitorBrowser()) {
                         void this.#useCapacitorBrowser(params);
                     }
                 });
@@ -82,7 +82,7 @@ export class MobileWindow implements IWindow {
     // TODO: oidc-client-ts impose a sync method but an async one is needed because of Capacitor Browser
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     public async close(): Promise<void> {
-        const _logger = logger.createChild('cleanup');
+        const _logger = this.#logger.createChild('cleanup');
         _logger.debug('begin');
         /**
          * Trying to close the browser while it's actually closing, can cause issues on Android.
@@ -90,7 +90,7 @@ export class MobileWindow implements IWindow {
          * @see https://github.com/ionic-team/capacitor-plugins/issues/2045
          */
         if (!this.#isClosed) {
-            await CAPACITOR_BROWSER?.close().catch((err: unknown) => {
+            await getCapacitorBrowser()?.close().catch((err: unknown) => {
                 _logger.error(err);
             });
             // TODO: BROWSER_TAB?.close();
@@ -101,7 +101,7 @@ export class MobileWindow implements IWindow {
     // --- HELPER(s) ---
 
     async #cleanup(): Promise<void> {
-        const _logger = logger.createChild('cleanup');
+        const _logger = this.#logger.createChild('cleanup');
         _logger.debug('begin');
         window.handleOpenURL = this.#originalHandleOpenURL;
         await this.#capacitorBrowserFinishedHandle?.remove();
@@ -111,7 +111,7 @@ export class MobileWindow implements IWindow {
     }
 
     async #onError(message: string): Promise<void> {
-        navigateLogger.error('error response:', message);
+        this.#navigateLogger.error('error response:', message);
         await this.close();
         await this.#cleanup();
         this.#reject?.(new Error(message));
@@ -119,7 +119,7 @@ export class MobileWindow implements IWindow {
     }
 
     async #onSuccess(url: string): Promise<void> {
-        navigateLogger.debug('successful response:', url);
+        this.#navigateLogger.debug('successful response:', url);
         await this.close();
         await this.#cleanup();
         this.#resolve?.({ url });
@@ -127,7 +127,7 @@ export class MobileWindow implements IWindow {
     }
 
     async #useCapacitorBrowser(params: NavigateParams): Promise<void> {
-        this.#capacitorBrowserFinishedHandle = await CAPACITOR_BROWSER?.addListener(
+        this.#capacitorBrowserFinishedHandle = await getCapacitorBrowser()?.addListener(
             'browserFinished',
             (): void => {
                 this.#isClosed = true;
@@ -136,7 +136,7 @@ export class MobileWindow implements IWindow {
                  * So we give it some extra time, and in case we still didn't received any results, we consider that the
                  * browser was simply closed by the user.
                  */
-                setTimeout(() => {
+                window.setTimeout(() => {
                     if (!this.#receivedResult) {
                         void this.#cleanup();
                         this.#reject?.('Capacitor browser closed by user');
@@ -145,7 +145,7 @@ export class MobileWindow implements IWindow {
             }
         );
 
-        await CAPACITOR_BROWSER?.open({
+        await getCapacitorBrowser()?.open({
             url: params.url,
             toolbarColor: this.params.mobileWindowToolbarColor,
             presentationStyle: this.params.mobileWindowPresentationStyle,
@@ -164,10 +164,10 @@ export class MobileWindow implements IWindow {
     }
 
     async #installCustomUrlSchemeHandler(): Promise<void> {
-        const _logger = logger.createChild('installCustomUrlSchemeHandler');
+        const _logger = this.#logger.createChild('installCustomUrlSchemeHandler');
 
         // Set a timeout in case no response is received
-        this.#timer = setTimeout(
+        this.#timer = window.setTimeout(
             () => void this.#onError('Installing custom url scheme handler, timed out without a response'),
             CUSTOM_URL_SCHEME_HANDLER_TIMEOUT
         );
@@ -179,7 +179,7 @@ export class MobileWindow implements IWindow {
         if (isCapacitor()) {
             _logger.debug('listening to Capacitor `appUrlOpen` event');
 
-            this.#capacitorAppUrlOpenHandle = await CAPACITOR_APP?.addListener?.(
+            this.#capacitorAppUrlOpenHandle = await getCapacitorApp()?.addListener(
                 'appUrlOpen',
                 ({ url }): void => {
                     if (isUrlMatching(url, this.redirectUrl)) {
