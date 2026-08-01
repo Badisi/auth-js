@@ -89,3 +89,56 @@ export const stringToURL = (url: string): URL => {
         return new URL(`${getBaseUrl()}${pathUrl}`);
     }
 };
+
+type PlainObject = Record<string, unknown>;
+
+const isPlainObject = (item: unknown): item is PlainObject => {
+    if (item && (typeof item === 'object')) {
+        const proto = Object.getPrototypeOf(item) as unknown;
+        return ((proto === null) || (proto === Object.prototype));
+    }
+    return false;
+};
+
+export const deepMerge = <T extends object>(target: T, ...sources: unknown[]): T => {
+    const result = isPlainObject(target) ? target : {};
+
+    sources.reduce<PlainObject>((acc, source) => {
+        if (!isPlainObject(source)) { return acc; }
+
+        Object.keys(source).forEach(key => {
+            const sourceValue = source[key];
+            const targetValue = acc[key];
+
+            if (isPlainObject(sourceValue)) {
+                if (!isPlainObject(targetValue)) {
+                    acc[key] = {};
+                }
+                deepMerge(acc[key] as object, sourceValue);
+            } else if (Array.isArray(sourceValue)) {
+                if (!Array.isArray(targetValue)) {
+                    acc[key] = [];
+                }
+
+                const targetArray = acc[key] as unknown[];
+
+                sourceValue.forEach((item, i) => {
+                    if (isPlainObject(item)) {
+                        if (!isPlainObject(targetArray[i])) {
+                            targetArray[i] = {};
+                        }
+                        deepMerge(targetArray[i] as object, item);
+                    } else {
+                        targetArray[i] = item;
+                    }
+                });
+            } else if (sourceValue !== undefined) {
+                acc[key] = sourceValue;
+            }
+        });
+
+        return acc;
+    }, result);
+
+    return result as unknown as T;
+};

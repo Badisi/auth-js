@@ -6,10 +6,9 @@
 
 import {
     type AuthGuardOptions, AuthLogger, AuthManager, type AuthSubscriber, type AuthSubscriberOptions,
-    type AuthSubscription, AuthSubscriptions, decodeJwt, getBaseUrl, isNativeMobile, isUrlMatching,
+    type AuthSubscription, AuthSubscriptions, decodeJwt, deepMerge, getBaseUrl, isNativeMobile, isUrlMatching,
     stringToURL
 } from '@badisi/auth-js';
-import { merge } from 'lodash-es';
 import {
     type ErrorResponse, InMemoryWebStorage, Log as OidcClientLogger, type SigninSilentArgs, type User,
     type UserProfile, WebStorageStateStore
@@ -98,7 +97,7 @@ export class OIDCAuthManager extends AuthManager<OIDCAuthSettings> {
         const baseUrl = (isNativeMobilePlatform) ? `${userSettings.mobileScheme!}://localhost/` : getBaseUrl();
 
         // Initialize settings
-        this.#settings = merge<OIDCAuthSettings>({}, DEFAULT_SETTINGS, {
+        this.#settings = deepMerge<OIDCAuthSettings>({} as OIDCAuthSettings, DEFAULT_SETTINGS, {
             internal: {
                 userStore: new WebStorageStateStore({
                     store: (isNativeMobilePlatform) ? new MobileStorage() : new InMemoryWebStorage()

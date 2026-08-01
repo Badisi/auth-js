@@ -14,7 +14,7 @@ export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 export { AuthLogger, type ILogger, LogLevel } from './auth-logger';
 export { AuthManager } from './auth-manager';
 export { AuthSubscriptions } from './auth-subscriptions';
-export { decodeJwt, getBaseUrl, isCapacitor, isCordova, isNativeMobile, isUrlMatching, stringToURL } from './auth-utils';
+export { decodeJwt, deepMerge, getBaseUrl, isCapacitor, isCordova, isNativeMobile, isUrlMatching, stringToURL } from './auth-utils';
 export { createAuthManager } from './main';
 export type { AuthGuardOptions } from './models/auth-guard-options.model';
 export type { AuthGuardValidator } from './models/auth-guard-validator.model';
