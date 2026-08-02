@@ -1,0 +1,1 @@
+import{_ as t,o as a,c as s,a as o,t as c}from"./index-t3v7gznO.js";const r={},n={class:"page"};function _(e,i){return a(),s("div",n,[o("h2",null,c(e.$route.meta.title),1)])}const d=t(r,[["render",_],["__scopeId","data-v-b4841f51"]]);export{d as default};
