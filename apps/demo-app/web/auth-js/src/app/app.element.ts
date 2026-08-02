@@ -47,6 +47,7 @@ export class AppElement extends HTMLElement {
         this.listenForPlaygroundEvents();
         this.listenForAuthChanges();
         this.installGuard();
+        void this.callGuard();
     }
 
     public disconnectedCallback(): void {
@@ -91,7 +92,10 @@ export class AppElement extends HTMLElement {
     private async callGuard(url = location.href): Promise<void> {
         const contentEl = this.demoAppPlaygroundEl?.querySelector('#demo-app-playground-content');
         if (contentEl) {
-            const pathname = (new URL(url)).pathname.slice(1);
+            const currentUrl = new URL(window.location.href);
+            const baseUrl = new URL(document.baseURI);
+            const pathname = currentUrl.pathname.replace(baseUrl.pathname, '');
+
             if (['protected', 'private'].includes(pathname)) {
                 const options = (pathname === 'protected') ? { validator: rolesValidator() } : undefined;
                 const isAllowed = await window.authManager.runGuard(url, options);
@@ -185,7 +189,7 @@ export class AppElement extends HTMLElement {
             this.listeners.push(() => this.demoAppPlaygroundEl?.removeEventListener('api', callApi));
 
             const callNavigate = ((event: CustomEvent): void => {
-                const url = new URL(event.type, location.origin);
+                const url = new URL((event.type === 'home') ? './' : event.type, location.href);
                 Object.entries(event.detail?.queryParams as Record<string, string>).forEach(([key, value]) => {
                     url.searchParams.set(key, value);
                 });

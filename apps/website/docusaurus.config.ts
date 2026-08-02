@@ -53,6 +53,37 @@ const config: Config = {
                 rel: 'stylesheet',
                 href: 'https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Inconsolata:wght@400;700&display=swap'
             }
+        },
+        {
+            // Redirects 404s under "/demo-app/" to the proper demo application.
+            // This runs synchronously in the <head>, before the Docusaurus bundle
+            // loads, so the 404 page is never displayed on screen.
+            tagName: 'script',
+            attributes: {},
+            innerHTML: `(function () {
+                var href = location.href;
+                var redirectTo = null;
+                var storeUrl = false;
+                if (href.indexOf('/demo-app/auth-js') !== -1) {
+                    redirectTo = '/auth-js/demo-app/auth-js';
+                    storeUrl = true;
+                } else if (href.indexOf('/demo-app/ngx-auth') !== -1) {
+                    redirectTo = '/auth-js/demo-app/ngx-auth';
+                    storeUrl = true;
+                } else if (href.indexOf('/demo-app/auth-vue') !== -1) {
+                    redirectTo = '/auth-js/demo-app/auth-vue';
+                    storeUrl = true;
+                } else if (href.indexOf('/demo-app') !== -1) {
+                    // Redirect to default demo application
+                    redirectTo = '/auth-js/demo-app/auth-js';
+                }
+                if (redirectTo && !href.endsWith(redirectTo) && !href.endsWith(redirectTo + '/')) {
+                    if (storeUrl) {
+                        sessionStorage.setItem('gh-pages-url-from-404', href);
+                    }
+                    location.replace(redirectTo);
+                }
+            })();`
         }
     ],
     presets: [

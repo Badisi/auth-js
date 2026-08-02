@@ -368,7 +368,7 @@ export class DemoAppPlaygroundElement extends HTMLElement {
             ...currentSettings.otherSettings,
             ...value
         };
-        window.appSettings.addOrUpdateSettings(currentSettings);
+        window.appSettings.addOrUpdateSettings(currentSettings, window.appSettings.get().currentSettingsIndex);
     }
 }
 
