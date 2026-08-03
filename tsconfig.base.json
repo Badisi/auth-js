@@ -1,43 +1,19 @@
 {
     "extends": "./tsconfig.strict.json",
-    "compileOnSave": false,
     "compilerOptions": {
-        "baseUrl": ".",
-        "rootDir": ".",
-        "declaration": false,
-        "moduleResolution": "node",
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "importHelpers": true,
-        "target": "ES2022",
-        "module": "ESNext",
+        "target": "esnext",
         "lib": [
-            "ES2022",
+            "esnext",
             "dom"
         ],
+        "module": "preserve",
+        "moduleResolution": "bundler",
+        "customConditions": [
+            "development"
+        ],
         "skipLibCheck": true,
-        "skipDefaultLibCheck": true,
-        "paths": {
-            "@badisi/auth-js": [
-                "./libs/auth-js/core"
-            ],
-            "@badisi/auth-js/oidc": [
-                "./libs/auth-js/oidc"
-            ],
-            "@badisi/auth-vue": [
-                "./libs/auth-vue"
-            ],
-            "@badisi/ngx-auth": [
-                "./libs/ngx-auth"
-            ],
-            "demo-app-common": [
-                "./apps/demo-app/web/common"
-            ]
-        }
-    },
-    "exclude": [
-        "node_modules",
-        "tmp"
-    ],
-    "references": []
+        "esModuleInterop": true,
+        "noEmitOnError": true,
+        "sourceMap": true
+    }
 }

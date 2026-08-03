@@ -1,6 +1,6 @@
+import type { AuthGuardOptions } from '@badisi/auth-js';
 import type { UserProfile } from 'oidc-client-ts';
 
-import type { AuthGuardOptions } from '../core';
 import type { AccessToken } from './models/access-token.model';
 import type { LoginArgs, LogoutArgs, RenewArgs } from './models/args.model';
 import type { IdToken } from './models/id-token.model';

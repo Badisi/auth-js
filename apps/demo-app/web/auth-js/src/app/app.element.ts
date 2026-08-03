@@ -1,5 +1,5 @@
 import { type AuthSubscription, decodeJwt } from '@badisi/auth-js';
-import { type DemoAppDebugElement, type DemoAppMainElement, type DemoAppPlaygroundElement, rolesValidator } from 'demo-app-common';
+import { type DemoAppDebugElement, type DemoAppMainElement, type DemoAppPlaygroundElement, rolesValidator } from 'demo-app-web/common';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -72,7 +72,7 @@ export class AppElement extends HTMLElement {
                         resp = {
                             status: req.status,
                             statusText: (req.statusText !== '') ? req.statusText : 'Unknown Error',
-                            url: req.url
+                            url: req.responseURL
                         };
                     }
                     this.demoAppPlaygroundEl?.setApiStatus(resp, (req.status !== 200));

@@ -231,18 +231,19 @@ export class DemoAppPlaygroundElement extends HTMLElement {
             if ('key' in event && event.key !== 'Enter') {
                 return true;
             } else {
-                const headers = this.apiHeadersEl?.value.split(',').reduce((acc, header) => {
-                    if (header) {
-                        const quoteRegex = /^"?([^"]*)"?$/;
-                        const item = header.split(':');
-                        const name = quoteRegex.exec(item[0]?.trim())?.[1] ?? '';
-                        const value = quoteRegex.exec(item[1]?.trim())?.[1] ?? '';
-                        if (name) {
-                            acc[name] = value;
+                const headers = this.apiHeadersEl?.value.split(',')
+                    .reduce<Record<string, unknown>>((acc, header) => {
+                        if (header) {
+                            const quoteRegex = /^"?([^"]*)"?$/;
+                            const item = header.split(':');
+                            const name = quoteRegex.exec(item[0]?.trim())?.[1] ?? '';
+                            const value = quoteRegex.exec(item[1]?.trim())?.[1] ?? '';
+                            if (name) {
+                                acc[name] = value;
+                            }
                         }
-                    }
-                    return acc;
-                }, {} as Record<string, unknown>);
+                        return acc;
+                    }, {});
 
                 const customEvent = new CustomEvent('api', {
                     bubbles: true,

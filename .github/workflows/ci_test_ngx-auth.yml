@@ -22,10 +22,10 @@ concurrency:
 
 jobs:
     ci_test_ngx-auth:
-        uses: badisi/actions/.github/workflows/action.yml@v4
+        uses: badisi/actions/.github/workflows/action.yml@v5
         with:
             working-directory: libs/ngx-auth
             runs-on: '["ubuntu-latest", "macos-latest", "windows-latest"]'
-            node-versions: '[22]'
+            node-versions: '[22, 24]'
             lint: true
             test: true

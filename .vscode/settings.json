@@ -4,32 +4,42 @@
         "**/dist/**": true,
         "**/tmp/**": true
     },
-    "typescript.updateImportsOnFileMove.enabled": "always",
-	"typescript.format.semicolons": "insert",
-	"javascript.format.semicolons": "insert",
-	"javascript.updateImportsOnFileMove.enabled": "always",
-    "html.format.wrapLineLength": 120,
-    "html.format.wrapAttributes": "force-aligned",
-    "diffEditor.ignoreTrimWhitespace": false,
     "search.exclude": {
         "**/node_modules": true,
         "**/dist": true,
         "**/tmp": true
     },
+    "diffEditor.ignoreTrimWhitespace": false,
     "editor.formatOnPaste": false,
-	"editor.formatOnType": false,
-	"editor.formatOnSave": true,
-	"eslint.format.enable": true,
-	"editor.detectIndentation": false,
-	"editor.defaultFormatter": "dbaeumer.vscode-eslint",
-    "[json]": {
-		"editor.defaultFormatter": "vscode.json-language-features"
-	},
-	"[html]": {
-		"editor.defaultFormatter": "vscode.html-language-features"
-	},
+    "editor.formatOnType": false,
+    "editor.formatOnSave": true,
+    "eslint.format.enable": true,
+    "editor.detectIndentation": false,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit"
+    },
+    "js/ts.format.semicolons": "insert",
+    "js/ts.updateImportsOnFileMove.enabled": "always",
+    "html.format.wrapLineLength": 120,
+    "html.format.wrapAttributes": "force-aligned",
+    "[javascript]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "[scss]": {
+        "editor.defaultFormatter": "sibiraj-s.vscode-scss-formatter"
+    },
+    "[css]": {
+        "editor.defaultFormatter": "sibiraj-s.vscode-scss-formatter"
     },
     "npm.exclude": "**/{dist,tmp}{,/**}",
     "npm.packageManager": "npm",

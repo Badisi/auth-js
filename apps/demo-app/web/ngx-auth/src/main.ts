@@ -1,7 +1,7 @@
 import { isDevMode, provideZoneChangeDetection } from '@angular/core';
 import { bootstrapApplication, platformBrowser } from '@angular/platform-browser';
 import { initAuth, provideAuth } from '@badisi/ngx-auth';
-import { DemoAppSettingsService } from 'demo-app-common';
+import { DemoAppSettingsService } from 'demo-app-web/common';
 
 import { AppComponent } from './app/app.component';
 import { AppModule } from './app/app.module';

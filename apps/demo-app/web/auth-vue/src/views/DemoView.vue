@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { DemoAppPlaygroundElement } from 'demo-app-common';
+import { DemoAppPlaygroundElement } from 'demo-app-web/common';
 import { LocationQueryRaw, useRouter } from 'vue-router';
 import { useTemplateRef } from 'vue';
 import axios from 'axios';

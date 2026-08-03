@@ -1,23 +1,24 @@
 {
     "extends": "../../../../tsconfig.base.json",
     "compilerOptions": {
-        "forceConsistentCasingInFileNames": true,
-        "strict": true,
-        "noImplicitOverride": true,
-        "noPropertyAccessFromIndexSignature": true,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-        "resolveJsonModule": true,
-        "esModuleInterop": true
+        "rootDir": ".",
+        "outDir": "../../../../node_modules/.tmp/typecheck/demo-common",
+        "tsBuildInfoFile": "../../../../node_modules/.tmp/typecheck/demo-common.tsbuildinfo",
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "isolatedModules": true,
+        "isolatedDeclarations": true
     },
-    "files": [],
-    "include": [],
+    "include": [
+        "**/*.ts"
+    ],
     "references": [
         {
-            "path": "./tsconfig.lib.json"
+            "path": "../../../../libs/auth-vue"
         },
         {
-            "path": "./tsconfig.spec.json"
+            "path": "../../../../libs/auth-js"
         }
     ]
 }

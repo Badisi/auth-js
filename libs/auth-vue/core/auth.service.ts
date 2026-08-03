@@ -1,8 +1,8 @@
-import { type AuthSubscription, decodeJwt, getBaseUrl } from '@badisi/auth-js';
 import {
-    type AccessToken, type IdToken, type OIDCAuthManager, OIDCAuthService, type UserProfile, type UserSession
+    type AccessToken, type AuthSubscription, decodeJwt, getBaseUrl, type IdToken,
+    type OIDCAuthManager, OIDCAuthService, type UserProfile, type UserSession
 } from '@badisi/auth-js/oidc';
-import { computed, inject, ref } from 'vue';
+import { computed, type ComputedRef, inject, type Ref, ref } from 'vue';
 import type { Router } from 'vue-router';
 
 export const useAuthService = (): AuthService => {
@@ -30,18 +30,18 @@ export class AuthService extends OIDCAuthService {
     }
 
     /* eslint-disable @typescript-eslint/member-ordering */
-    public readonly isRenewingRef = ref<boolean | undefined>();
-    public readonly isAuthenticatedRef = ref<boolean | undefined>();
-    public readonly userProfileRef = ref<UserProfile | undefined>();
-    public readonly userSessionRef = ref<UserSession | undefined>();
+    public readonly isRenewingRef: Ref<boolean | undefined> = ref();
+    public readonly isAuthenticatedRef: Ref<boolean | undefined> = ref();
+    public readonly userProfileRef: Ref<UserProfile | undefined> = ref();
+    public readonly userSessionRef: Ref<UserSession | undefined> = ref();
 
-    public readonly idTokenRef = ref<string | undefined>();
-    public readonly idTokenDecodedRef = computed(() =>
+    public readonly idTokenRef: Ref<string | undefined> = ref();
+    public readonly idTokenDecodedRef: ComputedRef<IdToken | string | undefined> = computed(() =>
         this.idTokenRef.value ? decodeJwt(this.idTokenRef.value) as IdToken | string | undefined : undefined
     );
 
-    public readonly accessTokenRef = ref<string | undefined>();
-    public readonly accessTokenDecodedRef = computed(() =>
+    public readonly accessTokenRef: Ref<string | undefined> = ref();
+    public readonly accessTokenDecodedRef: ComputedRef<AccessToken | string | undefined> = computed(() =>
         this.accessTokenRef.value ? decodeJwt(this.accessTokenRef.value) as AccessToken | string | undefined : undefined
     );
     /* eslint-enable @typescript-eslint/member-ordering */

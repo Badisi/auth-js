@@ -1,34 +1,20 @@
 {
     "extends": "../../../../tsconfig.base.json",
     "compilerOptions": {
-        "module": "preserve",
-        "moduleResolution": "bundler",
-        "strict": true,
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
-        "noImplicitOverride": true,
-        "noPropertyAccessFromIndexSignature": true,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-        "resolveJsonModule": true
+        "outDir": "../../../../node_modules/.tmp/typecheck/demo-ngx-auth",
+        "tsBuildInfoFile": "../../../../node_modules/.tmp/typecheck/demo-ngx-auth.tsbuildinfo",
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "isolatedModules": true,
+        "isolatedDeclarations": false
     },
-    "files": [],
-    "include": [],
+    "include": [
+        "**/*.ts"
+    ],
     "references": [
         {
-            "path": "./tsconfig.editor.json"
-        },
-        {
-            "path": "./tsconfig.app.json"
-        },
-        {
-            "path": "./tsconfig.spec.json"
+            "path": "../common"
         }
-    ],
-    "angularCompilerOptions": {
-        "enableI18nLegacyMessageIdFormat": false,
-        "strictInjectionParameters": true,
-        "strictInputAccessModifiers": true,
-        "strictTemplates": true
-    }
+    ]
 }

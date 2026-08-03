@@ -6,81 +6,37 @@
     "projectType": "library",
     "tags": [],
     "targets": {
-        "copy-assets": {
-            "executor": "nx:run-commands",
-            "outputs": [
-                "{workspaceRoot}/dist/ngx-auth"
-            ],
+        "build-lib": {
+            "executor": "@angular/build:ng-packagr",
             "options": {
-                "commands": [
-                    "cpy libs/auth-js/oidc/assets dist/ngx-auth/oidc/assets --flat",
-                    "cpy libs/ngx-auth/CHANGELOG.md dist/ngx-auth --flat",
-                    "cpy LICENSE dist/ngx-auth --flat"
-                ],
-                "color": true
-            }
-        },
-        "build-schematics": {
-            "executor": "nx:run-commands",
-            "outputs": [
-                "{workspaceRoot}/dist/ngx-auth"
-            ],
-            "options": {
-                "cwd": "libs/ngx-auth",
-                "commands": [
-                    "tsc -p schematics/tsconfig.lib.json",
-                    "cpy schematics/*/schema.json ../../dist/ngx-auth",
-                    "cpy schematics/collection.json ../../dist/ngx-auth"
-                ],
-                "color": true
-            }
-        },
-        "build": {
-            "executor": "@nx/angular:package",
-            "dependsOn": [
-                "^build"
-            ],
-            "outputs": [
-                "{workspaceRoot}/dist/ngx-auth"
-            ],
-            "options": {
-                "project": "libs/ngx-auth/ng-package.json",
-                "tsConfig": "libs/ngx-auth/tsconfig.lib.json"
+                "project": "{projectRoot}/ng-package.json",
+                "tsConfig": "{projectRoot}/tsconfig.lib.json"
             },
             "configurations": {
                 "production": {
-                    "tsConfig": "libs/ngx-auth/tsconfig.lib.prod.json"
+                    "tsConfig": "{projectRoot}/tsconfig.lib.prod.json"
                 },
                 "development": {}
             },
             "defaultConfiguration": "production"
         },
-        "build-lib": {
-            "executor": "nx:run-commands",
-            "outputs": [
-                "{workspaceRoot}/dist/ngx-auth"
+        "build": {
+            "command": "node {projectRoot}/make.mjs",
+            "dependsOn": [
+                "^build"
             ],
-            "options": {
-                "parallel": false,
-                "color": true,
-                "commands": [
-                    "nx run ngx-auth:build",
-                    "nx run ngx-auth:copy-assets",
-                    "nx run ngx-auth:build-schematics"
-                ]
-            }
+            "outputs": [
+                "{workspaceRoot}/dist/{projectName}"
+            ]
         },
         "lint": {
             "executor": "@nx/eslint:lint"
         },
         "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": [
-                "{workspaceRoot}/coverage/{projectRoot}"
-            ],
+            "executor": "@nx/vitest:test",
             "options": {
-                "jestConfig": "libs/ngx-auth/jest.config.ts",
-                "tsConfig": "libs/ngx-auth/tsconfig.spec.json"
+                "configFile": "{projectRoot}/vitest.config.mts",
+                "testFiles": []
             }
         }
     }

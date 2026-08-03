@@ -103,8 +103,9 @@ export class DemoAppDebugElement extends HTMLElement {
     }
 
     public set accessTokenDecoded(value: string | Record<string, unknown> | undefined) {
-        const text = (typeof value !== 'string') ?
-            prettyPrint(value, ['exp', 'iat', 'auth_time']) : '(no decoded info as it is not a JWT token)';
+        const text = (typeof value !== 'string')
+            ? prettyPrint(value, ['exp', 'iat', 'auth_time'])
+            : '(no decoded info as it is not a JWT token)';
         this.update('#accessTokenDecoded', text);
     }
 

@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import '../commands/set-value';
+
 import { $, browser } from '@wdio/globals';
 import type { ChainablePromiseElement } from 'webdriverio';
 
@@ -9,7 +11,6 @@ const SETTING = {
 };
 
 class DemoPageSettings {
-
     // --- ELEMENT(s) ---
 
     public getElement(selector: string): ChainablePromiseElement {
@@ -36,7 +37,6 @@ class DemoPageSettings {
 }
 
 class DemoPagePlayground {
-
     // --- ELEMENT(s) ---
 
     public getElement(selector: string): ChainablePromiseElement {

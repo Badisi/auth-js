@@ -1,0 +1,22 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "paths": {
+            "@badisi/auth-js": [
+                "../../../../libs/auth-js/core"
+            ],
+            "@badisi/auth-js/oidc": [
+                "../../../../libs/auth-js/oidc"
+            ],
+            "@badisi/auth-vue": [
+                "../../../../libs/auth-vue"
+            ],
+            "@badisi/ngx-auth": [
+                "../../../../libs/ngx-auth"
+            ],
+            "demo-app-web/common": [
+                "../common"
+            ]
+        }
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "extends": "./tsconfig.base.json",
+    "files": [],
+    "include": [
+        "eslint.config.mts",
+        "vitest.config.mts"
+    ],
+    "references": [
+        {
+            "path": "./libs/auth-js"
+        },
+        {
+            "path": "./libs/auth-vue"
+        },
+        {
+            "path": "./apps/demo-e2e"
+        },
+        {
+            "path": "./apps/demo-app/web/common"
+        },
+        {
+            "path": "./apps/demo-app/web/auth-js"
+        },
+        {
+            "path": "./apps/demo-app/web/auth-vue"
+        },
+        {
+            "path": "./apps/demo-app/web/ngx-auth"
+        }
+    ]
+}

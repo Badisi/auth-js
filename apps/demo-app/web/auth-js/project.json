@@ -1,70 +1,26 @@
 {
-    "name": "demo-app-auth-js",
+    "name": "demo-auth-js",
     "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-    "projectType": "application",
     "sourceRoot": "apps/demo-app/web/auth-js/src",
+    "projectType": "application",
     "tags": [],
     "targets": {
+        "serve": {
+            "executor": "@nx/vite:dev-server",
+            "options": {
+                "buildTarget": "demo-auth-js:build"
+            }
+        },
         "build": {
-            "executor": "@nx/webpack:webpack",
+            "executor": "@nx/vite:build",
             "outputs": [
-                "{options.outputPath}"
+                "{workspaceRoot}/dist/demo-app/auth-js"
             ],
             "options": {
-                "outputPath": "dist/demo-app/auth-js",
-                "compiler": "babel",
-                "index": "apps/demo-app/web/auth-js/src/index.html",
-                "baseHref": "/",
-                "main": "apps/demo-app/web/auth-js/src/main.ts",
-                "tsConfig": "apps/demo-app/web/auth-js/tsconfig.app.json",
-                "assets": [
-                    "apps/demo-app/web/auth-js/src/favicon.ico",
-                    {
-                        "glob": "**/*",
-                        "input": "libs/auth-js/oidc/assets",
-                        "output": "oidc/callback"
-                    }
-                ],
-                "styles": [
-                    "apps/demo-app/web/auth-js/src/styles.scss"
-                ],
-                "scripts": [],
-                "webpackConfig": "apps/demo-app/web/auth-js/webpack.config.js"
-            },
-            "configurations": {
-                "production": {
-                    "fileReplacements": [
-                        {
-                            "replace": "apps/demo-app/web/auth-js/src/environments/environment.ts",
-                            "with": "apps/demo-app/web/auth-js/src/environments/environment.prod.ts"
-                        }
-                    ],
-                    "optimization": true,
-                    "outputHashing": "all",
-                    "sourceMap": false,
-                    "namedChunks": false,
-                    "extractLicenses": true,
-                    "vendorChunk": false
-                },
-                "development": {}
-            },
-            "defaultConfiguration": "production"
-        },
-        "serve": {
-            "executor": "@nx/webpack:dev-server",
-            "options": {
-                "host": "0.0.0.0",
-                "buildTarget": "demo-app-auth-js:build"
-            },
-            "configurations": {
-                "production": {
-                    "buildTarget": "demo-app-auth-js:build:production"
-                },
-                "development": {
-                    "buildTarget": "demo-app-auth-js:build:development"
-                }
-            },
-            "defaultConfiguration": "development"
+                "outputPath": "{workspaceRoot}/dist/demo-app/auth-js",
+                "tsConfig": "{projectRoot}/tsconfig.json",
+                "configFile": "{projectRoot}/vite.config.mts"
+            }
         },
         "lint": {
             "executor": "@nx/eslint:lint"

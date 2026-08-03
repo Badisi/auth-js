@@ -1,12 +1,11 @@
+import './styles.scss';
 import './app/app.element';
 
 import { initOidc } from '@badisi/auth-js/oidc';
-import { DemoAppSettingsService } from 'demo-app-common';
-
-import { environment } from './environments/environment';
+import { DemoAppSettingsService } from 'demo-app-web/common';
 
 ((): void => {
-    window.appSettings = new DemoAppSettingsService(!environment.production);
+    window.appSettings = new DemoAppSettingsService(!import.meta.env.PROD);
 
     const el = document.createElement('div');
     el.innerHTML = 'Loading...';

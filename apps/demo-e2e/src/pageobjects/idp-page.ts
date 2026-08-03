@@ -1,3 +1,5 @@
+import '../commands/set-value';
+
 export abstract class IdpPage {
     public config = {
         responseType: 'code',
@@ -8,8 +10,8 @@ export abstract class IdpPage {
         loginRedirectUrl: '/?oidc-callback=login'
     };
 
-    protected username = 'admin';
-    protected password = 'Pa55w0rd';
+    protected username = 'demo';
+    protected password = 'Pa55w0rd!';
 
     public abstract readonly name: string;
     public abstract readonly clientId: string;

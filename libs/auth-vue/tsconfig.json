@@ -1,18 +1,26 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "forceConsistentCasingInFileNames": true,
-        "strict": true,
-        "noImplicitOverride": true,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-        "noPropertyAccessFromIndexSignature": true
+        "rootDir": ".",
+        "outDir": "../../node_modules/.tmp/typecheck/auth-vue",
+        "tsBuildInfoFile": "../../node_modules/.tmp/typecheck/auth-vue.tsbuildinfo",
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "isolatedModules": true,
+        "isolatedDeclarations": true,
+        "types": [
+            "vitest/globals",
+            "node"
+        ]
     },
-    "files": [],
-    "include": [],
+    "include": [
+        "tsdown.config.mts",
+        "**/*.ts"
+    ],
     "references": [
         {
-            "path": "./tsconfig.lib.json"
+            "path": "../auth-js"
         }
     ]
 }

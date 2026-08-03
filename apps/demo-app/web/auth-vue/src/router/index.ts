@@ -1,4 +1,4 @@
-import { rolesValidator } from 'demo-app-common';
+import { rolesValidator } from 'demo-app-web/common';
 import { createRouter, createWebHistory, type RouteComponent } from 'vue-router';
 
 import demoView from '../views/DemoView.vue';
@@ -8,7 +8,7 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            component: demoView,
+            component: demoView as RouteComponent,
             children: [
                 {
                     path: 'forbidden',

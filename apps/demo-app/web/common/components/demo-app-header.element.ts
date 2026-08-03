@@ -316,12 +316,16 @@ export class DemoAppHeaderElement extends HTMLElement {
 
             // 🔍 Add only what’s needed for dropdown arrow
             const arrowBuffer = ((): number => {
-                const isSafariMobile =
-                    /iP(hone|ad|od)/.test(navigator.userAgent) &&
-                    !!(/WebKit/.exec(navigator.userAgent)) &&
-                    !(/CriOS|FxiOS/.exec(navigator.userAgent));
-                if (isSafariMobile) return 40;
-                if (navigator.userAgent.includes('Chrome')) return 25;
+                const isSafariMobile
+                    = /iP(hone|ad|od)/.test(navigator.userAgent)
+                      && !!(/WebKit/.exec(navigator.userAgent))
+                      && !(/CriOS|FxiOS/.exec(navigator.userAgent));
+                if (isSafariMobile) {
+                    return 40;
+                }
+                if (navigator.userAgent.includes('Chrome')) {
+                    return 25;
+                }
                 return 35;
             })();
 

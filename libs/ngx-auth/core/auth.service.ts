@@ -1,14 +1,8 @@
 import { inject, Injectable, NgZone, type OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-    type AccessToken,
-    type AuthSubscription,
-    decodeJwt,
-    getBaseUrl,
-    type IdToken,
-    OIDCAuthService,
-    type UserProfile,
-    type UserSession
+    type AccessToken, type AuthSubscription, decodeJwt, getBaseUrl, type IdToken,
+    OIDCAuthService, type UserProfile, type UserSession
 } from '@badisi/auth-js/oidc';
 import { distinctUntilChanged, map, type Observable, ReplaySubject } from 'rxjs';
 

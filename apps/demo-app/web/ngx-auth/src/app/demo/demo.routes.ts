@@ -1,10 +1,10 @@
 import type { Routes } from '@angular/router';
 import { authGuard } from '@badisi/ngx-auth';
-import { rolesValidator } from 'demo-app-common';
+import { rolesValidator } from 'demo-app-web/common';
 
 import { DemoComponent } from './demo.component';
 
-const rolesGuard = authGuard({ validator: rolesValidator() });
+const rolesGuard$ = authGuard({ validator: rolesValidator() });
 
 export const routes: Routes = [
     {
@@ -42,9 +42,9 @@ export const routes: Routes = [
                 path: 'protected',
                 loadComponent: () => import('./components/page/page.component').then(m => m.PageComponent),
                 runGuardsAndResolvers: 'always',
-                canMatch: [rolesGuard],
-                canActivate: [rolesGuard],
-                canActivateChild: [rolesGuard],
+                canMatch: [rolesGuard$],
+                canActivate: [rolesGuard$],
+                canActivateChild: [rolesGuard$],
                 data: {
                     title: 'PROTECTED CONTENT'
                 }

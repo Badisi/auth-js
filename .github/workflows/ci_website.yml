@@ -23,7 +23,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Setup
-              uses: badisi/actions/setup@v4
+              uses: badisi/actions/setup@v5
 
             - name: Build website
               working-directory: apps/website
@@ -31,7 +31,7 @@ jobs:
 
             #
             # We do not use "peaceiris/actions-gh-page" action here as it wipes out
-            # the whole repo and we don't want to lose the demo-app folder.
+            # the whole dest and we don't want to lose the demo-app folder.
             #
             - name: Deploy to GitHub Pages
               run: |

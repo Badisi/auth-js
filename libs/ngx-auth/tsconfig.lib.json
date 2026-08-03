@@ -1,18 +1,39 @@
 {
-    "extends": "./tsconfig.json",
+    "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "outDir": "../../dist/out-tsc",
+        "outDir": "../../node_modules/.tmp/typecheck/ngx-auth",
+        "tsBuildInfoFile": "../../node_modules/.tmp/typecheck/ngx-auth.tsbuildinfo",
+        "composite": true,
         "declaration": true,
         "declarationMap": true,
-        "types": []
+        "isolatedModules": true,
+        "isolatedDeclarations": true,
+        "types": [
+            "vitest/globals"
+        ]
     },
-    "exclude": [
-        "test-setup.ts",
-        "jest.config.ts",
-        "**/*.spec.ts",
-        "**/*.test.ts"
-    ],
     "include": [
+        "vitest.config.mts",
         "**/*.ts"
+    ],
+    "exclude": [
+        "schematics/*"
+    ],
+    "angularCompilerOptions": {
+        "enableI18nLegacyMessageIdFormat": false,
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "strictTemplates": true,
+        "extendedDiagnostics": {
+            "checks": {
+                "nullishCoalescingNotNullable": "suppress",
+                "optionalChainNotNullable": "suppress"
+            }
+        }
+    },
+    "references": [
+        {
+            "path": "../auth-js"
+        }
     ]
 }

@@ -7,22 +7,19 @@
     "tags": [],
     "targets": {
         "build": {
-            "executor": "nx:run-commands",
+            "command": "tsc --noEmit && tsdown --config={projectRoot}/tsdown.config.mts",
             "dependsOn": [
                 "^build"
             ],
             "outputs": [
-                "{workspaceRoot}/dist/auth-vue"
-            ],
-            "options": {
-                "commands": [
-                    "node libs/auth-vue/build.mjs"
-                ],
-                "color": true
-            }
+                "{workspaceRoot}/dist/{projectName}"
+            ]
         },
         "lint": {
             "executor": "@nx/eslint:lint"
+        },
+        "test": {
+            "executor": "@nx/vitest:test"
         }
     }
 }

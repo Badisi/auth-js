@@ -6,28 +6,6 @@
  * Copyright (C) 2018 Badisi
  */
 
-import { AuthLogger } from '../core';
-
-AuthLogger.init('@badisi/auth-js');
-
-export type {
-    AuthGuardOptions,
-    AuthGuardValidator,
-    AuthSubscriber,
-    AuthSubscriberOptions,
-    AuthSubscription,
-    Optional
-} from '../core';
-export {
-    AuthManager,
-    AuthSubscriptions,
-    decodeJwt,
-    getBaseUrl,
-    isCapacitor,
-    isCordova,
-    isNativeMobile,
-    LogLevel
-} from '../core';
 export { initOidc } from './main';
 export type { AccessToken } from './models/access-token.model';
 export type { LoginArgs, LogoutArgs, RenewArgs, SigninMobileArgs, SignoutMobileArgs } from './models/args.model';
@@ -40,4 +18,22 @@ export type { OIDCAuthSettings } from './models/oidc-auth-settings.model';
 export type { UserSession } from './models/user-session.model';
 export { OIDCAuthManager } from './oidc-auth-manager';
 export { OIDCAuthService } from './oidc-auth-service';
+export type {
+    AuthGuardOptions,
+    AuthGuardValidator,
+    AuthSubscriber,
+    AuthSubscriberOptions,
+    AuthSubscription,
+    Optional
+} from '@badisi/auth-js';
+export {
+    AuthManager,
+    AuthSubscriptions,
+    decodeJwt,
+    getBaseUrl,
+    isCapacitor,
+    isCordova,
+    isNativeMobile,
+    LogLevel
+} from '@badisi/auth-js';
 export type { UserProfile } from 'oidc-client-ts';

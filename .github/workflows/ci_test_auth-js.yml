@@ -22,11 +22,11 @@ concurrency:
 
 jobs:
     ci_test_auth-js:
-        uses: badisi/actions/.github/workflows/action.yml@v4
+        uses: badisi/actions/.github/workflows/action.yml@v5
         with:
             working-directory: libs/auth-js
             runs-on: '["ubuntu-latest", "macos-latest", "windows-latest"]'
-            node-versions: '[22]'
+            node-versions: '[22, 24]'
             lint: true
             test: true
 
@@ -35,11 +35,11 @@ jobs:
         runs-on: 'ubuntu-latest'
         steps:
             - name: Test ngx-auth
-              uses: peter-evans/repository-dispatch@v3
+              uses: peter-evans/repository-dispatch@v4
               with:
                   event-type: test_ngx-auth
 
             - name: Test auth-vue
-              uses: peter-evans/repository-dispatch@v3
+              uses: peter-evans/repository-dispatch@v4
               with:
                   event-type: test_auth-vue

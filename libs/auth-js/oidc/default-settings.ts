@@ -1,6 +1,7 @@
 /* eslint-disable camelcase, @typescript-eslint/naming-convention */
 
-import { LogLevel } from '../core';
+import { LogLevel } from '@badisi/auth-js';
+
 import type { DefaultSettings } from './models/default-settings.model';
 import { DesktopNavigation } from './models/desktop-navigation.enum';
 

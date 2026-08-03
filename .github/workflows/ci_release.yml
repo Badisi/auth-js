@@ -24,7 +24,7 @@ env:
 
 jobs:
     ci_release:
-        uses: badisi/actions/.github/workflows/action.yml@v4
+        uses: badisi/actions/.github/workflows/action.yml@v5
         secrets:
             GIT_USER_NAME: ${{ github.actor }}
             GIT_USER_EMAIL: ${{ github.actor }}@users.noreply.github.com

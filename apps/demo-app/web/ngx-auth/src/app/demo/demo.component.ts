@@ -11,7 +11,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { type Params, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '@badisi/ngx-auth';
-import { type DemoAppPlaygroundElement, globalStyle } from 'demo-app-common';
+import { type DemoAppPlaygroundElement, globalStyle } from 'demo-app-web/common';
 
 @Component({
     standalone: true,

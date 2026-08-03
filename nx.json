@@ -9,113 +9,53 @@
         ],
         "production": [
             "default",
+            "!{workspaceRoot}/vitest.config.mts",
             "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
-            "!{projectRoot}/tsconfig.spec.json",
-            "!{projectRoot}/jest.config.[jt]s",
-            "!{projectRoot}/src/test-setup.[jt]s",
-            "!{projectRoot}/test-setup.[jt]s",
-            "!{projectRoot}/eslint.config.js"
+            "!{projectRoot}/*.config.mts"
         ],
         "sharedGlobals": []
     },
     "targetDefaults": {
-        "@nx/jest:jest": {
+        "build": {
             "cache": true,
             "inputs": [
-                "default",
-                "^production",
-                "{workspaceRoot}/jest.preset.js"
-            ],
-            "options": {
-                "passWithNoTests": true
-            },
-            "configurations": {
-                "ci": {
-                    "ci": true,
-                    "codeCoverage": true
-                }
-            }
+                "production",
+                "^production"
+            ]
         },
         "@nx/eslint:lint": {
             "cache": true,
             "inputs": [
                 "default",
-                "{workspaceRoot}/eslint.config.js"
+                "{workspaceRoot}/eslint.config.mts"
             ]
         },
-        "@nx/angular:package": {
+        "@nx/vitest:test": {
             "cache": true,
-            "dependsOn": [
-                "^build"
-            ],
+            "options": {
+                "configFile": "{workspaceRoot}/vitest.config.mts",
+                "testFiles": [
+                    "{projectRoot}"
+                ]
+            },
             "inputs": [
-                "production",
-                "^production"
+                "default",
+                "{workspaceRoot}/vitest.config.mts"
             ]
         },
-        "@nx/angular:application": {
-            "cache": true,
-            "dependsOn": [
-                "^build"
-            ],
-            "inputs": [
-                "production",
-                "^production"
-            ]
-        }
-    },
-    "generators": {
-        "@nx/angular:library": {
-            "linter": "eslint",
-            "unitTestRunner": "jest"
-        },
-        "@nx/angular:component": {
-            "style": "scss"
-        },
-        "@nx/angular:application": {
-            "style": "scss",
-            "linter": "eslint",
-            "unitTestRunner": "jest",
-            "e2eTestRunner": "none"
-        },
-        "@nx/web:application": {
-            "style": "scss",
-            "linter": "eslint",
-            "unitTestRunner": "jest",
-            "e2eTestRunner": "none"
+        "nx-release-publish": {
+            "options": {
+                "packageRoot": "{workspaceRoot}/dist/{projectName}"
+            }
         }
     },
     "plugins": [
         {
             "plugin": "@nx/js/typescript",
             "options": {
-                "build": {
-                    "targetName": "build",
-                    "configName": "tsconfig.lib.json"
+                "typecheck": {
+                    "targetName": "typecheck"
                 }
-            },
-            "exclude": [
-                "apps/demo-app/web/common/*"
-            ]
-        },
-        {
-            "plugin": "@nx/eslint/plugin",
-            "options": {
-                "targetName": "eslint:lint"
-            }
-        },
-        {
-            "plugin": "@nx/webpack/plugin",
-            "options": {
-                "buildTargetName": "build",
-                "serveTargetName": "serve"
-            }
-        },
-        {
-            "plugin": "@nx/vite/plugin",
-            "options": {
-                "buildTargetName": "build",
-                "serveTargetName": "serve"
             }
         }
     ],
@@ -125,6 +65,11 @@
             "pattern": "@badisi/{projectName}@{version}"
         },
         "version": {
+            "preVersionCommand": "npm run build",
+            "manifestRootsToUpdate": [
+                "{projectRoot}",
+                "{workspaceRoot}/dist/{projectName}"
+            ],
             "conventionalCommits": true
         },
         "changelog": {
@@ -158,17 +103,7 @@
                         "title": "📖 Documentation"
                     }
                 },
-                "deps": {
-                    "semverBump": "patch",
-                    "changelog": {
-                        "title": "🌱 Dependencies"
-                    }
-                },
                 "refactor": {
-                    "semverBump": "patch",
-                    "changelog": false
-                },
-                "types": {
                     "semverBump": "patch",
                     "changelog": false
                 },
@@ -185,7 +120,6 @@
                     "changelog": false
                 },
                 "chore": false,
-                "build": false,
                 "ci": false
             }
         }

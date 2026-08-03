@@ -1,33 +1,25 @@
 {
-    "extends": "../tsconfig.json",
+    "extends": "../../../tsconfig.base.json",
     "compilerOptions": {
-        "target": "es2018",
-        "outDir": "../../../dist/ngx-auth/schematics",
         "rootDir": ".",
-        "lib": [
-            "es2018",
-            "dom"
-        ],
-        "module": "commonjs",
-        "moduleResolution": "node",
+        "outDir": "../../../dist/ngx-auth/schematics",
+        "tsBuildInfoFile": "../../../node_modules/.tmp/typecheck/ngx-auth.schematics.tsbuildinfo",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "composite": true,
         "declaration": true,
-        "noEmitOnError": true,
-        "skipDefaultLibCheck": true,
-        "skipLibCheck": true,
-        "sourceMap": false,
+        "declarationMap": true,
+        "isolatedModules": true,
+        "isolatedDeclarations": true,
         "types": [
-            "jest",
+            "vitest/globals",
             "node"
         ]
     },
-    "files": [],
-    "include": [],
-    "references": [
-        {
-            "path": "./tsconfig.lib.json"
-        },
-        {
-            "path": "./tsconfig.spec.json"
-        }
+    "include": [
+        "**/*.ts"
+    ],
+    "exclude": [
+        "*/files/**/*"
     ]
 }

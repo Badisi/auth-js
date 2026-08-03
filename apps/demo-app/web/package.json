@@ -3,12 +3,12 @@
     "private": true,
     "license": "GPL-3.0-only",
     "scripts": {
-        "start:auth-js": "nx run demo-app-auth-js:serve",
-        "start:auth-vue": "nx run demo-app-auth-vue:serve",
-        "start:ngx-auth": "nx run demo-app-ngx-auth:serve",
-        "lint": "nx run-many --target=lint --projects=demo-app-common,demo-app-auth-js,demo-app-ngx-auth,demo-app-auth-vue",
-        "build:auth-js": "nx run demo-app-auth-js:build",
-        "build:auth-vue": "nx run demo-app-auth-vue:build",
-        "build:ngx-auth": "cd ../../../ && nx run demo-app-ngx-auth:build"
+        "lint": "nx run-many --target=lint --projects=demo-common,demo-auth-js,demo-auth-vue,demo-ngx-auth",
+        "start:demo-auth-js": "nx run demo-auth-js:serve",
+        "start:demo-auth-vue": "nx run demo-auth-vue:serve",
+        "start:demo-ngx-auth": "nx run demo-ngx-auth:serve",
+        "build:demo-auth-js": "nx run demo-auth-js:build",
+        "build:demo-auth-vue": "nx run demo-auth-vue:build",
+        "build:demo-ngx-auth": "nx run demo-ngx-auth:build"
     }
 }

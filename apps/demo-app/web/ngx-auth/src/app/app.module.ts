@@ -8,6 +8,7 @@ import { routes } from './app.routes';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
+    // eslint-disable-next-line @angular-eslint/prefer-standalone
     standalone: false
 })
 export class AppComponent {}

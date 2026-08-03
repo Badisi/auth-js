@@ -4,16 +4,15 @@
     "license": "GPL-3.0-only",
     "type": "module",
     "scripts": {
-        "start": "NODE_TLS_REJECT_UNAUTHORIZED=0 wdio run wdio.config.ts --watch=false --debug=true --headless=false",
-        "watch": "NODE_TLS_REJECT_UNAUTHORIZED=0 wdio run wdio.config.ts --watch=true --debug=true --headless=false",
-        "ci": "NODE_TLS_REJECT_UNAUTHORIZED=0 wdio run wdio.config.ts --watch=false --debug=false --headless=true"
+        "start": "wdio run wdio.config.ts --watch=false --debug=true --headless=false",
+        "watch": "wdio run wdio.config.ts --watch=true --debug=true --headless=false",
+        "ci": "wdio run wdio.config.ts --watch=false --debug=false --headless=false",
+        "lint": "eslint ."
     },
     "devDependencies": {
-        "@types/jasmine": "^5.1.12",
-        "@wdio/cli": "^9.20.0",
-        "@wdio/jasmine-framework": "^9.20.0",
-        "@wdio/local-runner": "^9.20.0",
-        "@wdio/spec-reporter": "^9.20.0",
-        "puppeteer-core": "^24.26.1"
+        "@wdio/cli": "^9.30.0",
+        "@wdio/jasmine-framework": "^9.30.0",
+        "@wdio/local-runner": "^9.30.0",
+        "@wdio/spec-reporter": "^9.29.1"
     }
 }

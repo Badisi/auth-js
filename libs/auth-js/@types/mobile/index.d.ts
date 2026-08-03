@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+/// <reference types="cordova" />
 
 import type { AppPlugin } from '@capacitor/app';
 import type { BrowserPlugin } from '@capacitor/browser';
 import type { CapacitorGlobal } from '@capacitor/core';
 import type { PreferencesPlugin } from '@capacitor/preferences';
-import type { Cordova } from '@types/Cordova';
 import type { SecureStoragePluginPlugin } from 'capacitor-secure-storage-plugin';
 
 declare global {

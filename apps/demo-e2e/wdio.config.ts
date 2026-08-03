@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import type { Options } from '@wdio/types';
-
 const argv = process.argv.slice(2).reverse();
 const getArgValue = (argName: string): unknown => {
     const itemIndex = argv.findIndex(arg => arg.includes(`--${argName}`));
@@ -21,7 +19,7 @@ const headless = getArgValue('headless') === 'true';
  * Configuration file documentation
  * https://webdriver.io/docs/configurationfile/
  */
-export const config: Options.Testrunner & { capabilities: unknown } = {
+export const config: WebdriverIO.Config = {
     // ====================
     // Runner Configuration
     // ====================
@@ -41,14 +39,13 @@ export const config: Options.Testrunner & { capabilities: unknown } = {
     // ============
     maxInstances: debug ? 1 : 100,
     capabilities: [{
-        browserName: 'chrome',
-        browserVersion: 'stable',
-        acceptInsecureCerts: true,
+        'browserName': 'chrome',
+        'browserVersion': 'stable',
+        'acceptInsecureCerts': true,
         'goog:chromeOptions': {
-            args: [
-                ...(headless ? ['--headless', '--disable-gpu', '--disable-dev-shm-usage'] : []),
-                ...(debug ? ['--auto-open-devtools-for-tabs'] : [])
-            ]
+            args: headless
+                ? ['--headless', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage']
+                : [debug ? '--auto-open-devtools-for-tabs' : '']
         }
     }],
     // ===================
@@ -60,10 +57,10 @@ export const config: Options.Testrunner & { capabilities: unknown } = {
     waitforTimeout: 10000,
     connectionRetryTimeout: 120000,
     connectionRetryCount: 3,
-    services: [],
     framework: 'jasmine',
     reporters: ['spec'],
     jasmineOpts: {
-        defaultTimeoutInterval: debug ? (24 * 60 * 60 * 1000) : 60000
+        defaultTimeoutInterval: debug ? (24 * 60 * 60 * 1000) : 60000,
+        stopOnSpecFailure: true
     }
 };

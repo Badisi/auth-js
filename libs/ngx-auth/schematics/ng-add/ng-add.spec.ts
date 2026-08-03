@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Tree } from '@angular-devkit/schematics';
 import type { UnitTestTree } from '@angular-devkit/schematics/testing';
 import { disable as disableColors } from '@colors/colors';
 import { type ApplicationDefinition, getProjectFromWorkspace } from '@hug/ngx-schematics-utilities';
-import { describe, expect, it } from '@jest/globals';
 
-import { appTest1, appTest2, getCleanAppTree, runner, runSchematic } from '../utils';
+import { appTest1, appTest2, getCleanAppTree, runner, runSchematic } from '../utils.spec';
 import { MODULE_CONTENT, STANDALONE_CONTENT } from './index';
 import type { NgAddOptions } from './ng-add-options';
 
@@ -15,9 +15,8 @@ interface Log {
 }
 
 const occurrences = (str: string, pattern: string): number => (str.match(new RegExp(pattern, 'g')) ?? []).length;
-
-const eoc = expect.objectContaining.bind(this);
-const eac = expect.arrayContaining.bind(this);
+const eoc = (value: unknown): unknown => expect.objectContaining(value);
+const eac = (value: unknown[]): unknown => expect.arrayContaining(value);
 
 [false, true].forEach(useStandalone => {
     [false, true].forEach(useWorkspace => {
@@ -41,7 +40,7 @@ const eac = expect.arrayContaining.bind(this);
                     project: (useWorkspace) ? appTest2.name : appTest1.name,
                     authorityUrl: 'https://dev-fijd1e9x.us.auth0.com',
                     clientId: 'kRVVEnAWKMpxxpcodl0TqLXfIHgQvmmt'
-                } as NgAddOptions;
+                };
                 project = await getProjectFromWorkspace(tree, defaultOptions.project);
             });
 
@@ -127,7 +126,7 @@ const eac = expect.arrayContaining.bind(this);
 
             it('should display an action message', async () => {
                 tree = await runSchematic('ng-add', defaultOptions, tree, true);
-                expect(logs).toContainEqual(expect.objectContaining({
+                expect(logs).toContainEqual(eoc({
                     name: 'ng-add',
                     level: 'info',
                     message: expect.stringMatching(/.*ACTION.*Have a look at main.ts file and update the auth configuration according to your needs\..*/)
@@ -143,7 +142,7 @@ const eac = expect.arrayContaining.bind(this);
                 };
 
                 tree = await runSchematic('ng-add', defaultOptions, tree, true);
-                expect(logs).not.toContainEqual(expect.objectContaining(error));
+                expect(logs).not.toContainEqual(eoc(error));
 
                 if (useStandalone) {
                     tree.overwrite(project.mainFilePath, originalMainTsContent.replace('bootstrapApplication', 'bootstrapApplicationERROR'));
@@ -152,7 +151,7 @@ const eac = expect.arrayContaining.bind(this);
                 }
 
                 tree = await runSchematic('ng-add', defaultOptions, tree, true);
-                expect(logs).toContainEqual(expect.objectContaining(error));
+                expect(logs).toContainEqual(eoc(error));
             });
         });
     });

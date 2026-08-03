@@ -6,7 +6,7 @@
     "author": "Badisi",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Badisi/auth-js"
+        "url": "git+https://github.com/Badisi/auth-js.git"
     },
     "keywords": [
         "authentication",
@@ -25,14 +25,15 @@
     ],
     "private": true,
     "scripts": {
-        "ncu": "npx npm-check-updates -i --format=group --packageFile='{,apps/**/,libs/**/}package.json'",
+        "check-updates": "npx @badisi/check-updates -i '{,apps/**/,libs/**/}package.json'",
         "migrate:nx": "nx migrate latest",
         "migrate:cap": "cap migrate",
+        "verify": "nx sync && nx run-many -t typecheck,build,lint,test",
         "lint": "eslint .",
-        "test:ci": "nx run-many --target=test:ci --projects=auth-js,auth-vue,ngx-auth --output-style=static",
-        "build": "nx run-many --target=build:nx --projects=auth-js,auth-vue,ngx-auth --output-style=static --verbose",
-        "release": "node ./scripts/release.mjs --verbose",
-        "release:dry-run": "npm run release -- --dry-run",
+        "test:ci": "nx run-many --target=test:ci --projects=auth-js,ngx-auth,auth-vue --output-style=static",
+        "build": "nx run-many --target=build --projects=auth-js,ngx-auth,auth-vue --output-style=static --verbose",
+        "release": "nx release --verbose",
+        "release:dry-run": "nx release --verbose --dry-run",
         "postinstall": "patch-package",
         "prepare": "husky || true"
     },
@@ -47,63 +48,50 @@
         "libs/ngx-auth"
     ],
     "dependencies": {
-        "@angular/common": "21.2.9",
-        "@angular/compiler": "21.2.9",
-        "@angular/core": "21.2.9",
-        "@angular/forms": "21.2.9",
-        "@angular/platform-browser": "21.2.9",
-        "@angular/router": "21.2.9",
+        "@angular/common": "^21.2.19",
+        "@angular/compiler": "^21.2.19",
+        "@angular/core": "^21.2.19",
+        "@angular/forms": "^21.2.19",
+        "@angular/platform-browser": "^21.2.19",
+        "@angular/router": "^21.2.19",
         "rxjs": "7.8.2",
-        "vue": "3.5.32",
-        "vue-router": "5.0.4",
-        "zone.js": "0.16.1"
+        "vue": "3.5.40",
+        "vue-router": "5.2.0",
+        "zone.js": "0.16.2"
     },
     "devDependencies": {
-        "@angular-devkit/build-angular": "21.2.7",
-        "@angular/cli": "21.2.7",
-        "@angular/compiler-cli": "21.2.9",
-        "@commitlint/cli": "^20.5.0",
-        "@commitlint/config-conventional": "^20.5.0",
-        "@hug/eslint-config": "^24.0.1",
-        "@nx/angular": "22.6.5",
-        "@nx/eslint": "22.6.5",
-        "@nx/eslint-plugin": "22.6.5",
-        "@nx/jest": "22.6.5",
-        "@nx/js": "22.6.5",
-        "@nx/vite": "22.6.5",
-        "@nx/vitest": "22.6.5",
-        "@nx/vue": "22.6.5",
-        "@nx/web": "22.6.5",
-        "@nx/webpack": "22.6.5",
-        "@nx/workspace": "22.6.5",
-        "@swc-node/register": "1.11.1",
-        "@types/jest": "30.0.0",
-        "@types/node": "25.6.0",
-        "@vitejs/plugin-vue": "6.0.6",
-        "autoprefixer": "^10.5.0",
-        "cpy-cli": "^7.0.0",
+        "@angular-devkit/core": "^21.2.19",
+        "@angular-devkit/schematics": "^21.2.19",
+        "@angular/build": "^21.2.19",
+        "@angular/cli": "^21.2.19",
+        "@angular/compiler-cli": "^21.2.19",
+        "@commitlint/cli": "^21.2.1",
+        "@commitlint/config-conventional": "^21.2.0",
+        "@hug/eslint-config": "^26.0.0",
+        "@nx/angular": "22.7.5",
+        "@nx/eslint": "22.7.5",
+        "@nx/js": "22.7.5",
+        "@nx/vite": "22.7.5",
+        "@nx/vitest": "22.7.5",
+        "@nx/vue": "22.7.5",
+        "@nx/web": "22.7.5",
+        "@types/node": "26.1.2",
+        "@vitejs/plugin-vue": "6.0.8",
+        "@vitest/coverage-v8": "~4.1.10",
         "detect-indent": "^7.0.2",
-        "esbuild": "^0.28.0",
+        "generate-license-file": "^4.2.1",
         "husky": "^9.1.7",
-        "jest": "30.3.0",
-        "jest-environment-jsdom": "30.3.0",
-        "jest-preset-angular": "16.1.4",
-        "jest-util": "30.3.0",
-        "jiti": "2.6.1",
-        "lint-staged": "^16.4.0",
+        "jsdom": "^29.1.1",
+        "lint-staged": "^17.3.0",
         "ng-packagr": "21.2.3",
-        "nx": "22.6.5",
+        "nx": "22.7.5",
         "patch-package": "^8.0.1",
-        "postcss": "^8.5.10",
-        "postcss-url": "~10.1.3",
-        "ts-jest": "29.4.9",
-        "ts-node": "^10.9.2",
+        "tsdown": "^0.22.14",
         "tslib": "^2.8.1",
         "typescript": "~5.9.3",
-        "vite": "8.0.8",
         "vite-plugin-simple-html": "^1.1.0",
-        "vite-plugin-static-copy": "^4.0.1",
-        "vue-tsc": "^3.2.6"
+        "vite-plugin-static-copy": "^4.1.1",
+        "vue-tsc": "^3.3.9"
     },
     "commitlint": {
         "extends": [
@@ -114,7 +102,6 @@
                 2,
                 "always",
                 [
-                    "build",
                     "chore",
                     "ci",
                     "docs",
@@ -124,8 +111,7 @@
                     "refactor",
                     "revert",
                     "style",
-                    "test",
-                    "deps"
+                    "test"
                 ]
             ]
         }
@@ -135,5 +121,19 @@
             "eslint --fix"
         ]
     },
-    "packageManager": "npm@11.12.1"
+    "packageManager": "npm@12.0.2",
+    "allowScripts": {
+        "@hug/eslint-config": true,
+        "fsevents": true,
+        "esbuild": true,
+        "nx": true,
+        "@parcel/watcher": true,
+        "lmdb": true,
+        "msgpackr-extract": true,
+        "@swc/core": true,
+        "edgedriver": false,
+        "geckodriver": false,
+        "core-js": false,
+        "less": false
+    }
 }

@@ -1,6 +1,6 @@
+import type { AuthSettings as CoreAuthSettings, LogLevel } from '@badisi/auth-js';
 import type { UserManagerSettings } from 'oidc-client-ts';
 
-import type { AuthSettings as CoreAuthSettings, LogLevel } from '../../core';
 import type { DesktopNavigation } from './desktop-navigation.enum';
 import type { InjectToken } from './inject-token.model';
 import type { MobileWindowParams } from './mobile-window-params.model';

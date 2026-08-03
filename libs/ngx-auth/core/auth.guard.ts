@@ -13,9 +13,9 @@ export const authGuard = (options?: AuthGuardOptions): CanMatchFn | CanActivateF
         const router = inject(Router);
 
         // In case of CanMatch guard we have to extract the inflight url, otherwise use the url from the state
-        const url = Array.isArray(segmentsOrState) ?
-            router.getCurrentNavigation()?.extractedUrl.toString() :
-            segmentsOrState.url;
+        const url = Array.isArray(segmentsOrState)
+            ? router.getCurrentNavigation()?.extractedUrl.toString()
+            : segmentsOrState.url;
 
         const isAllowed = await authService.runGuard(url ?? location.href, options);
         if (typeof isAllowed === 'string') {

@@ -24,25 +24,25 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Setup
-              uses: badisi/actions/setup@v4
+              uses: badisi/actions/setup@v5
 
             - name: Build demo-app:auth-js
               working-directory: apps/demo-app/web
               env:
                   BASE_URL: /${{ github.event.repository.name }}/demo-app/auth-js/
-              run: npm run build:auth-js -- --base-href=${{ env.BASE_URL }} --deploy-url=${{ env.BASE_URL }}
-
-            - name: Build demo-app:ngx-auth
-              working-directory: apps/demo-app/web
-              env:
-                  BASE_URL: /${{ github.event.repository.name }}/demo-app/ngx-auth/
-              run: npm run build:ngx-auth -- --base-href=${{ env.BASE_URL }} --deploy-url=${{ env.BASE_URL }}
+              run: npm run build:demo-auth-js
 
             - name: Build demo-app:auth-vue
               working-directory: apps/demo-app/web
               env:
                   BASE_URL: /${{ github.event.repository.name }}/demo-app/auth-vue/
-              run: npm run build:auth-vue
+              run: npm run build:demo-auth-vue
+
+            - name: Build demo-app:ngx-auth
+              working-directory: apps/demo-app/web
+              env:
+                  BASE_URL: /${{ github.event.repository.name }}/demo-app/ngx-auth/
+              run: npm run build:demo-ngx-auth -- --base-href=${{ env.BASE_URL }} --deploy-url=${{ env.BASE_URL }}
 
             - name: Deploy to GitHub Pages
               uses: peaceiris/actions-gh-pages@v4

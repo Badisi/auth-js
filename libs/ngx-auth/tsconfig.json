@@ -1,15 +1,4 @@
 {
-    "extends": "../../tsconfig.base.json",
-    "compilerOptions": {
-        "module": "preserve",
-        "moduleResolution": "bundler",
-        "strict": true,
-        "noImplicitOverride": true,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-        "noPropertyAccessFromIndexSignature": true,
-        "forceConsistentCasingInFileNames": true
-    },
     "files": [],
     "include": [],
     "references": [
@@ -17,13 +6,7 @@
             "path": "./tsconfig.lib.json"
         },
         {
-            "path": "./tsconfig.spec.json"
+            "path": "./schematics/tsconfig.json"
         }
-    ],
-    "angularCompilerOptions": {
-        "enableI18nLegacyMessageIdFormat": false,
-        "strictInjectionParameters": true,
-        "strictInputAccessModifiers": true,
-        "strictTemplates": true
-    }
+    ]
 }

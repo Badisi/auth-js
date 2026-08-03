@@ -1,10 +1,10 @@
 import './styles.scss';
 
 import { initAuth } from '@badisi/auth-vue';
-import { DemoAppSettingsService } from 'demo-app-common';
-import { createApp } from 'vue';
+import { DemoAppSettingsService } from 'demo-app-web/common';
+import { type Component, createApp } from 'vue';
 
-import app from './App.vue';
+import app from './app/App.vue';
 import router from './router';
 
 ((): void => {
@@ -18,7 +18,7 @@ import router from './router';
         .then(authPlugin => {
             el.replaceWith(document.createElement('root'));
 
-            const vueApp = createApp(app);
+            const vueApp = createApp(app as Component);
             vueApp.use(authPlugin, { router });
             vueApp.use(router);
             vueApp.mount('root');

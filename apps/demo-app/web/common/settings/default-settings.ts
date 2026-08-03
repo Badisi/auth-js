@@ -1,9 +1,10 @@
 import type { OIDCAuthSettings } from '@badisi/auth-js/oidc';
-import authJsPkgJson from 'libs/auth-js/package.json';
-import authVuePkgJson from 'libs/auth-vue/package.json';
-import ngxAuthPkgJson from 'libs/ngx-auth/package.json';
+import authJsPkgJson from '@badisi/auth-js/package.json' with { type: 'json' };
+import authVuePkgJson from '@badisi/auth-vue/package.json' with { type: 'json' };
+import ngxAuthPkgJson from '@badisi/ngx-auth/package.json' with { type: 'json' };
 
 import { DEFAULT_SETTINGS as DEFAULT_AUTH_JS_SETTINGS } from '../../../../../libs/auth-js/oidc/default-settings';
+import type { DefaultSettings } from '../../../../../libs/auth-js/oidc/models/default-settings.model';
 import type { LibraryImplementation, Settings } from '.';
 
 export const LIBRARY_IMPLEMENTATIONS: LibraryImplementation[] = [{
@@ -20,7 +21,7 @@ export const LIBRARY_IMPLEMENTATIONS: LibraryImplementation[] = [{
     version: authVuePkgJson.version
 }];
 
-export const DEFAULT_LIBRARY_SETTINGS = {
+export const DEFAULT_LIBRARY_SETTINGS: DefaultSettings = {
     ...DEFAULT_AUTH_JS_SETTINGS,
     automaticInjectToken: { headerName: 'Authorization', include: ['/api'] }
 };
@@ -63,8 +64,8 @@ const ZITADEL_SETTINGS: Settings<OIDCAuthSettings> = {
         scope: 'openid profile email phone offline_access',
         internal: {
             extraQueryParams: {
-                // eslint-disable-next-line @typescript-eslint/naming-convention
-                'login_hint': 'demo'
+                // eslint-disable-next-line @typescript-eslint/naming-convention, camelcase
+                login_hint: 'demo'
             }
         }
     }

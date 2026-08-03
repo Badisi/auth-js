@@ -1,46 +1,54 @@
 {
-    "name": "demo-app-ngx-auth",
+    "name": "demo-ngx-auth",
     "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-    "projectType": "application",
-    "prefix": "badisi",
     "sourceRoot": "apps/demo-app/web/ngx-auth/src",
+    "projectType": "application",
     "tags": [],
     "targets": {
+        "serve": {
+            "executor": "@angular/build:dev-server",
+            "options": {
+                "buildTarget": "demo-ngx-auth:build:development",
+                "host": "0.0.0.0"
+            }
+        },
         "build": {
-            "executor": "@nx/angular:application",
+            "executor": "@angular/build:application",
             "outputs": [
-                "{options.outputPath}"
+                "{workspaceRoot}/dist/demo-app/ngx-auth"
             ],
             "options": {
                 "outputPath": {
-                    "base": "dist/demo-app/ngx-auth",
+                    "base": "{workspaceRoot}/dist/demo-app/ngx-auth",
                     "browser": ""
                 },
-                "index": "apps/demo-app/web/ngx-auth/src/index.html",
-                "browser": "apps/demo-app/web/ngx-auth/src/main.ts",
+                "index": "{projectRoot}/src/index.html",
+                "browser": "{projectRoot}/src/main.ts",
+                "tsConfig": "{projectRoot}/tsconfig.json",
+                "inlineStyleLanguage": "scss",
+                "conditions": [
+                    "development"
+                ],
                 "polyfills": [
                     "zone.js"
                 ],
-                "tsConfig": "apps/demo-app/web/ngx-auth/tsconfig.app.json",
-                "inlineStyleLanguage": "scss",
                 "allowedCommonJsDependencies": [
                     "crypto-js"
                 ],
                 "assets": [
                     {
-                        "glob": "**/*",
-                        "input": "apps/demo-app/web/ngx-auth/public"
+                        "input": "{projectRoot}/public",
+                        "glob": "**/*"
                     },
                     {
+                        "input": "{workspaceRoot}/libs/auth-js/oidc/assets",
                         "glob": "**/*",
-                        "input": "libs/auth-js/oidc/assets",
                         "output": "oidc/callback"
                     }
                 ],
                 "styles": [
-                    "apps/demo-app/web/ngx-auth/src/styles.scss"
-                ],
-                "scripts": []
+                    "{projectRoot}/src/styles.scss"
+                ]
             },
             "configurations": {
                 "production": {
@@ -52,35 +60,20 @@
                         },
                         {
                             "type": "anyComponentStyle",
-                            "maximumWarning": "2kb",
-                            "maximumError": "4kb"
+                            "maximumWarning": "4kb",
+                            "maximumError": "8kb"
                         }
                     ],
                     "outputHashing": "all"
                 },
                 "development": {
+                    "tsConfig": "{projectRoot}/tsconfig.dev.json",
                     "optimization": false,
                     "extractLicenses": false,
                     "sourceMap": true
                 }
             },
             "defaultConfiguration": "production"
-        },
-        "serve": {
-            "executor": "@nx/angular:dev-server",
-            "options": {
-                "host": "0.0.0.0"
-            },
-            "configurations": {
-                "production": {
-                    "buildTarget": "demo-app-ngx-auth:build:production"
-                },
-                "development": {
-                    "buildTarget": "demo-app-ngx-auth:build:development"
-                }
-            },
-            "defaultConfiguration": "development",
-            "continuous": true
         },
         "lint": {
             "executor": "@nx/eslint:lint"

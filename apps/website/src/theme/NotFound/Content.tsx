@@ -7,10 +7,7 @@ import Heading from '@theme/Heading';
 import NotFoundSvg from '@site/static/assets/svg/404.svg';
 
 export default function NotFoundContent({ className }: Props): ReactNode {
-    const [
-        shouldRedirectTo,
-        setShouldRedirectTo
-    ] = useState(null);
+    const [shouldRedirectTo, setShouldRedirectTo] = useState<string | false | null>(null);
 
     useEffect(() => {
         const redirectTo = (url: string, storeUrl = true): void => {
@@ -38,7 +35,7 @@ export default function NotFoundContent({ className }: Props): ReactNode {
             // Redirect to default demo application
             redirectTo('/auth-js/demo-app/auth-js', false);
         } else {
-            shouldRedirectTo(false);
+            setShouldRedirectTo(false);
         }
     }, []);
 
