@@ -48,38 +48,30 @@ const Frameworks = () => {
 
                 <p className="subtitle">Get started:</p>
                 <div className="items flex-col sm:flex-row">
-                    <button type="button" className="item">
+                    <Link
+                        className="item"
+                        to={useBaseUrl('getting-started/vanilla-js')}>
                         <JavascriptSvg className="icon" />
-                        <Link
-                            className="label"
-                            to={useBaseUrl('getting-started/vanilla-js')}>
-                            vanilla/js
-                        </Link>
-                    </button>
-                    <button type="button" className="item">
+                        <span className="label">vanilla/js</span>
+                    </Link>
+                    <Link
+                        className="item"
+                        to={useBaseUrl('getting-started/angular')}>
                         <AngularSvg className="icon" />
-                        <Link
-                            className="label"
-                            to={useBaseUrl('getting-started/angular')}>
-                            angular
-                        </Link>
-                    </button>
-                    <button type="button" className="item">
+                        <span className="label">angular</span>
+                    </Link>
+                    <Link
+                        className="item"
+                        to={useBaseUrl('getting-started/vue-js')}>
                         <VueJsSvg className="icon" />
-                        <Link
-                            className="label"
-                            to={useBaseUrl('getting-started/vue-js')}>
-                            vue.js
-                        </Link>
-                    </button>
-                    <button type="button" className="item">
+                        <span className="label">vue.js</span>
+                    </Link>
+                    <Link
+                        className="item"
+                        to={useBaseUrl('getting-started/quasar')}>
                         <QuasarSvg className="icon" />
-                        <Link
-                            className="label"
-                            to={useBaseUrl('getting-started/quasar')}>
-                            quasar
-                        </Link>
-                    </button>
+                        <span className="label">quasar</span>
+                    </Link>
                 </div>
             </div>
         </section>
