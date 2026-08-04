@@ -1,18 +1,18 @@
 import { $ } from '@wdio/globals';
 import type { ChainablePromiseElement } from 'webdriverio';
 
+import { Idp } from '../../specs/oidc/utils';
 import { IdpPage } from './idp-page';
 
 class KeyCloakPage extends IdpPage {
-    public readonly name = 'Keycloak';
+    public readonly name = Idp.KEYCLOAK;
     public readonly clientId = 'demo';
+    public readonly authorityUrl = 'http://localhost:8080/auth/realms/demo';
+    // public readonly accountUrl = `http://localhost:8080/auth/realms/demo/account`;
 
     public get $submitButton(): ChainablePromiseElement {
         return $('input#kc-login');
     }
-
-    // public readonly url = 'http://localhost:8080';
-    // public readonly accountUrl = `${this.url}/auth/realms/demo/account`;
 
     // public get logoutButton(): ChainablePromiseElement {
     //     return $('button#landingSignOutButton');

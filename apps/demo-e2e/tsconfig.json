@@ -11,13 +11,13 @@
         "isolatedDeclarations": false,
         "types": [
             "node",
-            "jasmine",
+            "mocha",
             "@wdio/globals/types",
-            "expect-webdriverio/jasmine",
-            "@wdio/jasmine-framework"
+            "@wdio/mocha-framework"
         ]
     },
     "include": [
+        "wdio.capabilities.ts",
         "wdio.config.ts",
         "src/**/*.ts"
     ]

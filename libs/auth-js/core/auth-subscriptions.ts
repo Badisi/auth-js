@@ -20,7 +20,7 @@ export class AuthSubscriptions<T> {
     public add(subscriber: AuthSubscriber<T>, options?: AuthSubscriberOptions): AuthSubscription {
         const subscription = { subscriber, options };
         this.#subscriptions.push(subscription);
-        if (this.#lastNotifiedValue) {
+        if (this.#lastNotifiedValue !== undefined) {
             void subscriber(this.#lastNotifiedValue);
             if (options?.once) {
                 this.unsubscribe(subscriber);

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+import { getCapabilities } from './wdio.capabilities';
 
 const argv = process.argv.slice(2).reverse();
 const getArgValue = (argName: string): unknown => {
@@ -28,26 +28,14 @@ export const config: WebdriverIO.Config = {
     // ==================
     // Specify Test Files
     // ==================
-    specs: [
-        './src/specs/**/*.ts'
-    ],
     filesToWatch: [
         './src/**/*.ts'
     ],
     // ============
     // Capabilities
     // ============
-    maxInstances: debug ? 1 : 100,
-    capabilities: [{
-        'browserName': 'chrome',
-        'browserVersion': 'stable',
-        'acceptInsecureCerts': true,
-        'goog:chromeOptions': {
-            args: headless
-                ? ['--headless', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage']
-                : [debug ? '--auto-open-devtools-for-tabs' : '']
-        }
-    }],
+    maxInstances: debug ? 1 : 3,
+    capabilities: getCapabilities(headless),
     // ===================
     // Test Configurations
     // ===================
@@ -57,10 +45,39 @@ export const config: WebdriverIO.Config = {
     waitforTimeout: 10000,
     connectionRetryTimeout: 120000,
     connectionRetryCount: 3,
-    framework: 'jasmine',
-    reporters: ['spec'],
-    jasmineOpts: {
-        defaultTimeoutInterval: debug ? (24 * 60 * 60 * 1000) : 60000,
-        stopOnSpecFailure: true
+    framework: 'mocha',
+    reporters: [['spec', {
+        realtimeReporting: true,
+        showPreface: false
+    }]],
+    mochaOpts: {
+        timeout: debug ? (24 * 60 * 60 * 1000) : 120000
+    },
+    // ===================
+    // Hook Configurations
+    // ===================
+    before: async () => {
+        // The demo app content area is a fixed-position, scrollable region, so a tall window keeps
+        // the playground buttons (guards/api) within the viewport and avoids click-interception issues.
+        await browser.setWindowSize(1920, 1400);
+
+        // Chrome can occasionally clear sessionStorage after being redirected back from an IdP login.
+        // To keep the intended settings during a login round-trip, we enforce them at the beginning
+        // of every page load, before the app reads them.
+        await browser.addInitScript(() => {
+            try {
+                const desired = localStorage.getItem('auth-js:e2e:settings');
+                if (desired) {
+                    sessionStorage.setItem('auth-js:playground:settings', desired);
+                    localStorage.removeItem('auth-js:e2e:settings');
+                }
+            } catch { /**/ }
+        });
+
+        await Promise.all([
+            import('./src/commands/wait-for-navigation'),
+            import('./src/commands/spy-network'),
+            import('./src/commands/set-value')
+        ]);
     }
 };

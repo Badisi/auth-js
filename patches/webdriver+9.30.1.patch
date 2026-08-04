@@ -1,0 +1,12 @@
+diff --git a/node_modules/webdriver/build/index.js b/node_modules/webdriver/build/index.js
+index 799ed92d5016f44f92ea9277058964d314a42ed3..6212606090ef47527a186aabd97f72e806f44d15 100644
+@@ -2200,7 +2200,8 @@
+ // src/request/request.ts
+ var ERRORS_TO_EXCLUDE_FROM_RETRY = [
+   "detached shadow root",
+-  "move target out of bounds"
++  "move target out of bounds",
++  "no such window"
+ ];
+ var DEFAULT_HEADERS = {
+   "Content-Type": "application/json; charset=utf-8",

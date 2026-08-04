@@ -1,0 +1,429 @@
+diff --git a/node_modules/webdriverio/build/node.js b/node_modules/webdriverio/build/node.js
+index 1240820..74ca7b3 100644
+--- a/node_modules/webdriverio/build/node.js
++++ b/node_modules/webdriverio/build/node.js
+@@ -309,6 +309,7 @@ var ContextManager = class _ContextManager extends SessionManager {
+   #onCommandListener;
+   #onCommandResultMobileListener;
+   #navigationStartedListener;
++  #destroyedListener;
+   constructor(browser) {
+     super(browser, _ContextManager.name);
+     this.#browser = browser;
+@@ -323,6 +324,7 @@ var ContextManager = class _ContextManager extends SessionManager {
+     this.#onCommandListener = this.#onCommand.bind(this);
+     this.#onCommandResultMobileListener = this.#onCommandResultMobile.bind(this);
+     this.#navigationStartedListener = this.#navigationStarted.bind(this);
++    this.#destroyedListener = this.#contextDestroyed.bind(this);
+     this.#browser.on("result", this.#onCommandResultBidiAndClassicListener);
+     if (!this.isEnabled() && !this.#browser.isMobile) {
+       return;
+@@ -332,9 +334,10 @@ var ContextManager = class _ContextManager extends SessionManager {
+       this.#browser.on("result", this.#onCommandResultMobileListener);
+     } else {
+       this.#browser.sessionSubscribe({
+-        events: ["browsingContext.navigationStarted"]
++        events: ["browsingContext.navigationStarted", "browsingContext.contextDestroyed"]
+       });
+       this.#browser.on("browsingContext.navigationStarted", this.#navigationStartedListener);
++      this.#browser.on("browsingContext.contextDestroyed", this.#destroyedListener);
+     }
+   }
+   removeListeners() {
+@@ -345,8 +348,57 @@ var ContextManager = class _ContextManager extends SessionManager {
+       this.#browser.off("result", this.#onCommandResultMobileListener);
+     } else {
+       this.#browser.off("browsingContext.navigationStarted", this.#navigationStartedListener);
++      this.#browser.off("browsingContext.contextDestroyed", this.#destroyedListener);
+     }
+   }
++  async #contextDestroyed(destroyed) {
++    if (!this.#currentContext || destroyed.context !== this.#currentContext) {
++      return;
++    }
++    this.#currentWindowHandle = void 0;
++    this.#currentContext = void 0;
++    let handle;
++    try {
++      if (destroyed.parent) {
++        handle = await this.#getTopLevelContext(destroyed.parent);
++      }
++      if (!handle) {
++        const windowHandles = await this.#browser.getWindowHandles();
++        handle = windowHandles.find((windowHandle) => windowHandle !== destroyed.context) ?? windowHandles[0];
++      }
++      if (!handle) {
++        return;
++      }
++      if (this.#currentContext) {
++        return;
++      }
++      await this.#browser.switchToWindow(handle);
++      if (this.#currentContext && this.#currentContext !== handle) {
++        return;
++      }
++      this.setCurrentContext(handle);
++    } catch (err) {
++      if (!this.#currentContext || this.#currentContext === handle) {
++        this.#currentContext = void 0;
++        this.#currentWindowHandle = void 0;
++      }
++      log3.warn(`Failed to switch context after "${destroyed.context}" was destroyed: ${err.message}`);
++    }
++  }
++  /**
++   * Resolve the top-level context of a given context id, e.g. the top-level
++   * browsing context a child frame belongs to.
++   * @param contextId the context id to resolve the top-level context for
++   * @returns the top-level context id, or undefined if it can't be found
++   */
++  async #getTopLevelContext(contextId) {
++    const { contexts } = await this.#browser.browsingContextGetTree({});
++    let context = this.findContext(contextId, contexts, "byContextId");
++    while (context?.parent) {
++      context = this.findContext(context.parent, contexts, "byContextId");
++    }
++    return context?.context;
++  }
+   async #navigationStarted(nav) {
+     if (!this.#currentContext || nav.context === this.#currentContext) {
+       return;
+@@ -4250,8 +4302,10 @@ var WebDriverInterception = class _WebDriverInterception {
+     });
+   }
+   #handleResponseStarted(request) {
+-    if (!this.#isRequestMatching(request)) {
+-      if (request.intercepts?.includes(this.#mockId)) {
++    const isHandledByThisMock = request.intercepts?.includes(this.#mockId);
++    const urlMatches = this.#pattern && this.#pattern.test(request.request.url);
++    if (!urlMatches) {
++      if (isHandledByThisMock && request.isBlocked) {
+         return this.#browser.networkProvideResponse({
+           request: request.request.request
+         }).catch(this.#handleNetworkProvideResponseError);
+@@ -4259,13 +4313,22 @@ var WebDriverInterception = class _WebDriverInterception {
+       return;
+     }
+     this.#attachPostData(request);
+-    if (!this.#matchesFilterOptions(request)) {
++    const filterMatches = this.#matchesFilterOptions(request);
++    if (filterMatches) {
++      // Record matching requests even when the driver did not mark them as "blocked"
++      // (e.g. subresources loaded while navigating) so that calls[]/waitForResponse()
++      // resolve for them too. Interception is only needed to continue such requests.
++      this.#calls.push(request);
++    }
++    if (!request.isBlocked) {
++      return;
++    }
++    if (!filterMatches) {
+       this.#emit("continue", request.request.request);
+       return this.#browser.networkProvideResponse({
+         request: request.request.request
+       }).catch(this.#handleNetworkProvideResponseError);
+     }
+-    this.#calls.push(request);
+     if (this.#respondOverwrites.length === 0 || !this.#respondOverwrites[0].overwrite) {
+       this.#emit("continue", request.request.request);
+       return this.#browser.networkProvideResponse({
+@@ -4804,6 +4867,9 @@ import elementContains from "./scripts/elementContains.js";
+ import elementsContainedIn from "./scripts/elementsContainedIn.js";
+ import elementsConnected from "./scripts/elementsConnected.js";
+ var log14 = logger14("webdriverio");
++function isStaleReferenceError(err) {
++  return /no such node|belongs to different document|no such frame|Cannot find context|malformed type for/i.test(err?.message ?? "");
++}
+ async function runBatchedElementCheck(elementIds, checkName, contextId, onElementCheckError, batchCheck, perElementCheck) {
+   if (elementIds.length === 0) {
+     return [];
+@@ -4816,13 +4882,17 @@ async function runBatchedElementCheck(elementIds, checkName, contextId, onElemen
+     }
+     return result;
+   } catch (err) {
+-    log14.warn(`Failed to batch-check element ${checkName}${inContext}: ${err.message}. Falling back to per-element checks.`);
++    if (!isStaleReferenceError(err)) {
++      log14.warn(`Failed to batch-check element ${checkName}${inContext}: ${err.message}. Falling back to per-element checks.`);
++    }
+   }
+   return Promise.all(elementIds.map(async (elementId) => {
+     try {
+       return await perElementCheck(elementId);
+     } catch (err) {
+-      log14.warn(`Failed to check element ${checkName} for element ${elementId}${inContext}: ${err.message}`);
++      if (!isStaleReferenceError(err)) {
++        log14.warn(`Failed to check element ${checkName} for element ${elementId}${inContext}: ${err.message}`);
++      }
+       onElementCheckError?.(elementId);
+       return false;
+     }
+@@ -4873,11 +4943,13 @@ var ShadowRootManager = class _ShadowRootManager extends SessionManager {
+   #initialize;
+   #shadowRoots = /* @__PURE__ */ new Map();
+   #currentDocumentIds = /* @__PURE__ */ new Map();
+-  #documentElement;
++  #documentElements = /* @__PURE__ */ new Map();
++  #navigationCounts = /* @__PURE__ */ new Map();
+   #frameDepth = 0;
+   #handleLogEntryListener = this.handleLogEntry.bind(this);
+   #commandResultHandlerListener = this.#commandResultHandler.bind(this);
+   #handleBidiCommandListener = this.#handleBidiCommand.bind(this);
++  #handleNavigationStartedListener = this.#handleNavigationStarted.bind(this);
+   constructor(browser) {
+     super(browser, _ShadowRootManager.name);
+     this.#browser = browser;
+@@ -4891,6 +4963,7 @@ var ShadowRootManager = class _ShadowRootManager extends SessionManager {
+     this.#browser.on("log.entryAdded", this.#handleLogEntryListener);
+     this.#browser.on("result", this.#commandResultHandlerListener);
+     this.#browser.on("bidiCommand", this.#handleBidiCommandListener);
++    this.#browser.on("browsingContext.navigationStarted", this.#handleNavigationStartedListener);
+     this.#browser.scriptAddPreloadScript({
+       functionDeclaration: customElementWrapper.toString()
+     });
+@@ -4900,6 +4973,7 @@ var ShadowRootManager = class _ShadowRootManager extends SessionManager {
+     this.#browser.off("log.entryAdded", this.#handleLogEntryListener);
+     this.#browser.off("result", this.#commandResultHandlerListener);
+     this.#browser.off("bidiCommand", this.#handleBidiCommandListener);
++    this.#browser.off("browsingContext.navigationStarted", this.#handleNavigationStartedListener);
+   }
+   async initialize() {
+     return this.#initialize;
+@@ -4914,6 +4988,25 @@ var ShadowRootManager = class _ShadowRootManager extends SessionManager {
+     const params = command.params;
+     this.#shadowRoots.delete(params.context);
+     this.#currentDocumentIds.delete(params.context);
++    this.#documentElements.delete(params.context);
++    this.#navigationCounts.set(params.context, (this.#navigationCounts.get(params.context) ?? 0) + 1);
++  }
++  /**
++   * clear cached shadow roots as soon as a navigation starts (including
++   * page-initiated ones) so stale sharedIds are not passed to locateNodes
++   */
++  #handleNavigationStarted(nav) {
++    this.#shadowRoots.delete(nav.context);
++    this.#currentDocumentIds.delete(nav.context);
++    this.#documentElements.delete(nav.context);
++    this.#navigationCounts.set(nav.context, (this.#navigationCounts.get(nav.context) ?? 0) + 1);
++  }
++  /**
++   * number of navigations observed for a context, used to detect document
++   * swaps that happen while a locateNodes command is in flight
++   */
++  getNavigationCount(contextId) {
++    return this.#navigationCounts.get(contextId) ?? 0;
+   }
+   /**
+    * keep track of frame depth
+@@ -4984,7 +5077,7 @@ var ShadowRootManager = class _ShadowRootManager extends SessionManager {
+           this.#shadowRoots.set(logEntry.source.context, new ShadowRootTree(rootElem.sharedId));
+         }
+       }
+-      this.#documentElement = documentElement;
++      this.#documentElements.set(ctxId, documentElement);
+       const tree = this.#shadowRoots.get(logEntry.source.context);
+       if (!tree) {
+         throw new Error(`Couldn't find tree for context id ${logEntry.source.context}`);
+@@ -5037,7 +5130,7 @@ var ShadowRootManager = class _ShadowRootManager extends SessionManager {
+       }
+       tree = subTree;
+     } else {
+-      documentElement = this.#documentElement?.sharedId;
++      documentElement = this.#documentElements.get(contextId)?.sharedId;
+     }
+     const elements = tree.getAllLookupScopes();
+     return [
+@@ -7634,6 +7727,17 @@ async function workaround(element) {
+   await element.scrollIntoView({ block: "center", inline: "center" });
+ }
+ async function elementClick(element) {
++  const hasActiveMock = Object.values(SESSION_MOCKS).some((mocks) => mocks.size > 0);
++  if (hasActiveMock) {
++    try {
++      const resolvedElement = await element;
++      if (typeof resolvedElement?.execute === "function") {
++        return await resolvedElement.execute((el) => el.click(), resolvedElement);
++      }
++    } catch (error) {
++      // fall through to the native driver click when the script click cannot run
++    }
++  }
+   try {
+     return await element.elementClick(element.elementId);
+   } catch (error) {
+@@ -8863,10 +8967,12 @@ async function shadow$$(selector) {
+     const elements = await getElements.call(this, selector, res, { isShadowElement: true });
+     return enhanceElementsArray(elements, this, selector);
+   } catch (err) {
+-    log29.warn(
+-      `Failed to fetch element within shadow DOM using WebDriver command: ${err.message}!
++    if (!isStaleReferenceError(err)) {
++      log29.warn(
++        `Failed to fetch element within shadow DOM using WebDriver command: ${err.message}!
+ Falling back to JavaScript shim.`
+-    );
++      );
++    }
+     return await this.$$(shadowFnFactory(selector, true));
+   }
+ }
+@@ -8885,10 +8991,12 @@ async function shadow$(selector) {
+     const res = await browser.findElementFromShadowRoot(shadowRoot[SHADOW_ELEMENT_KEY2], using, value);
+     return getElement.call(this, selector, res, { isShadowElement: true });
+   } catch (err) {
+-    log30.warn(
+-      `Failed to fetch element within shadow DOM using WebDriver command: ${err.message}!
++    if (!isStaleReferenceError(err)) {
++      log30.warn(
++        `Failed to fetch element within shadow DOM using WebDriver command: ${err.message}!
+ Falling back to JavaScript shim.`
+-    );
++      );
++    }
+     return this.$(shadowFnFactory2(selector));
+   }
+ }
+@@ -9462,6 +9570,7 @@ async function findDeepElement(selector) {
+     context,
+     this.elementId
+   );
++  const navigationCount = shadowRootManager.getNavigationCount(context);
+   let { using, value } = findStrategy(selector, this.isW3C, this.isMobile);
+   if (using === "xpath" && (value.startsWith("./") || value.startsWith("..")) && this.elementId) {
+     return this.findElementFromElement(this.elementId, using, value);
+@@ -9481,6 +9590,21 @@ async function findDeepElement(selector) {
+     nodes = returnUniqueNodes(nodes);
+     if (!this.elementId) {
+       if (shadowRoots.length > 0 && nodes.length > 0) {
++        /**
++         * A navigation replaced the document while the locateNodes command was
++         * in flight: the results are stale, skip the connectivity check and
++         * retry over the whole document.
++         */
++        if (shadowRootManager.getNavigationCount(context) !== navigationCount) {
++          const retried = await browser.browsingContextLocateNodes({ locator, context }).catch(() => void 0);
++          const retriedNodes = (retried?.nodes || []).filter((node) => Boolean(node.sharedId));
++          if (retriedNodes.length > 0) {
++            return {
++              [ELEMENT_KEY21]: retriedNodes[0].sharedId,
++              locator
++            };
++          }
++        }
+         const connected = await checkElementsConnected(
+           browser,
+           nodes.map((node) => node[ELEMENT_KEY21]),
+@@ -9495,6 +9619,19 @@ async function findDeepElement(selector) {
+         if (firstConnected) {
+           return firstConnected;
+         }
++        /**
++         * All results were detached, likely because the document was replaced
++         * while the locateNodes command was in flight. Retry over the whole
++         * document now that the stale shadow root entries have been purged.
++         */
++        const retried = await browser.browsingContextLocateNodes({ locator, context }).catch(() => void 0);
++        const retriedNodes = (retried?.nodes || []).filter((node) => Boolean(node.sharedId));
++        if (retriedNodes.length > 0) {
++          return {
++            [ELEMENT_KEY21]: retriedNodes[0].sharedId,
++            locator
++          };
++        }
+         log31.warn(`All ${nodes.length} BiDi results for "${value}" are detached, removed stale entries from shadow root tree`);
+         return void 0;
+       }
+@@ -9527,8 +9664,30 @@ async function findDeepElement(selector) {
+       }
+     }
+     return scopedNodes[0];
+-  }, (err) => {
+-    log31.warn(`Failed to execute browser.browsingContextLocateNodes({ ... }) due to ${err}, falling back to regular WebDriver Classic command`);
++  }, async (err) => {
++    /**
++     * The cached shadow root startNodes may belong to a document that was
++     * replaced while the command was in flight. Retry over the whole document
++     * (top-level lookups only) before falling back to WebDriver Classic so the
++     * lookup still succeeds without emitting a warning.
++     */
++    if (!this.elementId && startNodes && isStaleReferenceError(err)) {
++      try {
++        const retried = await browser.browsingContextLocateNodes({ locator, context });
++        const retriedNodes = (retried.nodes || []).filter((node) => Boolean(node.sharedId));
++        if (retriedNodes.length > 0) {
++          return {
++            [ELEMENT_KEY21]: retriedNodes[0].sharedId,
++            locator
++          };
++        }
++      } catch {
++        // fall through to the classic fallback below
++      }
++    }
++    if (!isStaleReferenceError(err)) {
++      log31.warn(`Failed to execute browser.browsingContextLocateNodes({ ... }) due to ${err}, falling back to regular WebDriver Classic command`);
++    }
+     return this && "elementId" in this && this.elementId ? this.findElementFromElement(this.elementId, using, value) : browser.findElement(using, value);
+   });
+   return deepElementResult;
+@@ -9542,6 +9701,7 @@ async function findDeepElements(selector) {
+     context,
+     this.elementId
+   );
++  const navigationCount = shadowRootManager.getNavigationCount(context);
+   let { using, value } = findStrategy(selector, this.isW3C, this.isMobile);
+   if (using === "xpath" && (value.startsWith("./") || value.startsWith("..")) && this.elementId) {
+     return this.findElementsFromElement(this.elementId, using, value);
+@@ -9561,6 +9721,21 @@ async function findDeepElements(selector) {
+     nodes = returnUniqueNodes(nodes);
+     if (!this.elementId) {
+       if (shadowRoots.length > 0 && nodes.length > 0) {
++        /**
++         * A navigation replaced the document while the locateNodes command was
++         * in flight: the results are stale, skip the connectivity check and
++         * retry over the whole document.
++         */
++        if (shadowRootManager.getNavigationCount(context) !== navigationCount) {
++          const retried = await browser.browsingContextLocateNodes({ locator, context }).catch(() => void 0);
++          const retriedNodes = (retried?.nodes || []).filter((node) => Boolean(node.sharedId)).map((node) => ({
++            [ELEMENT_KEY21]: node.sharedId,
++            locator
++          }));
++          if (retriedNodes.length > 0) {
++            return retriedNodes;
++          }
++        }
+         const connected = await checkElementsConnected(
+           browser,
+           nodes.map((node) => node[ELEMENT_KEY21]),
+@@ -9605,8 +9780,30 @@ async function findDeepElements(selector) {
+       }
+     }
+     return scopedNodes;
+-  }, (err) => {
+-    log31.warn(`Failed to execute browser.browsingContextLocateNodes({ ... }) due to ${err}, falling back to regular WebDriver Classic command`);
++  }, async (err) => {
++    /**
++     * The cached shadow root startNodes may belong to a document that was
++     * replaced while the command was in flight. Retry over the whole document
++     * (top-level lookups only) before falling back to WebDriver Classic so the
++     * lookup still succeeds without emitting a warning.
++     */
++    if (!this.elementId && startNodes && isStaleReferenceError(err)) {
++      try {
++        const retried = await browser.browsingContextLocateNodes({ locator, context });
++        const retriedNodes = (retried.nodes || []).filter((node) => Boolean(node.sharedId)).map((node) => ({
++          [ELEMENT_KEY21]: node.sharedId,
++          locator
++        }));
++        if (retriedNodes.length > 0) {
++          return retriedNodes;
++        }
++      } catch {
++        // fall through to the classic fallback below
++      }
++    }
++    if (!isStaleReferenceError(err)) {
++      log31.warn(`Failed to execute browser.browsingContextLocateNodes({ ... }) due to ${err}, falling back to regular WebDriver Classic command`);
++    }
+     return this && "elementId" in this && this.elementId ? this.findElementsFromElement(this.elementId, using, value) : browser.findElements(using, value);
+   });
+   return deepElementResult;
