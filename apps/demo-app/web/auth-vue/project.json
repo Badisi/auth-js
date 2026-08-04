@@ -8,7 +8,7 @@
         "serve": {
             "executor": "@nx/vite:dev-server",
             "options": {
-                "buildTarget": "demo-auth-vue:build"
+                "buildTarget": "demo-auth-vue:build:development"
             }
         },
         "build": {
@@ -20,7 +20,14 @@
                 "outputPath": "{workspaceRoot}/dist/demo-app/auth-vue",
                 "tsConfig": "{projectRoot}/tsconfig.json",
                 "configFile": "{projectRoot}/vite.config.mts"
-            }
+            },
+            "configurations": {
+                "production": {
+                    "tsConfig": "{projectRoot}/tsconfig.prod.json"
+                },
+                "development": {}
+            },
+            "defaultConfiguration": "production"
         },
         "lint": {
             "executor": "@nx/eslint:lint"
